@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>隐盾 · 对话</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/chat.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="logo">盾</span><div><h1>隐盾</h1><p class="sub">上传材料，直接提问，继续对话</p></div></div>
+    <span id="apiStatus" class="service-status" role="status">正在读取服务状态…</span>
+  </header>
+  <main class="chat-layout">
+    <aside class="panel config">
+      <button class="btn primary" id="newChat">新对话</button>
+      <button class="btn ghost" id="clearChat">清除对话</button>
+      <details class="settings" open>
+        <summary>对话设置</summary>
+        <label class="field"><span>身份</span><select id="identity"></select></label>
+        <label class="field"><span>任务</span><select id="task"></select></label>
+        <label class="field"><span>处理要求</span><textarea id="description" rows="3" maxlength="4000" placeholder="例如：保持负责人和事项的对应关系"></textarea></label>
+        <p class="chat-note">设置在第一轮发送后固定。调整身份或任务时，请新建对话。</p>
+      </details>
+      <details class="settings" open>
+        <summary>本机材料</summary>
+        <div id="library" class="material-list" aria-live="polite"></div>
+        <p class="chat-note">可加入本轮或删除本机材料。删除文件不会撤回已发送内容，也不会修改历史。</p>
+      </details>
+      <details class="settings">
+        <summary>隐私与服务说明</summary>
+        <p class="chat-note">文字和附件在同一对话中处理。发送前自动脱敏并检查完整历史，回答复检通过后才展示。</p>
+        <p class="chat-note">历史和代号保存在本机内存，刷新后不自动恢复，闲置 30 分钟过期，最多 20 轮。清除对话会删除其原值匹配记录；本机材料需单独删除。</p>
+        <p id="apiHelp" class="chat-note"></p>
+      </details>
+      <p id="modelStatus" class="chat-note" role="status">正在检查本地模型…</p>
+    </aside>
+    <section class="panel chat-main">
+      <div class="chat-heading"><h2>对话</h2><span id="turns">0 / 20 轮</span></div>
+      <div id="notice" class="chat-notice" role="status">输入问题或添加材料即可开始，脱敏会在每轮发送前自动完成。</div>
+      <div id="messages" class="chat-messages" aria-live="polite"></div>
+      <details id="processing" class="processing" hidden><summary>查看本轮隐私处理</summary><div id="decisions"></div></details>
+      <form id="composer" class="chat-composer">
+        <label class="field"><span>消息</span><textarea id="message" rows="4" maxlength="12000" placeholder="例如：请根据附件整理纪要。之后可以直接继续追问。"></textarea></label>
+        <div id="attachments" class="attachments" aria-live="polite"></div>
+        <div class="chat-controls">
+          <label class="btn ghost">添加材料<input id="file" type="file" multiple hidden accept=".txt,.md,.csv,.tsv,.json,.docx,.xlsx,.pdf" /></label>
+          <button class="btn primary" id="send" type="submit" disabled>发送</button>
+        </div>
+      </form>
+    </section>
+  </main>
+  <script src="/static/chat.js"></script>
+</body>
+</html>

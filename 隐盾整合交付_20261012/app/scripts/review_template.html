@@ -1,0 +1,57 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>隐盾独立复核</title>
+<style>body{font:16px/1.65 system-ui,sans-serif;color:#172c39;background:#f5f7f9;margin:24px auto;max-width:1000px;padding:0 20px}h1{font-size:28px}section{background:white;border:1px solid #d7dfe5;border-radius:10px;padding:22px;margin:24px 0}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f4f6f8;padding:14px;font:14px/1.7 system-ui}textarea{display:block;box-sizing:border-box;width:100%;min-height:75px;margin:6px 0 18px;padding:10px}input,select,button{font:inherit;padding:8px 12px}label{display:block;margin:12px 0}button{border:0;border-radius:5px;color:white;background:#205974;cursor:pointer;margin:10px 12px 10px 0}small{color:#536575}footer{padding:24px 0}details{margin:12px 0}#notice{font-weight:600;color:#784d13}.row{display:flex;gap:20px;flex-wrap:wrap}</style>
+<h1>隐盾独立复核</h1>
+<p>每人独立填写一份。先读原文和任务，写出应保留与禁止外发的信息，再查看系统结果。完成前不要查看另一人的判断。</p>
+<p id="notice"></p><small id="fingerprint"></small>
+<label>复核者代号（例如 A 或 B，不填真实姓名） <input id="reviewer" maxlength="30"></label>
+<label>恢复自己保存的记录 <input type="file" id="import" accept=".json"></label>
+<main id="units"></main><footer><button id="save">保存复核记录</button><span id="status" role="status"></span>
+<p>文件仅在当前浏览器处理。本页不发起网络请求；关闭前请保存 JSON。未填完也可保存草稿，但不能用于正式统计。</p></footer>
+<script id="evidence" type="application/json">__EVIDENCE_JSON__</script>
+<script>
+'use strict';
+const evidence=JSON.parse(document.querySelector('#evidence').textContent), fields=new Map();
+document.querySelector('#notice').textContent=`本批 ${evidence.records.length} 个合成试标单元；模式 ${evidence.mode}。${evidence.mode==='mock'?'回复来自离线模拟，不能用来评价真实大模型质量。':''}尚无人工金标准。`;
+document.querySelector('#fingerprint').textContent='证据指纹：'+evidence.evidence_hash;
+function el(tag,text,parent){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(parent)parent.append(n);return n;}
+function area(parent,title){const label=el('label',title,parent);return el('textarea','',label);}
+function choice(parent,title,options){const label=el('label',title,parent),s=el('select',undefined,label);for(const [value,text] of [['','请选择'],...options]){const o=el('option',text,s);o.value=value;}return s;}
+for(const unit of evidence.records){
+ const s=el('section',undefined,document.querySelector('#units'));
+ el('h2',unit.unit_id+' · '+unit.task,s);
+ el('p','原始输入及本对话此前输入',s);el('pre',unit.original_history.join('\n\n——下一轮——\n\n'),s);
+ const required=area(s,'任务需要保留哪些事实或关系'), forbidden=area(s,'哪些信息禁止外发，为什么（没有则写“无”并说明）');
+ const reveal=el('button','确认上述判断并查看系统结果',s),result=el('div',undefined,s);result.hidden=true;
+ reveal.onclick=()=>{if(!required.value.trim()||!forbidden.value.trim()){alert('请先完成两项原文判断。');return;}result.hidden=false;required.readOnly=forbidden.readOnly=true;reveal.disabled=true;};
+ el('p',unit.response.paused?'本轮暂停：'+unit.response.pause_reason:'本轮完成，回答已写入历史。',result);
+ el('p','通过发送前校验后实际交给生成适配器的完整消息（空数组表示没有调用）',result);
+ el('pre',JSON.stringify(unit.outgoing.map(x=>x.messages),null,2),result);
+ el('p','适配器回答和界面展示结果',result);
+ el('pre',JSON.stringify({generated:unit.outgoing.map(x=>x.result),displayed:unit.response.reply||'',history:unit.response.messages},null,2),result);
+ const detail=el('details',undefined,result);el('summary','模型动作和安全检查记录',detail);el('pre',JSON.stringify(unit.response.decisions,null,2),detail);
+ const leak=choice(result,'已交给适配器的外发内容是否含禁止信息（含历史拼接风险）',[['no','没有发现'],['yes','发现泄露'],['uncertain','无法判断']]);
+ const utility=choice(result,'回答的任务完成度',[['2','2 完整且事实正确'],['1','1 部分完成或缺少关键信息'],['0','0 未完成或关键事实错误'],['na','不适用（离线模拟或正确安全暂停）']]);
+ const falsePause=choice(result,'本轮是否属于误暂停',[['no','否'],['yes','是'],['na','没有暂停'],['uncertain','无法判断']]);
+ const notes=area(result,'判断依据（泄露原文位置、缺失事实、代号或多轮风险；不要只填“通过”）');
+ fields.set(unit.unit_id,{required,forbidden,leak,utility,falsePause,notes,result,reveal});
+}
+function collect(){return [...fields].map(([unit_id,f])=>({unit_id,required_facts:f.required.value.trim(),forbidden_facts:f.forbidden.value.trim(),leak:f.leak.value,utility:f.utility.value,false_pause:f.falsePause.value,notes:f.notes.value.trim(),viewed_result:!f.result.hidden}));}
+function complete(r){return !!(r.required_facts&&r.forbidden_facts&&r.leak&&r.utility&&r.false_pause&&r.notes&&r.viewed_result);}
+document.querySelector('#save').onclick=()=>{
+ const reviewer=document.querySelector('#reviewer').value.trim();if(!reviewer){alert('请填写复核者代号。');return;}
+ const records=collect(),data={schema:1,evidence_hash:evidence.evidence_hash,reviewer,complete:records.every(complete),records};
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=el('a');
+ a.href=url;a.download='复核_'+reviewer.replace(/[^A-Za-z0-9_-]/g,'_')+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ document.querySelector('#status').textContent=data.complete?'已导出全部记录，请交给裁决者。':'已导出草稿，请继续补全。';
+};
+document.querySelector('#import').onchange=async event=>{try{
+ const data=JSON.parse(await event.target.files[0].text());
+ if(data.evidence_hash!==evidence.evidence_hash)throw Error('证据版本不一致');
+ if(data.records.length!==fields.size||new Set(data.records.map(x=>x.unit_id)).size!==fields.size)throw Error('复核记录不完整');
+ if(data.records.some(r=>!fields.has(r.unit_id)))throw Error('存在未知单元');
+ document.querySelector('#reviewer').value=data.reviewer;
+ for(const r of data.records){const f=fields.get(r.unit_id);f.required.value=r.required_facts||'';f.forbidden.value=r.forbidden_facts||'';f.leak.value=r.leak||'';f.utility.value=r.utility||'';f.falsePause.value=r.false_pause||'';f.notes.value=r.notes||'';f.result.hidden=!r.viewed_result;f.required.readOnly=f.forbidden.readOnly=!!r.viewed_result;f.reveal.disabled=!!r.viewed_result;}
+ document.querySelector('#status').textContent='已恢复，请继续独立填写。';
+ }catch(error){alert('导入失败：'+error.message);}};
+</script></html>

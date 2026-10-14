@@ -1,0 +1,422 @@
+{
+  "date": "2026-10-14",
+  "kept_code": "隐盾整合交付_20261012/app",
+  "kept_submission": "隐盾提交材料_20261014",
+  "protected_files_hash_verified": 94,
+  "records": [
+    {
+      "action": "preserved",
+      "source": "_submission_build\\build_deck.mjs",
+      "destination": "tools\\submission\\build_deck.mjs",
+      "sha256": "ABF99BEACA9E63EA9EAF642F7DD1F85889FDF3040E7F68E549A4BD15E605553A"
+    },
+    {
+      "action": "preserved",
+      "source": "_submission_build\\build_report.py",
+      "destination": "tools\\submission\\build_report.py",
+      "sha256": "0AB3F861F6F128C96C89E0C4DF392E856A44593463D937F28FA93B476C6801C3"
+    },
+    {
+      "action": "preserved",
+      "source": "_submission_build\\render_report.ps1",
+      "destination": "tools\\submission\\render_report.ps1",
+      "sha256": "345D0D52B1D4F29129614B708AA6873EB235691EBCBA91740F00A3FB50F147BC"
+    },
+    {
+      "action": "preserved",
+      "source": "_submission_build\\report_text.md",
+      "destination": "tools\\submission\\report_text.md",
+      "sha256": "96D0828D9FB950E7A7DCD0A59E80EE44719575EEE6F33D9B0661B6FBB39D294D"
+    },
+    {
+      "action": "preserved",
+      "source": "_submission_build\\slides_notes.json",
+      "destination": "tools\\submission\\slides_notes.json",
+      "sha256": "B9C0E2B08F526FFF5837B2EE4EF15084BA1378D4375BE65C546DF4B315DE95C2"
+    },
+    {
+      "action": "preserved",
+      "source": "_submission_build\\deck_validation.json",
+      "destination": "tools\\submission\\deck_validation.json",
+      "sha256": "6B83A70D4147C25DE9D4AA83683B97E46331AE70491EF59A5E98E1AD5E2265CC"
+    },
+    {
+      "action": "preserved",
+      "source": "_submission_build\\visual_qa.json",
+      "destination": "tools\\submission\\visual_qa.json",
+      "sha256": "209E3DF547E48B4E88D1EAFCE0E941D8D0F39D3663AB7AA2340C4BB244E010D9"
+    },
+    {
+      "action": "preserved",
+      "source": "_submission_build\\docx_qa\\report.pdf",
+      "destination": "隐盾提交材料_20261014\\隐盾项目最终报告_本地模型方案版.pdf",
+      "sha256": "6491279C0694C8E94C83FBD8CBCBECA7F78103ED02C32544619556DDF3F6ADB5"
+    },
+    {
+      "action": "preserved",
+      "source": "_shield_report_qa\\chat-desktop.png",
+      "destination": "隐盾整合交付_20261012\\验证结果\\界面截图\\chat-desktop.png",
+      "sha256": "2760C4187236AD9D517525D75A418B480F10CFD368F2BF34F948B51E12254575"
+    },
+    {
+      "action": "preserved",
+      "source": "_shield_report_qa\\chat-mobile.png",
+      "destination": "隐盾整合交付_20261012\\验证结果\\界面截图\\chat-mobile.png",
+      "sha256": "8CA05A474A75ADF8E583BEE73E452A8CD508ADE96501225458C8E4A282B22E43"
+    },
+    {
+      "action": "preserved",
+      "source": "_shield_report_qa\\review-ui.png",
+      "destination": "隐盾整合交付_20261012\\验证结果\\界面截图\\review-ui.png",
+      "sha256": "5ED638B900A6B453EE40B66E01504F2D7B62C0DE1F247D5EBB3B3EFD6A7263B2"
+    },
+    {
+      "action": "preserved",
+      "source": "_shield_browser_qa.cjs",
+      "destination": "tools\\qa\\browser_qa.cjs",
+      "sha256": "A21CF1C1606F149272684F9ECE2691BDC18055A613026DC07C2204CB0FAF9AB5"
+    },
+    {
+      "action": "preserved",
+      "source": "_shield_review_qa.cjs",
+      "destination": "tools\\qa\\review_qa.cjs",
+      "sha256": "F348B040457D05FD1C1AC9BA6CC0890E0F6A53E252324A45E1CDE006020DBEE3"
+    },
+    {
+      "action": "preserved",
+      "source": "_package_shield_delivery.py",
+      "destination": "tools\\package_delivery.py",
+      "sha256": "5921523E26A8931E96CBF00AA4E8205A472962B605D95160E5AB7BAB7634F670"
+    },
+    {
+      "action": "preserved",
+      "source": "三、详细介绍.md",
+      "destination": "参考资料\\原始需求\\三、详细介绍.md",
+      "sha256": "B77B5AD61903472E743B1A3273967FD68B0258C393B8015C98489B910835C8F6"
+    },
+    {
+      "action": "preserved",
+      "source": "现在需要解决的问题.docx",
+      "destination": "参考资料\\原始需求\\现在需要解决的问题.docx",
+      "sha256": "C5D6B1A582709C1DEFA8838DDEBE60217E3C526AC4F038866C4BA91EC7FD3FE7"
+    },
+    {
+      "action": "preserved",
+      "source": "隐盾-挑战杯作品信息.md",
+      "destination": "参考资料\\原始需求\\隐盾-挑战杯作品信息.md",
+      "sha256": "B847EF5E05F37936ED3899AE25351AB4291CCCD31ACDEC51E1629F1980C1D003"
+    },
+    {
+      "action": "preserved",
+      "source": "隐盾-作品信息.md",
+      "destination": "参考资料\\原始需求\\隐盾-作品信息.md",
+      "sha256": "34A9BCF695FDCA187AD05D9280B690A40F22521BF17D42D3906829C7D30680EB"
+    },
+    {
+      "action": "preserved",
+      "source": "重点为除技术外的整体架构.docx",
+      "destination": "参考资料\\原始需求\\重点为除技术外的整体架构.docx",
+      "sha256": "73184447CB7DDC71BA1A4026A889CCAD7458844344AB8CD2BE41A9EFEA969AAA"
+    },
+    {
+      "action": "preserved",
+      "source": "重点为技术层面.md",
+      "destination": "参考资料\\原始需求\\重点为技术层面.md",
+      "sha256": "5C73488CB2EA2119F3C9064010FAA1CA33AFD05808FF7F259F67549B7322A63A"
+    },
+    {
+      "action": "removed",
+      "path": "llm-shield",
+      "files": 11137,
+      "bytes": 362726331.0
+    },
+    {
+      "action": "removed",
+      "path": "llm-shield-model-decision",
+      "files": 14489,
+      "bytes": 378201007.0
+    },
+    {
+      "action": "removed",
+      "path": "_submission_build",
+      "files": 41,
+      "bytes": 6015869.0
+    },
+    {
+      "action": "removed",
+      "path": "_shield_report_qa",
+      "files": 55,
+      "bytes": 17074855.0
+    },
+    {
+      "action": "removed",
+      "path": "_extract",
+      "files": 2,
+      "bytes": 41509.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾-模型决策版.zip",
+      "files": 1,
+      "bytes": 882066.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾-修改前源码备份.zip",
+      "files": 1,
+      "bytes": 280490.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾-桌面同步清单.json",
+      "files": 1,
+      "bytes": 6314.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾项目完整报告-模型决策版.docx",
+      "files": 1,
+      "bytes": 56949.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾整合交付_20261012.zip",
+      "files": 1,
+      "bytes": 97001041.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾整合交付_20261012.zip.sha256",
+      "files": 1,
+      "bytes": 99.0
+    },
+    {
+      "action": "removed",
+      "path": "_assemble_shield_runtime.py",
+      "files": 1,
+      "bytes": 1451.0
+    },
+    {
+      "action": "removed",
+      "path": "_configure_shield_api.py",
+      "files": 1,
+      "bytes": 1087.0
+    },
+    {
+      "action": "removed",
+      "path": "_finalize_shield_update.py",
+      "files": 1,
+      "bytes": 11305.0
+    },
+    {
+      "action": "removed",
+      "path": "_package_shield_delivery.py",
+      "files": 1,
+      "bytes": 4882.0
+    },
+    {
+      "action": "removed",
+      "path": "_render_shield_report.ps1",
+      "files": 1,
+      "bytes": 1061.0
+    },
+    {
+      "action": "removed",
+      "path": "_render_unified_reports.ps1",
+      "files": 1,
+      "bytes": 1235.0
+    },
+    {
+      "action": "removed",
+      "path": "_shield_browser_qa.cjs",
+      "files": 1,
+      "bytes": 5261.0
+    },
+    {
+      "action": "removed",
+      "path": "_shield_review_qa.cjs",
+      "files": 1,
+      "bytes": 3075.0
+    },
+    {
+      "action": "removed",
+      "path": "_sync_shield_model_decision.py",
+      "files": 1,
+      "bytes": 3405.0
+    },
+    {
+      "action": "removed",
+      "path": "_unify_shield_ui.py",
+      "files": 1,
+      "bytes": 11916.0
+    },
+    {
+      "action": "removed",
+      "path": "_update_shield_docs.py",
+      "files": 1,
+      "bytes": 25824.0
+    },
+    {
+      "action": "removed",
+      "path": "final_review_gate.py",
+      "files": 1,
+      "bytes": 2691.0
+    },
+    {
+      "action": "removed",
+      "path": "_pdf_all.txt",
+      "files": 1,
+      "bytes": 31488.0
+    },
+    {
+      "action": "removed",
+      "path": "_pdf_fitz.txt",
+      "files": 1,
+      "bytes": 31565.0
+    },
+    {
+      "action": "removed",
+      "path": "_pdf_html.html",
+      "files": 1,
+      "bytes": 158792.0
+    },
+    {
+      "action": "removed",
+      "path": "_pdf_sec3_index.txt",
+      "files": 1,
+      "bytes": 27058.0
+    },
+    {
+      "action": "removed",
+      "path": "_pdf_sec3.json",
+      "files": 1,
+      "bytes": 44391.0
+    },
+    {
+      "action": "removed",
+      "path": "三、详细介绍.md",
+      "files": 1,
+      "bytes": 18572.0
+    },
+    {
+      "action": "removed",
+      "path": "现在需要解决的问题.docx",
+      "files": 1,
+      "bytes": 14799.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾-挑战杯作品信息.md",
+      "files": 1,
+      "bytes": 52849.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾-作品信息.md",
+      "files": 1,
+      "bytes": 18706.0
+    },
+    {
+      "action": "removed",
+      "path": "重点为除技术外的整体架构.docx",
+      "files": 1,
+      "bytes": 60378.0
+    },
+    {
+      "action": "removed",
+      "path": "重点为技术层面.md",
+      "files": 1,
+      "bytes": 24958.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾整合交付_20261012\\人工复核\\试标运行\\3bf20ab15a86",
+      "files": 2,
+      "bytes": 131310.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾整合交付_20261012\\交付文件清单.json",
+      "files": 1,
+      "bytes": 1920804.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾整合交付_20261012\\app\\llm_shield\\m4_necessity\\__pycache__",
+      "files": 3,
+      "bytes": 24064.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾整合交付_20261012\\app\\llm_shield\\m6_transform\\__pycache__",
+      "files": 4,
+      "bytes": 18512.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾整合交付_20261012\\app\\llm_shield\\m5_utility\\__pycache__",
+      "files": 2,
+      "bytes": 5337.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾整合交付_20261012\\app\\llm_shield\\m1_access\\__pycache__",
+      "files": 4,
+      "bytes": 25001.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾整合交付_20261012\\app\\llm_shield\\m2_detect\\__pycache__",
+      "files": 6,
+      "bytes": 42513.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾整合交付_20261012\\app\\llm_shield\\m3_decide\\__pycache__",
+      "files": 3,
+      "bytes": 19021.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾整合交付_20261012\\app\\llm_shield\\m7_egress\\__pycache__",
+      "files": 3,
+      "bytes": 24553.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾整合交付_20261012\\app\\llm_shield\\m8_audit\\__pycache__",
+      "files": 3,
+      "bytes": 11336.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾整合交付_20261012\\app\\llm_shield\\__pycache__",
+      "files": 7,
+      "bytes": 70842.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾整合交付_20261012\\app\\scripts\\__pycache__",
+      "files": 2,
+      "bytes": 13596.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾整合交付_20261012\\app\\tests\\__pycache__",
+      "files": 9,
+      "bytes": 141413.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾整合交付_20261012\\app\\eval\\__pycache__",
+      "files": 2,
+      "bytes": 11186.0
+    },
+    {
+      "action": "removed",
+      "path": "隐盾整合交付_20261012\\app\\.pytest_cache",
+      "files": 4,
+      "bytes": 5624.0
+    }
+  ]
+}

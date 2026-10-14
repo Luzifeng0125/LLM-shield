@@ -1,0 +1,10 @@
+# ============================================================
+# 可选：★ 校园领域预训练 + NER 微调（模块 ②）
+# 需要 NVIDIA GPU。已在 RTX 4060 Laptop 8GB / CUDA 12.x 验证
+# 安装：pip install -r requirements-gpu.txt --index-url https://download.pytorch.org/whl/cu124
+# ============================================================
+torch>=2.6.0
+transformers>=4.46.0
+datasets>=3.0.0
+accelerate>=1.1.0
+seqeval>=1.2.2

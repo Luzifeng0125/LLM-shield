@@ -1,0 +1,60 @@
+# ============================================================
+# 隐盾 接收方定义（模块 ⑦ 三类接收方）
+#   type:  EXTERNAL_MODEL / VIEWER / EGRESS_TOOL
+#   max_level:    允许接收的最高敏感级别
+#   can_restore:  是否允许把代号恢复回真实姓名（模块 ⑥ 授权恢复）
+#   forbidden:    该接收方额外禁止项
+# ============================================================
+version: recipients-v0.1
+
+# ---- 边界 1：发送给模型的请求 ----
+external_model:
+  name: 外部生成服务
+  type: EXTERNAL_MODEL
+  trust: low
+  max_level: 2
+  can_restore: false
+  forbidden: [PHONE, EMAIL, ID_CARD, BANK_CARD, API_KEY, STUDENT_ID, WECHAT, DORM, GRADE, SENSITIVE_ATTR, BUDGET]
+  note: 外部模型不能读本地映射表，不能直接调用高权限本地工具
+
+# ---- 边界 2：展示给用户的结果 ----
+viewer_teacher:
+  name: 查看者·指导老师
+  type: VIEWER
+  trust: high
+  max_level: 4
+  can_restore: true
+  forbidden: []
+
+viewer_peer:
+  name: 查看者·同组学生
+  type: VIEWER
+  trust: medium
+  max_level: 2
+  can_restore: false
+  forbidden: [ID_CARD, BANK_CARD, API_KEY, SENSITIVE_ATTR, BUDGET]
+
+viewer_outside:
+  name: 查看者·校外人员
+  type: VIEWER
+  trust: low
+  max_level: 1
+  can_restore: false
+  forbidden: [PHONE, EMAIL, ID_CARD, BANK_CARD, API_KEY, STUDENT_ID, WECHAT, DORM, GRADE, SENSITIVE_ATTR, BUDGET, PERSON_NAME]
+
+# ---- 边界 3：提交给工具接收端的内容 ----
+egress_tool_public:
+  name: 模拟外发端·公开发布
+  type: EGRESS_TOOL
+  trust: low
+  max_level: 1
+  can_restore: false
+  forbidden: [PHONE, EMAIL, ID_CARD, BANK_CARD, API_KEY, STUDENT_ID, WECHAT, DORM, GRADE, SENSITIVE_ATTR, BUDGET, PERSON_NAME]
+
+egress_tool_internal:
+  name: 模拟外发端·校内系统
+  type: EGRESS_TOOL
+  trust: medium
+  max_level: 3
+  can_restore: false
+  forbidden: [ID_CARD, BANK_CARD, API_KEY, SENSITIVE_ATTR]

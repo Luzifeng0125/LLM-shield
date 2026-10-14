@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-14",
+  "report": {
+    "pages": 15,
+    "all_pages_visually_inspected": true,
+    "renderer": "Microsoft Word PDF export and bundled Poppler",
+    "packaged_renderer_limitation": "LibreOffice is not included in this Windows runtime; native Word used after renderer failure",
+    "visible_layout_findings": 0
+  },
+  "presentation": {
+    "slides": 16,
+    "all_slides_visually_inspected": true,
+    "renderer": "Bundled Artifact Tool",
+    "visible_layout_findings": 0,
+    "finalizer_receipt": "deck_validation.json",
+    "native_powerpoint_open_test": false
+  },
+  "content": {
+    "unverified_model_completion_labeled_as_assumption": true,
+    "unmeasured_results_left_pending": true,
+    "existing_classifier_results_identified_as_synthetic_weak_labels": true,
+    "new_model_weights_or_api_tests_performed_this_task": false
+  }
+}

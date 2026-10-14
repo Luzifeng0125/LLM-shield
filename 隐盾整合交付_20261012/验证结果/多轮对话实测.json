@@ -1,0 +1,10 @@
+{
+  "mode": "real_local_action_model_and_mock_generation",
+  "first_ok": true,
+  "second_ok": true,
+  "turns": 2,
+  "first_user": "负责人：人员庚，期限：2026年10月20日，电话。请整理会议纪要。",
+  "second_user": "负责人：人员庚。任务：海报设计，期限：2026年10月20日。",
+  "raw_name_in_history": false,
+  "raw_phone_in_history": false
+}

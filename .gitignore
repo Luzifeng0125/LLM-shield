@@ -1,0 +1,52 @@
+# Only the maintained project and its supporting material belong in this repo.
+/*
+!/.gitignore
+!/.gitattributes
+!/README.md
+!/隐盾整合交付_20261012/
+!/隐盾提交材料_20261014/
+!/tools/
+!/docs/
+
+# Local credentials, environments, uploaded materials and generated traces.
+**/.env
+**/.env.*
+!**/.env.example
+**/*.env.local
+**/.venv/
+**/venv/
+**/node_modules/
+**/runtime/
+**/__pycache__/
+**/.pytest_cache/
+**/pytest-cache-files-*/
+**/*.py[cod]
+**/*.log
+**/~$*
+**/outputs/
+**/data/uploads/*
+!**/data/uploads/.gitkeep
+**/data/campus_corpus/raw/
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+
+# The active synthetic review package is shared; human reviews stay local.
+/隐盾整合交付_20261012/人工复核/*
+!/隐盾整合交付_20261012/人工复核/使用说明.md
+!/隐盾整合交付_20261012/人工复核/第二台电脑验收.md
+!/隐盾整合交付_20261012/人工复核/当前试标.json
+!/隐盾整合交付_20261012/人工复核/试标运行/
+/隐盾整合交付_20261012/人工复核/试标运行/*
+!/隐盾整合交付_20261012/人工复核/试标运行/a08ca7f5ced1/
+/隐盾整合交付_20261012/人工复核/试标运行/a08ca7f5ced1/*
+!/隐盾整合交付_20261012/人工复核/试标运行/a08ca7f5ced1/evidence.json
+!/隐盾整合交付_20261012/人工复核/试标运行/a08ca7f5ced1/独立复核.html
+/隐盾整合交付_20261012/交付文件清单.json
+
+# Rendered intermediate files can be regenerated from the retained scripts.
+/tools/submission/docx_qa/
+/tools/submission/slides_qa/
+/tools/submission/draft.pptx*
+/tools/qa/automated_review_ui_only.json

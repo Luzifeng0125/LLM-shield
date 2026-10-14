@@ -1,0 +1,168 @@
+# ============================================================
+# 隐盾 规则库 v0 —— 数据属性 / 敏感类别 / 硬约束 / 候选动作
+# 对应推进顺序第 1 步「定规范」的产出物
+# ============================================================
+version: rules-v0.1
+
+# ------------------------------------------------------------
+# 一、敏感类别字典
+#   kind:      format=格式规则（正则+校验） / semantic=语义实体（词典+上下文）
+#   level:     敏感级别 1(低) ~ 4(极高)，用于硬约束的「最高可披露级别」比较
+#   hard_ban:  true 表示任何任务/任何接收方都禁止外发（只能删除或本地聚合）
+# ------------------------------------------------------------
+categories:
+  PHONE:
+    name: 手机号
+    kind: format
+    level: 3
+    hard_ban: false
+  EMAIL:
+    name: 电子邮箱
+    kind: format
+    level: 2
+    hard_ban: false
+  ID_CARD:
+    name: 身份证号
+    kind: format
+    level: 4
+    hard_ban: true
+  BANK_CARD:
+    name: 银行卡号
+    kind: format
+    level: 4
+    hard_ban: true
+  STUDENT_ID:
+    name: 学号
+    kind: format
+    level: 3
+    hard_ban: false
+  API_KEY:
+    name: 密钥/口令
+    kind: format
+    level: 4
+    hard_ban: true
+  WECHAT:
+    name: 微信号/QQ
+    kind: format
+    level: 2
+    hard_ban: false
+  BUDGET:
+    name: 预算/金额
+    kind: format
+    level: 3
+    hard_ban: false
+  PERSON_NAME:
+    name: 姓名
+    kind: semantic
+    level: 2
+    hard_ban: false
+  ORG:
+    name: 机构/社团名
+    kind: semantic
+    level: 2
+    hard_ban: false
+  LOCATION:
+    name: 地点
+    kind: semantic
+    level: 1
+    hard_ban: false
+  DORM:
+    name: 宿舍号
+    kind: format
+    level: 2
+    hard_ban: false
+  GRADE:
+    name: 成绩/绩点
+    kind: format
+    level: 3
+    hard_ban: false
+  SENSITIVE_ATTR:
+    name: 敏感个人属性（政治面貌/宗教/健康/家庭）
+    kind: semantic
+    level: 4
+    hard_ban: true
+
+# ------------------------------------------------------------
+# 二、候选动作（模块 ③ 的六种动作）
+#   disclosure_cost: 披露代价，越小越「披露少」，用于词典序第 (3) 步排序
+# ------------------------------------------------------------
+actions:
+  DELETE:
+    name: 删除
+    disclosure_cost: 0
+    desc: 从发送内容中完全移除该片段
+  LOCAL_AGGREGATE:
+    name: 本地聚合
+    disclosure_cost: 1
+    desc: 本地完成计数/求和/分组，仅发送汇总结果，不发明细
+  GENERALIZE:
+    name: 泛化
+    disclosure_cost: 2
+    desc: 降低精度，如「计算机学院」→「某学院」、具体日期→月份
+  PSEUDONYMIZE:
+    name: 代号替换
+    disclosure_cost: 3
+    desc: 会话内稳定代号替换真实姓名，保持人物—事项—期限对应关系
+  RETAIN:
+    name: 受控保留
+    disclosure_cost: 5
+    desc: 经权限核对后原样保留（仅限已获准公开的事实）
+  PAUSE:
+    name: 暂停外发
+    disclosure_cost: 99
+    desc: 无可行方案时停止发送并说明触发规则
+
+# ------------------------------------------------------------
+# 三、全局硬约束（不可被效用评分抵消）
+# ------------------------------------------------------------
+hard_constraints:
+  # (1) 绝对禁止项：无论任务、无论接收方
+  absolute_ban:
+    - ID_CARD
+    - BANK_CARD
+    - API_KEY
+    - SENSITIVE_ATTR
+
+  # (2) 高风险处理规则：低置信 + 高风险 一律禁止上传
+  low_confidence_threshold: 0.60
+  low_confidence_ban_level: 4   # 置信度低于阈值且级别 >= 该值 → 禁止任何形式外发
+
+  # (3) 结构化表格：命中敏感列名的整列默认按「本地聚合」处理
+  sensitive_columns:
+    - 手机号
+    - 电话
+    - 联系方式
+    - 邮箱
+    - 身份证
+    - 学号
+    - 银行卡
+    - 宿舍
+    - 家庭住址
+    - 成绩
+    - 绩点
+    - 政治面貌
+    - 预算
+    - 金额
+
+  # (4) 接收方未知 → 一律拒绝（模块 ⑦）
+  unknown_recipient_policy: deny
+
+# ------------------------------------------------------------
+# 四、泛化规则（模块 ⑥ 转换用）
+# ------------------------------------------------------------
+generalization:
+  ORG: "某学生组织"
+  LOCATION: "校内某场所"
+  DORM: "校内宿舍"
+  DATE_PATTERN: "日期→月份"   # 2026-03-15 -> 2026年3月
+  BUDGET: "金额区间化"          # 12800元 -> 1万~2万元
+
+# ------------------------------------------------------------
+# 五、代号替换配置
+# ------------------------------------------------------------
+pseudonym:
+  # 会话内稳定；不同会话映射隔离
+  prefix_pool: [甲, 乙, 丙, 丁, 戊, 己, 庚, 辛, 壬, 癸]
+  person_template: "人员{code}"
+  org_template: "组织{code}"
+  scope: session          # session=会话内隔离 / global=全局（不建议）

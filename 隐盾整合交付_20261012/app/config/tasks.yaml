@@ -1,0 +1,94 @@
+# ============================================================
+# 隐盾 任务模板 v0 —— 三类首版任务
+#   must_retain:  完成任务必须保留的信息（缺失 → 任务不可完成）
+#   never_send:   任何情况下都不得外发（叠加在 rules.yaml 的 absolute_ban 之上）
+#   prefer:       离线合成启动标签的参考动作；线上模型决策不读取此字段
+# ============================================================
+version: tasks-v0.1
+
+activity_stats:
+  name: 活动统计与总结
+  desc: 统计一次校园活动的参与情况并生成总结文案
+  purpose: 生成汇总统计与公开总结，不识别到个人
+  must_retain:
+    - EVENT_NAME      # 活动名称
+    - COUNT           # 人数
+    - DATE            # 时间
+    - PUBLIC_FACT     # 可公开事实
+  never_send:
+    - PHONE
+    - EMAIL
+    - WECHAT
+    - STUDENT_ID
+    - ID_CARD
+  prefer:
+    PHONE: DELETE
+    EMAIL: DELETE
+    WECHAT: DELETE
+    STUDENT_ID: DELETE
+    PERSON_NAME: LOCAL_AGGREGATE
+    ORG: RETAIN
+    LOCATION: RETAIN
+    DORM: DELETE
+    BUDGET: GENERALIZE
+  # 任务完成标准（模块 ⑤ 效用估计用）
+  completion_criteria:
+    - 人数统计正确
+    - 个人明细未上传
+    - 活动类别与可公开事实保留
+
+meeting_minutes:
+  name: 会议纪要与任务分配
+  desc: 把一次例会记录整理成纪要，并抽取任务分派
+  purpose: 生成可执行的任务分派清单，需保留人物—事项—期限对应关系
+  must_retain:
+    - PERSON_ROLE     # 人物与职责对应
+    - TASK_ITEM       # 事项
+    - DEADLINE        # 期限
+  never_send:
+    - PHONE
+    - EMAIL
+    - ID_CARD
+    - SENSITIVE_ATTR
+  prefer:
+    PERSON_NAME: PSEUDONYMIZE
+    PHONE: DELETE
+    EMAIL: DELETE
+    WECHAT: DELETE
+    ORG: RETAIN
+    LOCATION: RETAIN
+    DORM: DELETE
+    BUDGET: DELETE
+    STUDENT_ID: DELETE
+  completion_criteria:
+    - 替换后负责人/事项/期限三者仍一一对应
+    - 无关联系方式已删除
+
+project_intro:
+  name: 项目对外介绍
+  desc: 把项目计划书改写成可对外发布的介绍文案
+  purpose: 对外发布已获准公开的项目信息
+  must_retain:
+    - PROJECT_NAME
+    - PUBLIC_FACT
+    - ORG_PUBLIC
+  never_send:
+    - BUDGET
+    - PHONE
+    - EMAIL
+    - ID_CARD
+    - STUDENT_ID
+    - SENSITIVE_ATTR
+  prefer:
+    BUDGET: DELETE
+    PHONE: DELETE
+    EMAIL: DELETE
+    STUDENT_ID: DELETE
+    PERSON_NAME: GENERALIZE
+    ORG: RETAIN
+    LOCATION: GENERALIZE
+    DORM: DELETE
+  completion_criteria:
+    - 内部预算与联系方式已删除
+    - 未授权接收方的发送被阻止
+    - 已获准公开的事实完整保留

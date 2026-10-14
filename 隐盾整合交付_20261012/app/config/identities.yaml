@@ -1,0 +1,47 @@
+# ============================================================
+# 隐盾 预设身份与权限（模块 ①）
+#   readable:    该身份有权读取的材料（无权材料在入模前拒绝）
+#   can_send_to: 可向哪些接收方提供
+#   max_level:   可提供的最高敏感级别
+# ============================================================
+version: identities-v0.1
+
+student_leader:
+  name: 学生组织负责人
+  desc: 社团/学生会负责人，可读取本组织材料
+  readable:
+    - activity_roster
+    - meeting_minutes
+    - project_plan
+    - uploaded          # 用户自行上传的材料，视为本人已授权输入
+  can_send_to:
+    - external_model
+    - viewer_teacher
+    - viewer_peer
+    - egress_tool_public
+    - egress_tool_internal
+  max_level: 3
+  can_restore: true
+
+course_member:
+  name: 课程小组成员
+  desc: 课程小组成员，仅可读取课程相关材料
+  readable:
+    - meeting_minutes
+    - uploaded
+  can_send_to:
+    - external_model
+    - viewer_peer
+  max_level: 2
+  can_restore: false
+
+external_partner:
+  name: 校外合作方
+  desc: 校外人员，仅可接触已获准公开材料
+  readable:
+    - project_intro_draft
+    - uploaded
+  can_send_to:
+    - egress_tool_public
+  max_level: 1
+  can_restore: false
