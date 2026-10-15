@@ -1,29 +1,475 @@
-.chat-layout { display: grid; grid-template-columns: 285px minmax(0,1fr); gap: 22px; max-width: 1350px; margin: 24px auto; padding: 0 24px; }
-.chat-layout .config { align-self: start; }
-.chat-note { color: #66758b; line-height: 1.75; font-size: 13px; margin: 16px 0; }
-.chat-main { display: flex; flex-direction: column; padding: 24px; min-height: 72vh; }
-.chat-heading { display: flex; align-items: center; justify-content: space-between; }
-.chat-notice { background: #eef3f8; padding: 13px 16px; border-radius: 6px; margin: 12px 0; line-height: 1.6; }
-.chat-notice.error { color: #932424; background: #fff1f1; }
-.chat-messages { flex: 1; max-height: 52vh; overflow: auto; }
-.chat-message { margin: 18px 0; padding-bottom: 18px; border-bottom: 1px solid #e4e9ef; }
-.chat-message h3 { font-size: 13px; color: #526174; margin: 0 0 8px; }
-.chat-message p { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.8; margin: 0; }
-.chat-composer { border-top: 1px solid #dce4ec; padding-top: 18px; }
-.chat-controls { display: flex; justify-content: space-between; align-items: center; }
-.chat-layout textarea { width: 100%; box-sizing: border-box; }
-button:disabled { opacity: .55; cursor: wait; }
-.service-status { color: #486078; font-size: 12px; max-width: 45%; text-align: right; }
-.settings { margin-top: 22px; padding-top: 16px; border-top: 1px solid #e4e9ef; }
-.settings summary, .processing summary { cursor: pointer; font-weight: 600; margin-bottom: 14px; }
-.material-list { font-size: 12px; color: #66758b; }
-.material-row { padding: 10px 0; border-bottom: 1px solid #e4e9ef; overflow-wrap: anywhere; }
-.material-actions { display: flex; gap: 6px; margin-top: 8px; }
-.compact { padding: 5px 8px; font-size: 11px; }
-.attachments { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
-.attachment { display: flex; align-items: center; gap: 8px; padding: 4px 8px; background: #eef3f8; border-radius: 6px; font-size: 12px; overflow-wrap: anywhere; max-width: 100%; }
+/* ============================================================
+   隐盾 · 对话区（Apple / iMessage 风格）
+   依据：Apple HIG（Materials / Layout / Typography 原文核对）
+
+   ── 材质层级（本轮修正重点）──
+   HIG 原文："Don't use Liquid Glass in the content layer."
+   → 对话主区**不是**玻璃。它是内容层，用 systemBackground 实色。
+   → 只有「导航/控件层」是玻璃：顶栏（已在 style.css 处理）与输入胶囊。
+   → 因此输入胶囊玻璃与其父容器实色相邻 = 一层玻璃，不构成 stacking。
+
+   ── 内容层用 standard material ──
+   HIG："use standard materials for elements in the content layer"
+   提示词卡、处理详情、附件标签 → 实色卡片 + 发丝分隔，不套 backdrop-filter。
+
+   ── 布局 ──
+   · 正文列宽限 760px（HIG：限制文本宽度以获得最佳可读性，中文约 34 字/行）
+   · 气泡圆角 18px，仅尾巴方向收小角
+   · 空态借用 apple.com 的营销版式：大标题 weight 600（不是 700）、
+     上下留白按 48px 级（Apple 瓦片用 48–56px），中文一律 letter-spacing 0
+   ============================================================ */
+
+/* ---------------- 整体布局 ---------------- */
+.chat-layout {
+  display: grid;
+  /* 侧栏 23rem = 368px。原来的 20rem（320px）放不下「名称 + 一句示例」，
+     用户反馈「左边太窄」。 */
+  grid-template-columns: 23rem minmax(0, 1fr);
+  gap: 16px;
+  flex: 1;                                 /* 在 body 的纵向 flex 中占满剩余高度 */
+  min-height: 0;
+  padding: 16px 24px 20px;
+  max-width: 90rem;
+  margin: 0 auto;
+  width: 100%;
+  transition: grid-template-columns var(--dur-base) var(--ease-out);
+}
+.chat-layout.rail-collapsed { grid-template-columns: 4.5rem minmax(0, 1fr); }
+
+/* ---------------- 侧栏（导航层 → 玻璃） ---------------- */
+.config {
+  border-radius: var(--r-lg);
+  padding: 16px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--glass-sidebar);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-hairline);
+  box-shadow: var(--shadow-1);
+}
+
+/* 收起态图标导轨 */
+.rail-nav { display: none; flex-direction: column; gap: 6px; align-items: center; padding-top: 4px; }
+.chat-layout.rail-collapsed .config { padding: 12px 12px; }
+.chat-layout.rail-collapsed .config-body { display: none; }
+.chat-layout.rail-collapsed .rail-nav { display: flex; }
+
+.rail-btn {
+  width: 3rem; height: 3rem; padding: 0;    /* ≥44 点按目标 */
+  display: inline-flex; align-items: center; justify-content: center;
+  border: none; border-radius: var(--r-sm); cursor: pointer;
+  background: transparent; color: var(--label-2);
+  transition: background var(--dur-fast), color var(--dur-fast), transform var(--dur-fast);
+}
+.rail-btn:hover { background: var(--fill); color: var(--sys-blue-text); }
+.rail-btn:active { transform: scale(.94); }
+
+.config-body {
+  flex: 1; min-height: 0;
+  overflow-y: auto; overflow-x: hidden;
+  padding-right: 4px;
+  animation: railIn var(--dur-base) var(--ease-out) both;
+}
+@keyframes railIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: none; }
+}
+
+.config-head { display: flex; gap: 8px; align-items: center; padding-bottom: var(--sp-4); }
+/* 侧栏唯一的主操作（整个界面只有这一个 blue 实心按钮，HIG：一个视图一个主操作）。
+   用户要求「蓝色的框再拉大一点」→ 高度用 --tap-lg(52)，字号提到正文级 18px，
+   圆角随控件变大而变大（与 .btn.compact 用 --r-xs 是同一条规律）。
+   旁边的清除按钮保持 --tap(44)：它是次要操作，不该和主操作抢分量。 */
+.config-head .btn.primary {
+  flex: 1;
+  min-height: var(--tap-lg);
+  font-size: var(--fs-17);
+  border-radius: var(--r-md);
+}
+
+/* ---------------- 对话主区（内容层 → 实色，不套玻璃） ---------------- */
+.chat-main {
+  border-radius: var(--r-lg);
+  display: flex; flex-direction: column;
+  min-height: 0;
+  padding: 20px 0 0;
+  position: relative;
+  overflow: hidden;
+  background: var(--surface);              /* systemBackground / 深色下 elevated */
+  border: 1px solid var(--sep-vibrant);
+  box-shadow: var(--shadow-1);
+}
+
+.chat-heading {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px;
+  padding: 0 26px 22px;
+  flex-shrink: 0;
+}
+.chat-heading h2 {
+  /* 用户两次要求放大：「上面那个『对话』也放大一点」→ 32，
+     再「顶上那一个横列拉大一点点」→ 34（iOS Large Title 的尺寸）。
+     页面标题与空态大标题共用同一档，层级因此一致。
+     line-height 收到 1.25：大字号下 1.5 只是白白撑高行盒，
+     收紧后字更大而横列不会虚胖。 */
+  font-size: var(--fs-28); font-weight: 700; line-height: 1.25;
+  letter-spacing: 0;                           /* 中文不加字距（见 style.css 说明） */
+  color: var(--label);
+}
+/* 标题下的一行「当前任务 · 后端模板」，让用户随时确认自己选的是什么 */
+.heading-text { min-width: 0; }
+.heading-sub {
+  margin-top: 4px;
+  font-size: var(--fs-15); color: var(--label-3);   /* 提到 Subhead，跟着大标题一起变大 */
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* 轮次进度条 */
+.turns-wrap { display: flex; align-items: center; gap: 9px; cursor: help; }
+.turns-track {
+  display: block; width: 60px; height: 5px;
+  background: var(--fill); border-radius: 3px; overflow: hidden;
+}
+.turns-bar {
+  display: block; height: 100%; width: 0;
+  background: var(--sys-blue); border-radius: 3px;
+  transition: width var(--dur-base) var(--ease-out), background var(--dur-fast);
+}
+.turns-wrap.is-warn .turns-bar { background: var(--sys-orange); }
+.turns-wrap.is-full .turns-bar { background: var(--sys-red); }
+.turns-label {
+  font-size: var(--fs-13); font-weight: 500; color: var(--label-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.chat-scroll {
+  flex: 1; min-height: 0; overflow-y: auto; padding: 0 26px;
+  display: flex; flex-direction: column;
+}
+
+.chat-notice {
+  flex-shrink: 0;
+  max-width: var(--col); margin: 0 auto 16px;
+  padding: 12px 16px;
+  border-radius: var(--r-md);
+  background: var(--sys-blue-soft);
+  color: var(--info-text);
+  line-height: 1.5;
+  font-size: var(--fs-13);
+}
+.chat-notice.error { color: var(--danger-text); background: var(--danger-soft); }
+
+/* ---------------- 消息 ---------------- */
+.chat-messages { width: 100%; max-width: var(--col); margin: 0 auto; padding-bottom: 8px; }
+
+/* 只有「空态独占」时消息容器才吃满剩余高度，空态因此能在剩余空间里
+   垂直居中（Apple 的空态是居中的，不是贴在标题下面）。
+   为什么用 :has() 而不是无条件 flex:1 —— 一旦无条件吃满，有消息时
+   后面的「隐私处理详情」会被推到滚动区最底部，而不是紧跟在消息之后。 */
+.chat-messages:has(> .empty-conversation) {
+  flex: 1 1 auto;
+  display: flex; flex-direction: column;
+}
+/* 上下 auto 外边距把空态推到中间；:has() 不成立时这几条不生效 */
+.chat-messages:has(> .empty-conversation) > .empty-conversation { margin: auto 0; }
+
+.chat-message {
+  display: flex; gap: 10px;
+  margin-bottom: 14px;
+  animation: bubbleIn 480ms var(--ease-spring) both;
+}
+.chat-message.is-user { flex-direction: row-reverse; }
+
+@keyframes bubbleIn {
+  from { opacity: 0; transform: translateY(14px) scale(.94); }
+  60% { opacity: 1; }
+  to { opacity: 1; transform: none; }
+}
+
+.avatar {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: var(--fs-13); font-weight: 600; line-height: 1;
+}
+.is-assistant .avatar {
+  background: linear-gradient(160deg, #4aa3ff, #0a84ff);
+  color: #fff;
+  box-shadow: var(--shadow-accent);
+}
+.is-user .avatar { background: var(--surface-3); color: var(--label-2); }
+
+.bubble { max-width: min(76%, 580px); min-width: 0; }
+.bubble-head {
+  font-size: var(--fs-11); font-weight: 500; color: var(--label-3);
+  margin: 0 6px 5px;
+}
+.is-user .bubble-head { text-align: right; }
+
+.bubble-text {
+  padding: 11px 16px;
+  border-radius: 18px;
+  /* 17pt Body：中文长文更耐读；同时使蓝底白字落入 WCAG「大字」档 */
+  font-size: var(--fs-17);
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.is-assistant .bubble-text {
+  background: var(--bubble-assistant);   /* systemGray6 / 深色下 elevated */
+  color: var(--label);
+  border-bottom-left-radius: 6px;
+}
+.is-user .bubble-text {
+  background: linear-gradient(170deg, #3d9bff, var(--sys-blue));
+  color: #fff;
+  border-bottom-right-radius: 6px;
+  box-shadow: var(--shadow-accent-lg);
+}
+
+/* ---------------- 空态引导（Spotlight 式） ----------------
+   留白交给上面的 auto 外边距做垂直居中，这里只保留一个「矮窗口时
+   不至于贴住标题」的最小间距。 */
+.empty-conversation { text-align: center; padding: 24px 0 16px; }
+.empty-conversation .shield-icon {
+  width: 76px; height: 76px; margin: 0 auto 22px;
+  border-radius: 24px;
+  background: var(--surface);
+  box-shadow: var(--shadow-2);
+  border: 1px solid var(--sep-vibrant);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--sys-blue-text);
+  animation: floatIcon 480ms var(--ease-spring) both;
+}
+@keyframes floatIcon {
+  from { opacity: 0; transform: scale(.8) translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+/* 空态大标题借 apple.com 的营销版式：weight 600 而非 700
+   （apple.com 的 .typography-headline 是 48px/600），中文不加字距。 */
+.empty-title {
+  font-size: var(--fs-28);              /* Title 1 */
+  font-weight: 600; letter-spacing: 0;
+  color: var(--label); margin-bottom: 8px;
+}
+.empty-sub { font-size: var(--fs-15); color: var(--label-3); margin-bottom: 30px; line-height: 1.55; }
+
+/* 预设提示词：内容层 → 实色卡（不套玻璃，避免与父层 stacking） */
+.prompt-group { max-width: 620px; margin: 0 auto; text-align: left; }
+.prompt-group-title {
+  font-size: var(--fs-13); font-weight: 600; color: var(--label-3);
+  letter-spacing: 0;                       /* 中文不做 uppercase / 加字距 */
+  margin-bottom: 10px; text-align: center;
+}
+.prompt-chips { display: flex; flex-direction: column; gap: 9px; }
+.prompt-chip {
+  display: flex; align-items: center; gap: 11px;
+  text-align: left; width: 100%;
+  min-height: 52px; padding: 13px 16px;
+  font-family: inherit; font-size: var(--fs-15); color: var(--label);
+  background: var(--surface-3);
+  border: 1px solid var(--sep-vibrant);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-spring),
+              box-shadow var(--dur-fast), background var(--dur-fast),
+              border-color var(--dur-fast);
+  line-height: 1.45;
+}
+.prompt-chip:hover {
+  transform: translateY(-1px);
+  background: var(--surface);
+  border-color: var(--sys-blue);
+  box-shadow: var(--shadow-2);
+}
+.prompt-chip:active { transform: scale(.98); }
+.prompt-chip:disabled { opacity: var(--disabled-opacity); cursor: not-allowed; transform: none; }
+
+.prompt-chip .chip-ico {
+  flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--sys-blue-soft); color: var(--sys-blue-text);
+  display: flex; align-items: center; justify-content: center;
+}
+.prompt-chip .chip-text { min-width: 0; }
+.prompt-chip .chip-arrow { margin-left: auto; color: var(--label-4); flex-shrink: 0; }
+
+/* ---------------- 悬浮输入胶囊（唯一内容层之上的玻璃控件） ---------------- */
+.composer-wrap {
+  flex-shrink: 0;
+  padding: 14px 26px 22px;
+  max-width: calc(var(--col) + 52px);        /* 与内容列同宽 + 左右内边距 */
+  margin: 0 auto;
+  width: 100%;
+  /* 顶部渐隐，提示内容可继续滚动（HIG scroll edge effect 思路） */
+  mask-image: linear-gradient(to bottom, transparent 0, #000 16px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16px);
+}
+
+.chat-composer { width: 100%; }
+
+.composer-capsule {
+  display: flex; align-items: flex-end; gap: 8px;
+  padding: 8px 8px 8px 18px;
+  background: var(--glass-composer);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-hairline);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-2);
+  transition: box-shadow var(--dur-fast), border-color var(--dur-fast);
+}
+.composer-capsule:focus-within {
+  box-shadow: var(--shadow-3);
+  border-color: var(--sys-blue);
+}
+
+.composer-capsule textarea {
+  flex: 1; min-width: 0;
+  padding: 8px 0;
+  max-height: 132px;
+  min-height: var(--tap);                /* 44：文本区自身也是点按目标。
+                                            胶囊高度本就被 44px 图标按钮决定，
+                                            所以这一条不改变外观，只修正语义 */
+  background: transparent;
+  border: none; box-shadow: none;
+  font-size: var(--fs-17);
+  line-height: 1.45;
+  resize: none;
+}
+.composer-capsule textarea:hover { background: transparent; }
+.composer-capsule textarea:focus { outline: none; background: transparent; box-shadow: none; }
+
+/* 胶囊内图标按钮：由 --tap 派生，随字号自适应，≥44 */
+.capsule-icon-btn {
+  flex-shrink: 0; width: var(--tap); height: var(--tap);
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%; cursor: pointer;
+  color: var(--label-2);
+  transition: background var(--dur-fast), color var(--dur-fast), transform var(--dur-fast);
+}
+.capsule-icon-btn:hover { background: var(--fill); color: var(--sys-blue-text); }
+.capsule-icon-btn:active { transform: scale(.92); }
+.capsule-icon-btn.is-disabled { opacity: var(--disabled-opacity); pointer-events: none; }
+
+/* 内嵌发送键（iMessage 向上箭头） */
+.capsule-send {
+  flex-shrink: 0; width: 2.25rem; height: 2.25rem; padding: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: none; border-radius: 50%; cursor: pointer;
+  background: var(--sys-blue); color: #fff;
+  box-shadow: var(--shadow-accent);
+  transition: transform var(--dur-fast) var(--ease-spring),
+              background var(--dur-fast), opacity var(--dur-fast);
+}
+.capsule-send::before {
+  content: ''; width: 18px; height: 18px; background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 19V5M6 11l6-6 6 6' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 19V5M6 11l6-6 6 6' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+.capsule-send:hover { background: var(--sys-blue-hover); }
+.capsule-send:active { transform: scale(.9); }
+.capsule-send:disabled {
+  background: var(--label-4); box-shadow: none;
+  opacity: .75; cursor: not-allowed;       /* 蓝底上的禁用键需更实才看得出形状 */
+}
+.capsule-send:disabled:active { transform: none; }
+
+/* ---------------- 附件标签（内容层 → 实色） ---------------- */
+.attachments { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.attachments:empty { display: none; }
+.attachment {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 6px 4px 14px;
+  background: var(--surface-3);
+  border: 1px solid var(--sep-vibrant);
+  border-radius: var(--r-pill);
+  font-size: var(--fs-13); color: var(--label-2);
+  overflow-wrap: anywhere; max-width: 100%;
+  animation: bubbleIn 340ms var(--ease-spring) both;
+}
 .attachment span { min-width: 0; }
-.processing { margin: 12px 0; color: #526174; font-size: 12px; }
-#decisions { max-height: 180px; overflow: auto; line-height: 1.7; }
-.empty-conversation { color: #7a8798; text-align: center; max-width: 420px; margin: 70px auto; line-height: 2; }
-@media (max-width: 800px) { .chat-layout { grid-template-columns: 1fr; padding: 0 12px; } .chat-main { padding: 16px; } }
+.attachment .btn.compact { color: var(--label-3); }
+.attachment .btn.compact:hover { color: var(--danger); background: var(--danger-soft); }
+.attachment.is-processing { color: var(--warn-text); background: var(--warn-soft); border-color: var(--warn); }
+
+/* ---------------- 隐私处理详情（内容层 → 实色） ---------------- */
+.processing {
+  flex-shrink: 0;
+  max-width: var(--col); margin: 10px auto 0;
+  padding: 14px 16px;
+  border-radius: var(--r-md);
+  background: var(--surface-3);
+  border: 1px solid var(--sep-vibrant);
+  font-size: var(--fs-13); color: var(--label-2);
+}
+#decisions {
+  max-height: 180px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 8px;
+  margin-top: 8px;
+}
+.decision { display: flex; align-items: flex-start; gap: 9px; line-height: 1.5; }
+.decision-badge {
+  flex-shrink: 0; padding: 2px 9px; border-radius: var(--r-pill);
+  font-size: var(--fs-11); font-weight: 600; white-space: nowrap;
+}
+.decision-reason { color: var(--label-2); word-break: break-word; }
+.decision-badge.DELETE, .decision-badge.PAUSE { background: var(--danger-soft); color: var(--danger-text); }
+.decision-badge.PSEUDONYMIZE { background: var(--sys-blue-soft); color: var(--sys-blue-text); }
+.decision-badge.GENERALIZE { background: var(--warn-soft); color: var(--warn-text); }
+.decision-badge.RETAIN { background: var(--ok-soft); color: var(--ok-text); }
+.decision-badge.LOCAL_AGGREGATE { background: var(--purple-soft); color: var(--purple-text); }
+
+/* ---------------- 二次确认弹窗（最厚玻璃，独立层不叠玻璃） ---------------- */
+.modal-mask {
+  position: fixed; inset: 0; z-index: 100;
+  background: var(--mask);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: fadein var(--dur-fast) ease-out both;
+}
+.modal {
+  width: 100%; max-width: 320px;
+  background: var(--glass-modal);        /* thick：文字多的组件用最厚档 */
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-hairline);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-3);
+  padding: 22px 20px 16px;
+  text-align: center;
+  animation: alertIn 340ms var(--ease-spring) both;
+}
+@keyframes alertIn {
+  from { opacity: 0; transform: scale(.9); }
+  to { opacity: 1; transform: none; }
+}
+.modal-title { font-size: var(--fs-17); font-weight: 660; color: var(--label); margin-bottom: 8px; }
+.modal-body { font-size: var(--fs-13); color: var(--label-2); line-height: 1.55; margin-bottom: 20px; }
+.modal-actions { display: flex; gap: 10px; }
+.modal-actions .btn { flex: 1; min-width: 0; }
+.btn.danger { background: var(--sys-red); color: #fff; }
+.btn.danger:hover { filter: brightness(.92); }
+
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---------------- 响应式 ---------------- */
+@media (max-width: 1000px) {
+  body { overflow: auto; }
+  .chat-layout {
+    grid-template-columns: 1fr;
+    min-height: calc(100vh - 64px);
+    padding: 14px;
+    gap: 14px;
+  }
+  .config { overflow: visible; }
+  .config-body { overflow: visible; }
+  .chat-main { min-height: 76vh; padding-top: 16px; }
+  .chat-heading, .chat-scroll { padding-left: 18px; padding-right: 18px; }
+  .composer-wrap { padding: 12px 18px 16px; mask-image: none; -webkit-mask-image: none; }
+  .bubble { max-width: 86%; }
+  .empty-title { font-size: var(--fs-20); }
+}
