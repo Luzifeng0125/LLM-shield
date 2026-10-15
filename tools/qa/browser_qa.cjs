@@ -38,14 +38,18 @@ const sleep = ms => new Promise(r => setTimeout(r,ms));
     assert((await page.locator('#apiStatus').innerText()).includes('未调用真实 API'));
     await page.locator('#file').setInputFiles({name:'browser_test.txt',mimeType:'text/plain',buffer:Buffer.from('负责人：张明，期限：2026年10月20日，电话13812345678。请整理会议纪要。')});
     await page.waitForFunction(()=>document.querySelector('#attachments').textContent.includes('browser_test.txt'));
-    await page.getByRole('button',{name:'移出本轮'}).click();
+    // 新版把「移出本轮」简化为「移出」（所在分组已表达「本轮」语义）
+    await page.getByRole('button',{name:'移出',exact:true}).click();
     assert.equal(await page.locator('#attachments').innerText(),'');
-    await page.getByRole('button',{name:'加入本轮',exact:true}).click();
+    // 文件库里「加入本轮」由 button 改成了 iOS 拨动开关（role=switch），
+    // getByRole('button') 再也匹配不到；aria-label 形如 将「<文件名>」加入本轮。
+    await page.getByRole('switch',{name:/加入本轮/}).check();
     await page.locator('#send').click();
-    await page.waitForFunction(()=>document.querySelector('#turns').textContent==='1 / 20 轮');
+    // 轮次标签去掉冗余的「轮」字（进度条已表达同一含义）
+    await page.waitForFunction(()=>document.querySelector('#turns').textContent==='1 / 20');
     await page.locator('#message').fill('负责人：张明。任务：海报设计，期限：2026年10月20日。');
     await page.locator('#send').click();
-    await page.waitForFunction(()=>document.querySelector('#turns').textContent==='2 / 20 轮');
+    await page.waitForFunction(()=>document.querySelector('#turns').textContent==='2 / 20');
     const safeText=await page.locator('#messages').innerText();
     assert(!safeText.includes('张明') && !safeText.includes('13812345678'));
     assert.equal(await page.locator('.chat-message').count(),4);
@@ -60,12 +64,15 @@ const sleep = ms => new Promise(r => setTimeout(r,ms));
     assert(sessionId);
     await fetch(origin+'/api/chat/'+sessionId,{method:'DELETE'});
     await page.locator('#newChat').click();
-    await page.waitForFunction(()=>document.querySelector('#turns').textContent==='0 / 20 轮' && document.querySelector('#notice').textContent.includes('新对话已准备好'));
+    await page.waitForFunction(()=>document.querySelector('#turns').textContent==='0 / 20' && document.querySelector('#notice').textContent.includes('新对话已准备好'));
     assert(await page.locator('#identity').isEnabled());
     await page.locator('#clearChat').click();
     await page.waitForFunction(()=>document.querySelector('#notice').textContent.includes('代号映射已清除'));
-    await page.getByRole('button',{name:'删除文件',exact:true}).click();
-    await page.waitForFunction(()=>document.querySelector('#library').textContent.includes('尚未上传材料'));
+    // 新版删除本机材料改成「先弹确认框再删」的两步操作：
+    // 材料行按钮的 aria-label 是 删除「<文件名>」，确认框主按钮文案是「删除」。
+    await page.getByRole('button',{name:/^删除「/}).click();
+    await page.getByRole('button',{name:'删除',exact:true}).click();
+    await page.waitForFunction(()=>document.querySelector('#library').textContent.includes('还没有文件'));
     await page.goto(origin+'/');
     assert.equal(await page.locator('a[href="/chat"]').count(),0);
     assert.deepEqual(errors,[]);
