@@ -18,7 +18,9 @@ from llm_shield.schema import Action, Segment, Span
 class EgressSafetyTests(unittest.TestCase):
     def setUp(self):
         self.gateway = gateway.EgressGateway(Auditor())
-        self.ner = patch("llm_shield.config.use_campus_ner", return_value=False)
+        # 外发复扫走的是默认识别链。这里把可选的 GLiNER 关掉，
+        # 让测试只依赖零成本的「正则 + 词典」底座，不加载 1GB 权重。
+        self.ner = patch("llm_shield.config.use_gliner", return_value=False)
         self.ner.start()
         self.addCleanup(self.ner.stop)
 

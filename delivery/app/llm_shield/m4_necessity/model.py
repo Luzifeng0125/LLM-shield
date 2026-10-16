@@ -10,10 +10,13 @@ from collections import Counter
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from ..config import ROOT, recipients, tasks
+from ..config import necessity_model_path, recipients, tasks
 from ..schema import Action, Segment
 
-MODEL_PATH = ROOT / "models" / "necessity_action.joblib"
+# 决策模型路径来自统一的模型目录（config.necessity_model_path()）：
+# 默认 <SHIELD_MODEL_DIR>/necessity_action.joblib，缺失时回退到项目内 models/。
+# 不再写死路径，避免「模型到底放在哪个目录」这种问题。
+MODEL_PATH = necessity_model_path()
 ARTIFACT_TYPE = "llm-shield-action-policy"
 SCHEMA_VERSION = 2
 FEATURE_VERSION = 2

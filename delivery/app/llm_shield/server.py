@@ -20,7 +20,6 @@ from .m1_access.file_loader import (MAX_BYTES, SUPPORTED, ParseError,
                                     parse_upload)
 from .m1_access.loader import list_materials, load_material
 from .m1_access.identity import check_provide, check_read
-from .m2_detect.pipeline import build_detectors
 from .m4_necessity.model import get_model
 from .m8_audit.audit import get_auditor
 from .pipeline import preview_only, run_pipeline
@@ -28,10 +27,11 @@ from .schema import Material, ShieldRequest
 from .chat import STORE, ChatError, send_turn, snapshot
 
 def _warmup() -> None:
-    """启动预热。
+    """启动预热：把两个模型的冷启动开销从「第一个用户请求」挪到「服务启动」。
 
-    必要性模型首次加载需反序列化 TF-IDF 词表，实测约 1.8s（一次性开销），
-    稳态推理只要 ~0.4ms。放在启动时做，避免第一个请求承担冷启动延迟。
+    · 决策模型：首次加载需反序列化 TF-IDF 词表，实测约 1.8s，稳态 ~0.4ms。
+    · GLiNER（启用时）：加载约 8s、占 ~1.1GB 显存，稳态推理短句 ~21ms。
+      不预热的话第一个用户请求要干等 8 秒。
     """
     try:
         from .m4_necessity.model import get_model
@@ -39,9 +39,23 @@ def _warmup() -> None:
         model = get_model()
         model.score(Segment(seg_id="warmup", text="预热", start=0, end=2),
                     "meeting_minutes", "external_model")
-        print(f"[预热] 必要性判别模型已就绪：{model.backend}")
+        print(f"[预热] 决策模型已就绪：{model.backend}")
     except Exception as exc:
         print(f"[预热] 本地决策模型不可用，将暂停外发：{exc}")
+
+    if C.use_gliner():
+        try:
+            from .m2_detect.pipeline import build_detectors
+            gliner = [d for d in build_detectors(use_gliner=True) if d.name == "gliner"]
+            if gliner:
+                gliner[0].detect("预热")
+                print(f"[预热] GLiNER 识别模型已就绪：{gliner[0].reason}")
+            else:
+                print("[预热] GLiNER 未挂载，识别将退回规则底座")
+        except Exception as exc:
+            print(f"[预热] GLiNER 不可用（{exc}）；识别退回规则底座，不阻断服务")
+    else:
+        print("[预热] GLiNER 未启用（SHIELD_USE_GLINER=false），识别走规则+词典底座")
 
 
 @asynccontextmanager
@@ -160,9 +174,13 @@ def api_config(include_builtin: bool = False):
             "necessity_reason": get_model().reason,
             "necessity_available": get_model().available,
             "decision_policy": "model_only",
-            "campus_ner": {
-                "available": any(d.name == "campus_ner" for d in build_detectors()),
-                "note": "敏感识别使用规则底座；领域 NER 需配置显式启用",
+            # 识别层状态：只读配置，不实例化检测器
+            # （GLiNER 加载约 8s，不能放在每次 /api/config 请求里）
+            "recognizer": {
+                "detectors": ["regex", "dict"] + (["gliner"] if C.use_gliner() else []),
+                "gliner_enabled": C.use_gliner(),
+                "gliner_model_dir": C.gliner_model_dir(),
+                "note": "格式类由带校验位的正则权威判定；GLiNER 只负责语义 5 类",
             },
             "llm": {
                 "mode": C.llm_settings()["mode"],

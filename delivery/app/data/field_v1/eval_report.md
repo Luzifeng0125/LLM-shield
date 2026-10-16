@@ -2,7 +2,7 @@
 隐盾 v3 识别层 —— 独立手写评测集 field_v1 评测报告
 ==========================================================================
 
-生成时间：2026-10-16T18:15:36
+生成时间：2026-10-16T22:32:48
 
 - **field_v1（独立手写集）**：87 条 / 149 个实体 / 纯负例 17 条
 - **gold_v3 test（旧留出集，与训练同源）**：80 条 / 124 个实体 / 纯负例 12 条
@@ -50,7 +50,7 @@
 | L2 中 | 1.000 | 0.556 | 0.714 | 40 | 0 | 32 | DORM,EMAIL,PERSON_NAME,WECHAT |
 | L3-L4 高 | 0.926 | 0.909 | 0.917 | 50 | 4 | 5 | API_KEY,BANK_CARD,BUDGET,GRADE,ID_CARD,PHONE,SENSITIVE_ATTR,STUDENT_ID |
 
-耗时 9ms / 87 条 = 0.1ms 每条
+耗时 10ms / 87 条 = 0.1ms 每条
 
 ## 配置 2｜+ GLiNER v3（显式 13 类）
 
@@ -89,7 +89,7 @@
 | L2 中 | 0.947 | 0.986 | 0.966 | 71 | 4 | 1 | DORM,EMAIL,PERSON_NAME,WECHAT |
 | L3-L4 高 | 0.654 | 0.964 | 0.779 | 53 | 28 | 2 | API_KEY,BANK_CARD,BUDGET,GRADE,ID_CARD,PHONE,SENSITIVE_ATTR,STUDENT_ID |
 
-耗时 4837ms / 87 条 = 55.6ms 每条
+耗时 4370ms / 87 条 = 50.2ms 每条
 
 ## 配置 3｜+ GLiNER v3（语义 5 类，当前默认）
 
@@ -128,7 +128,7 @@
 | L2 中 | 0.935 | 1.000 | 0.966 | 72 | 5 | 0 | DORM,EMAIL,PERSON_NAME,WECHAT |
 | L3-L4 高 | 0.869 | 0.964 | 0.914 | 53 | 8 | 2 | API_KEY,BANK_CARD,BUDGET,GRADE,ID_CARD,PHONE,SENSITIVE_ATTR,STUDENT_ID |
 
-耗时 1856ms / 87 条 = 21.3ms 每条
+耗时 2198ms / 87 条 = 25.3ms 每条
 
 ## 误报结构诊断（+GLiNER）
 
@@ -228,7 +228,7 @@
 | L2 中 | 1.000 | 0.679 | 0.808 | 38 | 0 | 18 | DORM,EMAIL,PERSON_NAME,WECHAT |
 | L3-L4 高 | 1.000 | 0.786 | 0.880 | 44 | 0 | 12 | API_KEY,BANK_CARD,BUDGET,GRADE,ID_CARD,PHONE,SENSITIVE_ATTR,STUDENT_ID |
 
-耗时 5ms / 80 条 = 0.1ms 每条
+耗时 8ms / 80 条 = 0.1ms 每条
 
 ## 配置 2｜+ GLiNER v3（显式 13 类）
 
@@ -267,7 +267,7 @@
 | L2 中 | 1.000 | 1.000 | 1.000 | 56 | 0 | 0 | DORM,EMAIL,PERSON_NAME,WECHAT |
 | L3-L4 高 | 1.000 | 1.000 | 1.000 | 56 | 0 | 0 | API_KEY,BANK_CARD,BUDGET,GRADE,ID_CARD,PHONE,SENSITIVE_ATTR,STUDENT_ID |
 
-耗时 3538ms / 80 条 = 44.2ms 每条
+耗时 4068ms / 80 条 = 50.9ms 每条
 
 ## 配置 3｜+ GLiNER v3（语义 5 类，当前默认）
 
@@ -306,7 +306,7 @@
 | L2 中 | 1.000 | 1.000 | 1.000 | 56 | 0 | 0 | DORM,EMAIL,PERSON_NAME,WECHAT |
 | L3-L4 高 | 1.000 | 0.821 | 0.902 | 46 | 0 | 10 | API_KEY,BANK_CARD,BUDGET,GRADE,ID_CARD,PHONE,SENSITIVE_ATTR,STUDENT_ID |
 
-耗时 1730ms / 80 条 = 21.6ms 每条
+耗时 2009ms / 80 条 = 25.1ms 每条
 
 ## 误报结构诊断（+GLiNER）
 

@@ -109,8 +109,8 @@ def main() -> int:
     cfg = get(args.url, "/api/config")
     print(f"连接到 {args.url}")
     m = cfg.get("models", {})
-    print(f"  必要性模型: {m.get('necessity_backend')} | "
-          f"NER: {'RoBERTa-campus' if m.get('campus_ner', {}).get('available') else '规则底座'} | "
+    print(f"  决策模型: {m.get('necessity_backend')} | "
+          f"识别链: {'+'.join(m.get('recognizer', {}).get('detectors', ['regex', 'dict']))} | "
           f"大模型: {m.get('llm', {}).get('model')} (mode={m.get('llm', {}).get('mode')}, "
           f"has_key={m.get('llm', {}).get('has_key')})")
 

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-16T18:15:36.685118",
+  "generated_at": "2026-10-16T22:32:48.088867",
   "datasets": {
     "field_v1（独立手写集）": {
       "independence": "与训练语料字符 8-gram 重合率 2.4%（对照：旧 gold_v3 test 为 78.8%）；完整校验见 data/field_v1/integrity_report.md（脚本 scripts/field_v1_check.py）",
@@ -568,7 +568,7 @@
               }
             }
           },
-          "total_ms": 9.0
+          "total_ms": 9.6
         },
         "配置 2｜+ GLiNER v3（显式 13 类）": {
           "cover": {
@@ -1132,7 +1132,7 @@
               }
             }
           },
-          "total_ms": 4837.2
+          "total_ms": 4369.9
         },
         "配置 3｜+ GLiNER v3（语义 5 类，当前默认）": {
           "cover": {
@@ -1696,7 +1696,7 @@
               }
             }
           },
-          "total_ms": 1856.1
+          "total_ms": 2197.7
         }
       }
     },
@@ -2266,7 +2266,7 @@
               }
             }
           },
-          "total_ms": 5.0
+          "total_ms": 7.8
         },
         "配置 2｜+ GLiNER v3（显式 13 类）": {
           "cover": {
@@ -2830,7 +2830,7 @@
               }
             }
           },
-          "total_ms": 3538.2
+          "total_ms": 4068.2
         },
         "配置 3｜+ GLiNER v3（语义 5 类，当前默认）": {
           "cover": {
@@ -3394,7 +3394,7 @@
               }
             }
           },
-          "total_ms": 1729.5
+          "total_ms": 2009.0
         }
       }
     }

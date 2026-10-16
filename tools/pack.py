@@ -1,26 +1,29 @@
 """把隐盾打包成单个 exe（PyInstaller onefile）。
 
 用法：
-    python pack.py                # 精简版：不含领域 NER 模型，产物 dist/隐盾.exe（约 121MB）
-    python pack.py --with-models  # 完整版：把本地 NER 模型一并打包（约 2.5GB+）
+    python pack.py                # 精简版：只含决策模型，产物 dist/隐盾.exe
+    python pack.py --with-models  # 完整版：额外打入可选识别模型权重
     python pack.py --keep-temp    # 保留中间产物，便于排查依赖缺失
 
-体积取舍（见 README / 记忆日志）：
-- 「精简版」（默认）**排除 torch / transformers**：领域 NER 权重（models/ 下约 2GB）
-  默认不打。代码里 campus_ner 对 ImportError 有降级保护，排除后功能不受影响，
-  状态栏会显示「规则底座」。
-- 「完整版」（--with-models）把 models/ 下全部本地模型打进 exe，可离线跑领域 NER。
+体积取舍：
+- 「精简版」（默认）**排除 torch / transformers**。识别层用「正则 + 词典」底座，
+  零模型依赖；决策模型只有 1MB（necessity_action.joblib），必须打进去
+  —— 少了它会「决策模型不可用 → 全部暂停」。
+- 「完整版」（--with-models）额外打入可选识别模型权重，可离线跑 GLiNER。
   ⚠ **必须用 CPU 版 torch 打包**：CUDA 版 torch 单包就 4.2GB，会让 exe 膨胀到 5GB+。
   推荐先建独立环境再打包：
       python -m venv .venv-pack
       .venv-pack/Scripts/pip install torch --index-url https://download.pytorch.org/whl/cpu
       .venv-pack/Scripts/pip install -r requirements.txt pyinstaller
       .venv-pack/Scripts/python pack.py --with-models
+- 注意 GLiNER 权重默认放在项目外的 D:\\project\\models（sentencepiece 打不开含中文的
+  项目路径），因此打包时需要显式把该目录拷进 exe，见 --with-models 的提示。
 - data/generated（训练语料）与 outputs/ 不打进去，属于运行时产物。
 """
 from __future__ import annotations
 
 import argparse
+import os
 import shutil  # noqa: F401  （保留，便于后续扩展清理逻辑）
 import subprocess  # noqa: F401
 import sys
@@ -30,26 +33,34 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 APP_NAME = "隐盾"
 
+# 决策模型从**统一模型目录**解析（与运行时同一套逻辑，见 config.necessity_model_path）。
+# 打进 exe 后落在 models/ 下；运行时先找统一模型目录、找不到再回退 exe 内 models/，
+# 因此开发机与打包后的 exe 都能命中同一份权重。
+sys.path.insert(0, str(ROOT))
+from llm_shield.config import necessity_model_path  # noqa: E402
+
+_NECESSITY_SRC = str(necessity_model_path())
+
 # ---------------- 只读资源 ----------------
 # 基础资源：精简版与完整版都打
 BASE_DATA_FILES = [
     ("web", "web"),                              # 控制台 + 对话页
     ("config", "config"),                        # 规则 / 任务 / 身份 / 接收方 / retain_thresholds
     ("data/fixtures", "data/fixtures"),          # 内置虚构演示材料
-    # ★ 决策模型：必须与 m4_necessity/model.py 的 MODEL_PATH 一致（necessity_action.joblib）。
-    #   历史上这里写的是 necessity_lr.joblib（schema 1，当前代码在 model.py:84 明确拒绝加载），
-    #   又漏了真正在用的 necessity_action.joblib —— 那样打出来的 exe 会「决策模型不可用 → 全部暂停」。
-    ("models/necessity_action.joblib", "models"),
+    # ★ 决策模型（约 1MB）：少了它会「决策模型不可用 → 全部暂停」。
+    #   历史上这里写的是 necessity_lr.joblib（旧 schema，代码在 model.py 明确拒绝加载），
+    #   又漏了真正在用的 necessity_action.joblib。
+    (_NECESSITY_SRC, "models"),
     (".env", "."),                               # 用户选择把当前 .env 打进去
 ]
 
-# 完整版额外资源：本地领域 NER（**默认关闭**，需 SHIELD_USE_CAMPUS_NER=true 才加载）。
-# 注意：语义识别当前默认由 GLiNER 承担（权重在 D:\project\models\gliner_v3，不在仓库内，
-# 需单独部署）；campus_ner 是早期的领域 RoBERTa，已不再作为默认路径。
-MODEL_DATA_FILES = [
-    ("models/campus_ner", "models/campus_ner"),        # 领域 NER（可选，默认关闭）
-    ("models/roberta_campus", "models/roberta_campus"),# 重训 campus_ner 用的继续预训练基座
-]
+# 完整版额外资源：可选的 GLiNER 语义识别模型。
+# GLiNER 权重在项目外（默认 D:\project\models\gliner_v3）——sentencepiece 的 C++ 后端
+# 打不开含中文的项目路径，所以不能放 models/ 下。要打进 exe 时用环境变量指向源目录：
+#     set SHIELD_PACK_GLINER_SRC=D:\project\models\gliner_v3
+# 未设置时跳过（精简版行为不变）。
+_GLINER_SRC = os.getenv("SHIELD_PACK_GLINER_SRC", "").strip()
+MODEL_DATA_FILES = ([(_GLINER_SRC, "models/gliner_v3")] if _GLINER_SRC else [])
 
 # ---------------- 排除 ----------------
 # 与打包目标无关的通用库 + 训练侧依赖（不参与线上推理）

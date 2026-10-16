@@ -63,30 +63,55 @@ def action_cost(action: str) -> float:
     return float(rules().get("actions", {}).get(action, {}).get("disclosure_cost", 5))
 
 
-def use_campus_ner() -> bool:
-    """是否启用 ★ 领域预训练 NER（模块 ② 的可选增强）。
+# ---------------------------------------------------------------- 模型目录
+# 全项目**只有一个模型目录**：默认 D:\project\models（纯 ASCII 路径）。
+#
+# 为什么必须在外面的 ASCII 路径，而不是项目内的 models/：
+#   项目根目录名是「隐盾」（含中文），而 sentencepiece 的 C++ 后端**打不开
+#   含中文的路径**——GLiNER 的 spm.model 加载会直接 RuntimeError。
+#   所以识别模型只能放在 D:\project\models 这类纯 ASCII 目录。
+#
+# 历史上决策模型放在项目内 models/、识别模型放在 D:\project\models，
+# 两个根目录是「搞不清模型到底在哪」的直接原因。现在统一到这一个根：
+#   D:\project\models\
+#     ├── necessity_action.joblib   决策模型（m4，总是加载）
+#     ├── gliner_v3/                识别模型（m2，可选，SHIELD_USE_GLINER=true）
+#     ├── gliner_multi_v21/         重训用基座
+#     └── gliner_multi/             重训用基座
+DEFAULT_MODEL_DIR = r"D:\project\models"
 
-    默认 **关闭**。原因：
-    - 规则+词典底座已能满足「P95 ≤ 500ms」，实测 2000 字约 6ms；
-    - 领域模型推理更慢（实测 2000 字约 576ms），且当前用合成数据训练的版本
-      在分布外文本上泛化有限，可能引入错误片段；
-    - 因此作为可选增强，需显式开启（.env: SHIELD_USE_CAMPUS_NER=true）。
 
-    权重存在（models/campus_ner）只是前提，是否启用由本开关决定。
+def model_dir() -> Path:
+    """所有本地模型的统一根目录（可用 SHIELD_MODEL_DIR 覆盖）。"""
+    load_env()
+    return Path(os.getenv("SHIELD_MODEL_DIR", DEFAULT_MODEL_DIR))
+
+
+def necessity_model_path() -> Path:
+    """决策模型路径。
+
+    优先取统一模型目录下的 necessity_action.joblib；若那里没有（例如从 Git
+    克隆后只带了随包权重的部署方式），回退到项目内 models/ 下的同名文件。
     """
     load_env()
-    return os.getenv("SHIELD_USE_CAMPUS_NER", "false").strip().lower() in (
-        "1", "true", "yes", "on")
+    override = os.getenv("SHIELD_NECESSITY_MODEL", "").strip()
+    if override:
+        return Path(override)
+    primary = model_dir() / "necessity_action.joblib"
+    if primary.exists():
+        return primary
+    return ROOT / "models" / "necessity_action.joblib"
 
 
 def use_gliner() -> bool:
-    """是否启用 GLiNER v3 语义实体识别（模块 ② / v3 A 层的模型增强）。
+    """是否启用 GLiNER 语义实体识别（模块 ② 的可选模型增强）。
 
-    默认 **关闭**。GLiNER 只负责**语义类**（人名/组织/地点/宿舍/敏感属性），
-    格式类（电话/邮箱/学号/证件/银行卡/密钥/微信/预算/成绩）仍由正则底座负责。
+    GLiNER 只负责**语义类**（人名/组织/地点/宿舍/敏感属性）；格式类
+    （电话/邮箱/学号/证件/银行卡/密钥/微信/预算/成绩）由带校验位的正则底座
+    权威判定。实测这样分工比让模型覆盖 13 类精度更高（独立集 F1 0.9068 vs 0.8443）。
 
-    启用：.env 设置 SHIELD_USE_GLINER=true；模型路径用 SHIELD_GLINER_MODEL_DIR
-    覆盖（默认 D:\\project\\models\\gliner_v3，必须在 ASCII 路径，见 gliner_ner.py）。
+    启用：.env 设置 ``SHIELD_USE_GLINER=true``；模型路径用
+    ``SHIELD_GLINER_MODEL_DIR`` 覆盖（默认 ``<模型目录>/gliner_v3``）。
     """
     load_env()
     return os.getenv("SHIELD_USE_GLINER", "false").strip().lower() in (
@@ -94,21 +119,20 @@ def use_gliner() -> bool:
 
 
 def gliner_model_dir() -> str:
-    """GLiNER v3 模型目录（必须在 ASCII 路径，sentencepiece 不支持中文路径）。"""
+    """GLiNER 模型目录（必须在 ASCII 路径，sentencepiece 不支持中文路径）。"""
     load_env()
-    return os.getenv("SHIELD_GLINER_MODEL_DIR", r"D:\project\models\gliner_v3")
+    override = os.getenv("SHIELD_GLINER_MODEL_DIR", "").strip()
+    if override:
+        return override
+    return str(model_dir() / "gliner_v3")
 
 
 def reviewed_ner_settings() -> tuple[str, str]:
     """人工 gold NER 候选产物的目录与设备；目录为空表示不启用。
 
-    与 GLiNER 是两条**互相独立**的可选识别增强链路，可分别开启：
-
-    - GLiNER：``SHIELD_USE_GLINER=true`` 开关 + ``SHIELD_GLINER_MODEL_DIR`` 路径；
-    - 人工 gold NER：``SHIELD_REVIEWED_NER_MODEL_DIR`` **非空即启用**（默认空）。
-
-    目录内应含 ``artifact_manifest.json``；留空则保持原识别链不变。
-    产物元数据只记录来源，**不能**独立证明该数据经过人工复核。
+    这是仓库里**独立于 GLiNER** 的第二条可选识别链路：只要
+    ``SHIELD_REVIEWED_NER_MODEL_DIR`` 非空就会被接入 pipeline（默认空，即不启用）。
+    产物元数据只记录来源，不能独立证明该数据经过人工复核。
     """
     load_env()
     return (os.getenv("SHIELD_REVIEWED_NER_MODEL_DIR", "").strip(),

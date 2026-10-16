@@ -1,7 +1,10 @@
 """用「人工标注 gold」评估识别器真实准确率。
 
-与 eval/run_eval.py 的区别：后者用合成数据的自产 gold（会虚高），
-本脚本用人工标注的 gold，得到可信的精确率 / 召回率 / F1。
+本脚本量两层指标：
+  1. **识别层**：实体 P/R/F1（严格 / 区间相交 / 粒度无关三种口径）
+  2. **业务层**：禁止披露的值是否真的外发、任务是否仍能完成、责任关系是否保住
+     （原 eval/metrics.py 中仍有价值的部分已并入本文件；那套按合成数据自产
+     gold 的评测框架 eval/run_eval.py 会给出虚高结论，已删除）
 
 用法：
     python scripts/eval_gold.py --gold data/gold/我的标注.json
@@ -11,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from collections import defaultdict
 from datetime import datetime
@@ -23,7 +27,9 @@ sys.path.insert(0, str(APP))
 #  证件/密钥/金额这些真正高敏类别的表现。
 LEVEL_GROUPS = [("L1 低", {1}), ("L2 中", {2}), ("L3-L4 高", {3, 4})]
 
-from llm_shield.config import category_level  # noqa: E402  (需先 sys.path 注入)
+from llm_shield.config import (  # noqa: E402  (需先 sys.path 注入)
+    category_level, recipients, rules, tasks,
+)
 
 
 def load_system_spans(text: str) -> list:
@@ -92,6 +98,126 @@ def prf(tp: int, fp: int, fn: int) -> tuple:
     r = tp / (tp + fn) if (tp + fn) else 0.0
     f = 2 * p * r / (p + r) if (p + r) else 0.0
     return p, r, f
+
+
+# ============================================================
+# 业务层指标（原 eval/metrics.py 中仍有价值的部分，已并入本文件）
+# ------------------------------------------------------------
+# 上面的 match/prf 量的是「实体找得准不准」；下面这四个函数量的是
+# 「处理完之后任务还做不做得成、禁止披露的值有没有真的出去」——
+# 两者是不同层次，不能互相替代。
+# ============================================================
+
+_COUNT_RE = re.compile(r"(\d+)\s*(人|名|位|人次)")
+_DEADLINE_RE = re.compile(r"(\d{1,2}月\d{1,2}日|(本|下|上)(周|月)|周[一二三四五六日天]|截止)")
+_CODE_RE = re.compile(r"(人员[甲乙丙丁戊己庚辛壬癸\d]+|组织[甲乙丙丁戊己庚辛壬癸\d]+)")
+_TASK_VERB_RE = re.compile(r"(负责|完成|提交|对接|整理|撰写|组织|采购|设计|开发|测试|汇总|联系|安排)")
+
+
+def _has_person_mark(text: str) -> bool:
+    """文本中是否存在「人物标识」。
+
+    标识可以是代号（人员甲），也可以是真名（负责人：李晓华）。
+    判定的是「人物—事项—期限的对应关系是否还在」，而不是「有没有用代号」——
+    后者会把「无防护直发原文」误判成关系断裂。
+    """
+    if _CODE_RE.search(text):
+        return True
+    return bool(re.search(
+        r"(负责人|责任人|对接人|成员|组长|队长|部长|同学|老师)\s*[:：]?\s*[\u4e00-\u9fa5]{2,4}",
+        text))
+
+
+def forbidden_categories(task_key: str, recipient_key: str = "external_model") -> set:
+    """该任务 × 该接收方下「定义内禁止披露」的类别集合。"""
+    cfg = rules().get("hard_constraints", {})
+    banned = set(cfg.get("absolute_ban", []))
+    banned |= set(tasks().get(task_key, {}).get("never_send", []))
+    rec = recipients().get(recipient_key, {})
+    banned |= set(rec.get("forbidden", []))
+    banned |= {cat for cat in rules().get("categories", {})
+               if category_level(cat) > int(rec.get("max_level", 0))}
+    if rec.get("trust") == "low":
+        banned |= {"PERSON_NAME", "PHONE", "EMAIL", "STUDENT_ID", "WECHAT"}
+    return banned
+
+
+def leakage_of(text: str, gold_spans: list, task_key: str,
+               recipient_key: str = "external_model") -> dict:
+    """单个案例的泄露情况：禁止披露的值是否真的出现在载荷里。
+
+    :param gold_spans: [{"category": ..., "value": ...}, ...]
+    """
+    banned = forbidden_categories(task_key, recipient_key)
+    leaked_values, leaked_cats = [], set()
+    for g in gold_spans:
+        if g["category"] not in banned:
+            continue
+        if g["value"] in text:
+            leaked_values.append(g["value"])
+            leaked_cats.add(g["category"])
+    n_banned = sum(1 for g in gold_spans if g["category"] in banned)
+    return {
+        "leaked": bool(leaked_values),
+        "n_leaked": len(leaked_values),
+        "n_banned": n_banned,
+        "leaked_categories": sorted(leaked_cats),
+        "leak_rate": (len(leaked_values) / n_banned) if n_banned else 0.0,
+    }
+
+
+def completion_of(text: str, task_key: str, aggregates: dict = None) -> dict:
+    """任务完成判定：按各类任务「做不做得成」的本地检查。"""
+    aggregates = aggregates or {}
+    ok, reasons = True, []
+
+    if task_key == "activity_stats":
+        if not (_COUNT_RE.search(text) or aggregates.get("person_count", 0) > 0):
+            ok = False
+            reasons.append("缺少人数统计")
+        if not re.search(r"(活动|比赛|讲座|沙龙|培训|志愿|招新|晚会|论坛|训练营|分享会)", text):
+            ok = False
+            reasons.append("缺少活动名称/类别")
+
+    elif task_key == "meeting_minutes":
+        if not _has_person_mark(text):
+            ok = False
+            reasons.append("缺少责任人标识（代号或真名）")
+        if not _TASK_VERB_RE.search(text):
+            ok = False
+            reasons.append("缺少任务事项")
+        if not _DEADLINE_RE.search(text):
+            ok = False
+            reasons.append("缺少期限")
+
+    elif task_key == "project_intro":
+        if len(text.strip()) < 40:
+            ok = False
+            reasons.append("可公开内容过少")
+        if not re.search(r"(项目|平台|系统|课程|赛事|计划)", text):
+            ok = False
+            reasons.append("缺少项目名称")
+
+    return {"completed": ok, "reasons": reasons}
+
+
+def relation_correctness(text: str, task_key: str) -> dict:
+    """责任关系正确性：仅对会议纪要任务判定。
+
+    人物标识（代号或真名）+ 事项动词 + 期限三者同时存在，即认为对应关系仍成立。
+    """
+    if task_key != "meeting_minutes":
+        return {"applicable": False, "correct": True, "detail": "该任务不适用"}
+    has_person = _has_person_mark(text)
+    verbs = _TASK_VERB_RE.findall(text)
+    deadlines = _DEADLINE_RE.findall(text)
+    correct = has_person and bool(verbs) and bool(deadlines)
+    return {
+        "applicable": True, "correct": correct,
+        "n_person_marks": int(has_person), "n_tasks": len(verbs),
+        "n_deadlines": len(deadlines),
+        "detail": "" if correct else "人物标识/事项/期限三者未同时保留",
+    }
 
 
 def main() -> int:
