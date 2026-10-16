@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import re
+import threading
 from dataclasses import replace
 from typing import List, Optional, Tuple
 
@@ -20,6 +21,7 @@ _SENT_SPLIT_RE = re.compile(r"(?<=[。！？；;!?\n])")
 # 模型加载约 8s、占 ~1.1GB 内存，绝不能每次请求都重建；
 # RegexDetector / EntityDetector 零依赖、构造极轻，每次新建即可。
 _gliner_singleton: Optional[GLiNERDetector] = None
+_gliner_lock = threading.Lock()
 
 
 class DetectionError(RuntimeError):
@@ -48,7 +50,9 @@ def build_detectors(use_gliner: Optional[bool] = None) -> List[Detector]:
     detectors: List[Detector] = [RegexDetector(), EntityDetector(detect_org_location=not use_gliner)]
     if use_gliner:
         if _gliner_singleton is None:
-            _gliner_singleton = GLiNERDetector()
+            with _gliner_lock:
+                if _gliner_singleton is None:
+                    _gliner_singleton = GLiNERDetector()
         gliner = _gliner_singleton
         if not gliner.available:
             raise DetectionError("已启用的 GLiNER 识别模型不可用，已暂停处理")

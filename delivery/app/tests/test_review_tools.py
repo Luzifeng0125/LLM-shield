@@ -32,6 +32,8 @@ def test_invalid_pair_cannot_be_aggregated(change):
 
 def test_trial_captures_sanitized_history_and_does_not_call_network(monkeypatch):
     import llm_shield.m7_egress.llm_client as adapter
+    # This test covers trial capture and network isolation, not probabilistic NER.
+    monkeypatch.setenv('SHIELD_USE_GLINER', 'false')
     monkeypatch.setattr(adapter, 'OpenAICompatLLM', lambda *a: pytest.fail('Trial must stay offline'))
     records = run_cases([{'id': 'x', 'task': 'meeting_minutes', 'turns': [
         '负责人：张明。事项：准备海报。期限：周五。', '请沿用前面的负责人代号，期限改为下周一。']}])

@@ -64,21 +64,20 @@ def action_cost(action: str) -> float:
 
 
 # ---------------------------------------------------------------- 模型目录
-# 全项目**只有一个模型目录**：默认 D:\project\models（纯 ASCII 路径）。
+# 全项目共用一个模型根目录。默认使用项目内 models/ 以便便携运行。
 #
-# 为什么必须在外面的 ASCII 路径，而不是项目内的 models/：
+# 为什么启用 GLiNER 时必须用外部 ASCII 路径：
 #   项目根目录名是「隐盾」（含中文），而 sentencepiece 的 C++ 后端**打不开
 #   含中文的路径**——GLiNER 的 spm.model 加载会直接 RuntimeError。
-#   所以识别模型只能放在 D:\project\models 这类纯 ASCII 目录。
+#   启用 GLiNER 时必须用 SHIELD_MODEL_DIR 指向纯 ASCII 路径。
 #
-# 历史上决策模型放在项目内 models/、识别模型放在 D:\project\models，
-# 两个根目录是「搞不清模型到底在哪」的直接原因。现在统一到这一个根：
-#   D:\project\models\
+# 两种模型可共用 SHIELD_MODEL_DIR；仅决策模型也允许随包放在 models/。
+#   <SHIELD_MODEL_DIR>/
 #     ├── necessity_action.joblib   决策模型（m4，总是加载）
 #     ├── gliner_v3/                识别模型（m2，可选，SHIELD_USE_GLINER=true）
 #     ├── gliner_multi_v21/         重训用基座
 #     └── gliner_multi/             重训用基座
-DEFAULT_MODEL_DIR = r"D:\project\models"
+DEFAULT_MODEL_DIR = ROOT / "models"
 
 
 def model_dir() -> Path:
@@ -162,3 +161,12 @@ def llm_settings() -> Dict[str, Any]:
         "model": os.getenv("LLM_MODEL", "deepseek-flash"),
         "timeout": float(os.getenv("LLM_TIMEOUT", "60")),
     }
+
+
+def max_parallel_analyses() -> int:
+    """Bound local model work so simultaneous requests do not exhaust memory."""
+    load_env()
+    try:
+        return max(1, min(8, int(os.getenv("SHIELD_MAX_PARALLEL_ANALYSES", "2"))))
+    except ValueError:
+        return 2

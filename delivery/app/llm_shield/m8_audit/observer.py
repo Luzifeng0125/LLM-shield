@@ -92,7 +92,8 @@ def _restriction(category: str, recipient_key: str,
 
 def check_category_leakage(payload: str, recipient_key: str,
                            *, task_key: Optional[str] = None,
-                           identity_key: Optional[str] = None) -> List[dict]:
+                           identity_key: Optional[str] = None,
+                           placeholders: Optional[Set[str]] = None) -> List[dict]:
     """类别级泄露检测：对载荷重新识别，看是否残留接收方禁止的类别。
 
     检测结果若落在**系统自己发出的代号**之内则豁免：代号按定义不是原始敏感值，
@@ -107,23 +108,33 @@ def check_category_leakage(payload: str, recipient_key: str,
     scanned = (payload if budget_banned else
                _AGG_SAFE_RE.sub(lambda match: " " * len(match.group(0)), payload))
 
-    from ..m6_transform.mapping import get_table
-    table = get_table()
-
     hits: List[dict] = []
     for s in detect_all(scanned):
         if not s.text:
             continue
-        if table.is_placeholder(s.text):
+        if _inside_placeholder(s.start, s.end, scanned, placeholders or set()):
             continue
         reason = _restriction(s.category, recipient_key, task_key, identity_key)
         if reason:
             hits.append({
                 "type": "CATEGORY", "category": s.category,
                 "value_masked": _mask(s.text),
+                "position": s.start, "length": s.end - s.start,
                 "reason": reason,
             })
     return hits
+
+
+def _inside_placeholder(start: int, end: int, payload: str,
+                        placeholders: Set[str]) -> bool:
+    """Only exempt exact ranges of codes issued for this request's session."""
+    for code in placeholders:
+        position = payload.find(code)
+        while position >= 0:
+            if position <= start and end <= position + len(code):
+                return True
+            position = payload.find(code, position + 1)
+    return False
 
 
 def _mask(value: str) -> str:
@@ -137,7 +148,8 @@ def inspect_payload(payload: str, recipient_key: str,
                     original_spans: List[Span] = None,
                     allowed_values: Optional[Set[str]] = None,
                     *, task_key: Optional[str] = None,
-                    identity_key: Optional[str] = None) -> Dict[str, object]:
+                    identity_key: Optional[str] = None,
+                    placeholders: Optional[Set[str]] = None) -> Dict[str, object]:
     """综合判定一个载荷是否发生泄露。"""
     original_spans = original_spans or []
     invalid_context = (
@@ -153,7 +165,8 @@ def inspect_payload(payload: str, recipient_key: str,
             payload, original_spans, allowed_values, recipient_key=recipient_key,
             task_key=task_key, identity_key=identity_key)
         hits += check_category_leakage(payload, recipient_key, task_key=task_key,
-                                       identity_key=identity_key)
+                                       identity_key=identity_key,
+                                       placeholders=placeholders)
     categories = sorted({h["category"] for h in hits})
     return {
         "leaked": bool(hits),

@@ -50,6 +50,21 @@ def test_two_turns_keep_stable_codes_and_sanitized_history(setup_chat):
     assert "张明" not in str(history) and "13812345678" not in str(history)
 
 
+def test_exact_table_count_stays_local_and_is_saved_as_safe_history(setup_chat):
+    _, store, calls = setup_chat
+    session = store.create("student_leader", "activity_stats")
+    rows = [{"专业": "网络空间安全" if i % 25 == 0 else "其他专业"}
+            for i in range(310)]
+    result = chat.send_turn(session, [Material("table", "uploaded", "专业表", "", rows, ["专业"]),
+                                      Material("chat-input", "uploaded", "", "帮我统计网络空间安全专业有多少人")])
+    assert result["ok"] and result["engine"] == "local"
+    assert "共有 13 人" in result["reply"]
+    assert not calls
+    assert len(store.get(session.session_id).messages) == 2
+    followup = chat.send_turn(session, [Material("chat-input", "uploaded", "", "这个结果是怎么计算的？")])
+    assert followup["ok"] and followup["turns"] == 2 and len(calls) == 1
+
+
 def test_model_failure_preserves_previous_history(setup_chat, monkeypatch):
     client, store, calls = setup_chat
     sid = new_session(client)
@@ -76,6 +91,19 @@ def test_unsafe_answer_never_displayed_or_saved(setup_chat, monkeypatch):
     result = send(client, sid).json()
     assert result["paused"] and result["messages"] == [] and "张明" not in str(result)
     assert not store.get(sid).mapping.export(sid)
+
+
+def test_answer_with_restricted_detail_is_redacted_and_conversation_continues(setup_chat, monkeypatch):
+    client, store, _ = setup_chat
+    sid = new_session(client)
+    monkeypatch.setattr(gateway, "chat_messages_with_fallback",
+                        lambda _: {"text": "张明负责整理会议纪要，并在周五前完成海报设计。",
+                                   "engine": "real", "error": ""})
+    result = send(client, sid).json()
+    assert result["ok"] and result["turns"] == 1
+    assert "张明" not in str(result)
+    assert "隐私信息已隐藏" in result["reply"]
+    assert "张明" not in str(store.get(sid).messages)
 
 
 def test_full_history_rechecked_before_next_send(setup_chat):

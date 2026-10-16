@@ -43,6 +43,12 @@ def test_real_http_failure_does_not_expose_upstream_body(monkeypatch):
     assert 'private-upstream' not in str(result) and 'test-key' not in str(result)
 
 
+def test_auto_with_key_reports_failure_instead_of_mock_reply(monkeypatch):
+    configure(monkeypatch, lambda _: httpx.Response(429, json={'error': 'secret'}), mode='auto')
+    result = adapter.chat_messages_with_fallback([{'role': 'user', 'content': '公开内容'}])
+    assert result == {'text': '', 'engine': 'error', 'error': '真实模型请求失败（HTTP 429）'}
+
+
 def test_reasoning_only_response_is_not_presented_as_answer(monkeypatch):
     configure(monkeypatch, lambda _: httpx.Response(200, json={'choices':[{'message':{'content':'','reasoning_content':'内部推理'}}]}))
     result = adapter.chat_messages_with_fallback([{'role':'user','content':'公开内容'}])

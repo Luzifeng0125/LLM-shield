@@ -77,6 +77,24 @@ cd delivery/app
 python run.py --host 127.0.0.1 --port 8787
 ```
 
+### 运行时自检
+
+```bash
+python scripts/check_runtime.py     # 启动前检查模型与 API 配置（不打印密钥或模型路径）
+python scripts/run_checks.py        # 一次性跑完全部测试与冒烟检查
+python scripts/benchmark_local.py   # 只测本地处理耗时，不外呼、不落载荷
+```
+
+服务本身提供两个只读诊断端点：
+
+| 端点 | 返回 |
+|---|---|
+| `GET /api/health` | 动作模型 / 识别器 / 真实 API 配置 / 会话容量的就绪状态；**不返回密钥与模型路径** |
+| `GET /api/metrics` | 各阶段耗时中位数与 P95；每项最多保留最近 500 个数值，**只统计数字、不记录内容** |
+
+本地识别与决策的并发上限由 `SHIELD_MAX_PARALLEL_ANALYSES` 控制（默认 2，范围 1–8）；
+满载时新请求暂停并提示重试，避免并发把显存打满。
+
 ---
 
 ## 验证与人工复核
@@ -102,23 +120,24 @@ python run.py --host 127.0.0.1 --port 8787
 
 启用方式：`delivery/app/.env` 中设 `SHIELD_USE_GLINER=true`。
 
-### 模型目录只有一处
+### 模型目录
 
-所有本地模型都在 `SHIELD_MODEL_DIR`（默认 `D:\project\models`）：
+**决策模型随包放在项目内 `delivery/app/models/`**（约 1 MB），克隆即可运行，无需额外准备。
+识别模型（GLiNER，约 1.1 GB）因体积不随仓库分发，需要用 `SHIELD_MODEL_DIR` 单独指向：
 
 ```
-D:\project\models\
-  ├── necessity_action.joblib   决策模型（m4，总是加载，约 1MB）
-  ├── gliner_v3/               识别模型（m2，可选，约 1.1GB）
-  ├── gliner_multi_v21/        重训用基座
-  └── gliner_multi/            重训用基座
+<SHIELD_MODEL_DIR>/                 # 默认取项目内 delivery/app/models/
+  ├── necessity_action.joblib   决策模型（m4，总是加载，约 1 MB）
+  ├── gliner_v3/                识别模型（m2，可选，约 1.1 GB）
+  ├── gliner_multi_v21/         重训用基座
+  └── gliner_multi/             重训用基座
 ```
 
-> 必须是**纯 ASCII 路径**：sentencepiece 的 C++ 后端打不开含中文的路径，
-> 而项目目录名是「隐盾」。这正是历史上识别模型被迫放在项目外的原因。
-> 早期决策模型放在项目内 `models/`、识别模型放在项目外，两个根目录一度是
-> 「搞不清模型在哪」的主因；现已统一，`config.necessity_model_path()` 会
-> 优先取统一目录、找不到再回退项目内 `models/`（打包后的 exe 走这条回退）。
+> **启用 GLiNER 时 `SHIELD_MODEL_DIR` 必须是纯 ASCII 路径**：sentencepiece 的 C++ 后端
+> 打不开含中文的路径，而项目目录名是「隐盾」。决策模型自己不需要这个限制
+> （joblib 读中文路径没问题），所以默认值才敢用项目内 `models/`。
+> `config.necessity_model_path()` 会先找统一模型目录、找不到再回退项目内 `models/`
+> ——打包后的 exe 与默认克隆都走这条回退。
 
 ### 三个关键工程点
 
@@ -164,7 +183,8 @@ D:\project\models\
 2. 用 `delivery/app/` 下的训练脚本微调；
 3. 放到**纯 ASCII 路径**（如 `D:/project/models/gliner_v3`）——
    sentencepiece 的 C++ 后端无法打开含中文的路径；
-4. `.env` 中设 `SHIELD_USE_GLINER=true` 与 `SHIELD_GLINER_MODEL_DIR`。
+4. `.env` 中设 `SHIELD_USE_GLINER=true`，并用 `SHIELD_MODEL_DIR` 指向放权重的纯 ASCII 目录
+   （也可用 `SHIELD_GLINER_MODEL_DIR` 单独指定 GLiNER 目录，默认取 `<SHIELD_MODEL_DIR>/gliner_v3`）。
 
 ---
 
@@ -183,9 +203,19 @@ D:\project\models\
 
 | 分支 | 内容 |
 |---|---|
-| `main` | **主分支**：整理后的目录结构 + GLiNER A 层 + 人工 gold NER 候选 + 专项数据集 v1 + field_v1 独立评测集 |
+| `main` | **主分支**：整理后的目录结构 + GLiNER A 层 + 专项数据集 v1 + field_v1 独立评测集 + 2026-10-17 工程加固 |
 | `v3` | GLiNER A 层的工作分支；2026-10-16 合并后与 `main` 指向同一提交，保留仅为历史追溯 |
 | `frontend` | Apple 风格前端改版（已并入 `main`） |
+
+> 2026-10-16/17 的两轮整理：
+> - `campus_ner`（RoBERTa，388 MB）与 `reviewed_ner`（BERT）两条模型 NER 路线退出应用运行时，
+>   识别层收敛为「正则底座 + GLiNER 语义类」；`reviewed_ner` 适配器迁入「复核与训练执行包」，
+>   该训练链路完整保留。决策模型重训（FEATURE_VERSION 3），修掉「纯电话片段被判成代号替换
+>   动作、触发全场暂停」的缺陷。
+> - 新增 `/api/health`（就绪检查）与 `/api/metrics`（分阶段耗时，仅统计不落内容）、
+>   `SHIELD_MAX_PARALLEL_ANALYSES`（本地识别决策并发上限，默认 2）。
+>   完整记录见 [程序优化记录](docs/程序优化记录-20261016.md) 与
+>   [架构整理与代码审查](docs/架构整理与代码审查-20261016.md)。
 
 整理与合并的完整记录见：
 

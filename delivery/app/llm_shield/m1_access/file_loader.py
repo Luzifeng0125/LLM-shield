@@ -115,9 +115,25 @@ def _parse_excel(data: bytes, title: str) -> Tuple[str, Optional[list], Optional
     wb.close()
     if len(rows_raw) < 2:
         return "\n".join(" ".join(r) for r in rows_raw), None, None
-    columns = rows_raw[0]
+    # Many school forms start with a merged title row. A one-cell title is not
+    # the table header; using it also creates duplicate empty dict keys and
+    # silently overwrites all but the last data cell.
+    header_index = next((i for i, row in enumerate(rows_raw[:10])
+                         if sum(bool(cell) for cell in row) >= 2), 0)
+    raw_columns = rows_raw[header_index]
+    columns = []
+    used = set()
+    for i, raw in enumerate(raw_columns):
+        base = raw or f"列{i + 1}"
+        name = base
+        suffix = 2
+        while name in used:
+            name = f"{base}_{suffix}"
+            suffix += 1
+        columns.append(name)
+        used.add(name)
     rows = [{columns[i]: (r[i] if i < len(r) else "") for i in range(len(columns))}
-            for r in rows_raw[1:]]
+            for r in rows_raw[header_index + 1:] if any(r)]
     return "", columns, rows          # 正文留空，内容全在 rows 里
 
 

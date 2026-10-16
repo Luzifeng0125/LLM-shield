@@ -6,6 +6,7 @@ TF-IDF + 逻辑回归用于验证模型决策链路，不等同于已训练的�
 from __future__ import annotations
 
 import hashlib
+import threading
 from collections import Counter
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -251,12 +252,15 @@ class NecessityModel:
 
 
 _MODEL: Optional[NecessityModel] = None
+_MODEL_LOCK = threading.Lock()
 
 
 def get_model() -> NecessityModel:
     global _MODEL
     if _MODEL is None:
-        _MODEL = NecessityModel()
+        with _MODEL_LOCK:
+            if _MODEL is None:
+                _MODEL = NecessityModel()
     return _MODEL
 
 

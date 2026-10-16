@@ -5,6 +5,7 @@ import pytest
 from llm_shield import pipeline
 from llm_shield.m2_detect.pipeline import DetectionError, detect_all, detect_and_segment, merge_spans
 from llm_shield.m7_egress.gateway import EgressGateway
+from llm_shield.m2_detect.gliner_ner import GLiNERDetector
 from llm_shield.schema import Material, ShieldRequest, Span
 
 
@@ -19,6 +20,20 @@ def test_detector_exception_cannot_become_empty_results():
 def test_empty_detector_chain_fails_closed():
     with pytest.raises(DetectionError):
         detect_all("材料", detectors=[])
+
+
+def test_gliner_inference_error_pauses_instead_of_becoming_no_match():
+    detector = object.__new__(GLiNERDetector)
+    detector.available = True
+    detector.semantic_labels = ["person"]
+    detector.format_labels = []
+    detector.threshold = .5
+    detector.model = Mock()
+    detector.model.config.max_len = 384
+    detector.model.inference.side_effect = RuntimeError("private input")
+    with pytest.raises(DetectionError) as raised:
+        detect_all("张明", detectors=[detector])
+    assert "private input" not in str(raised.value)
 
 
 def test_overlapping_spans_cover_both_ends_and_match_source():

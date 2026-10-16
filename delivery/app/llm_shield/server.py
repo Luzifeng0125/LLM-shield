@@ -25,6 +25,8 @@ from .m8_audit.audit import get_auditor
 from .pipeline import preview_only, run_pipeline
 from .schema import Material, ShieldRequest
 from .chat import STORE, ChatError, send_turn, snapshot
+from .metrics import snapshot as metrics_snapshot
+from .runtime import readiness
 
 def _warmup() -> None:
     """启动预热：把两个模型的冷启动开销从「第一个用户请求」挪到「服务启动」。
@@ -51,9 +53,9 @@ def _warmup() -> None:
                 gliner[0].detect("预热")
                 print(f"[预热] GLiNER 识别模型已就绪：{gliner[0].reason}")
             else:
-                print("[预热] GLiNER 未挂载，识别将退回规则底座")
+                print("[预热] GLiNER 未挂载；启用配置下的请求将暂停处理")
         except Exception as exc:
-            print(f"[预热] GLiNER 不可用（{exc}）；识别退回规则底座，不阻断服务")
+            print(f"[预热] GLiNER 不可用（{type(exc).__name__}）；请求将暂停处理")
     else:
         print("[预热] GLiNER 未启用（SHIELD_USE_GLINER=false），识别走规则+词典底座")
 
@@ -61,7 +63,10 @@ def _warmup() -> None:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     _warmup()
-    yield
+    try:
+        yield
+    finally:
+        STORE.close()
 
 
 app = FastAPI(title="隐盾 LLM-Shield", version="0.1.0",
@@ -150,6 +155,16 @@ def api_chat_turn(session_id: str, r: ChatTurnRequest):
 # ---------------------------------------------------------------- 配置接口
 
 
+@app.get("/api/health")
+def api_health():
+    return {**readiness(), **STORE.stats()}
+
+
+@app.get("/api/metrics")
+def api_metrics():
+    return {"latency": metrics_snapshot()}
+
+
 @app.get("/api/config")
 def api_config(include_builtin: bool = False):
     """返回任务模板 / 身份 / 接收方 / 材料清单，以及当前模型后端状态。
@@ -212,13 +227,15 @@ async def api_upload(file: UploadFile = File(...)):
 
     解析在本地完成，只保留提取出的文本/表格，不保存原始二进制文件。
     """
-    data = await file.read()
+    # Read only enough to detect an oversized upload before parsing or
+    # retaining an arbitrarily large request body in application memory.
+    data = await file.read(MAX_BYTES + 1)
     try:
         mat = parse_upload(data, file.filename or "upload.txt")
     except ParseError as e:
         raise HTTPException(400, str(e))
-    except Exception as e:
-        raise HTTPException(500, f"上传处理失败：{type(e).__name__}: {e}")
+    except Exception:
+        raise HTTPException(500, "上传处理失败，请检查文件格式后重试")
 
     preview = (mat.text or "")[:200]
     if not preview and mat.rows:

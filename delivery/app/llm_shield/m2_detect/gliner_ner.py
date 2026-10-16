@@ -10,8 +10,7 @@ CampusNERDetector 完全相同的 Detector 接口，可热替换。
 2. **只贡献语义类实体**（默认 PERSON_NAME / ORG / LOCATION / DORM / SENSITIVE_ATTR）：
    格式类（电话/邮箱/学号/证件/银行卡/密钥/微信/预算/成绩）由正则底座负责，
    避免证件号误报与重叠边界冲突。可通过 ``categories`` 参数调整。
-3. **优雅降级**：模型缺失 / 依赖未装 / 加载失败时 available=False，detect() 返回
-   空列表，主链路不受影响（与 CampusNERDetector 一致）。
+3. 模型不可用或推理失败时，在线识别链暂停请求，避免把故障当作无敏感信息。
 
 模型：urchade/gliner_multi-v2.1（Apache-2.0）+ 人工 gold 微调。
 实测（docs/评测报告-独立手写集field_v1.md）：独立手写集上 13 类 F1 0.8383、
@@ -119,53 +118,62 @@ class GLiNERDetector(Detector):
             self.available = False
 
     def detect(self, text: str, columns=None, rows=None) -> List[Span]:
-        if not self.available or not text or not (self.semantic_labels or self.format_labels):
-            return []
+        return self.detect_many([text])[0]
+
+    def detect_many(self, texts: List[str]) -> List[List[Span]]:
+        """Batch windows from several materials without mixing their coordinates."""
+        outputs: List[List[Span]] = [[] for _ in texts]
+        if not self.available or not (self.semantic_labels or self.format_labels):
+            return outputs
         # GLiNER 是双向编码器，配置 max_len（本项目 384 个 token）封顶；长文本需滑窗。
         # 窗口间重叠 32 个 token，避免实体被窗口边界切断；重复 span 由下游 merge_spans 去重。
         max_len = int(getattr(self.model.config, "max_len", 384))
         step = max(1, max_len - 32)
-
-        # 先收集全部滑窗及其原文偏移（与原逐窗循环的停止条件一致）
-        offsets: List[int] = []
-        for offset in range(0, len(text), step):
-            offsets.append(offset)
-            if offset + max_len >= len(text):
-                break
-        windows = [text[o:o + max_len] for o in offsets]
-
-        spans: List[Span] = []
-        seen = set()
+        windows: List[str] = []
+        locations: List[tuple[int, int]] = []
+        for document_index, text in enumerate(texts):
+            for offset in range(0, len(text), step):
+                windows.append(text[offset:offset + max_len])
+                locations.append((document_index, offset))
+                if offset + max_len >= len(text):
+                    break
+        if not windows:
+            return outputs
+        seen = [set() for _ in texts]
         try:
             for label_group in (self.semantic_labels, self.format_labels):
                 if not label_group:
                     continue
-                # ★ 批量推理：把所有滑窗一次性送进模型，而不是逐窗调用。
-                # 实测 2000 字（6 个窗口）逐窗循环约 490ms、批量约 361ms（1.36x），
-                # 这是把识别耗时压回「识别路径 P95 ≤ 500ms」指标内的关键一步。
-                results = self.model.inference(windows, label_group,
-                                               threshold=self.threshold)
-                for offset, out in zip(offsets, results):
-                    for p in out:
-                        cat = LABEL_TO_CATEGORY.get(p.get("label"))
-                        if cat is None or cat not in self.categories:
-                            continue
-                        start = offset + int(p["start"])
-                        end = offset + int(p["end"])
-                        key = (start, end, cat)
-                        if key in seen:
-                            continue
-                        seen.add(key)
-                        spans.append(Span(
-                            start=start,
-                            end=end,
-                            text=text[start:end],
-                            category=cat,
-                            confidence=min(float(p.get("score", self.threshold)), 1.0),
-                            detector="gliner",
-                            rule_id="gliner_" + p.get("label", ""),
-                        ))
+                # Bound memory for requests containing many long attachments.
+                for batch_start in range(0, len(windows), 16):
+                    batch = windows[batch_start:batch_start + 16]
+                    results = self.model.inference(batch, label_group,
+                                                   threshold=self.threshold)
+                    if len(results) != len(batch):
+                        raise RuntimeError("incomplete GLiNER result")
+                    for (document_index, offset), out in zip(
+                            locations[batch_start:batch_start + 16], results):
+                        text = texts[document_index]
+                        for p in out:
+                            cat = LABEL_TO_CATEGORY.get(p.get("label"))
+                            if cat is None or cat not in self.categories:
+                                continue
+                            start = offset + int(p["start"])
+                            end = offset + int(p["end"])
+                            key = (start, end, cat)
+                            if key in seen[document_index]:
+                                continue
+                            seen[document_index].add(key)
+                            outputs[document_index].append(Span(
+                                start=start,
+                                end=end,
+                                text=text[start:end],
+                                category=cat,
+                                confidence=min(float(p.get("score", self.threshold)), 1.0),
+                                detector="gliner",
+                                rule_id="gliner_" + p.get("label", ""),
+                            ))
         except Exception:
-            # 推理异常按"未检出"处理，不抛原异常（异常消息可能含输入原文）
-            return []
-        return spans
+            # 上层 detect_all 会将异常转成不含原文的 DetectionError 并暂停外发。
+            raise RuntimeError("GLiNER inference failed") from None
+        return outputs

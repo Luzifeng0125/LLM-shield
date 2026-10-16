@@ -5,12 +5,13 @@
 """
 import pytest
 
-from llm_shield.m2_detect.pipeline import detect_all
+from llm_shield.m2_detect.pipeline import build_detectors, detect_all
 from llm_shield.m2_detect.entity_rules import EntityDetector
 
 
 def spans(text, category=None):
-    out = [(s.text, s.category) for s in detect_all(text)]
+    # These cases validate the rules themselves, independent of the optional model.
+    out = [(s.text, s.category) for s in detect_all(text, detectors=build_detectors(use_gliner=False))]
     return out if category is None else [t for t, c in out if c == category]
 
 

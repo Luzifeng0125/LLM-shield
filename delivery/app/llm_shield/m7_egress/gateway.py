@@ -35,12 +35,49 @@ class EgressGateway:
     def __init__(self, auditor=None):
         self.auditor = auditor or get_auditor()
 
+    @staticmethod
+    def _redact_answer(answer: str, hits: List[dict], original_spans: List[Span]) -> str:
+        """Remove detected restricted ranges locally before storing a model answer."""
+        ranges = []
+        for hit in hits:
+            start = hit.get("position")
+            if not isinstance(start, int) or start < 0:
+                continue
+            if hit.get("type") == "CATEGORY":
+                end = start + hit.get("length", 0)
+                if start < end <= len(answer):
+                    ranges.append((start, end))
+            elif hit.get("type") == "VALUE":
+                for span in original_spans:
+                    if span.category != hit.get("category") or not span.text:
+                        continue
+                    pos = answer.find(span.text)
+                    while pos >= 0:
+                        ranges.append((pos, pos + len(span.text)))
+                        pos = answer.find(span.text, pos + len(span.text))
+        if not ranges:
+            return ""
+        merged = []
+        for start, end in sorted(ranges):
+            if merged and start <= merged[-1][1]:
+                merged[-1] = (merged[-1][0], max(merged[-1][1], end))
+            else:
+                merged.append((start, end))
+        remaining = "".join(answer[merged[i - 1][1] if i else 0:start]
+                            for i, (start, _) in enumerate(merged)) + answer[merged[-1][1]:]
+        if len(remaining.strip(" \n\t，。；：、")) < 8:
+            return ""
+        for start, end in reversed(merged):
+            answer = answer[:start] + "〔隐私信息已隐藏〕" + answer[end:]
+        return answer
+
     # ------------------------------------------------------------ 检查
 
     def precheck(self, recipient_key: str, identity_key: str, content: str,
                  original_spans: List[Span] = None,
                  allowed_values: Optional[Set[str]] = None,
-                 *, task_key: Optional[str] = None,
+                 *, placeholders: Optional[Set[str]] = None,
+                 task_key: Optional[str] = None,
                  expected_type: Optional[RecipientType] = None) -> Dict[str, object]:
         """发送前检查：权限 + 载荷内容。"""
         rec = recipients().get(recipient_key)
@@ -66,7 +103,8 @@ class EgressGateway:
         try:
             insp = inspect_payload(content or "", recipient_key,
                                    original_spans or [], allowed_values,
-                                   task_key=task_key, identity_key=identity_key)
+                                   task_key=task_key, identity_key=identity_key,
+                                   placeholders=placeholders)
         except DetectionError:
             return {"allowed": False, "reason": "出站敏感信息识别失败，已暂停外发"}
         if insp["leaked"]:
@@ -111,14 +149,16 @@ class EgressGateway:
     # ---- 边界 1：发送给模型 ----
     def send_to_model(self, task_key: str, content: str, identity_key: str,
                       original_spans: List[Span] = None,
-                      allowed_values: Set[str] = None) -> Dict[str, object]:
+                      allowed_values: Set[str] = None,
+                      *, placeholders: Optional[Set[str]] = None) -> Dict[str, object]:
         t0 = time.perf_counter()
         # 在检查前完成消息构造，发送时不再拼接任何未检查文本。
         system = system_prompt(task_key)
         user = content
         payload = f"{system}\n\n{user}" if isinstance(user, str) else user
         pre = self.precheck("external_model", identity_key, payload,
-                            original_spans, allowed_values, task_key=task_key,
+                            original_spans, allowed_values, placeholders=placeholders,
+                            task_key=task_key,
                             expected_type=RecipientType.EXTERNAL_MODEL)
         if not pre["allowed"]:
             insp = pre.get("inspect", {})
@@ -145,7 +185,8 @@ class EgressGateway:
 
     # ---- 边界 2：展示给查看者 ----
     def send_conversation(self, task_key: str, messages: List[dict], identity_key: str,
-                           original_spans: List[Span], allowed_values: Set[str]) -> Dict[str, object]:
+                           original_spans: List[Span], allowed_values: Set[str],
+                           *, placeholders: Optional[Set[str]] = None) -> Dict[str, object]:
         """系统消息由服务端创建，完整历史重新检查后才交给生成服务。"""
         started = time.perf_counter()
         if not messages or any(m.get("role") not in {"user", "assistant"}
@@ -157,7 +198,7 @@ class EgressGateway:
         outgoing += [{"role": m["role"], "content": m["content"]} for m in messages]
         payload = "\n\n".join(m["content"] for m in outgoing)
         pre = self.precheck("external_model", identity_key, payload, original_spans,
-                            allowed_values, task_key=task_key,
+                            allowed_values, placeholders=placeholders, task_key=task_key,
                             expected_type=RecipientType.EXTERNAL_MODEL)
         if not pre["allowed"]:
             self._record(Boundary.B1_MODEL_INPUT, "external_model", "", True,
@@ -170,10 +211,22 @@ class EgressGateway:
             return {**generated, "allowed": False}
         # 回答要进入下一轮历史，因此按外部模型边界复检，不能把原值存回历史。
         output = self.precheck("external_model", identity_key, generated["text"], original_spans,
-                               allowed_values, task_key=task_key,
+                               allowed_values, placeholders=placeholders, task_key=task_key,
                                expected_type=RecipientType.EXTERNAL_MODEL)
         if not output["allowed"]:
             self.auditor.log("chat.output_blocked", task=task_key, reason=str(output["reason"]))
+            sanitized = self._redact_answer(generated["text"],
+                                            output.get("inspect", {}).get("leak_hits", []),
+                                            original_spans)
+            if sanitized:
+                checked = self.precheck("external_model", identity_key, sanitized,
+                                        original_spans, allowed_values,
+                                        placeholders=placeholders, task_key=task_key,
+                                        expected_type=RecipientType.EXTERNAL_MODEL)
+                if checked["allowed"]:
+                    self.auditor.log("chat.output_redacted", task=task_key)
+                    return {**generated, "text": sanitized, "allowed": True,
+                            "error": "回答中的受限信息已在本机隐藏。"}
             return {"allowed": False, "text": "", "engine": generated["engine"],
                     "error": "回答未通过敏感信息复检，本轮不写入历史"}
         return {**generated, "allowed": True}
@@ -181,10 +234,12 @@ class EgressGateway:
     def send_to_viewer(self, recipient_key: str, content: str, identity_key: str,
                        original_spans: List[Span] = None,
                        allowed_values: Set[str] = None,
-                       *, task_key: Optional[str] = None) -> Dict[str, object]:
+                       *, task_key: Optional[str] = None,
+                       placeholders: Optional[Set[str]] = None) -> Dict[str, object]:
         t0 = time.perf_counter()
         pre = self.precheck(recipient_key, identity_key, content,
-                            original_spans, allowed_values, task_key=task_key,
+                            original_spans, allowed_values, placeholders=placeholders,
+                            task_key=task_key,
                             expected_type=RecipientType.VIEWER)
         latency = (time.perf_counter() - t0) * 1000
         if not pre["allowed"]:
@@ -205,10 +260,12 @@ class EgressGateway:
                      original_spans: List[Span] = None,
                      allowed_values: Set[str] = None,
                      write_file: bool = True,
-                     *, task_key: Optional[str] = None) -> Dict[str, object]:
+                     *, task_key: Optional[str] = None,
+                     placeholders: Optional[Set[str]] = None) -> Dict[str, object]:
         t0 = time.perf_counter()
         pre = self.precheck(recipient_key, identity_key, content,
-                            original_spans, allowed_values, task_key=task_key,
+                            original_spans, allowed_values, placeholders=placeholders,
+                            task_key=task_key,
                             expected_type=RecipientType.EGRESS_TOOL)
         latency = (time.perf_counter() - t0) * 1000
         if not pre["allowed"]:
