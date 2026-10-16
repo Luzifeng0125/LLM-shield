@@ -127,18 +127,6 @@ def gliner_model_dir() -> str:
     return str(model_dir() / "gliner_v3")
 
 
-def reviewed_ner_settings() -> tuple[str, str]:
-    """人工 gold NER 候选产物的目录与设备；目录为空表示不启用。
-
-    这是仓库里**独立于 GLiNER** 的第二条可选识别链路：只要
-    ``SHIELD_REVIEWED_NER_MODEL_DIR`` 非空就会被接入 pipeline（默认空，即不启用）。
-    产物元数据只记录来源，不能独立证明该数据经过人工复核。
-    """
-    load_env()
-    return (os.getenv("SHIELD_REVIEWED_NER_MODEL_DIR", "").strip(),
-            os.getenv("SHIELD_REVIEWED_NER_DEVICE", "cpu").strip().lower())
-
-
 def llm_settings() -> Dict[str, Any]:
     """大模型接入设置（模块 ⑦）。
 

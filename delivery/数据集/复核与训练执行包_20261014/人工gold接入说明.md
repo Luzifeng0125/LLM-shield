@@ -1,5 +1,29 @@
 # 人工 gold 导入、训练与独立验证
 
+> ## ⚠ 2026-10-16 变更：app 侧接入已退休
+>
+> 应用（`delivery/app`）的识别链已收敛为**两条路**：带校验位的正则底座（格式类）
+> + GLiNER 语义模型（人名/机构/地点/宿舍/敏感属性）。
+>
+> 因此**本包训练出的 BERT 实体模型不再接入应用运行时**：
+>
+> | 已移除 | 说明 |
+> |---|---|
+> | `app/llm_shield/m2_detect/reviewed_ner.py` | **已迁入本包 `scripts/reviewed_ner.py`**（训练/验证脚本仍与它共享 BIO 解码） |
+> | `app/llm_shield/config.py: reviewed_ner_settings()` | 应用不再有 `SHIELD_REVIEWED_NER_*` 开关 |
+> | `app/llm_shield/m2_detect/pipeline.py` 的注入 | 应用识别链不再挂 `reviewed_ner` 检测器 |
+> | `app/tests/test_reviewed_ner*.py` | 两个测试随接入一并移除 |
+> | `app/scripts/start_reviewed_candidate.py`、`启动人工gold候选版.cmd` | 候选版启动入口退休 |
+> | `scripts/verify_reviewed_ner_app.py`、`scripts/verify_candidate_service.py` | 它们验证的是「应用接入」，接入已无 |
+>
+> **本包保留的完整能力**：数据复核与验收、gold 构建、中文 BERT 实体模型训练、
+> 独立评分、上下文动作模型训练。训练出的模型权重仍可离线复算与评估，
+> 只是不再由应用加载。历史评测结论（BERT 单模型严格 F1 99.45%、
+> 应用组合链 96.74%）保留在下方与 `outputs/` 记录中，作为该路线的存档证据。
+>
+> 如需重新接入应用，应先在**独立测试集**上把它与当前默认的 GLiNER 做同口径对比
+> （口径见 `docs/评测报告-独立手写集field_v1.md`），再决定是否作为第三条路径引入。
+
 本流程接收已导出的 `train_gold.jsonl`、`validation_gold.jsonl`、`test_gold.jsonl`。现已完成数据验收、基线、中文 BERT 实体模型训练、上下文动作模型 v2，以及实体模型的本地应用接入。原始 gold 和模型产物放在被 Git 忽略的 `outputs/` 内。
 
 ## 2026-10-16 最新结果：训练与候选接入已完成
@@ -16,17 +40,16 @@
 
 这些结果来自人工复核的合成开发数据，不是封存测试成绩，也不能表示真实业务隐私保护率。动作 v2 的 100% 仅指动作分类，没有测量其生成外发文本的能力。BERT 是实体标注模型，本轮未做生成式大语言模型 SFT。
 
-## 直接使用本地候选版
+## 本地候选版（已随 app 侧接入退休）
 
-交付目录新增 [启动人工gold候选版.cmd](../../启动人工gold候选版.cmd)。双击后，等待预检成功，打开 `http://127.0.0.1:8788/`。该入口实际加载新实体模型，同时明确使用**本地模拟回复**，不调用外部大模型。旧启动入口、`.env` 和原动作权重保持原状。窗口关闭或按 Ctrl+C 即停止。
+原先交付目录提供 `启动人工gold候选版.cmd` + `app/scripts/start_reviewed_candidate.py`，
+在 `http://127.0.0.1:8788/` 启动一个加载 BERT 实体模型、使用本地模拟回复的候选版应用。
+**该入口已于 2026-10-16 随 app 侧接入一并移除**，本文开头的变更表记录了完整范围。
 
-该入口自动选择 CUDA / CPU，预加载实体模型和现有动作模型。无需重新训练。也可从交付目录只做预检：
+若要把这条路线重新接回应用，需要先在独立测试集上与当前默认的 GLiNER 做同口径对比，
+再决定是否引入——直接接入会让应用重新出现「多条模型 NER」的歧义。
 
-```powershell
-& './runtime/training_env/Scripts/python.exe' -X utf8 './app/scripts/start_reviewed_candidate.py' --check-only
-```
-
-真实训练环境为独立 `runtime/training_env`：Python 3.12、PyTorch 2.11.0+cu128、Transformers 4.57.6，已验证 RTX 5060 Laptop CUDA 运算。版本清单见 [training_environment_lock.txt](outputs/gold_run_20261016/training_environment_lock.txt)。基础权重经 ModelScope 下载，其 SHA-256 与 [官方权重页面](https://huggingface.co/google-bert/bert-base-chinese/blob/main/model.safetensors) 一致：`3404a1ffd8da507042e8161013ba2a4fc49858b4e3f8fbf5ce5724f94883aec3`。下载传输分支及实际文件指纹单独记录，不把镜像 master 宣称为已锁定的官方 revision。
+真实训练环境为独立 `runtime/training_env`：Python 3.12、PyTorch 2.11.0+cu128、Transformers 4.57.6，已在 RTX 5060 Laptop 上验证 CUDA 运算。版本清单见 [training_environment_lock.txt](outputs/gold_run_20261016/training_environment_lock.txt)。基础权重经 ModelScope 下载，其 SHA-256 与 [官方权重页面](https://huggingface.co/google-bert/bert-base-chinese/blob/main/model.safetensors) 一致：`3404a1ffd8da507042e8161013ba2a4fc49858b4e3f8fbf5ce5724f94883aec3`。下载传输分支及实际文件指纹单独记录，不把镜像 master 宣称为已锁定的官方 revision。
 
 ## 重现实验
 
@@ -43,16 +66,14 @@ $run = 'outputs/gold_run_20261016'
 & $trainingPython -X utf8 scripts/train_context_policy.py `
   --train "$run/gold/train_gold.jsonl" --validation "$run/gold/validation_gold.jsonl" `
   --baseline "$run/policy_baseline" --out "$run/policy_context_rerun"
-
-& $trainingPython -X utf8 scripts/verify_reviewed_ner_app.py `
-  --data "$run/gold/validation_gold.jsonl" --model "$run/ner_bert_v1" `
-  --app '../../app' --out "$run/ner_app_rerun" --device cpu
-
-& $trainingPython -X utf8 scripts/verify_candidate_service.py `
-  --model "$run/ner_bert_v1" --out "$run/candidate_service_rerun.json" --device cuda
 ```
 
 无 GPU 时将 `--device cuda` 改为 `--device cpu`。所有评估入口均限制在验证集；默认 `evaluate_gold_ner.py` 固定为原规则链，不受候选模型环境变量污染。
+
+> 训练脚本与 `scripts/reviewed_ner.py` 共享 BIO 解码与偏移对齐（`train_transformer_ner.py`
+> 通过 `--app` 把 app 目录加入 `sys.path`，再以绝对路径导入 `llm_shield` 的共享类型）。
+> 原先的 `verify_reviewed_ner_app.py` / `verify_candidate_service.py` 依赖 app 侧的
+> `reviewed_ner` 检测器与候选启动入口，已随接入退休一并移除。
 
 ## 首轮基线记录（保留作对照）
 

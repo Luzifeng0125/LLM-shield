@@ -1,7 +1,14 @@
-"""Local, explicitly enabled BERT NER trained on the reviewed gold dataset.
+"""在人工 gold 上训练的中文 BERT 实体模型的推理适配器。
 
-The trainer and application share offset handling and BIO decoding here. Artifact
-metadata records provenance; it cannot independently certify human review.
+2026-10-16 从 `app/llm_shield/m2_detect/reviewed_ner.py` 迁入本执行包：
+app 的识别链已收敛为「正则底座 + GLiNER 语义类」两条路，本模型不再参与
+应用运行时；但训练脚本（`train_transformer_ner.py`）与验证脚本仍与它共享
+BIO 解码与偏移对齐逻辑，因此保留在本包内。
+
+依赖 app 包提供两个共享类型：`llm_shield.m2_detect.base.Detector`、
+`llm_shield.schema.Span`；调用方需先把 app 目录加入 sys.path（训练脚本已做）。
+
+Artifact metadata records provenance; it cannot independently certify human review.
 """
 from __future__ import annotations
 
@@ -12,8 +19,8 @@ from pathlib import Path
 import re
 from typing import Mapping, Sequence
 
-from .base import Detector
-from ..schema import Span
+from llm_shield.m2_detect.base import Detector
+from llm_shield.schema import Span
 
 
 ENTITY_CATEGORIES = tuple(sorted({

@@ -279,8 +279,9 @@ def train(args):
     import transformers
     from transformers import AutoModelForTokenClassification, AutoTokenizer, DataCollatorForTokenClassification
     sys.path.insert(0, str(APP))
-    from llm_shield.m2_detect.reviewed_ner import predict_entities
-    import llm_shield.m2_detect.reviewed_ner as shared_inference
+    # 适配器已随本包提供（同目录，脚本头部已把 scripts/ 注入 sys.path）
+    import reviewed_ner as shared_inference
+    predict_entities = shared_inference.predict_entities
 
     random.seed(args.seed)
     np.random.seed(args.seed)

@@ -67,7 +67,9 @@ def summarize(run, app):
         "live_action_model_unchanged": True, "live_action_model_sha256": current_model_hash,
         "test_used_for_training_or_scoring": False,
         "test_access_note": baseline["test_access_note"],
-        "launch": str(app.parent / "启动人工gold候选版.cmd"),
+        # 候选版启动入口已于 2026-10-16 随 app 侧接入一并退休：
+        # app 识别链收敛为「正则底座 + GLiNER 语义类」，本包只保留训练与评测链路。
+        "launch": None,
         "limitations": [
             "Human-reviewed synthetic development validation, not sealed test or real-world safety.",
             "Three combined NER boundary errors remain in ORG/LOCATION.",
