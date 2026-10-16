@@ -53,7 +53,7 @@ def main():
     parser.add_argument('--real', action='store_true', help='允许将通过检查的固定合成样例发送给配置的 API，最多 9 次请求')
     parser.add_argument('--out', type=Path, default=APP.parent / '人工复核/试标运行')
     args = parser.parse_args()
-    from llm_shield.config import llm_settings
+    from llm_shield.config import llm_settings, necessity_model_path
     settings = llm_settings()
     if args.real and not settings.get('api_key'):
         parser.error('本机密钥为空；没有发起请求。')
@@ -61,9 +61,10 @@ def main():
     case_path = APP / 'data/review/trial_cases.json'
     cases = json.loads(case_path.read_text(encoding='utf-8'))
     records = run_cases(cases, real=args.real)
-    weights = APP / 'models/necessity_action.joblib'
-    if not weights.exists():
-        weights = next((APP / 'models').rglob('necessity_action.joblib'))
+    # 决策模型路径交给 config 解析（统一模型目录，找不到回退项目内 models/）
+    weights = necessity_model_path()
+    if not weights.is_file():
+        parser.error(f'找不到决策模型权重：{weights}（可用 SHIELD_MODEL_DIR 指定模型目录）')
     evidence = {'schema': 1, 'dataset': 'synthetic_trial_not_human_gold',
                 'mode': 'real' if args.real else 'mock',
                 'provider': settings['provider'], 'model': settings['model'],

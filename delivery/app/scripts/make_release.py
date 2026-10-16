@@ -16,11 +16,20 @@
 from __future__ import annotations
 
 import argparse
+import sys
 import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-REQUIRED_MODEL = Path("models/necessity_action.joblib")
+sys.path.insert(0, str(ROOT))
+
+# 决策模型现在住在**统一模型目录**（默认 D:\project\models，项目外）。
+# 归档里放 models/ 下：运行时 config.necessity_model_path() 先找统一目录，
+# 找不到再回退 <项目根>/models/ —— 发布包走的就是这条回退。
+from llm_shield.config import necessity_model_path  # noqa: E402
+
+ARCHIVE_MODEL = Path("models/necessity_action.joblib")
+MODEL_SRC = necessity_model_path()
 
 # 需要排除的目录名（出现在路径任意层级即排除）
 EXCLUDE_DIRS = {
@@ -40,8 +49,6 @@ def should_skip(path: Path) -> bool:
         rel = path.relative_to(ROOT)
     except ValueError:
         return True
-    if rel == REQUIRED_MODEL:
-        return False
     if set(rel.parts) & EXCLUDE_DIRS:
         return True
     if path.name in EXCLUDE_FILES or (path.name.startswith(".env.") and path.name != ".env.example"):
@@ -65,8 +72,10 @@ def main() -> int:
     ap.add_argument("--version", default="0.1.0-model-only")
     args = ap.parse_args()
 
-    if not (ROOT / REQUIRED_MODEL).is_file():
-        print("缺少本地动作模型，停止打包。请先运行：python -m llm_shield.m4_necessity.train")
+    if not MODEL_SRC.is_file():
+        print("缺少决策模型，停止打包。请先运行：python -m llm_shield.m4_necessity.train")
+        print("  期望位置（统一模型目录）:", MODEL_SRC)
+        print("  可用 SHIELD_MODEL_DIR 指定其它模型目录。")
         return 1
 
     out = Path(args.out) if args.out else ROOT.parent / f"隐盾-LLM-Shield-v{args.version}.zip"
@@ -84,6 +93,9 @@ def main() -> int:
         for p in files:
             total_raw += p.stat().st_size
             z.write(p, p.relative_to(ROOT))
+        # 决策模型在统一模型目录（项目外），显式写入归档的 models/ 下
+        total_raw += MODEL_SRC.stat().st_size
+        z.write(MODEL_SRC, ARCHIVE_MODEL)
 
     # 记录被排除的敏感/大体积项，便于人工核对
     for name in (".env",):
@@ -96,7 +108,7 @@ def main() -> int:
     size = out.stat().st_size
     print(f"打包完成: {out}")
     print(f"  文件数 {len(files)}  原始 {human(total_raw)}  压缩后 {human(size)}")
-    print(f"  已包含必需模型: {REQUIRED_MODEL}（其他模型权重不入包）")
+    print(f"  已包含决策模型: {MODEL_SRC}  ->  归档内 {ARCHIVE_MODEL}（其他模型权重不入包）")
     if skipped:
         print(f"  已排除: {', '.join(skipped)}")
     print("\n前 20 个文件:")
