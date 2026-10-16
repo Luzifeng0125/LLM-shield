@@ -24,72 +24,72 @@
    ============================================================ */
 
 :root {
-  /* ---- 发布会强调色：一支渐变，三个锚点 ---- */
-  --k-blue: #0a84ff;
-  --k-violet: #7c5cff;
-  --k-cyan: #2ee6d6;
+  /* ---- 发布会强调色：一支渐变，三个锚点（浅色版取 Apple 链接蓝）---- */
+  --k-blue: #0071e3;
+  --k-violet: #6e4bd8;
+  --k-cyan: #00b8d4;
 
-  --sys-blue: #0a84ff;
-  --sys-blue-hover: #3d9bff;
-  --sys-blue-text: #7ab8ff;                /* 深底蓝字，≥ 7:1 */
-  --sys-green: #30d158;
-  --sys-red: #ff453a;
-  --sys-orange: #ff9f0a;
-  --sys-purple: #a17cff;
+  --sys-blue: #0071e3;
+  --sys-blue-hover: #0077ed;
+  --sys-blue-text: #0066cc;                /* 白底蓝字，5.65:1 */
+  --sys-green: #1a9c3f;
+  --sys-red: #e0342a;
+  --sys-orange: #d4770a;
+  --sys-purple: #7d4bd0;
 
   /* ---- 淡色软底 ---- */
-  --sys-blue-soft: rgba(10, 132, 255, .2);
-  --danger-soft: rgba(255, 69, 58, .2);
-  --warn-soft: rgba(255, 159, 10, .2);
-  --ok-soft: rgba(48, 209, 88, .2);
-  --purple-soft: rgba(124, 92, 255, .22);
+  --sys-blue-soft: rgba(0, 113, 227, .1);
+  --danger-soft: rgba(224, 52, 42, .1);
+  --warn-soft: rgba(212, 119, 10, .12);
+  --ok-soft: rgba(26, 156, 63, .12);
+  --purple-soft: rgba(125, 75, 208, .12);
 
   /* ---- 状态填充色 ---- */
-  --ok: #30d158;
-  --warn: #ff9f0a;
-  --danger: #ff453a;
+  --ok: #1a9c3f;
+  --warn: #d4770a;
+  --danger: #e0342a;
 
-  /* ---- 状态文字色 ---- */
-  --ok-text: #5fd97c;
-  --warn-text: #ffb340;
-  --danger-text: #ff8a80;
-  --info-text: #7ab8ff;
-  --purple-text: #b79aff;
+  /* ---- 状态文字色（白底实测 ≥4.5:1）---- */
+  --ok-text: #14702e;
+  --warn-text: #8a4a06;
+  --danger-text: #b3271e;
+  --info-text: #0066cc;
+  --purple-text: #6a3fb5;
 
-  /* ---- 深色文本层级（永远深色，不再跟随系统切明暗）---- */
-  --label: #ffffff;
-  --label-2: rgba(255, 255, 255, .78);
-  --label-3: rgba(255, 255, 255, .55);
-  --label-4: rgba(255, 255, 255, .3);
-  --sep: rgba(255, 255, 255, .16);
-  --sep-vibrant: rgba(255, 255, 255, .12);
-  --fill: rgba(255, 255, 255, .12);
-  --fill-hover: rgba(255, 255, 255, .2);
-  --fill-2: rgba(255, 255, 255, .08);
+  /* ---- 浅色文本层级（Apple 近黑 #1d1d1f，不用纯黑）---- */
+  --label: #1d1d1f;
+  --label-2: rgba(29, 29, 31, .78);
+  --label-3: rgba(29, 29, 31, .56);
+  --label-4: rgba(29, 29, 31, .28);
+  --sep: rgba(0, 0, 0, .12);
+  --sep-vibrant: rgba(0, 0, 0, .08);
+  --fill: rgba(0, 0, 0, .06);
+  --fill-hover: rgba(0, 0, 0, .1);
+  --fill-2: rgba(0, 0, 0, .04);
 
-  /* ---- 表面（base 后退 / elevated 前进）---- */
-  --bg-grouped: #050507;                    /* 舞台底色 */
-  --surface: #121217;                       /* 内容面 */
-  --surface-2: #1a1a21;
-  --surface-3: #1a1a21;
-  --row-bg: rgba(255, 255, 255, .05);
-  --row-bg-on: rgba(10, 132, 255, .2);
-  --switch-off: rgba(255, 255, 255, .24);
-  --badge-bg: rgba(255, 255, 255, .14);
-  --mask: rgba(0, 0, 0, .6);
-  --bubble-assistant: #1a1a21;
-  --scroll-thumb: rgba(255, 255, 255, .2);
-  --scroll-thumb-hover: rgba(255, 255, 255, .36);
+  /* ---- 表面（白底 + Apple 浅灰 #f5f5f7）---- */
+  --bg-grouped: #ffffff;                    /* 白色舞台底 */
+  --surface: #ffffff;                       /* 内容面 */
+  --surface-2: #f5f5f7;
+  --surface-3: #f5f5f7;
+  --row-bg: rgba(255, 255, 255, .9);
+  --row-bg-on: rgba(0, 113, 227, .1);
+  --switch-off: rgba(0, 0, 0, .16);
+  --badge-bg: rgba(255, 255, 255, .9);
+  --mask: rgba(0, 0, 0, .3);
+  --bubble-assistant: #f5f5f7;
+  --scroll-thumb: rgba(0, 0, 0, .18);
+  --scroll-thumb-hover: rgba(0, 0, 0, .32);
 
-  /* ---- 有色玻璃（Keynote：玻璃上带彩）---- */
-  --glass-sidebar: rgba(22, 22, 28, .66);
-  --glass-topbar: rgba(16, 16, 21, .6);
-  --glass-composer: rgba(22, 22, 28, .78);
-  --glass-modal: rgba(28, 28, 34, .9);
-  --glass-hairline: rgba(255, 255, 255, .12);
-  --glass-glow: rgba(10, 132, 255, .14);     /* 玻璃边缘的一层蓝色辉光 */
+  /* ---- 白玻璃（浅色下材质取其亮度方向：白玻璃 + 发丝线）---- */
+  --glass-sidebar: rgba(255, 255, 255, .74);
+  --glass-topbar: rgba(255, 255, 255, .7);
+  --glass-composer: rgba(255, 255, 255, .84);
+  --glass-modal: rgba(255, 255, 255, .94);
+  --glass-hairline: rgba(0, 0, 0, .08);
+  --glass-glow: rgba(0, 113, 227, .1);       /* 玻璃边缘的一层极淡蓝辉光 */
   --blur: saturate(180%) blur(24px);
-  --material-fallback: #16161c;
+  --material-fallback: #ffffff;
 
   /* ---- 字体 ---- */
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
@@ -123,21 +123,20 @@
   --tap: 2.75rem;
   --tap-lg: 3.25rem;
 
-  /* ---- 阴影（深色下以辉光为主）---- */
-  --shadow-1: 0 2px 12px rgba(0, 0, 0, .45);
-  --shadow-2: 0 4px 22px rgba(0, 0, 0, .55);
-  --shadow-3: 0 14px 48px rgba(0, 0, 0, .7);
-  --shadow-accent: 0 2px 16px rgba(10, 132, 255, .4);
-  --shadow-accent-lg: 0 4px 24px rgba(10, 132, 255, .34);
-
+  /* ---- 阴影（浅色下用极浅方向性阴影，绝不生硬黑）---- */
+  --shadow-1: 0 1px 3px rgba(0, 0, 0, .04), 0 4px 16px rgba(0, 0, 0, .04);
+  --shadow-2: 0 2px 8px rgba(0, 0, 0, .06), 0 12px 32px rgba(0, 0, 0, .07);
+  --shadow-3: 0 8px 24px rgba(0, 0, 0, .1), 0 24px 56px rgba(0, 0, 0, .12);
+  --shadow-accent: 0 2px 12px rgba(0, 113, 227, .26);
+  --shadow-accent-lg: 0 4px 20px rgba(0, 113, 227, .2);
   /* ---- 动效 ---- */
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --dur-fast: 200ms;
   --dur-base: 340ms;
 
-  --focus-ring: 0 0 0 3.5px rgba(10, 132, 255, .3);
-  --disabled-opacity: .38;
+  --focus-ring: 0 0 0 3.5px rgba(0, 113, 227, .18);
+  --disabled-opacity: .42;
 }
 
 /* ---------------- 重置与基础 ---------------- */
@@ -166,27 +165,27 @@ h1, h2, h3, p { margin: 0; }
 /* ---------------- 背景：流动极光 ---------------- */
 .app-bg {
   position: fixed; inset: 0; z-index: -1; overflow: hidden;
-  background: #050507;
+  background: #ffffff;
 }
 .app-bg::before,
 .app-bg::after {
   content: ''; position: absolute; border-radius: 50%;
-  filter: blur(90px); opacity: .55; will-change: transform;
+  filter: blur(90px); opacity: .75; will-change: transform;
 }
 .app-bg::before {
   width: 62vw; height: 62vw; left: -16vw; top: -24vh;
-  background: radial-gradient(circle, rgba(10, 132, 255, .6), transparent 68%);
+  background: radial-gradient(circle, rgba(0, 113, 227, .18), transparent 68%);
   animation: auroraA 26s ease-in-out infinite alternate;
 }
 .app-bg::after {
   width: 56vw; height: 56vw; right: -14vw; bottom: -26vh;
-  background: radial-gradient(circle, rgba(124, 92, 255, .55), transparent 68%);
+  background: radial-gradient(circle, rgba(110, 75, 216, .16), transparent 68%);
   animation: auroraB 34s ease-in-out infinite alternate;
 }
 .app-bg .aurora-cyan {
   position: absolute; width: 48vw; height: 48vw; left: 30vw; top: 20vh;
-  border-radius: 50%; filter: blur(90px); opacity: .4;
-  background: radial-gradient(circle, rgba(46, 230, 214, .5), transparent 68%);
+  border-radius: 50%; filter: blur(90px); opacity: .6;
+  background: radial-gradient(circle, rgba(0, 184, 212, .16), transparent 68%);
   animation: auroraC 40s ease-in-out infinite alternate;
 }
 @keyframes auroraA { to { transform: translate(14vw, 12vh) scale(1.18); } }
@@ -210,19 +209,19 @@ h1, h2, h3, p { margin: 0; }
 .logo { width: 34px; height: 34px; flex-shrink: 0; display: inline-flex; }
 .logo svg {
   display: block;
-  filter: drop-shadow(0 0 10px rgba(10, 132, 255, .65)) drop-shadow(0 2px 8px rgba(10, 132, 255, .4));
+  filter: drop-shadow(0 2px 6px rgba(0, 113, 227, .32));
   animation: logoGlow 4.5s ease-in-out infinite;
 }
 @keyframes logoGlow {
-  0%, 100% { filter: drop-shadow(0 0 8px rgba(10,132,255,.55)) drop-shadow(0 2px 6px rgba(10,132,255,.35)); }
-  50%      { filter: drop-shadow(0 0 18px rgba(124,92,255,.8)) drop-shadow(0 2px 10px rgba(10,132,255,.5)); }
+  0%, 100% { filter: drop-shadow(0 2px 6px rgba(0,113,227,.28)); }
+  50%      { filter: drop-shadow(0 3px 12px rgba(110,75,216,.42)); }
 }
 
 .brand-text { min-width: 0; }
 .brand-text h1 {
   font-size: var(--fs-17); font-weight: 700;
   letter-spacing: 0; line-height: 1.3;
-  background: linear-gradient(100deg, #fff 30%, #9cc4ff 75%, #c9b8ff 100%);
+  background: linear-gradient(100deg, #1d1d1f 22%, #0071e3 68%, #6e4bd8 100%);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .sub { font-size: var(--fs-13); color: var(--label-3); }
@@ -268,9 +267,9 @@ h1, h2, h3, p { margin: 0; }
 .service-status.error::before { background: var(--danger); }
 
 @keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(10, 132, 255, .5); }
-  70% { box-shadow: 0 0 0 6px rgba(10, 132, 255, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(10, 132, 255, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(0, 113, 227, .5); }
+  70% { box-shadow: 0 0 0 6px rgba(0, 113, 227, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 113, 227, 0); }
 }
 
 /* ---------------- 按钮 ---------------- */
@@ -293,7 +292,7 @@ h1, h2, h3, p { margin: 0; }
 .btn:active { transform: scale(.96); }
 
 .btn.primary {
-  background: linear-gradient(120deg, #1a90ff, #0a84ff 55%, #5a4dff);
+  background: linear-gradient(120deg, #147ce5, #0071e3 55%, #5a4dff);
   color: #fff;
   box-shadow: var(--shadow-accent);
 }
@@ -532,7 +531,7 @@ textarea:focus { outline: none; background: var(--surface); box-shadow: inset 0 
   background: var(--label-4); flex-shrink: 0;
 }
 .model-status.is-ok { background: var(--ok-soft); color: var(--ok-text); }
-.model-status.is-ok::before { background: var(--ok); box-shadow: 0 0 0 3px rgba(48, 209, 88, .2); }
+.model-status.is-ok::before { background: var(--ok); box-shadow: 0 0 0 3px rgba(26, 156, 63, .18); }
 .model-status.is-error { background: var(--danger-soft); color: var(--danger-text); }
 .model-status.is-error::before { background: var(--danger); }
 
@@ -541,7 +540,7 @@ textarea:focus { outline: none; background: var(--surface); box-shadow: inset 0 
   padding: 2px 9px; border-radius: var(--r-pill);
   font-size: var(--fs-11); font-weight: 600;
   background: var(--badge-bg); color: inherit;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .12);
 }
 
 /* ---------------- 文件库 ---------------- */
@@ -578,7 +577,7 @@ textarea:focus { outline: none; background: var(--surface); box-shadow: inset 0 
   content: ''; position: absolute; top: 2px; left: 2px;
   width: 1.6875rem; height: 1.6875rem; border-radius: 50%;
   background: #fff;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, .3), 0 1px 1px rgba(0, 0, 0, .3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .18), 0 1px 2px rgba(0, 0, 0, .12);
   transition: transform var(--dur-base) var(--ease-spring);
 }
 .mat-switch:checked { background: var(--sys-green); }
@@ -615,18 +614,18 @@ textarea:focus { outline: none; background: var(--surface); box-shadow: inset 0 
 /* ---------------- 降级：降低透明度 / 不支持毛玻璃 ---------------- */
 @media (prefers-reduced-transparency: reduce) {
   .topbar, .config, .composer-capsule, .modal, .picker-pop { backdrop-filter: none; -webkit-backdrop-filter: none; }
-  .topbar { background: #101015; }
-  .config { background: #121217; }
-  .composer-capsule { background: #16161c; }
-  .modal { background: #1c1c22; }
-  .picker-pop { background: #1c1c22; }
+  .topbar { background: #ffffff; }
+  .config { background: #ffffff; }
+  .composer-capsule { background: #ffffff; }
+  .modal { background: #ffffff; }
+  .picker-pop { background: #ffffff; }
 }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .topbar { background: #101015; }
-  .config { background: #121217; }
-  .composer-capsule { background: #16161c; }
-  .modal { background: #1c1c22; }
-  .picker-pop { background: #1c1c22; }
+  .topbar { background: #ffffff; }
+  .config { background: #ffffff; }
+  .composer-capsule { background: #ffffff; }
+  .modal { background: #ffffff; }
+  .picker-pop { background: #ffffff; }
 }
 
 /* ---------------- 降级：减少动效 ---------------- */
