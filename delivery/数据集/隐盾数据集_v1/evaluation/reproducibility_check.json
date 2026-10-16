@@ -1,0 +1,6 @@
+{
+  "reproducible_jsonl_files": 18,
+  "all_byte_identical_after_regeneration": true,
+  "human_review_overwrite_refused": true,
+  "all_python_scripts_parse": true
+}

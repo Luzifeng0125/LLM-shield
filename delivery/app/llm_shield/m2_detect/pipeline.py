@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import replace
+from functools import lru_cache
 from typing import List, Optional, Tuple
 
 from .. import config as cfg
@@ -13,6 +14,7 @@ from .campus_ner import CampusNERDetector
 from .entity_rules import EntityDetector
 from .gliner_ner import GLiNERDetector
 from .regex_rules import RegexDetector
+from .reviewed_ner import ReviewedNERDetector
 
 # 句子切分符
 _SENT_SPLIT_RE = re.compile(r"(?<=[。！？；;!?\n])")
@@ -28,6 +30,17 @@ class DetectionError(RuntimeError):
     """识别服务异常或结果无效；错误说明不含材料原文。"""
 
 
+@lru_cache(maxsize=1)
+def _reviewed_detector(model_dir: str, device: str) -> ReviewedNERDetector:
+    """人工 gold NER 候选检测器（按目录+设备缓存，避免重复加载）。"""
+    if device not in {"cpu", "cuda"}:
+        raise DetectionError("人工 gold NER 设备配置必须是 cpu 或 cuda")
+    detector = ReviewedNERDetector(model_dir, device=device)
+    if not detector.available:
+        raise DetectionError("已启用的人工 gold NER 模型不可用，已暂停处理")
+    return detector
+
+
 def build_detectors(use_campus_ner: Optional[bool] = None,
                     use_gliner: Optional[bool] = None) -> List[Detector]:
     """构建识别器链。
@@ -39,6 +52,10 @@ def build_detectors(use_campus_ner: Optional[bool] = None,
     :param use_gliner: 是否接入 GLiNER v3 语义实体识别（A 层）。
         传 None 时按配置决定（config.use_gliner()，默认关闭）——
         GLiNER 负责语义类+格式类（除身份证外的 13 类），身份证由正则权威判定。
+
+    另有一条**独立于上述开关**的可选链路：人工 gold NER 候选模型。
+    只要 ``SHIELD_REVIEWED_NER_MODEL_DIR`` 非空就会被接入（config.reviewed_ner_settings()），
+    与 GLiNER 可同时开启，两者结果由 merge_spans 统一归并。
     """
     global _gliner_singleton, _campus_singleton
 
@@ -48,6 +65,9 @@ def build_detectors(use_campus_ner: Optional[bool] = None,
         use_gliner = cfg.use_gliner()
 
     detectors: List[Detector] = [RegexDetector(), EntityDetector(detect_org_location=not use_gliner)]
+    reviewed_path, reviewed_device = cfg.reviewed_ner_settings()
+    if reviewed_path:
+        detectors.append(_reviewed_detector(reviewed_path, reviewed_device))
     if use_campus_ner:
         if _campus_singleton is None:
             _campus_singleton = CampusNERDetector()

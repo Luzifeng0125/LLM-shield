@@ -56,7 +56,12 @@ RULES: List[dict] = [
     # ---- 手机号 / 固话 ----
     {
         "category": "PHONE", "rule_id": "phone_mobile",
-        "pattern": re.compile(r"(?<!\d)(1[3-9]\d{9})(?!\d)"),
+        # 允许段内空格/连字符分组。人工 gold 本身就大量使用 "150 0278 7488" 这种
+        # 写法（scripts/field_v1_check.py 可复核），旧 pattern 要求 11 位连续数字，
+        # 在旧 gold 的 4 条带空格号码上全部漏检，只能靠 GLiNER 兜底——
+        # 这正是"模型看起来很有用"的一部分其实是在补正则的漏洞。
+        # 只允许空格/制表符/连字符，不用 \s，避免把跨行数字粘成一个号码。
+        "pattern": re.compile(r"(?<!\d)(1[3-9]\d[ \t\-]?\d{4}[ \t\-]?\d{4})(?!\d)"),
         "group": 1, "confidence": 0.98, "validator": None, "ctx": ["手机", "电话", "联系", "联系方式", "拨打"],
     },
     {
@@ -100,10 +105,14 @@ RULES: List[dict] = [
         "group": 1, "confidence": 0.99, "validator": None, "ctx": [],
     },
     {
+        # 赋值式密钥：取整段「键名=值」，与 m9_data/synthesize.py 和人工 gold
+        # 的标注口径一致（二者都把 api_key=Club...Secret 整体标为一个实体）。
+        # 只取等号右侧会与标注错位，且「键名保留、值脱敏」在这里并无额外价值——
+        # 整段替换更能保证没有凭证碎片残留。
         "category": "API_KEY", "rule_id": "api_key_assign",
-        "pattern": re.compile(r"(?:api[_-]?key|access[_-]?token|secret|password|passwd|口令|密钥)\s*[=:：]\s*([A-Za-z0-9._\-]{8,})",
+        "pattern": re.compile(r"(?:api[_-]?key|access[_-]?token|secret|password|passwd|口令|密钥)\s*[=:：]\s*[A-Za-z0-9._\-]{8,}",
                               re.IGNORECASE),
-        "group": 1, "confidence": 0.96, "validator": None, "ctx": [],
+        "group": None, "confidence": 0.96, "validator": None, "ctx": [],
     },
     {
         "category": "API_KEY", "rule_id": "api_key_bearer",

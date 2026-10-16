@@ -1,0 +1,3468 @@
+{
+  "schema": 1,
+  "generated_at": "2026-10-16T14:54:04.240888",
+  "datasets": {
+    "field_v1（独立手写集）": {
+      "independence": "与训练语料字符 8-gram 重合率 2.4%（对照：旧 gold_v3 test 为 78.8%）；完整校验见 data/field_v1/integrity_report.md（脚本 scripts/field_v1_check.py）",
+      "n_cases": 87,
+      "results": {
+        "配置 1｜纯正则 + 词典（基线）": {
+          "cover": {
+            "overall": {
+              "precision": 0.875,
+              "recall": 0.6577,
+              "f1": 0.751,
+              "tp": 98,
+              "fp": 14,
+              "fn": 51
+            },
+            "macro_f1": 0.7969,
+            "negative_total": 17,
+            "negative_with_fp": 3,
+            "by_level": {
+              "L1 低": {
+                "precision": 0.5833,
+                "recall": 0.6364,
+                "f1": 0.6087,
+                "tp": 14,
+                "fp": 10,
+                "fn": 8,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 1.0,
+                "recall": 0.5417,
+                "f1": 0.7027,
+                "tp": 39,
+                "fp": 0,
+                "fn": 33,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 0.9184,
+                "recall": 0.8182,
+                "f1": 0.8654,
+                "tp": 45,
+                "fp": 4,
+                "fn": 10,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "per_category": {
+              "API_KEY": {
+                "precision": 1.0,
+                "recall": 0.6,
+                "f1": 0.75,
+                "tp": 3,
+                "fp": 0,
+                "fn": 2,
+                "in_gold": true
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "BUDGET": {
+                "precision": 0.9091,
+                "recall": 0.9091,
+                "f1": 0.9091,
+                "tp": 10,
+                "fp": 1,
+                "fn": 1,
+                "in_gold": true
+              },
+              "DORM": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 6,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 11,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "GRADE": {
+                "precision": 1.0,
+                "recall": 0.4,
+                "f1": 0.5714,
+                "tp": 2,
+                "fp": 0,
+                "fn": 3,
+                "in_gold": true
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "LOCATION": {
+                "precision": 0.6667,
+                "recall": 0.8333,
+                "f1": 0.7407,
+                "tp": 10,
+                "fp": 5,
+                "fn": 2,
+                "in_gold": true
+              },
+              "ORG": {
+                "precision": 0.4444,
+                "recall": 0.4,
+                "f1": 0.4211,
+                "tp": 4,
+                "fp": 5,
+                "fn": 6,
+                "in_gold": true
+              },
+              "PERSON_NAME": {
+                "precision": 1.0,
+                "recall": 0.3725,
+                "f1": 0.5429,
+                "tp": 19,
+                "fp": 0,
+                "fn": 32,
+                "in_gold": true
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 14,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 0.4,
+                "recall": 0.3333,
+                "f1": 0.3636,
+                "tp": 2,
+                "fp": 3,
+                "fn": 4,
+                "in_gold": true
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "WECHAT": {
+                "precision": 1.0,
+                "recall": 0.75,
+                "f1": 0.8571,
+                "tp": 3,
+                "fp": 0,
+                "fn": 1,
+                "in_gold": true
+              }
+            }
+          },
+          "overlap": {
+            "overall": {
+              "precision": 0.8673,
+              "recall": 0.6577,
+              "f1": 0.7481,
+              "tp": 98,
+              "fp": 15,
+              "fn": 51
+            },
+            "macro_f1": 0.7947,
+            "negative_total": 17,
+            "negative_with_fp": 3,
+            "by_level": {
+              "L1 低": {
+                "precision": 0.5833,
+                "recall": 0.6364,
+                "f1": 0.6087,
+                "tp": 14,
+                "fp": 10,
+                "fn": 8,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 1.0,
+                "recall": 0.5417,
+                "f1": 0.7027,
+                "tp": 39,
+                "fp": 0,
+                "fn": 33,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 0.9,
+                "recall": 0.8182,
+                "f1": 0.8571,
+                "tp": 45,
+                "fp": 5,
+                "fn": 10,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "per_category": {
+              "API_KEY": {
+                "precision": 1.0,
+                "recall": 0.6,
+                "f1": 0.75,
+                "tp": 3,
+                "fp": 0,
+                "fn": 2,
+                "in_gold": true
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "BUDGET": {
+                "precision": 0.9091,
+                "recall": 0.9091,
+                "f1": 0.9091,
+                "tp": 10,
+                "fp": 1,
+                "fn": 1,
+                "in_gold": true
+              },
+              "DORM": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 6,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 11,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "GRADE": {
+                "precision": 1.0,
+                "recall": 0.4,
+                "f1": 0.5714,
+                "tp": 2,
+                "fp": 0,
+                "fn": 3,
+                "in_gold": true
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "LOCATION": {
+                "precision": 0.6667,
+                "recall": 0.8333,
+                "f1": 0.7407,
+                "tp": 10,
+                "fp": 5,
+                "fn": 2,
+                "in_gold": true
+              },
+              "ORG": {
+                "precision": 0.4444,
+                "recall": 0.4,
+                "f1": 0.4211,
+                "tp": 4,
+                "fp": 5,
+                "fn": 6,
+                "in_gold": true
+              },
+              "PERSON_NAME": {
+                "precision": 1.0,
+                "recall": 0.3725,
+                "f1": 0.5429,
+                "tp": 19,
+                "fp": 0,
+                "fn": 32,
+                "in_gold": true
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 14,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 0.3333,
+                "recall": 0.3333,
+                "f1": 0.3333,
+                "tp": 2,
+                "fp": 4,
+                "fn": 4,
+                "in_gold": true
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "WECHAT": {
+                "precision": 1.0,
+                "recall": 0.75,
+                "f1": 0.8571,
+                "tp": 3,
+                "fp": 0,
+                "fn": 1,
+                "in_gold": true
+              }
+            }
+          },
+          "strict": {
+            "overall": {
+              "precision": 0.7434,
+              "recall": 0.5638,
+              "f1": 0.6412,
+              "tp": 84,
+              "fp": 29,
+              "fn": 65
+            },
+            "macro_f1": 0.6504,
+            "negative_total": 17,
+            "negative_with_fp": 3,
+            "by_level": {
+              "L1 低": {
+                "precision": 0.375,
+                "recall": 0.4091,
+                "f1": 0.3913,
+                "tp": 9,
+                "fp": 15,
+                "fn": 13,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 0.8462,
+                "recall": 0.4583,
+                "f1": 0.5946,
+                "tp": 33,
+                "fp": 6,
+                "fn": 39,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 0.84,
+                "recall": 0.7636,
+                "f1": 0.8,
+                "tp": 42,
+                "fp": 8,
+                "fn": 13,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "per_category": {
+              "API_KEY": {
+                "precision": 1.0,
+                "recall": 0.6,
+                "f1": 0.75,
+                "tp": 3,
+                "fp": 0,
+                "fn": 2,
+                "in_gold": true
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "BUDGET": {
+                "precision": 0.9091,
+                "recall": 0.9091,
+                "f1": 0.9091,
+                "tp": 10,
+                "fp": 1,
+                "fn": 1,
+                "in_gold": true
+              },
+              "DORM": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 6,
+                "fn": 6,
+                "in_gold": true
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 11,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "GRADE": {
+                "precision": 0.5,
+                "recall": 0.2,
+                "f1": 0.2857,
+                "tp": 1,
+                "fp": 1,
+                "fn": 4,
+                "in_gold": true
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "LOCATION": {
+                "precision": 0.4,
+                "recall": 0.5,
+                "f1": 0.4444,
+                "tp": 6,
+                "fp": 9,
+                "fn": 6,
+                "in_gold": true
+              },
+              "ORG": {
+                "precision": 0.3333,
+                "recall": 0.3,
+                "f1": 0.3158,
+                "tp": 3,
+                "fp": 6,
+                "fn": 7,
+                "in_gold": true
+              },
+              "PERSON_NAME": {
+                "precision": 1.0,
+                "recall": 0.3725,
+                "f1": 0.5429,
+                "tp": 19,
+                "fp": 0,
+                "fn": 32,
+                "in_gold": true
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 14,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 6,
+                "fn": 6,
+                "in_gold": true
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "WECHAT": {
+                "precision": 1.0,
+                "recall": 0.75,
+                "f1": 0.8571,
+                "tp": 3,
+                "fp": 0,
+                "fn": 1,
+                "in_gold": true
+              }
+            }
+          },
+          "total_ms": 9.3
+        },
+        "配置 2｜+ GLiNER v3（默认 13 类）": {
+          "cover": {
+            "overall": {
+              "precision": 0.7568,
+              "recall": 0.9396,
+              "f1": 0.8383,
+              "tp": 140,
+              "fp": 45,
+              "fn": 9
+            },
+            "macro_f1": 0.8192,
+            "negative_total": 17,
+            "negative_with_fp": 13,
+            "by_level": {
+              "L1 低": {
+                "precision": 0.5862,
+                "recall": 0.7727,
+                "f1": 0.6667,
+                "tp": 17,
+                "fp": 12,
+                "fn": 5,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 0.9342,
+                "recall": 0.9861,
+                "f1": 0.9595,
+                "tp": 71,
+                "fp": 5,
+                "fn": 1,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 0.65,
+                "recall": 0.9455,
+                "f1": 0.7704,
+                "tp": 52,
+                "fp": 28,
+                "fn": 3,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "per_category": {
+              "API_KEY": {
+                "precision": 1.0,
+                "recall": 0.8,
+                "f1": 0.8889,
+                "tp": 4,
+                "fp": 0,
+                "fn": 1,
+                "in_gold": true
+              },
+              "BANK_CARD": {
+                "precision": 0.625,
+                "recall": 1.0,
+                "f1": 0.7692,
+                "tp": 5,
+                "fp": 3,
+                "fn": 0,
+                "in_gold": true
+              },
+              "BUDGET": {
+                "precision": 0.9167,
+                "recall": 1.0,
+                "f1": 0.9565,
+                "tp": 11,
+                "fp": 1,
+                "fn": 0,
+                "in_gold": true
+              },
+              "DORM": {
+                "precision": 1.0,
+                "recall": 0.8333,
+                "f1": 0.9091,
+                "tp": 5,
+                "fp": 0,
+                "fn": 1,
+                "in_gold": true
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 11,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "GRADE": {
+                "precision": 0.625,
+                "recall": 1.0,
+                "f1": 0.7692,
+                "tp": 5,
+                "fp": 3,
+                "fn": 0,
+                "in_gold": true
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "LOCATION": {
+                "precision": 0.5,
+                "recall": 0.5833,
+                "f1": 0.5385,
+                "tp": 7,
+                "fp": 7,
+                "fn": 5,
+                "in_gold": true
+              },
+              "ORG": {
+                "precision": 0.6667,
+                "recall": 1.0,
+                "f1": 0.8,
+                "tp": 10,
+                "fp": 5,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PERSON_NAME": {
+                "precision": 0.9107,
+                "recall": 1.0,
+                "f1": 0.9533,
+                "tp": 51,
+                "fp": 5,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PHONE": {
+                "precision": 0.6087,
+                "recall": 1.0,
+                "f1": 0.7568,
+                "tp": 14,
+                "fp": 9,
+                "fn": 0,
+                "in_gold": true
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 0.4167,
+                "recall": 0.8333,
+                "f1": 0.5556,
+                "tp": 5,
+                "fp": 7,
+                "fn": 1,
+                "in_gold": true
+              },
+              "STUDENT_ID": {
+                "precision": 0.4444,
+                "recall": 0.8,
+                "f1": 0.5714,
+                "tp": 4,
+                "fp": 5,
+                "fn": 1,
+                "in_gold": true
+              },
+              "WECHAT": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              }
+            }
+          },
+          "overlap": {
+            "overall": {
+              "precision": 0.7527,
+              "recall": 0.9396,
+              "f1": 0.8358,
+              "tp": 140,
+              "fp": 46,
+              "fn": 9
+            },
+            "macro_f1": 0.8171,
+            "negative_total": 17,
+            "negative_with_fp": 13,
+            "by_level": {
+              "L1 低": {
+                "precision": 0.5862,
+                "recall": 0.7727,
+                "f1": 0.6667,
+                "tp": 17,
+                "fp": 12,
+                "fn": 5,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 0.9342,
+                "recall": 0.9861,
+                "f1": 0.9595,
+                "tp": 71,
+                "fp": 5,
+                "fn": 1,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 0.642,
+                "recall": 0.9455,
+                "f1": 0.7647,
+                "tp": 52,
+                "fp": 29,
+                "fn": 3,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "per_category": {
+              "API_KEY": {
+                "precision": 1.0,
+                "recall": 0.8,
+                "f1": 0.8889,
+                "tp": 4,
+                "fp": 0,
+                "fn": 1,
+                "in_gold": true
+              },
+              "BANK_CARD": {
+                "precision": 0.625,
+                "recall": 1.0,
+                "f1": 0.7692,
+                "tp": 5,
+                "fp": 3,
+                "fn": 0,
+                "in_gold": true
+              },
+              "BUDGET": {
+                "precision": 0.9167,
+                "recall": 1.0,
+                "f1": 0.9565,
+                "tp": 11,
+                "fp": 1,
+                "fn": 0,
+                "in_gold": true
+              },
+              "DORM": {
+                "precision": 1.0,
+                "recall": 0.8333,
+                "f1": 0.9091,
+                "tp": 5,
+                "fp": 0,
+                "fn": 1,
+                "in_gold": true
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 11,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "GRADE": {
+                "precision": 0.625,
+                "recall": 1.0,
+                "f1": 0.7692,
+                "tp": 5,
+                "fp": 3,
+                "fn": 0,
+                "in_gold": true
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "LOCATION": {
+                "precision": 0.5,
+                "recall": 0.5833,
+                "f1": 0.5385,
+                "tp": 7,
+                "fp": 7,
+                "fn": 5,
+                "in_gold": true
+              },
+              "ORG": {
+                "precision": 0.6667,
+                "recall": 1.0,
+                "f1": 0.8,
+                "tp": 10,
+                "fp": 5,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PERSON_NAME": {
+                "precision": 0.9107,
+                "recall": 1.0,
+                "f1": 0.9533,
+                "tp": 51,
+                "fp": 5,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PHONE": {
+                "precision": 0.6087,
+                "recall": 1.0,
+                "f1": 0.7568,
+                "tp": 14,
+                "fp": 9,
+                "fn": 0,
+                "in_gold": true
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 0.3846,
+                "recall": 0.8333,
+                "f1": 0.5263,
+                "tp": 5,
+                "fp": 8,
+                "fn": 1,
+                "in_gold": true
+              },
+              "STUDENT_ID": {
+                "precision": 0.4444,
+                "recall": 0.8,
+                "f1": 0.5714,
+                "tp": 4,
+                "fp": 5,
+                "fn": 1,
+                "in_gold": true
+              },
+              "WECHAT": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              }
+            }
+          },
+          "strict": {
+            "overall": {
+              "precision": 0.7097,
+              "recall": 0.8859,
+              "f1": 0.7881,
+              "tp": 132,
+              "fp": 54,
+              "fn": 17
+            },
+            "macro_f1": 0.774,
+            "negative_total": 17,
+            "negative_with_fp": 13,
+            "by_level": {
+              "L1 低": {
+                "precision": 0.5862,
+                "recall": 0.7727,
+                "f1": 0.6667,
+                "tp": 17,
+                "fp": 12,
+                "fn": 5,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 0.8684,
+                "recall": 0.9167,
+                "f1": 0.8919,
+                "tp": 66,
+                "fp": 10,
+                "fn": 6,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 0.6049,
+                "recall": 0.8909,
+                "f1": 0.7206,
+                "tp": 49,
+                "fp": 32,
+                "fn": 6,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "per_category": {
+              "API_KEY": {
+                "precision": 1.0,
+                "recall": 0.8,
+                "f1": 0.8889,
+                "tp": 4,
+                "fp": 0,
+                "fn": 1,
+                "in_gold": true
+              },
+              "BANK_CARD": {
+                "precision": 0.625,
+                "recall": 1.0,
+                "f1": 0.7692,
+                "tp": 5,
+                "fp": 3,
+                "fn": 0,
+                "in_gold": true
+              },
+              "BUDGET": {
+                "precision": 0.75,
+                "recall": 0.8182,
+                "f1": 0.7826,
+                "tp": 9,
+                "fp": 3,
+                "fn": 2,
+                "in_gold": true
+              },
+              "DORM": {
+                "precision": 1.0,
+                "recall": 0.8333,
+                "f1": 0.9091,
+                "tp": 5,
+                "fp": 0,
+                "fn": 1,
+                "in_gold": true
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 11,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "GRADE": {
+                "precision": 0.625,
+                "recall": 1.0,
+                "f1": 0.7692,
+                "tp": 5,
+                "fp": 3,
+                "fn": 0,
+                "in_gold": true
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "LOCATION": {
+                "precision": 0.5,
+                "recall": 0.5833,
+                "f1": 0.5385,
+                "tp": 7,
+                "fp": 7,
+                "fn": 5,
+                "in_gold": true
+              },
+              "ORG": {
+                "precision": 0.6667,
+                "recall": 1.0,
+                "f1": 0.8,
+                "tp": 10,
+                "fp": 5,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PERSON_NAME": {
+                "precision": 0.8393,
+                "recall": 0.9216,
+                "f1": 0.8785,
+                "tp": 47,
+                "fp": 9,
+                "fn": 4,
+                "in_gold": true
+              },
+              "PHONE": {
+                "precision": 0.6087,
+                "recall": 1.0,
+                "f1": 0.7568,
+                "tp": 14,
+                "fp": 9,
+                "fn": 0,
+                "in_gold": true
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 0.3077,
+                "recall": 0.6667,
+                "f1": 0.4211,
+                "tp": 4,
+                "fp": 9,
+                "fn": 2,
+                "in_gold": true
+              },
+              "STUDENT_ID": {
+                "precision": 0.4444,
+                "recall": 0.8,
+                "f1": 0.5714,
+                "tp": 4,
+                "fp": 5,
+                "fn": 1,
+                "in_gold": true
+              },
+              "WECHAT": {
+                "precision": 0.75,
+                "recall": 0.75,
+                "f1": 0.75,
+                "tp": 3,
+                "fp": 1,
+                "fn": 1,
+                "in_gold": true
+              }
+            }
+          },
+          "total_ms": 4371.0
+        },
+        "配置 3｜+ GLiNER v3（仅 5 个语义类）": {
+          "cover": {
+            "overall": {
+              "precision": 0.8235,
+              "recall": 0.9396,
+              "f1": 0.8777,
+              "tp": 140,
+              "fp": 30,
+              "fn": 9
+            },
+            "macro_f1": 0.8598,
+            "negative_total": 17,
+            "negative_with_fp": 10,
+            "by_level": {
+              "L1 低": {
+                "precision": 0.6,
+                "recall": 0.9545,
+                "f1": 0.7368,
+                "tp": 21,
+                "fp": 14,
+                "fn": 1,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 0.9103,
+                "recall": 0.9861,
+                "f1": 0.9467,
+                "tp": 71,
+                "fp": 7,
+                "fn": 1,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 0.8421,
+                "recall": 0.8727,
+                "f1": 0.8571,
+                "tp": 48,
+                "fp": 9,
+                "fn": 7,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "per_category": {
+              "API_KEY": {
+                "precision": 1.0,
+                "recall": 0.6,
+                "f1": 0.75,
+                "tp": 3,
+                "fp": 0,
+                "fn": 2,
+                "in_gold": true
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "BUDGET": {
+                "precision": 0.9091,
+                "recall": 0.9091,
+                "f1": 0.9091,
+                "tp": 10,
+                "fp": 1,
+                "fn": 1,
+                "in_gold": true
+              },
+              "DORM": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 6,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 11,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "GRADE": {
+                "precision": 1.0,
+                "recall": 0.4,
+                "f1": 0.5714,
+                "tp": 2,
+                "fp": 0,
+                "fn": 3,
+                "in_gold": true
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "LOCATION": {
+                "precision": 0.55,
+                "recall": 0.9167,
+                "f1": 0.6875,
+                "tp": 11,
+                "fp": 9,
+                "fn": 1,
+                "in_gold": true
+              },
+              "ORG": {
+                "precision": 0.6667,
+                "recall": 1.0,
+                "f1": 0.8,
+                "tp": 10,
+                "fp": 5,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PERSON_NAME": {
+                "precision": 0.8793,
+                "recall": 1.0,
+                "f1": 0.9358,
+                "tp": 51,
+                "fp": 7,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 14,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 0.3846,
+                "recall": 0.8333,
+                "f1": 0.5263,
+                "tp": 5,
+                "fp": 8,
+                "fn": 1,
+                "in_gold": true
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "WECHAT": {
+                "precision": 1.0,
+                "recall": 0.75,
+                "f1": 0.8571,
+                "tp": 3,
+                "fp": 0,
+                "fn": 1,
+                "in_gold": true
+              }
+            }
+          },
+          "overlap": {
+            "overall": {
+              "precision": 0.8187,
+              "recall": 0.9396,
+              "f1": 0.875,
+              "tp": 140,
+              "fp": 31,
+              "fn": 9
+            },
+            "macro_f1": 0.8579,
+            "negative_total": 17,
+            "negative_with_fp": 10,
+            "by_level": {
+              "L1 低": {
+                "precision": 0.6,
+                "recall": 0.9545,
+                "f1": 0.7368,
+                "tp": 21,
+                "fp": 14,
+                "fn": 1,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 0.9103,
+                "recall": 0.9861,
+                "f1": 0.9467,
+                "tp": 71,
+                "fp": 7,
+                "fn": 1,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 0.8276,
+                "recall": 0.8727,
+                "f1": 0.8496,
+                "tp": 48,
+                "fp": 10,
+                "fn": 7,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "per_category": {
+              "API_KEY": {
+                "precision": 1.0,
+                "recall": 0.6,
+                "f1": 0.75,
+                "tp": 3,
+                "fp": 0,
+                "fn": 2,
+                "in_gold": true
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "BUDGET": {
+                "precision": 0.9091,
+                "recall": 0.9091,
+                "f1": 0.9091,
+                "tp": 10,
+                "fp": 1,
+                "fn": 1,
+                "in_gold": true
+              },
+              "DORM": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 6,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 11,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "GRADE": {
+                "precision": 1.0,
+                "recall": 0.4,
+                "f1": 0.5714,
+                "tp": 2,
+                "fp": 0,
+                "fn": 3,
+                "in_gold": true
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "LOCATION": {
+                "precision": 0.55,
+                "recall": 0.9167,
+                "f1": 0.6875,
+                "tp": 11,
+                "fp": 9,
+                "fn": 1,
+                "in_gold": true
+              },
+              "ORG": {
+                "precision": 0.6667,
+                "recall": 1.0,
+                "f1": 0.8,
+                "tp": 10,
+                "fp": 5,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PERSON_NAME": {
+                "precision": 0.8793,
+                "recall": 1.0,
+                "f1": 0.9358,
+                "tp": 51,
+                "fp": 7,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 14,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 0.3571,
+                "recall": 0.8333,
+                "f1": 0.5,
+                "tp": 5,
+                "fp": 9,
+                "fn": 1,
+                "in_gold": true
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "WECHAT": {
+                "precision": 1.0,
+                "recall": 0.75,
+                "f1": 0.8571,
+                "tp": 3,
+                "fp": 0,
+                "fn": 1,
+                "in_gold": true
+              }
+            }
+          },
+          "strict": {
+            "overall": {
+              "precision": 0.7778,
+              "recall": 0.8926,
+              "f1": 0.8312,
+              "tp": 133,
+              "fp": 38,
+              "fn": 16
+            },
+            "macro_f1": 0.8047,
+            "negative_total": 17,
+            "negative_with_fp": 10,
+            "by_level": {
+              "L1 低": {
+                "precision": 0.6,
+                "recall": 0.9545,
+                "f1": 0.7368,
+                "tp": 21,
+                "fp": 14,
+                "fn": 1,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 0.8462,
+                "recall": 0.9167,
+                "f1": 0.88,
+                "tp": 66,
+                "fp": 12,
+                "fn": 6,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 0.7931,
+                "recall": 0.8364,
+                "f1": 0.8142,
+                "tp": 46,
+                "fp": 12,
+                "fn": 9,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "per_category": {
+              "API_KEY": {
+                "precision": 1.0,
+                "recall": 0.6,
+                "f1": 0.75,
+                "tp": 3,
+                "fp": 0,
+                "fn": 2,
+                "in_gold": true
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "BUDGET": {
+                "precision": 0.9091,
+                "recall": 0.9091,
+                "f1": 0.9091,
+                "tp": 10,
+                "fp": 1,
+                "fn": 1,
+                "in_gold": true
+              },
+              "DORM": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 6,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 11,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "GRADE": {
+                "precision": 0.5,
+                "recall": 0.2,
+                "f1": 0.2857,
+                "tp": 1,
+                "fp": 1,
+                "fn": 4,
+                "in_gold": true
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "LOCATION": {
+                "precision": 0.55,
+                "recall": 0.9167,
+                "f1": 0.6875,
+                "tp": 11,
+                "fp": 9,
+                "fn": 1,
+                "in_gold": true
+              },
+              "ORG": {
+                "precision": 0.6667,
+                "recall": 1.0,
+                "f1": 0.8,
+                "tp": 10,
+                "fp": 5,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PERSON_NAME": {
+                "precision": 0.8103,
+                "recall": 0.9216,
+                "f1": 0.8624,
+                "tp": 47,
+                "fp": 11,
+                "fn": 4,
+                "in_gold": true
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 14,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 0.2857,
+                "recall": 0.6667,
+                "f1": 0.4,
+                "tp": 4,
+                "fp": 10,
+                "fn": 2,
+                "in_gold": true
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "WECHAT": {
+                "precision": 0.6667,
+                "recall": 0.5,
+                "f1": 0.5714,
+                "tp": 2,
+                "fp": 1,
+                "fn": 2,
+                "in_gold": true
+              }
+            }
+          },
+          "total_ms": 2021.0
+        }
+      }
+    },
+    "gold_v3 test（旧留出集，与训练同源）": {
+      "independence": "与训练语料同源生成，与训练集 8-gram 重合率 78.8%（脚本 scripts/field_v1_check.py 可复核）",
+      "n_cases": 80,
+      "results": {
+        "配置 1｜纯正则 + 词典（基线）": {
+          "cover": {
+            "overall": {
+              "precision": 1.0,
+              "recall": 0.6935,
+              "f1": 0.819,
+              "tp": 86,
+              "fp": 0,
+              "fn": 38
+            },
+            "macro_f1": 0.6522,
+            "negative_total": 12,
+            "negative_with_fp": 0,
+            "by_level": {
+              "L1 低": {
+                "precision": 1.0,
+                "recall": 0.6667,
+                "f1": 0.8,
+                "tp": 8,
+                "fp": 0,
+                "fn": 4,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 1.0,
+                "recall": 0.6429,
+                "f1": 0.7826,
+                "tp": 36,
+                "fp": 0,
+                "fn": 20,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 1.0,
+                "recall": 0.75,
+                "f1": 0.8571,
+                "tp": 42,
+                "fp": 0,
+                "fn": 14,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "per_category": {
+              "API_KEY": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 2,
+                "in_gold": true
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "BUDGET": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "DORM": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "GRADE": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 10,
+                "in_gold": true
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "LOCATION": {
+                "precision": 1.0,
+                "recall": 0.7,
+                "f1": 0.8235,
+                "tp": 7,
+                "fp": 0,
+                "fn": 3,
+                "in_gold": true
+              },
+              "ORG": {
+                "precision": 1.0,
+                "recall": 0.5,
+                "f1": 0.6667,
+                "tp": 1,
+                "fp": 0,
+                "fn": 1,
+                "in_gold": true
+              },
+              "PERSON_NAME": {
+                "precision": 1.0,
+                "recall": 0.4706,
+                "f1": 0.64,
+                "tp": 16,
+                "fp": 0,
+                "fn": 18,
+                "in_gold": true
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 18,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 2,
+                "in_gold": true
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "WECHAT": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 2,
+                "in_gold": true
+              }
+            }
+          },
+          "overlap": {
+            "overall": {
+              "precision": 1.0,
+              "recall": 0.6935,
+              "f1": 0.819,
+              "tp": 86,
+              "fp": 0,
+              "fn": 38
+            },
+            "macro_f1": 0.6522,
+            "negative_total": 12,
+            "negative_with_fp": 0,
+            "by_level": {
+              "L1 低": {
+                "precision": 1.0,
+                "recall": 0.6667,
+                "f1": 0.8,
+                "tp": 8,
+                "fp": 0,
+                "fn": 4,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 1.0,
+                "recall": 0.6429,
+                "f1": 0.7826,
+                "tp": 36,
+                "fp": 0,
+                "fn": 20,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 1.0,
+                "recall": 0.75,
+                "f1": 0.8571,
+                "tp": 42,
+                "fp": 0,
+                "fn": 14,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "per_category": {
+              "API_KEY": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 2,
+                "in_gold": true
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "BUDGET": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "DORM": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "GRADE": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 10,
+                "in_gold": true
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "LOCATION": {
+                "precision": 1.0,
+                "recall": 0.7,
+                "f1": 0.8235,
+                "tp": 7,
+                "fp": 0,
+                "fn": 3,
+                "in_gold": true
+              },
+              "ORG": {
+                "precision": 1.0,
+                "recall": 0.5,
+                "f1": 0.6667,
+                "tp": 1,
+                "fp": 0,
+                "fn": 1,
+                "in_gold": true
+              },
+              "PERSON_NAME": {
+                "precision": 1.0,
+                "recall": 0.4706,
+                "f1": 0.64,
+                "tp": 16,
+                "fp": 0,
+                "fn": 18,
+                "in_gold": true
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 18,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 2,
+                "in_gold": true
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "WECHAT": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 2,
+                "in_gold": true
+              }
+            }
+          },
+          "strict": {
+            "overall": {
+              "precision": 0.7907,
+              "recall": 0.5484,
+              "f1": 0.6476,
+              "tp": 68,
+              "fp": 18,
+              "fn": 56
+            },
+            "macro_f1": 0.5191,
+            "negative_total": 12,
+            "negative_with_fp": 0,
+            "by_level": {
+              "L1 低": {
+                "precision": 0.125,
+                "recall": 0.0833,
+                "f1": 0.1,
+                "tp": 1,
+                "fp": 7,
+                "fn": 11,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 0.6944,
+                "recall": 0.4464,
+                "f1": 0.5435,
+                "tp": 25,
+                "fp": 11,
+                "fn": 31,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 1.0,
+                "recall": 0.75,
+                "f1": 0.8571,
+                "tp": 42,
+                "fp": 0,
+                "fn": 14,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "per_category": {
+              "API_KEY": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 2,
+                "in_gold": true
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "BUDGET": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "DORM": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 10,
+                "fn": 10,
+                "in_gold": true
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "GRADE": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 10,
+                "in_gold": true
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "LOCATION": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 7,
+                "fn": 10,
+                "in_gold": true
+              },
+              "ORG": {
+                "precision": 1.0,
+                "recall": 0.5,
+                "f1": 0.6667,
+                "tp": 1,
+                "fp": 0,
+                "fn": 1,
+                "in_gold": true
+              },
+              "PERSON_NAME": {
+                "precision": 0.9375,
+                "recall": 0.4412,
+                "f1": 0.6,
+                "tp": 15,
+                "fp": 1,
+                "fn": 19,
+                "in_gold": true
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 18,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 2,
+                "in_gold": true
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "WECHAT": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 2,
+                "in_gold": true
+              }
+            }
+          },
+          "total_ms": 5.2
+        },
+        "配置 2｜+ GLiNER v3（默认 13 类）": {
+          "cover": {
+            "overall": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "tp": 124,
+              "fp": 0,
+              "fn": 0
+            },
+            "macro_f1": 1.0,
+            "negative_total": 12,
+            "negative_with_fp": 0,
+            "by_level": {
+              "L1 低": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 12,
+                "fp": 0,
+                "fn": 0,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 56,
+                "fp": 0,
+                "fn": 0,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 56,
+                "fp": 0,
+                "fn": 0,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "per_category": {
+              "API_KEY": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "BUDGET": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "DORM": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "GRADE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "LOCATION": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "ORG": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PERSON_NAME": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 34,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 18,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "WECHAT": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              }
+            }
+          },
+          "overlap": {
+            "overall": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "tp": 124,
+              "fp": 0,
+              "fn": 0
+            },
+            "macro_f1": 1.0,
+            "negative_total": 12,
+            "negative_with_fp": 0,
+            "by_level": {
+              "L1 低": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 12,
+                "fp": 0,
+                "fn": 0,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 56,
+                "fp": 0,
+                "fn": 0,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 56,
+                "fp": 0,
+                "fn": 0,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "per_category": {
+              "API_KEY": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "BUDGET": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "DORM": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "GRADE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "LOCATION": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "ORG": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PERSON_NAME": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 34,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 18,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "WECHAT": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              }
+            }
+          },
+          "strict": {
+            "overall": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "tp": 124,
+              "fp": 0,
+              "fn": 0
+            },
+            "macro_f1": 1.0,
+            "negative_total": 12,
+            "negative_with_fp": 0,
+            "by_level": {
+              "L1 低": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 12,
+                "fp": 0,
+                "fn": 0,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 56,
+                "fp": 0,
+                "fn": 0,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 56,
+                "fp": 0,
+                "fn": 0,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "per_category": {
+              "API_KEY": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "BUDGET": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "DORM": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "GRADE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "LOCATION": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "ORG": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PERSON_NAME": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 34,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 18,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "WECHAT": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              }
+            }
+          },
+          "total_ms": 3628.2
+        },
+        "配置 3｜+ GLiNER v3（仅 5 个语义类）": {
+          "cover": {
+            "overall": {
+              "precision": 0.9649,
+              "recall": 0.8871,
+              "f1": 0.9244,
+              "tp": 110,
+              "fp": 4,
+              "fn": 14
+            },
+            "macro_f1": 0.7599,
+            "negative_total": 12,
+            "negative_with_fp": 0,
+            "by_level": {
+              "L1 低": {
+                "precision": 0.8571,
+                "recall": 1.0,
+                "f1": 0.9231,
+                "tp": 12,
+                "fp": 2,
+                "fn": 0,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 0.9643,
+                "recall": 0.9643,
+                "f1": 0.9643,
+                "tp": 54,
+                "fp": 2,
+                "fn": 2,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 1.0,
+                "recall": 0.7857,
+                "f1": 0.88,
+                "tp": 44,
+                "fp": 0,
+                "fn": 12,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "per_category": {
+              "API_KEY": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 2,
+                "in_gold": true
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "BUDGET": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "DORM": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "GRADE": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 10,
+                "in_gold": true
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "LOCATION": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "ORG": {
+                "precision": 0.5,
+                "recall": 1.0,
+                "f1": 0.6667,
+                "tp": 2,
+                "fp": 2,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PERSON_NAME": {
+                "precision": 0.9444,
+                "recall": 1.0,
+                "f1": 0.9714,
+                "tp": 34,
+                "fp": 2,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 18,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "WECHAT": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 2,
+                "in_gold": true
+              }
+            }
+          },
+          "overlap": {
+            "overall": {
+              "precision": 0.9649,
+              "recall": 0.8871,
+              "f1": 0.9244,
+              "tp": 110,
+              "fp": 4,
+              "fn": 14
+            },
+            "macro_f1": 0.7599,
+            "negative_total": 12,
+            "negative_with_fp": 0,
+            "by_level": {
+              "L1 低": {
+                "precision": 0.8571,
+                "recall": 1.0,
+                "f1": 0.9231,
+                "tp": 12,
+                "fp": 2,
+                "fn": 0,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 0.9643,
+                "recall": 0.9643,
+                "f1": 0.9643,
+                "tp": 54,
+                "fp": 2,
+                "fn": 2,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 1.0,
+                "recall": 0.7857,
+                "f1": 0.88,
+                "tp": 44,
+                "fp": 0,
+                "fn": 12,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "per_category": {
+              "API_KEY": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 2,
+                "in_gold": true
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "BUDGET": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "DORM": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "GRADE": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 10,
+                "in_gold": true
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "LOCATION": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "ORG": {
+                "precision": 0.5,
+                "recall": 1.0,
+                "f1": 0.6667,
+                "tp": 2,
+                "fp": 2,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PERSON_NAME": {
+                "precision": 0.9444,
+                "recall": 1.0,
+                "f1": 0.9714,
+                "tp": 34,
+                "fp": 2,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 18,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "WECHAT": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 2,
+                "in_gold": true
+              }
+            }
+          },
+          "strict": {
+            "overall": {
+              "precision": 0.9649,
+              "recall": 0.8871,
+              "f1": 0.9244,
+              "tp": 110,
+              "fp": 4,
+              "fn": 14
+            },
+            "macro_f1": 0.7599,
+            "negative_total": 12,
+            "negative_with_fp": 0,
+            "by_level": {
+              "L1 低": {
+                "precision": 0.8571,
+                "recall": 1.0,
+                "f1": 0.9231,
+                "tp": 12,
+                "fp": 2,
+                "fn": 0,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 0.9643,
+                "recall": 0.9643,
+                "f1": 0.9643,
+                "tp": 54,
+                "fp": 2,
+                "fn": 2,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 1.0,
+                "recall": 0.7857,
+                "f1": 0.88,
+                "tp": 44,
+                "fp": 0,
+                "fn": 12,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "per_category": {
+              "API_KEY": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 2,
+                "in_gold": true
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "BUDGET": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "DORM": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "GRADE": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 10,
+                "in_gold": true
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "LOCATION": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "ORG": {
+                "precision": 0.5,
+                "recall": 1.0,
+                "f1": 0.6667,
+                "tp": 2,
+                "fp": 2,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PERSON_NAME": {
+                "precision": 0.9444,
+                "recall": 1.0,
+                "f1": 0.9714,
+                "tp": 34,
+                "fp": 2,
+                "fn": 0,
+                "in_gold": true
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 18,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 2,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 10,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true
+              },
+              "WECHAT": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 2,
+                "in_gold": true
+              }
+            }
+          },
+          "total_ms": 1914.5
+        }
+      }
+    }
+  },
+  "diagnosis": {
+    "field_v1（独立手写集）": {
+      "strict": 132,
+      "boundary": 8,
+      "cross": 9,
+      "hallu": 37,
+      "fp_by_detector": {
+        "gliner": 42,
+        "entity": 4
+      },
+      "cross_pairs": {
+        "LOCATION→PHONE": 4,
+        "LOCATION→ORG": 1,
+        "SENSITIVE_ATTR→SENSITIVE_ATTR": 1,
+        "STUDENT_ID→BANK_CARD": 1,
+        "DORM→PHONE": 1,
+        "API_KEY→PERSON_NAME": 1
+      },
+      "hallu_items": {
+        "STUDENT_ID|本学期": 3,
+        "STUDENT_ID|2026年春季学期": 1,
+        "SENSITIVE_ATTR|助学金": 1,
+        "LOCATION|辅导员办公室": 1,
+        "BANK_CARD|校园卡一张": 1,
+        "STUDENT_ID|学号": 1,
+        "PHONE|线上（腾讯会议": 1,
+        "PERSON_NAME|全体委员": 1,
+        "SENSITIVE_ATTR|不涉及敏感信息": 1,
+        "ORG|教务处": 1,
+        "LOCATION|教务处": 1,
+        "PERSON_NAME|各系主任": 1,
+        "BUDGET|500元": 1,
+        "LOCATION|校园二手书流转平台": 1,
+        "LOCATION|智汇课堂": 1,
+        "SENSITIVE_ATTR|剧烈运动需注意": 1,
+        "PERSON_NAME|班主任": 1,
+        "SENSITIVE_ATTR|父母均务农": 1,
+        "SENSITIVE_ATTR|宗教": 1,
+        "SENSITIVE_ATTR|信仰": 1,
+        "SENSITIVE_ATTR|不影响正常学习": 1,
+        "PHONE|校园服务热线12345": 1,
+        "ORG|学校": 1,
+        "GRADE|6个小组": 1,
+        "ORG|计算机2301班": 1,
+        "ORG|计算机2302班": 1,
+        "LOCATION|校园卡服务中心": 1,
+        "LOCATION|自助机": 1,
+        "GRADE|218票": 1,
+        "LOCATION|老地方": 1,
+        "PERSON_NAME|张罗": 1,
+        "BANK_CARD|王者荣耀": 1,
+        "GRADE|第 3": 1,
+        "PHONE|上午9:40至10:00": 1,
+        "PHONE|8:00": 1
+      }
+    },
+    "gold_v3 test（旧留出集，与训练同源）": {
+      "strict": 124,
+      "boundary": 0,
+      "cross": 0,
+      "hallu": 0,
+      "fp_by_detector": {},
+      "cross_pairs": {},
+      "hallu_items": {}
+    }
+  }
+}

@@ -57,9 +57,14 @@ categories:
     level: 2
     hard_ban: false
   ORG:
+    # level 1 = 最低档。公开机构名（计算机学院 / 校团委志愿服务中心）本身不含
+    # 个人属性，泄露代价远低于姓名；把它与地点同列最低档后，
+    # 「身份 max_level ∩ 接收方 max_level」会自然地放行给校外人员 / 公开发布
+    # （二者 max_level = 1），而同一场景下的姓名（L2）仍被拦住。
+    # 这不是「不检测」——仍然识别，只是降低缺省脱敏强度（GENERALIZE / RETAIN）。
     name: 机构/社团名
     kind: semantic
-    level: 2
+    level: 1
     hard_ban: false
   LOCATION:
     name: 地点
@@ -151,7 +156,7 @@ hard_constraints:
 # 四、泛化规则（模块 ⑥ 转换用）
 # ------------------------------------------------------------
 generalization:
-  ORG: "某学生组织"
+  ORG: "某校内单位"          # 兼容社团与院系/部门，见 anonymizer.GENERIC_VALUES
   LOCATION: "校内某场所"
   DORM: "校内宿舍"
   DATE_PATTERN: "日期→月份"   # 2026-03-15 -> 2026年3月

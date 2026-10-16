@@ -19,6 +19,12 @@ from pathlib import Path
 APP = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(APP))
 
+#  按敏感级别分层汇报：机构名（ORG）是 L1 最低档，它的标注缺口不该淹没
+#  证件/密钥/金额这些真正高敏类别的表现。
+LEVEL_GROUPS = [("L1 低", {1}), ("L2 中", {2}), ("L3-L4 高", {3, 4})]
+
+from llm_shield.config import category_level  # noqa: E402  (需先 sys.path 注入)
+
 
 def load_system_spans(text: str) -> list:
     """调用线上识别链路，返回系统判定的敏感片段。"""
@@ -34,14 +40,34 @@ def match(gold: list, pred: list, mode: str) -> tuple:
 
     strict  : 类别相同且边界完全一致
     overlap : 类别相同且区间相交（与项目评测修复后的口径一致）
+    cover   : 粒度无关口径。人工标注常把并列实体标成一整段
+              （「李晓华、王芳、赵磊、陈静」是一个 PERSON_NAME 区间），
+              而系统会逐个人名分别标注。overlap 口径下一个 gold 只能认领一个 pred，
+              于是系统找对的另外 3 个人名被算成误报——这是标注粒度差异，不是识别错误。
+              本口径允许一个 gold 区间吸收所有**完整落在其中**的同类别 pred，
+              一个 gold 仍只记 1 次 TP（召回率不会超过 1）。
     """
     used = [False] * len(pred)
     tp = 0
     missed, spurious = [], []
+
+    def same_cat(p, g):
+        return p['category'] == g['category']
+
     for g in gold:
+        if mode == 'cover':
+            # ① 完整落在 gold 内的 pred 全部认领
+            inside = [i for i, p in enumerate(pred)
+                      if not used[i] and same_cat(p, g)
+                      and g['start'] <= p['start'] and p['end'] <= g['end']]
+            if inside:
+                for i in inside:
+                    used[i] = True
+                tp += 1
+                continue
         hit = -1
         for i, p in enumerate(pred):
-            if used[i] or p['category'] != g['category']:
+            if used[i] or not same_cat(p, g):
                 continue
             if mode == 'strict':
                 ok = (p['start'] == g['start'] and p['end'] == g['end'])
@@ -108,7 +134,10 @@ def main() -> int:
         print('[错误] 没有任何已标注的单元可供评测（未标注单元已跳过）')
         return 1
 
-    for mode in ('overlap', 'strict'):
+    # gold 中实际出现过的类别（用于 macro 平均，见下方 macro_f1 说明）
+    gold_categories = {g['category'] for c in cases for g in (c.get('entities') or [])}
+
+    for mode in ('cover', 'overlap', 'strict'):
         per_cat = defaultdict(lambda: {'tp': 0, 'fp': 0, 'fn': 0})
         details = defaultdict(lambda: {'missed': [], 'spurious': []})
         tot = {'tp': 0, 'fp': 0, 'fn': 0}
@@ -140,15 +169,42 @@ def main() -> int:
             cp, cr, cf = prf(v['tp'], v['fp'], v['fn'])
             cats_summary[c] = {'precision': round(cp, 4), 'recall': round(cr, 4),
                                'f1': round(cf, 4), 'tp': v['tp'], 'fp': v['fp'], 'fn': v['fn'],
+                               'in_gold': c in gold_categories,
                                'missed': details[c]['missed'][:args.show],
                                'spurious': details[c]['spurious'][:args.show]}
-        macro_f1 = (sum(v['f1'] for v in cats_summary.values()) / len(cats_summary)
-                    if cats_summary else 0.0)
+        # macro-F1 只对「gold 里出现过的类别」求平均。
+        # gold 从未标注的类别（本次为 ORG）召回率在数学上无定义：
+        # 把它按 F1=0 计入，惩罚的是标注覆盖不全，而不是识别能力。
+        scored = [v['f1'] for c, v in cats_summary.items() if c in gold_categories]
+        macro_f1 = sum(scored) / len(scored) if scored else 0.0
+
+        # 按敏感级别分层汇总
+        by_level = {}
+        for label, levels in LEVEL_GROUPS:
+            agg = {'tp': 0, 'fp': 0, 'fn': 0}
+            cats = []
+            for c, v in cats_summary.items():
+                if category_level(c) in levels:
+                    agg['tp'] += v['tp']
+                    agg['fp'] += v['fp']
+                    agg['fn'] += v['fn']
+                    cats.append(c)
+            lp, lr, lf = prf(agg['tp'], agg['fp'], agg['fn'])
+            by_level[label] = {
+                'precision': round(lp, 4), 'recall': round(lr, 4), 'f1': round(lf, 4),
+                'tp': agg['tp'], 'fp': agg['fp'], 'fn': agg['fn'],
+                'categories': sorted(cats),
+            }
+
         report['modes'][mode] = {
             'overall': {'precision': round(p, 4), 'recall': round(r, 4), 'f1': round(f, 4),
                         'tp': tot['tp'], 'fp': tot['fp'], 'fn': tot['fn']},
             'macro_f1': round(macro_f1, 4),
+            'macro_f1_basis': sorted(gold_categories),
+            'categories_without_gold': sorted(c for c in cats_summary
+                                              if c not in gold_categories),
             'per_category': cats_summary,
+            'by_level': by_level,
         }
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
@@ -162,18 +218,29 @@ def main() -> int:
         print(f'  跳过未标注单元：{report["skipped_unannotated"]} 条'
               f'（加 --all-cases 可纳入，但会高估误报）')
     print('=' * 68)
-    for mode in ('overlap', 'strict'):
+    labels = {'cover': '粒度无关（推荐）', 'overlap': '区间相交', 'strict': '边界严格一致'}
+    for mode in ('cover', 'overlap', 'strict'):
         m = report['modes'][mode]
         o = m['overall']
-        label = '区间相交' if mode == 'overlap' else '边界严格一致'
-        print(f'\n  【{label}口径】整体 P={o["precision"]:.4f}  '
+        print(f'\n  【{labels[mode]}口径】整体 P={o["precision"]:.4f}  '
               f'R={o["recall"]:.4f}  F1={o["f1"]:.4f}   '
               f'(TP={o["tp"]} FP={o["fp"]} FN={o["fn"]})')
+        print(f'  macro-F1={m["macro_f1"]:.4f}（仅对 gold 出现过的 '
+              f'{len(m["macro_f1_basis"])} 类求平均）')
+        if m['categories_without_gold']:
+            print(f'  ⚠ gold 未标注类别：{", ".join(m["categories_without_gold"])}'
+                  f' —— 其检出全部计为误报，且不计入 macro-F1')
         print(f'  {'类别':<16}{'P':>8}{'R':>8}{'F1':>8}{'TP':>6}{'FP':>6}{'FN':>6}')
         print('  ' + '-' * 58)
         for c, v in sorted(m['per_category'].items(), key=lambda x: -x[1]['f1']):
+            flag = '' if v['in_gold'] else '  (gold 未标注)'
             print(f'  {c:<16}{v["precision"]:>8.3f}{v["recall"]:>8.3f}'
-                  f'{v["f1"]:>8.3f}{v["tp"]:>6}{v["fp"]:>6}{v["fn"]:>6}')
+                  f'{v["f1"]:>8.3f}{v["tp"]:>6}{v["fp"]:>6}{v["fn"]:>6}{flag}')
+        print(f'\n  按敏感级别分层：')
+        for label, lv in m['by_level'].items():
+            print(f'    {label:<8} P={lv["precision"]:.3f}  R={lv["recall"]:.3f}  '
+                  f'F1={lv["f1"]:.3f}   (TP={lv["tp"]} FP={lv["fp"]} FN={lv["fn"]})  '
+                  f'{",".join(lv["categories"]) or "—"}')
     print('\n  报告已写入：' + str(args.out))
     print('  提示：FN=漏检（人标了系统没找到），FP=误报（系统多标）')
     print('=' * 68)

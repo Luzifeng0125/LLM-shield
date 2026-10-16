@@ -99,6 +99,22 @@ def gliner_model_dir() -> str:
     return os.getenv("SHIELD_GLINER_MODEL_DIR", r"D:\project\models\gliner_v3")
 
 
+def reviewed_ner_settings() -> tuple[str, str]:
+    """人工 gold NER 候选产物的目录与设备；目录为空表示不启用。
+
+    与 GLiNER 是两条**互相独立**的可选识别增强链路，可分别开启：
+
+    - GLiNER：``SHIELD_USE_GLINER=true`` 开关 + ``SHIELD_GLINER_MODEL_DIR`` 路径；
+    - 人工 gold NER：``SHIELD_REVIEWED_NER_MODEL_DIR`` **非空即启用**（默认空）。
+
+    目录内应含 ``artifact_manifest.json``；留空则保持原识别链不变。
+    产物元数据只记录来源，**不能**独立证明该数据经过人工复核。
+    """
+    load_env()
+    return (os.getenv("SHIELD_REVIEWED_NER_MODEL_DIR", "").strip(),
+            os.getenv("SHIELD_REVIEWED_NER_DEVICE", "cpu").strip().lower())
+
+
 def llm_settings() -> Dict[str, Any]:
     """大模型接入设置（模块 ⑦）。
 

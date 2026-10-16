@@ -1,0 +1,8 @@
+# Human work stays local. Share explicitly after a separate check.
+批次/**/复核员*/空白复核表.jsonl
+*结果*.jsonl
+**/*结果*.jsonl
+工作结果/
+gold/
+qa/
+__pycache__/

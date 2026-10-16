@@ -46,14 +46,22 @@ PERSON_TITLES = [
     "姓名", "名字", "名单", "报名人", "经办人", "填报人",
     # 会议场景：主持人、参会人同样指向具体个人
     "主持人", "参会", "与会", "出席", "列席", "记录人", "参会人员", "与会人员", "参会人",
+    # 分工动词：「刘洋负责测试与上线」这类写法没有称谓词，只有动词。
+    # 不加进来，「负责/牵头/协助」后面的姓名会整段漏召回。
+    "负责", "牵头", "分管", "主导", "承担", "协助", "统筹", "对接", "跟进", "报送",
+    "联络", "协调", "经办", "主讲人",
 ]
 
 # 机构后缀词
+#
+# 注意：「系」已从通用后缀中移出，改由 _ORG_DEPT_RE 单独收紧判定。
+# 放在这里时，贪婪前缀 + 回溯会让「实际系（统）」「（联）系」「（院）系」这类
+# 普通词整段被框成机构名——实测一次评测里 4 个 ORG 误报有 3 个来自「系」。
 ORG_SUFFIXES = [
     "学生会", "研究生会", "社团", "协会", "研究会", "俱乐部", "志愿者协会", "团委", "团支部",
     "学院", "大学", "学校", "实验室", "研究中心", "服务中心", "数据中心", "信息中心",
     "工作室", "团队", "组委会", "理事会",
-    "公司", "基金会", "书院", "学部", "系",
+    "公司", "基金会", "书院", "学部",
     # 注意：泛化的「中心」不在此列——「学生活动中心」是地点而非机构，
     # 保留它会把大量校内场所误判成 ORG
 ]
@@ -62,7 +70,23 @@ ORG_SUFFIXES = [
 LOC_SUFFIXES = [
     "楼", "教室", "会议室", "报告厅", "操场", "体育馆", "图书馆", "食堂", "礼堂", "活动中心",
     "广场", "展厅", "咖啡厅", "多功能厅", "楼前", "路", "门",
+    # 「处」按校内惯例指办公场所（后勤处/教务处/登记处），归为地点。
+    # 但「处理/到处/好处/长处」这类常用词必须挡掉，否则误报遍地。
+    "处",
 ]
+
+# 「处」后面紧跟这些字时，「处」是另一个词的首字而非地点后缀：
+# 处理 / 处于 / 处所 / 处罚 / 处境 / 处置 / 处分。
+# 「这个问题处理起来」曾被框成地点「这个问题处」。
+CHU_FOLLOW_BAD = frozenset("理所于罚境置分")
+
+# 「XX处」中的常见非地点词，命中即丢弃
+LOC_STOPWORDS = {
+    "路上", "门口", "门前", "门后",
+    "处理", "到处", "此处", "该处", "一处", "多处", "各处", "每处", "别处", "近处",
+    "远处", "深处", "四处", "处处", "好处", "坏处", "难处", "用处", "害处", "错处",
+    "苦处", "痛处", "短处", "长处", "难处", "处于", "处事",
+}
 
 # 敏感个人属性关键词（出现即高敏）
 SENSITIVE_WORDS = [
@@ -118,11 +142,50 @@ class EntityDetector(Detector):
     _TITLES = "|".join(sorted(set(PERSON_TITLES), key=len, reverse=True))
     _PERSON_RE = re.compile(_NAME + r"(?=$|[^\u4e00-\u9fa5]|[和与及]|" + _TITLES + r")")
     _PREFIX_RE = re.compile(r"(?:" + _TITLES + r")[ \t]*(?:[：:为是][ \t]*)?")
-    _SUFFIX_RE = re.compile(r"(?:^|[^\u4e00-\u9fa5]|[由请和与及])(?P<name>" + _NAME
+    # 前一个字符原只允许「非汉字 / 由请和与及」，于是「计算机学院的周涛同学」
+    # 这种最常见的「的」字结构整段漏召回——而它恰恰是会把姓名带去公开场合的句式。
+    # 放开常见虚词前缀；误报由姓氏表 + 停用词表 + 后置称谓三重约束兜住。
+    _NAME_PRE_CHARS = "由请和与及的了是在有"
+    _SUFFIX_RE = re.compile(r"(?:^|[^\u4e00-\u9fa5]|[" + _NAME_PRE_CHARS + r"])(?P<name>" + _NAME
                             + r")(?=[（(]?(?:" + _TITLES + r"))")
     _LIST_SEPARATOR = re.compile(r"[ \t]*[、,，和与及][ \t]*")
-    _ORG_RE = re.compile(r"[\u4e00-\u9fa5A-Za-z0-9]{2,12}(?:" + "|".join(ORG_SUFFIXES) + r")")
-    _LOC_RE = re.compile(r"[\u4e00-\u9fa5A-Za-z0-9]{1,10}(?:" + "|".join(LOC_SUFFIXES) + r")")
+    # 专名主体的「断点字」：动词、介词、助词、连词。
+    #
+    # 用无约束的 [\u4e00-\u9fa5]{2,12} 做前缀时，贪婪回溯会把整段引导语框进来：
+    # 「申请由赵磊提交至后勤处」被判成地点「申请由赵磊提交至后勤处」。
+    # 改成「不含断点字的连续串」（tempered greedy）：从后缀往左遇到断点字即止，
+    # 于是上面这句正确落在「后勤处」。刻意不收 会/动/活/和/同/向/正 等字——
+    # 它们是「学生活动中心」「校学生会」「和平路」「同济大学」的组成部分。
+    _BREAKCHARS = "的了着过是在有与及或把将被给让叫由从到至以于对还就都也又再才更很曾请使令作为"
+    _BODY = r"(?:(?![{}])[\u4e00-\u9fa5A-Za-z0-9])".format(_BREAKCHARS)
+
+    _ORG_RE = re.compile(_BODY + r"{2,12}(?:" + "|".join(ORG_SUFFIXES) + r")")
+    _LOC_RE = re.compile(_BODY + r"{1,10}(?:" + "|".join(LOC_SUFFIXES) + r")")
+
+    # 「XX系」单独判定（见 ORG_SUFFIXES 注释）：
+    #   ① 后面不能紧跟 统/列/数 —— 那是「系统 / 系列 / 系别」，不是院系；
+    #   ② 「系」前一字落进 _DEPT_BAD_PREV —— 那是「联系 / 关系 / 体系 / 派系」等常用词；
+    #   ③ 主体至少 2 个字 —— 单字 + 「系」不成机构名。
+    _ORG_DEPT_RE = re.compile(_BODY + r"{2,6}系(?![统列数])")
+    _DEPT_BAD_PREV = frozenset("联关体世派母嫡")
+
+    # 机构名左侧的引导词：贪婪前缀常把动词/介词一并框进来
+    # （「覆盖计算机学院」→ 实为「计算机学院」）。
+    _ORG_LEADIN_2 = (
+        "覆盖", "辐射", "包括", "包含", "依托", "联合", "承办", "主办", "协办", "来自",
+        "前往", "位于", "走进", "走访", "面向", "针对", "关于", "以及", "还有", "例如",
+        "比如", "所在", "所属", "下设", "隶属", "挂靠", "成立", "组建", "搭建", "建设",
+        "创建", "加入", "参加", "参与", "通知", "拜访", "访问", "调研", "考察", "参观",
+        "服务", "支持", "感谢", "委托", "授权", "会同", "携手", "对接", "沟通", "汇报",
+        "请示", "报备", "申报", "提交", "报送", "抄送", "合作", "签约", "共建", "招募",
+        "联络", "联系", "协调", "统筹", "对接", "邀请", "召集", "发动", "动员",
+    )
+    # 机构名左侧的限定词单字（永远不会是专名开头）
+    _ORG_LEADIN_1 = frozenset("各本该此全多数几每整")
+
+    # 姓名末字禁用字：贪婪匹配会把「陈静共5人」的「共」一起吃进来。
+    # 末字落在这些连接/总括/助词上，说明名字已经越界，回退到最短合法长度。
+    _NAME_TAIL_STOP = frozenset("共等及与和的在了是也就都还要将会可已被把让给向从为以地得着过")
 
     # 明显不是人名的常见词（姓氏开头的误报词）
     _PERSON_STOPWORDS = {
@@ -165,6 +228,18 @@ class EntityDetector(Detector):
 
     # ------------------------------------------------------------ 各类别
 
+    @classmethod
+    def _trim_name_tail(cls, value: str) -> str:
+        """裁掉被贪婪后缀吃进姓名的虚词。
+
+        「陈静共5人」会被 _PERSON_RE 匹配成「陈静共」（「5」是非汉字，满足后瞻），
+        于是「陈静」这个真名既不进 names，全文的其它「陈静」提及也全部漏召回。
+        末字是连接/总括/助词时回退到最短合法长度（≥2 字）。
+        """
+        while len(value) > 2 and value[-1] in cls._NAME_TAIL_STOP:
+            value = value[:-1]
+        return value
+
     def _detect_person(self, text: str) -> List[Span]:
         """先定位标签或称谓直接指向的姓名，再覆盖同文中的同名提及。"""
         out: List[Span] = []
@@ -172,16 +247,19 @@ class EntityDetector(Detector):
         for title in self._PREFIX_RE.finditer(text):
             cursor = title.end()
             while match := self._PERSON_RE.match(text, cursor):
-                if match.group() in self._PERSON_STOPWORDS:
+                name = self._trim_name_tail(match.group())
+                if match.group() in self._PERSON_STOPWORDS or name in self._PERSON_STOPWORDS:
                     break
-                names.add(match.group())
-                separator = self._LIST_SEPARATOR.match(text, match.end())
+                names.add(name)
+                # 用裁剪后的边界继续找并列项，否则「陈静共5人」会把游标推过分隔符
+                separator = self._LIST_SEPARATOR.match(text, match.start() + len(name))
                 if separator is None:
                     break
                 cursor = separator.end()
         for match in self._SUFFIX_RE.finditer(text):
-            if match.group("name") not in self._PERSON_STOPWORDS:
-                names.add(match.group("name"))
+            name = self._trim_name_tail(match.group("name"))
+            if name not in self._PERSON_STOPWORDS:
+                names.add(name)
         for value in sorted(names):
             cursor = 0
             while (start := text.find(value, cursor)) >= 0:
@@ -190,13 +268,48 @@ class EntityDetector(Detector):
                 cursor = start + len(value)
         return out
 
+    @classmethod
+    def _trim_org(cls, value: str) -> str:
+        """修机构名的左右边界。
+
+        右：「经济管理学院等主要院系」把总括语一起框了进来，止于「等」之前。
+        左：「覆盖计算机学院」里的「覆盖」是动词，不是机构名的一部分。
+        """
+        idx = value.find("等")
+        if 2 <= idx < len(value) - 1:
+            value = value[:idx]
+        changed = True
+        while changed and len(value) > 3:
+            changed = False
+            for lead in cls._ORG_LEADIN_2:
+                if value.startswith(lead) and len(value) - len(lead) >= 2:
+                    value = value[len(lead):]
+                    changed = True
+                    break
+            if changed:
+                continue
+            if value[0] in cls._ORG_LEADIN_1 and len(value) > 3:
+                value = value[1:]
+                changed = True
+        return value
+
     def _detect_org(self, text: str) -> List[Span]:
         out: List[Span] = []
         for m in self._ORG_RE.finditer(text):
-            value = m.group(0)
+            end = m.end()
+            value = self._trim_org(m.group(0))
             if len(value) < 3:
                 continue
-            out.append(Span(m.start(), m.end(), value, "ORG", 0.80, self.name, "org_suffix"))
+            out.append(Span(end - len(value), end, value, "ORG", 0.80, self.name, "org_suffix"))
+        for m in self._ORG_DEPT_RE.finditer(text):
+            end = m.end()
+            raw = m.group(0)
+            if raw[-2] in self._DEPT_BAD_PREV:      # 联系 / 关系 / 体系 …
+                continue
+            value = self._trim_org(raw)
+            if len(value) < 3:
+                continue
+            out.append(Span(end - len(value), end, value, "ORG", 0.78, self.name, "org_dept"))
         return out
 
     def _detect_location(self, text: str) -> List[Span]:
@@ -205,8 +318,11 @@ class EntityDetector(Detector):
             value = m.group(0)
             if len(value) < 2:
                 continue
-            # 「路上」「门口」之类不构成地点
-            if value in {"路上", "门口", "门前", "门前", "门后"}:
+            # 「路上」「门口」「处理」「到处」之类不构成地点
+            if value in LOC_STOPWORDS:
+                continue
+            if value.endswith("处") and m.end() < len(text) \
+                    and text[m.end()] in CHU_FOLLOW_BAD:
                 continue
             out.append(Span(m.start(), m.end(), value, "LOCATION", 0.75, self.name, "loc_suffix"))
         return out

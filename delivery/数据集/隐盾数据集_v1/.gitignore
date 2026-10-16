@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+# Filled review records must stay local unless deliberately approved for release.
+review/reviewer_A.jsonl
+review/reviewer_B.jsonl
+review/adjudicated*.jsonl
+review/*gold*.jsonl

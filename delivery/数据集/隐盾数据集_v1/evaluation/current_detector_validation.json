@@ -1,0 +1,132 @@
+{
+  "model": "current_rule_context_detector",
+  "data_file": "validation.jsonl",
+  "source_folder": "ner",
+  "documents": 850,
+  "matching": "exact character offsets and category; no partial-match credit",
+  "micro": {
+    "tp": 475,
+    "fp": 152,
+    "fn": 625,
+    "precision": 0.757576,
+    "recall": 0.431818,
+    "f1": 0.550087
+  },
+  "per_category": {
+    "API_KEY": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 50,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "BANK_CARD": {
+      "tp": 50,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "BUDGET": {
+      "tp": 100,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "DORM": {
+      "tp": 0,
+      "fp": 100,
+      "fn": 100,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "EMAIL": {
+      "tp": 100,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "GRADE": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 100,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "ID_CARD": {
+      "tp": 50,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "LOCATION": {
+      "tp": 0,
+      "fp": 33,
+      "fn": 50,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "ORG": {
+      "tp": 0,
+      "fp": 13,
+      "fn": 50,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "PERSON_NAME": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 150,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "PHONE": {
+      "tp": 75,
+      "fp": 0,
+      "fn": 25,
+      "precision": 1.0,
+      "recall": 0.75,
+      "f1": 0.857143
+    },
+    "SENSITIVE_ATTR": {
+      "tp": 0,
+      "fp": 6,
+      "fn": 50,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "STUDENT_ID": {
+      "tp": 100,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "WECHAT": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 50,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    }
+  },
+  "exact_document_matches": 338,
+  "elapsed_seconds": 0.773,
+  "note": "Synthetic weak/upstream labels; measures entity detection only, not task decision quality or end-to-end privacy."
+}

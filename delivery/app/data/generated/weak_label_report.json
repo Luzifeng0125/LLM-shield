@@ -1,0 +1,171 @@
+{
+  "per_lf": [
+    {
+      "lf": "hmm",
+      "aggregated": true,
+      "precision": 0.9131,
+      "recall": 0.8985,
+      "f1": 0.9058,
+      "n_pred": 3753,
+      "hmm_acc": 0.0,
+      "hmm_acc_all": 0.0,
+      "hmm_weight": 1.0
+    },
+    {
+      "lf": "lf_regex_phone",
+      "aggregated": false,
+      "precision": 1.0,
+      "recall": 0.2459,
+      "f1": 0.3948,
+      "n_pred": 938,
+      "hmm_acc": 0.3416,
+      "hmm_acc_all": 0.3679,
+      "hmm_weight": 1.0
+    },
+    {
+      "lf": "lf_entity_person",
+      "aggregated": false,
+      "precision": 0.7585,
+      "recall": 0.2585,
+      "f1": 0.3856,
+      "n_pred": 1300,
+      "hmm_acc": 0.3415,
+      "hmm_acc_all": 0.3679,
+      "hmm_weight": 1.0
+    },
+    {
+      "lf": "lf_regex_email",
+      "aggregated": false,
+      "precision": 1.0,
+      "recall": 0.1235,
+      "f1": 0.2198,
+      "n_pred": 471,
+      "hmm_acc": 0.407,
+      "hmm_acc_all": 0.4307,
+      "hmm_weight": 1.0
+    },
+    {
+      "lf": "lf_regex_student_id",
+      "aggregated": false,
+      "precision": 1.0,
+      "recall": 0.1148,
+      "f1": 0.206,
+      "n_pred": 438,
+      "hmm_acc": 0.4096,
+      "hmm_acc_all": 0.4332,
+      "hmm_weight": 1.0
+    },
+    {
+      "lf": "lf_regex_budget",
+      "aggregated": false,
+      "precision": 0.9763,
+      "recall": 0.0863,
+      "f1": 0.1585,
+      "n_pred": 337,
+      "hmm_acc": 0.3434,
+      "hmm_acc_all": 0.3696,
+      "hmm_weight": 1.0
+    },
+    {
+      "lf": "lf_regex_dorm",
+      "aggregated": false,
+      "precision": 0.9402,
+      "recall": 0.0288,
+      "f1": 0.056,
+      "n_pred": 117,
+      "hmm_acc": 0.3479,
+      "hmm_acc_all": 0.374,
+      "hmm_weight": 1.0
+    },
+    {
+      "lf": "lf_regex_wechat",
+      "aggregated": false,
+      "precision": 1.0,
+      "recall": 0.0262,
+      "f1": 0.0511,
+      "n_pred": 100,
+      "hmm_acc": 0.4114,
+      "hmm_acc_all": 0.4349,
+      "hmm_weight": 1.0
+    },
+    {
+      "lf": "lf_regex_api_key",
+      "aggregated": false,
+      "precision": 1.0,
+      "recall": 0.0144,
+      "f1": 0.0284,
+      "n_pred": 55,
+      "hmm_acc": 0.5336,
+      "hmm_acc_all": 0.5523,
+      "hmm_weight": 1.0
+    },
+    {
+      "lf": "lf_regex_bank_card",
+      "aggregated": false,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "n_pred": 0,
+      "hmm_acc": 0.0,
+      "hmm_acc_all": 0.0,
+      "hmm_weight": 1.0
+    },
+    {
+      "lf": "lf_regex_grade",
+      "aggregated": false,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "n_pred": 0,
+      "hmm_acc": 0.0,
+      "hmm_acc_all": 0.0,
+      "hmm_weight": 1.0
+    },
+    {
+      "lf": "lf_regex_id_card",
+      "aggregated": false,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "n_pred": 0,
+      "hmm_acc": 0.0,
+      "hmm_acc_all": 0.0,
+      "hmm_weight": 1.0
+    }
+  ],
+  "n_cases": 384,
+  "match_mode": "overlap",
+  "dropped_lfs": [
+    {
+      "lf": "lf_bare_number_noisy",
+      "f1": 0.1451,
+      "precision": 0.2709,
+      "n_pred": 395
+    },
+    {
+      "lf": "lf_entity_loc",
+      "f1": 0.0343,
+      "precision": 0.2326,
+      "n_pred": 86
+    },
+    {
+      "lf": "lf_entity_org",
+      "f1": 0.0243,
+      "precision": 0.0955,
+      "n_pred": 157
+    }
+  ],
+  "kept_lfs": [
+    "lf_regex_phone",
+    "lf_entity_person",
+    "lf_regex_email",
+    "lf_regex_budget",
+    "lf_regex_student_id",
+    "lf_regex_dorm",
+    "lf_regex_wechat",
+    "lf_regex_api_key",
+    "lf_regex_bank_card",
+    "lf_regex_grade",
+    "lf_regex_id_card"
+  ]
+}

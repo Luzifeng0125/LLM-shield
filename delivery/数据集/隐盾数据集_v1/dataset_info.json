@@ -1,0 +1,26 @@
+{
+  "yindun_train": {
+    "file_name": "sft/train.jsonl",
+    "columns": {
+      "prompt": "instruction",
+      "query": "input",
+      "response": "output"
+    }
+  },
+  "yindun_validation": {
+    "file_name": "sft/validation.jsonl",
+    "columns": {
+      "prompt": "instruction",
+      "query": "input",
+      "response": "output"
+    }
+  },
+  "yindun_test": {
+    "file_name": "sft/test.jsonl",
+    "columns": {
+      "prompt": "instruction",
+      "query": "input",
+      "response": "output"
+    }
+  }
+}

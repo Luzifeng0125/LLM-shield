@@ -1,0 +1,78 @@
+{
+  "history": [
+    {
+      "round": 0,
+      "f1": 0.964,
+      "precision": 0.931,
+      "recall": 0.9994
+    },
+    {
+      "round": 1,
+      "f1": 0.9655,
+      "precision": 0.9333,
+      "recall": 1.0
+    }
+  ],
+  "final": {
+    "precision": 0.9327,
+    "recall": 1.0,
+    "f1": 0.9652,
+    "tp": 1553,
+    "fp": 112,
+    "fn": 0,
+    "n_cases": 90,
+    "match_mode": "overlap",
+    "per_category": {
+      "ATTR": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "n_gold": 30
+      },
+      "BUDGET": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "n_gold": 151
+      },
+      "DORM": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "n_gold": 30
+      },
+      "EMAIL": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "n_gold": 210
+      },
+      "NAME": {
+        "precision": 0.8095,
+        "recall": 1.0,
+        "f1": 0.8947,
+        "n_gold": 476
+      },
+      "PHONE": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "n_gold": 446
+      },
+      "SID": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "n_gold": 180
+      },
+      "WECHAT": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "n_gold": 30
+      }
+    }
+  },
+  "rounds": 2,
+  "top_k": 60
+}

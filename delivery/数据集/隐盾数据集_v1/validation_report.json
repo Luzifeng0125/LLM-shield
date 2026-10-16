@@ -1,0 +1,32 @@
+{
+  "ok": true,
+  "counts": {
+    "ner": {
+      "train": 3400,
+      "validation": 850,
+      "test": 850
+    },
+    "policy": {
+      "train": 960,
+      "validation": 240,
+      "test": 240
+    },
+    "dialogues": {
+      "train": 240,
+      "validation": 60,
+      "test": 60
+    }
+  },
+  "all_checked_spans": 32566,
+  "public_rows_checked": 8000,
+  "template_family_overlap": 0,
+  "source_group_overlap": 0,
+  "exact_text_overlap_across_splits": 0,
+  "public_custom_exact_text_overlap": 0,
+  "duplicate_full_inputs_within_each_split": 0,
+  "sft_schema_and_export_alignment": true,
+  "public_span_check": true,
+  "pause_and_history_checks": true,
+  "human_gold_count": 0,
+  "limitations": "No semantic or real-world accuracy claim. Shared generation logic can still cause distribution bias; human review remains required."
+}

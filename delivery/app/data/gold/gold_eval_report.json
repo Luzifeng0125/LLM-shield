@@ -1,0 +1,598 @@
+{
+  "schema": 1,
+  "evaluated_at": "2026-10-16T14:03:52.286233",
+  "gold_file": "data\\gold\\gold_未署名_2026-10-14.json",
+  "annotator": "",
+  "cases": 9,
+  "skipped_unannotated": 4,
+  "modes": {
+    "cover": {
+      "overall": {
+        "precision": 0.9286,
+        "recall": 1.0,
+        "f1": 0.963,
+        "tp": 39,
+        "fp": 3,
+        "fn": 0
+      },
+      "macro_f1": 1.0,
+      "macro_f1_basis": [
+        "API_KEY",
+        "BUDGET",
+        "EMAIL",
+        "ID_CARD",
+        "LOCATION",
+        "PERSON_NAME",
+        "PHONE",
+        "WECHAT"
+      ],
+      "categories_without_gold": [
+        "ORG"
+      ],
+      "per_category": {
+        "API_KEY": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        },
+        "BUDGET": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 6,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        },
+        "EMAIL": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        },
+        "ID_CARD": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        },
+        "LOCATION": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        },
+        "ORG": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 3,
+          "fn": 0,
+          "in_gold": false,
+          "missed": [],
+          "spurious": [
+            {
+              "case": "fixture:activity_roster",
+              "text": "校团委志愿服务中心",
+              "detector": "entity"
+            },
+            {
+              "case": "fixture:project_plan",
+              "text": "计算机学院",
+              "detector": "entity"
+            },
+            {
+              "case": "fixture:project_plan",
+              "text": "经济管理学院",
+              "detector": "entity"
+            }
+          ]
+        },
+        "PERSON_NAME": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 22,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        },
+        "PHONE": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        },
+        "WECHAT": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        }
+      },
+      "by_level": {
+        "L1 低": {
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6667,
+          "tp": 3,
+          "fp": 3,
+          "fn": 0,
+          "categories": [
+            "LOCATION",
+            "ORG"
+          ]
+        },
+        "L2 中": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 24,
+          "fp": 0,
+          "fn": 0,
+          "categories": [
+            "EMAIL",
+            "PERSON_NAME",
+            "WECHAT"
+          ]
+        },
+        "L3-L4 高": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 12,
+          "fp": 0,
+          "fn": 0,
+          "categories": [
+            "API_KEY",
+            "BUDGET",
+            "ID_CARD",
+            "PHONE"
+          ]
+        }
+      }
+    },
+    "overlap": {
+      "overall": {
+        "precision": 0.8667,
+        "recall": 1.0,
+        "f1": 0.9286,
+        "tp": 39,
+        "fp": 6,
+        "fn": 0
+      },
+      "macro_f1": 0.992,
+      "macro_f1_basis": [
+        "API_KEY",
+        "BUDGET",
+        "EMAIL",
+        "ID_CARD",
+        "LOCATION",
+        "PERSON_NAME",
+        "PHONE",
+        "WECHAT"
+      ],
+      "categories_without_gold": [
+        "ORG"
+      ],
+      "per_category": {
+        "API_KEY": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        },
+        "BUDGET": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 6,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        },
+        "EMAIL": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        },
+        "ID_CARD": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        },
+        "LOCATION": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        },
+        "ORG": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 3,
+          "fn": 0,
+          "in_gold": false,
+          "missed": [],
+          "spurious": [
+            {
+              "case": "fixture:activity_roster",
+              "text": "校团委志愿服务中心",
+              "detector": "entity"
+            },
+            {
+              "case": "fixture:project_plan",
+              "text": "计算机学院",
+              "detector": "entity"
+            },
+            {
+              "case": "fixture:project_plan",
+              "text": "经济管理学院",
+              "detector": "entity"
+            }
+          ]
+        },
+        "PERSON_NAME": {
+          "precision": 0.88,
+          "recall": 1.0,
+          "f1": 0.9362,
+          "tp": 22,
+          "fp": 3,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": [
+            {
+              "case": "fixture:meeting_minutes",
+              "text": "王芳",
+              "detector": "entity"
+            },
+            {
+              "case": "fixture:meeting_minutes",
+              "text": "赵磊",
+              "detector": "entity"
+            },
+            {
+              "case": "fixture:meeting_minutes",
+              "text": "陈静",
+              "detector": "entity"
+            }
+          ]
+        },
+        "PHONE": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        },
+        "WECHAT": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        }
+      },
+      "by_level": {
+        "L1 低": {
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6667,
+          "tp": 3,
+          "fp": 3,
+          "fn": 0,
+          "categories": [
+            "LOCATION",
+            "ORG"
+          ]
+        },
+        "L2 中": {
+          "precision": 0.8889,
+          "recall": 1.0,
+          "f1": 0.9412,
+          "tp": 24,
+          "fp": 3,
+          "fn": 0,
+          "categories": [
+            "EMAIL",
+            "PERSON_NAME",
+            "WECHAT"
+          ]
+        },
+        "L3-L4 高": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 12,
+          "fp": 0,
+          "fn": 0,
+          "categories": [
+            "API_KEY",
+            "BUDGET",
+            "ID_CARD",
+            "PHONE"
+          ]
+        }
+      }
+    },
+    "strict": {
+      "overall": {
+        "precision": 0.8444,
+        "recall": 0.9744,
+        "f1": 0.9048,
+        "tp": 38,
+        "fp": 7,
+        "fn": 1
+      },
+      "macro_f1": 0.9867,
+      "macro_f1_basis": [
+        "API_KEY",
+        "BUDGET",
+        "EMAIL",
+        "ID_CARD",
+        "LOCATION",
+        "PERSON_NAME",
+        "PHONE",
+        "WECHAT"
+      ],
+      "categories_without_gold": [
+        "ORG"
+      ],
+      "per_category": {
+        "API_KEY": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        },
+        "BUDGET": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 6,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        },
+        "EMAIL": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        },
+        "ID_CARD": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        },
+        "LOCATION": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        },
+        "ORG": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 3,
+          "fn": 0,
+          "in_gold": false,
+          "missed": [],
+          "spurious": [
+            {
+              "case": "fixture:activity_roster",
+              "text": "校团委志愿服务中心",
+              "detector": "entity"
+            },
+            {
+              "case": "fixture:project_plan",
+              "text": "计算机学院",
+              "detector": "entity"
+            },
+            {
+              "case": "fixture:project_plan",
+              "text": "经济管理学院",
+              "detector": "entity"
+            }
+          ]
+        },
+        "PERSON_NAME": {
+          "precision": 0.84,
+          "recall": 0.9545,
+          "f1": 0.8936,
+          "tp": 21,
+          "fp": 4,
+          "fn": 1,
+          "in_gold": true,
+          "missed": [
+            {
+              "case": "fixture:meeting_minutes",
+              "text": "李晓华、王芳、赵磊、陈静"
+            }
+          ],
+          "spurious": [
+            {
+              "case": "fixture:meeting_minutes",
+              "text": "李晓华",
+              "detector": "entity"
+            },
+            {
+              "case": "fixture:meeting_minutes",
+              "text": "王芳",
+              "detector": "entity"
+            },
+            {
+              "case": "fixture:meeting_minutes",
+              "text": "赵磊",
+              "detector": "entity"
+            },
+            {
+              "case": "fixture:meeting_minutes",
+              "text": "陈静",
+              "detector": "entity"
+            }
+          ]
+        },
+        "PHONE": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        },
+        "WECHAT": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "in_gold": true,
+          "missed": [],
+          "spurious": []
+        }
+      },
+      "by_level": {
+        "L1 低": {
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6667,
+          "tp": 3,
+          "fp": 3,
+          "fn": 0,
+          "categories": [
+            "LOCATION",
+            "ORG"
+          ]
+        },
+        "L2 中": {
+          "precision": 0.8519,
+          "recall": 0.9583,
+          "f1": 0.902,
+          "tp": 23,
+          "fp": 4,
+          "fn": 1,
+          "categories": [
+            "EMAIL",
+            "PERSON_NAME",
+            "WECHAT"
+          ]
+        },
+        "L3-L4 高": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 12,
+          "fp": 0,
+          "fn": 0,
+          "categories": [
+            "API_KEY",
+            "BUDGET",
+            "ID_CARD",
+            "PHONE"
+          ]
+        }
+      }
+    }
+  }
+}

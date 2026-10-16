@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-14",
+  "purpose": "大挑六分钟答辩的内容组织与事实依据",
+  "sources": {
+    "rules": "https://tiaozhanbei.net/rules",
+    "advice": "https://nxy.yangtzeu.edu.cn/info/1039/12343.htm",
+    "tech": "https://cs.ccnu.edu.cn/info/1055/14006.htm",
+    "model": "https://huggingface.co/Qwen/Qwen3-1.7B",
+    "tests": "本地：隐盾整合交付_20261012/验证结果/验证摘要.json，记录日期 2026-10-13",
+    "classifier": "本地：隐盾整合交付_20261012/验证结果/模型元信息.json",
+    "dataset": "本地：隐盾整合交付_20261012/数据集/隐盾数据集_v1/stats.json，数据版本 1.0",
+    "review": "本地：隐盾整合交付_20261012/数据集/复核与训练执行包_20261014/执行统计.json",
+    "ner": "本地：隐盾整合交付_20261012/数据集/隐盾数据集_v1/evaluation/current_detector_validation.json"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "model": "models\\ner_weak_baseline",
+  "precision": 0.6371,
+  "recall": 0.6716,
+  "f1": 0.6539,
+  "tp": 1043,
+  "fp": 594,
+  "fn": 510,
+  "n_cases": 90,
+  "match_mode": "overlap",
+  "per_category": {
+    "ATTR": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "n_gold": 30
+    },
+    "BUDGET": {
+      "precision": 0.8079,
+      "recall": 0.8079,
+      "f1": 0.8079,
+      "n_gold": 151
+    },
+    "DORM": {
+      "precision": 0.2812,
+      "recall": 0.3,
+      "f1": 0.2903,
+      "n_gold": 30
+    },
+    "EMAIL": {
+      "precision": 0.9667,
+      "recall": 0.9667,
+      "f1": 0.9667,
+      "n_gold": 210
+    },
+    "NAME": {
+      "precision": 0.155,
+      "recall": 0.1912,
+      "f1": 0.1712,
+      "n_gold": 476
+    },
+    "PHONE": {
+      "precision": 0.9284,
+      "recall": 0.9305,
+      "f1": 0.9295,
+      "n_gold": 446
+    },
+    "SID": {
+      "precision": 0.9778,
+      "recall": 0.9778,
+      "f1": 0.9778,
+      "n_gold": 180
+    },
+    "WECHAT": {
+      "precision": 0.9,
+      "recall": 0.9,
+      "f1": 0.9,
+      "n_gold": 30
+    }
+  }
+}
