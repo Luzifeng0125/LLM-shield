@@ -36,18 +36,19 @@ BASE_DATA_FILES = [
     ("web", "web"),                              # 控制台 + 对话页
     ("config", "config"),                        # 规则 / 任务 / 身份 / 接收方 / retain_thresholds
     ("data/fixtures", "data/fixtures"),          # 内置虚构演示材料
-    ("models/necessity_lr.joblib", "models"),    # 必要性判别模型 v1（缺了会降级到规则）
+    # ★ 决策模型：必须与 m4_necessity/model.py 的 MODEL_PATH 一致（necessity_action.joblib）。
+    #   历史上这里写的是 necessity_lr.joblib（schema 1，当前代码在 model.py:84 明确拒绝加载），
+    #   又漏了真正在用的 necessity_action.joblib —— 那样打出来的 exe 会「决策模型不可用 → 全部暂停」。
+    ("models/necessity_action.joblib", "models"),
     (".env", "."),                               # 用户选择把当前 .env 打进去
 ]
 
-# 完整版额外资源：本地领域模型 + 线上真正加载的 necessity_v2
+# 完整版额外资源：本地领域 NER（**默认关闭**，需 SHIELD_USE_CAMPUS_NER=true 才加载）。
+# 注意：语义识别当前默认由 GLiNER 承担（权重在 D:\project\models\gliner_v3，不在仓库内，
+# 需单独部署）；campus_ner 是早期的领域 RoBERTa，已不再作为默认路径。
 MODEL_DATA_FILES = [
-    ("models/campus_ner", "models/campus_ner"),                # ★ 线上唯一加载的 NER（约 407MB）
-    ("models/ner_freeal", "models/ner_freeal"),                # FreeAL 实验产物
-    ("models/ner_freeal_llm", "models/ner_freeal_llm"),        # FreeAL+LLM 实验产物
-    ("models/ner_weak_baseline", "models/ner_weak_baseline"),  # 弱监督基线
-    ("models/roberta_campus", "models/roberta_campus"),        # 领域继续预训练基座
-    ("models/necessity_v2.joblib", "models"),                  # 必要性判别模型 v2（当前线上默认）
+    ("models/campus_ner", "models/campus_ner"),        # 领域 NER（可选，默认关闭）
+    ("models/roberta_campus", "models/roberta_campus"),# 重训 campus_ner 用的继续预训练基座
 ]
 
 # ---------------- 排除 ----------------
