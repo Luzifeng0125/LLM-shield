@@ -3,8 +3,7 @@
 !/.gitignore
 !/.gitattributes
 !/README.md
-!/隐盾整合交付_20261012/
-!/隐盾提交材料_20261014/
+!/delivery/
 !/tools/
 !/docs/
 
@@ -33,17 +32,17 @@
 **/*.pfx
 
 # The active synthetic review package is shared; human reviews stay local.
-/隐盾整合交付_20261012/人工复核/*
-!/隐盾整合交付_20261012/人工复核/使用说明.md
-!/隐盾整合交付_20261012/人工复核/第二台电脑验收.md
-!/隐盾整合交付_20261012/人工复核/当前试标.json
-!/隐盾整合交付_20261012/人工复核/试标运行/
-/隐盾整合交付_20261012/人工复核/试标运行/*
-!/隐盾整合交付_20261012/人工复核/试标运行/a08ca7f5ced1/
-/隐盾整合交付_20261012/人工复核/试标运行/a08ca7f5ced1/*
-!/隐盾整合交付_20261012/人工复核/试标运行/a08ca7f5ced1/evidence.json
-!/隐盾整合交付_20261012/人工复核/试标运行/a08ca7f5ced1/独立复核.html
-/隐盾整合交付_20261012/交付文件清单.json
+/delivery/人工复核/*
+!/delivery/人工复核/使用说明.md
+!/delivery/人工复核/第二台电脑验收.md
+!/delivery/人工复核/当前试标.json
+!/delivery/人工复核/试标运行/
+/delivery/人工复核/试标运行/*
+!/delivery/人工复核/试标运行/a08ca7f5ced1/
+/delivery/人工复核/试标运行/a08ca7f5ced1/*
+!/delivery/人工复核/试标运行/a08ca7f5ced1/evidence.json
+!/delivery/人工复核/试标运行/a08ca7f5ced1/独立复核.html
+/delivery/交付文件清单.json
 
 # Rendered intermediate files can be regenerated from the retained scripts.
 /tools/submission/docx_qa/
