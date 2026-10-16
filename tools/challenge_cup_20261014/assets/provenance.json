@@ -1,0 +1,8 @@
+{
+  "generator": "imagegen",
+  "date": "2026-10-14",
+  "purpose": "封面概念插画，不是产品实拍",
+  "prompt": "Use case: stylized-concept. Asset: cover illustration for a Chinese university technology competition PowerPoint about a local AI privacy guard called 隐盾. Create a premium minimalist product-style 3D render of ONE translucent frosted optical-glass shield with a very thin satin silver rim and subtle pale ice-blue refraction, hovering slightly above a seamless PURE WHITE studio background with a delicate soft contact shadow. Square composition; shield centered with ample white breathing room all around; shield occupies about 65% of the image. View slightly from the right, restrained glass thickness, exquisite realistic material and soft studio light, contemporary Apple keynote-like restraint. No words, no numbers, no logos, no Apple logo, no lock icon, no plus symbol, no circuit pattern, no scenery, no multiple shields, no colored background, no dark areas. This is clearly a conceptual illustration, not a real product photograph.",
+  "source": "C:/Users/nicholas/.codex/generated_images/01a12ebb-ea16-7060-83a2-515e8a2c4957/exec-e8dfd6fa-b810-49fa-b9b0-6b2d848919c8.png",
+  "asset": "assets/glass-shield.png"
+}

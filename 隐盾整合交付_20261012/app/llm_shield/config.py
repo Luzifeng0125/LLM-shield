@@ -79,6 +79,13 @@ def use_campus_ner() -> bool:
         "1", "true", "yes", "on")
 
 
+def reviewed_ner_settings() -> tuple[str, str]:
+    """Explicit candidate path; empty means the reviewed model is not enabled."""
+    load_env()
+    return (os.getenv("SHIELD_REVIEWED_NER_MODEL_DIR", "").strip(),
+            os.getenv("SHIELD_REVIEWED_NER_DEVICE", "cpu").strip().lower())
+
+
 def llm_settings() -> Dict[str, Any]:
     """大模型接入设置（模块 ⑦）。
 

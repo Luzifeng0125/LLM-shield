@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import replace
+from functools import lru_cache
 from typing import List, Optional, Tuple
 
 from .. import config as cfg
@@ -12,6 +13,7 @@ from .base import Detector
 from .campus_ner import CampusNERDetector
 from .entity_rules import EntityDetector
 from .regex_rules import RegexDetector
+from .reviewed_ner import ReviewedNERDetector
 
 # 句子切分符
 _SENT_SPLIT_RE = re.compile(r"(?<=[。！？；;!?\n])")
@@ -19,6 +21,16 @@ _SENT_SPLIT_RE = re.compile(r"(?<=[。！？；;!?\n])")
 
 class DetectionError(RuntimeError):
     """识别服务异常或结果无效；错误说明不含材料原文。"""
+
+
+@lru_cache(maxsize=1)
+def _reviewed_detector(model_dir: str, device: str) -> ReviewedNERDetector:
+    if device not in {"cpu", "cuda"}:
+        raise DetectionError("人工 gold NER 设备配置必须是 cpu 或 cuda")
+    detector = ReviewedNERDetector(model_dir, device=device)
+    if not detector.available:
+        raise DetectionError("已启用的人工 gold NER 模型不可用，已暂停处理")
+    return detector
 
 
 def build_detectors(use_campus_ner: Optional[bool] = None) -> List[Detector]:
@@ -33,6 +45,9 @@ def build_detectors(use_campus_ner: Optional[bool] = None) -> List[Detector]:
         use_campus_ner = cfg.use_campus_ner()
 
     detectors: List[Detector] = [RegexDetector(), EntityDetector()]
+    reviewed_path, reviewed_device = cfg.reviewed_ner_settings()
+    if reviewed_path:
+        detectors.append(_reviewed_detector(reviewed_path, reviewed_device))
     if use_campus_ner:
         ner = CampusNERDetector()
         if not ner.available:

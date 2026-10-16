@@ -1,0 +1,175 @@
+{
+  "created_date": "2026-10-14",
+  "human_gold_count": 0,
+  "review_units": 312,
+  "independent_reviewers": 2,
+  "files": [
+    {
+      "path": ".gitignore",
+      "bytes": 180,
+      "sha256": "b2b160d80489901d7c3ec112c6c8c7761369d1c0020ad39480eb749f80e5983e"
+    },
+    {
+      "path": "scripts/build_batches.py",
+      "bytes": 6892,
+      "sha256": "c58610a16e079bc5834146f07f02d7f8364d125102acc339dc9fbb1f0e913d2c"
+    },
+    {
+      "path": "scripts/build_manual.py",
+      "bytes": 4677,
+      "sha256": "91f6f3458bb9025d6d606674f991c417b264cc8786dc5d67be03982d0c318616"
+    },
+    {
+      "path": "scripts/check_bulk_review.cjs",
+      "bytes": 9521,
+      "sha256": "8a83abf79483300ceeaf9cff6aa4e109d7c69a7e9759bd82865858b8c119e991"
+    },
+    {
+      "path": "scripts/check_reviewer.cjs",
+      "bytes": 4968,
+      "sha256": "e127552f7d045fffedea7b6422aabdc263e339a7d9564fd039fa91a766bed984"
+    },
+    {
+      "path": "scripts/package_execution.py",
+      "bytes": 2105,
+      "sha256": "82c1397553de6f4319c5f61972c2909eb08e15b79c1311c0d4ff9c22a33279e7"
+    },
+    {
+      "path": "scripts/render_manual.ps1",
+      "bytes": 1262,
+      "sha256": "af40c2b454977c44e2337297fdf0b6a1dec6403ff6dc234ae203c29ee6bb0aa4"
+    },
+    {
+      "path": "scripts/review_workflow.py",
+      "bytes": 11602,
+      "sha256": "1b70ba742602ab625f9d0ff62823274abf7632fb2a09e9e000345b0d7dacc189"
+    },
+    {
+      "path": "scripts/reviewer.html",
+      "bytes": 20507,
+      "sha256": "c8e040e4b6a177899abbb60cbe020b402de1b4f4197c79e11cf5158c68e4e1da"
+    },
+    {
+      "path": "scripts/test_review_workflow.py",
+      "bytes": 6253,
+      "sha256": "6ffebd883357e672917f18371fc500567b3ce42807bfece39543f8461f738be1"
+    },
+    {
+      "path": "培训试标编号.json",
+      "bytes": 104,
+      "sha256": "acd4cbcdba3924c32da5142c38bc0b09d688d37a2e8c33d110181b0233961318"
+    },
+    {
+      "path": "开始这里.md",
+      "bytes": 5487,
+      "sha256": "b56a42a2270ec8413303ce477f4b31840fffbd07fa21a5d9ff81addb72012b2e"
+    },
+    {
+      "path": "执行统计.json",
+      "bytes": 876,
+      "sha256": "3c3f92d1efec7de5ea14a4b5ac9fa51c865ed1586480b8bb98471396fc9c114d"
+    },
+    {
+      "path": "批次/01_训练试标/复核员A/打开复核.html",
+      "bytes": 81658,
+      "sha256": "7651c9a71f59c3d3ae71d03e8d4479cd770369e0796021c853f1c7bfc4a3519a"
+    },
+    {
+      "path": "批次/01_训练试标/复核员A/空白复核表.jsonl",
+      "bytes": 61029,
+      "sha256": "ed6e07869c6338cfff081c70ba71baf7ca785f2d5ba9ec467dd2b9a647443549"
+    },
+    {
+      "path": "批次/01_训练试标/复核员B/打开复核.html",
+      "bytes": 81658,
+      "sha256": "4ce891b602b2d85768f91287147bbb8867296c2b3ecdf20ca885d2a9ac322f5a"
+    },
+    {
+      "path": "批次/01_训练试标/复核员B/空白复核表.jsonl",
+      "bytes": 61029,
+      "sha256": "780e771344457cbbb69bb698755b10740c78332ea804751f6ad5574d06109ad7"
+    },
+    {
+      "path": "批次/02_独立验证/复核员A/打开复核.html",
+      "bytes": 71306,
+      "sha256": "374f58cef6a78566601d1dae6d4cee46e0d9aa1af4b7e2d58cfb3d041d132b08"
+    },
+    {
+      "path": "批次/02_独立验证/复核员A/空白复核表.jsonl",
+      "bytes": 50677,
+      "sha256": "02d1e52c1115610eb46cfa3b2e2bb8cebfed87c5e40c103af80a81ef91d88a31"
+    },
+    {
+      "path": "批次/02_独立验证/复核员B/打开复核.html",
+      "bytes": 71306,
+      "sha256": "d2c08c686341ce9caf1f2520f649f024239353f1cd3e3ab8c4c2b3be9ddfc494"
+    },
+    {
+      "path": "批次/02_独立验证/复核员B/空白复核表.jsonl",
+      "bytes": 50677,
+      "sha256": "0b7525fe3db884dbd7bad0a7ced510824a9d914094cdc86e4b45426152802b6f"
+    },
+    {
+      "path": "批次/03_封存测试/复核员A/打开复核.html",
+      "bytes": 72890,
+      "sha256": "2ef6fa049f78fae5086785bfd819d7a98218e19a7e29004061c0da2337b1284e"
+    },
+    {
+      "path": "批次/03_封存测试/复核员A/空白复核表.jsonl",
+      "bytes": 52261,
+      "sha256": "256466008a8598f2a721b58d04f0302b30983178bd429894fdb47e016f02073a"
+    },
+    {
+      "path": "批次/03_封存测试/复核员B/打开复核.html",
+      "bytes": 72890,
+      "sha256": "94bad7ac174c07f9d53d41702af855efbe4f143c7cc1bb57cbededd4323b5184"
+    },
+    {
+      "path": "批次/03_封存测试/复核员B/空白复核表.jsonl",
+      "bytes": 52261,
+      "sha256": "bf4a7091b66d8ba503db287eb6bdca3ec9f4e8cc452807bfa2792303fdaee5a8"
+    },
+    {
+      "path": "裁决员专用/01_训练试标/批次清单.jsonl",
+      "bytes": 25744,
+      "sha256": "29210a7768bfff2a01bdf6b7c5000f6053956eea6466c6acc0d34d6c5d7616af"
+    },
+    {
+      "path": "裁决员专用/01_训练试标/机器建议勿提前给AB.jsonl",
+      "bytes": 108674,
+      "sha256": "2cd0044d2616868580e1c310ec0d62695c8af352baa956df9b1e565bbb1d8035"
+    },
+    {
+      "path": "裁决员专用/02_独立验证/批次清单.jsonl",
+      "bytes": 19036,
+      "sha256": "77790574f91dd35d14aa7f21295abffebe853d4bdf3e4fb2298068b0cd3d3d60"
+    },
+    {
+      "path": "裁决员专用/02_独立验证/机器建议勿提前给AB.jsonl",
+      "bytes": 90138,
+      "sha256": "bb55c6c10c3a7a0ae4350744d71b0026ae95191d8cabe59eb5b758ba4ef64c46"
+    },
+    {
+      "path": "裁决员专用/03_封存测试/批次清单.jsonl",
+      "bytes": 18484,
+      "sha256": "8036bcb8f5313bd5ea20f1127b0357c48c4dbd8a4bb2d8360f26292107e08014"
+    },
+    {
+      "path": "裁决员专用/03_封存测试/机器建议勿提前给AB.jsonl",
+      "bytes": 93067,
+      "sha256": "5e5340f21a551dbb3b965c21143cc362eb71e1b1a0c1277d75d228093917defb"
+    },
+    {
+      "path": "隐盾数据复核与模型训练执行方案.docx",
+      "bytes": 56463,
+      "sha256": "f93cf9860492486fcce94438e79d04d37ec4a622bf963266aa747b4cf8bbb579"
+    },
+    {
+      "path": "隐盾数据复核与模型训练执行方案.md",
+      "bytes": 28726,
+      "sha256": "404d165f504b8a0cc0add447b6248a1626f3ee4c6062330acd5d05291fb07b98"
+    }
+  ],
+  "updated_date": "2026-10-15",
+  "update": "独立复核工作台支持批量通过、撤销、按类型和状态筛选；保留旧进度兼容性。"
+}

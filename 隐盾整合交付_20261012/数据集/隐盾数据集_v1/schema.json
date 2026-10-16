@@ -1,0 +1,36 @@
+{
+  "offsets": "Python Unicode code points; [start,end), NOT UTF-16 indices or UTF-8 bytes",
+  "categories": {
+    "PERSON_NAME": "姓名",
+    "PHONE": "手机号",
+    "EMAIL": "电子邮箱",
+    "ID_CARD": "身份证号",
+    "BANK_CARD": "银行卡号",
+    "STUDENT_ID": "学号",
+    "API_KEY": "接口密钥",
+    "WECHAT": "微信号",
+    "BUDGET": "内部预算",
+    "ORG": "组织机构",
+    "LOCATION": "地点",
+    "DORM": "宿舍",
+    "GRADE": "成绩",
+    "SENSITIVE_ATTR": "敏感个人属性"
+  },
+  "public_extra_categories": [
+    "ADDRESS",
+    "PASSPORT",
+    "LICENSE_PLATE"
+  ],
+  "actions": [
+    "DELETE",
+    "LOCAL_AGGREGATE",
+    "GENERALIZE",
+    "PSEUDONYMIZE",
+    "RETAIN",
+    "PAUSE"
+  ],
+  "train_file": "sft/train.jsonl",
+  "validation_file": "sft/validation.jsonl",
+  "test_file": "sft/test.jsonl",
+  "action_labels": "provisional task-specific targets; equivalent safe actions can be added by human adjudication"
+}

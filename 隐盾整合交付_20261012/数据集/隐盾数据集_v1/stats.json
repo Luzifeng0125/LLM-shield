@@ -1,0 +1,74 @@
+{
+  "seed": 20261014,
+  "version": "1.0",
+  "created_date": "2026-10-14",
+  "human_gold_count": 0,
+  "ner": {
+    "train": 3400,
+    "validation": 850,
+    "test": 850
+  },
+  "policy": {
+    "train": 960,
+    "validation": 240,
+    "test": 240
+  },
+  "dialogue_sessions": {
+    "train": 240,
+    "validation": 60,
+    "test": 60
+  },
+  "dialogue_turns": 1080,
+  "categories": [
+    "PERSON_NAME",
+    "PHONE",
+    "EMAIL",
+    "ID_CARD",
+    "BANK_CARD",
+    "STUDENT_ID",
+    "API_KEY",
+    "WECHAT",
+    "BUDGET",
+    "ORG",
+    "LOCATION",
+    "DORM",
+    "GRADE",
+    "SENSITIVE_ATTR"
+  ],
+  "actions": [
+    "DELETE",
+    "LOCAL_AGGREGATE",
+    "GENERALIZE",
+    "PSEUDONYMIZE",
+    "RETAIN",
+    "PAUSE"
+  ],
+  "ner_entities": {
+    "PERSON_NAME": 900,
+    "PHONE": 600,
+    "EMAIL": 600,
+    "ID_CARD": 300,
+    "BANK_CARD": 300,
+    "STUDENT_ID": 600,
+    "API_KEY": 300,
+    "WECHAT": 300,
+    "BUDGET": 600,
+    "ORG": 300,
+    "LOCATION": 300,
+    "DORM": 600,
+    "GRADE": 600,
+    "SENSITIVE_ATTR": 300
+  },
+  "hard_negative_documents": 300,
+  "public_usable_rows": 8000,
+  "public_rejected_rows": 0,
+  "public_status": "separate external synthetic benchmark; not included in SFT",
+  "sft": {
+    "train": 5080,
+    "validation": 1270,
+    "test": 1270
+  },
+  "review_units": 92,
+  "split_policy": "whole template families held out: v0-v3 train, v4 validation, v5 test",
+  "warning": "All custom labels are constructed weak labels, not human gold. Formats are duplicate views, not additional independent samples."
+}

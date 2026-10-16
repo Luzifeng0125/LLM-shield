@@ -1,0 +1,37 @@
+{
+  "dataset": "隐盾数据集_v1",
+  "dataset_version": "1.0",
+  "seed": "sha256 stable selection",
+  "created_date": "2026-10-14",
+  "human_gold_count": 0,
+  "batches": [
+    {
+      "batch": "01_训练试标",
+      "split": "train",
+      "units": 128,
+      "ner": 92,
+      "policy": 24,
+      "dialogue": 12,
+      "sft_rows_if_all_approved": 152
+    },
+    {
+      "batch": "02_独立验证",
+      "split": "validation",
+      "units": 92,
+      "ner": 56,
+      "policy": 24,
+      "dialogue": 12,
+      "sft_rows_if_all_approved": 116
+    },
+    {
+      "batch": "03_封存测试",
+      "split": "test",
+      "units": 92,
+      "ner": 56,
+      "policy": 24,
+      "dialogue": 12,
+      "sft_rows_if_all_approved": 116
+    }
+  ],
+  "source_manifest_sha256": "9bbaf1057a3a1bb35d0746bccebb966bfd954f44c3397587bb14a2a251a902ad"
+}
