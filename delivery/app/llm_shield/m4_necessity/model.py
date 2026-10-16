@@ -10,7 +10,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from ..config import ROOT, recipients, tasks
+from ..config import ROOT, action_model_path, recipients, tasks
 from ..schema import Action, Segment
 
 MODEL_PATH = ROOT / "models" / "necessity_action.joblib"
@@ -208,8 +208,10 @@ _MODEL: Optional[NecessityModel] = None
 
 def get_model() -> NecessityModel:
     global _MODEL
-    if _MODEL is None:
-        _MODEL = NecessityModel()
+    selected_path = action_model_path()
+    if _MODEL is None or _MODEL.model_path.resolve() != selected_path:
+        # Explicit missing/incompatible candidates stay unavailable: no fallback.
+        _MODEL = NecessityModel(selected_path)
     return _MODEL
 
 

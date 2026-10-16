@@ -57,6 +57,21 @@ def check_value_leakage(payload: str, original_spans: List[Span],
 _AGG_SAFE_RE = re.compile(
     r"\d+\s*万\s*~\s*\d+\s*万?元|\d+\s*~\s*\d+\s*元|1000元以下")
 
+# Only server-generated codes from the current session may suppress a model's
+# category false positive. User text that merely looks like a code is untrusted.
+_CODE_RE = re.compile(r"(?:人员|组织)(?:[甲乙丙丁戊己庚辛壬癸]|[0-9]+)")
+
+
+def _generated_code_ranges(payload: str, generated_pseudonyms: Optional[Set[str]]):
+    ranges = []
+    for code in generated_pseudonyms or set():
+        if not isinstance(code, str) or not _CODE_RE.fullmatch(code):
+            continue
+        category = "PERSON_NAME" if code.startswith("人员") else "ORG"
+        for match in re.finditer(re.escape(code) + r"(?![0-9甲乙丙丁戊己庚辛壬癸])", payload):
+            ranges.append((match.start(), match.end(), category))
+    return ranges
+
 
 def _restriction(category: str, recipient_key: str,
                  task_key: Optional[str] = None,
@@ -92,7 +107,8 @@ def _restriction(category: str, recipient_key: str,
 
 def check_category_leakage(payload: str, recipient_key: str,
                            *, task_key: Optional[str] = None,
-                           identity_key: Optional[str] = None) -> List[dict]:
+                           identity_key: Optional[str] = None,
+                           generated_pseudonyms: Optional[Set[str]] = None) -> List[dict]:
     """类别级泄露检测：对载荷重新识别，看是否残留接收方禁止的类别。"""
     if not payload:
         return []
@@ -104,7 +120,11 @@ def check_category_leakage(payload: str, recipient_key: str,
                _AGG_SAFE_RE.sub(lambda match: " " * len(match.group(0)), payload))
 
     hits: List[dict] = []
+    code_ranges = _generated_code_ranges(payload, generated_pseudonyms)
     for s in detect_all(scanned):
+        if any(category == s.category and start <= s.start < s.end <= end
+               for start, end, category in code_ranges):
+            continue
         reason = _restriction(s.category, recipient_key, task_key, identity_key)
         if reason:
             hits.append({
@@ -126,7 +146,8 @@ def inspect_payload(payload: str, recipient_key: str,
                     original_spans: List[Span] = None,
                     allowed_values: Optional[Set[str]] = None,
                     *, task_key: Optional[str] = None,
-                    identity_key: Optional[str] = None) -> Dict[str, object]:
+                    identity_key: Optional[str] = None,
+                    generated_pseudonyms: Optional[Set[str]] = None) -> Dict[str, object]:
     """综合判定一个载荷是否发生泄露。"""
     original_spans = original_spans or []
     invalid_context = (
@@ -142,7 +163,8 @@ def inspect_payload(payload: str, recipient_key: str,
             payload, original_spans, allowed_values, recipient_key=recipient_key,
             task_key=task_key, identity_key=identity_key)
         hits += check_category_leakage(payload, recipient_key, task_key=task_key,
-                                       identity_key=identity_key)
+                                       identity_key=identity_key,
+                                       generated_pseudonyms=generated_pseudonyms)
     categories = sorted({h["category"] for h in hits})
     return {
         "leaked": bool(hits),

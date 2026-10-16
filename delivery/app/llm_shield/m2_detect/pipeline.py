@@ -31,11 +31,14 @@ class DetectionError(RuntimeError):
 
 
 @lru_cache(maxsize=1)
-def _reviewed_detector(model_dir: str, device: str) -> ReviewedNERDetector:
+def _reviewed_detector(model_dir: str, device: str, decoding: str = "greedy") -> ReviewedNERDetector:
     """人工 gold NER 候选检测器（按目录+设备缓存，避免重复加载）。"""
     if device not in {"cpu", "cuda"}:
         raise DetectionError("人工 gold NER 设备配置必须是 cpu 或 cuda")
-    detector = ReviewedNERDetector(model_dir, device=device)
+    if decoding not in {"greedy", "bio_viterbi"}:
+        raise DetectionError("人工 gold NER 解码配置无效")
+    options = {"decoding": decoding} if decoding != "greedy" else {}
+    detector = ReviewedNERDetector(model_dir, device=device, **options)
     if not detector.available:
         raise DetectionError("已启用的人工 gold NER 模型不可用，已暂停处理")
     return detector
@@ -67,7 +70,7 @@ def build_detectors(use_campus_ner: Optional[bool] = None,
     detectors: List[Detector] = [RegexDetector(), EntityDetector(detect_org_location=not use_gliner)]
     reviewed_path, reviewed_device = cfg.reviewed_ner_settings()
     if reviewed_path:
-        detectors.append(_reviewed_detector(reviewed_path, reviewed_device))
+        detectors.append(_reviewed_detector(reviewed_path, reviewed_device, cfg.reviewed_ner_decoding()))
     if use_campus_ner:
         if _campus_singleton is None:
             _campus_singleton = CampusNERDetector()
@@ -108,6 +111,13 @@ def merge_spans(spans: List[Span], text: Optional[str] = None) -> List[Span]:
             span.text = text[span.start:span.end]
         elif len(span.text) != span.end - span.start:
             raise DetectionError("识别结果的文本长度与位置不一致，已暂停处理")
+    # A complete email token has one boundary. Digits in its local part are
+    # not a separate telephone/student field, even if a numeric detector or
+    # token classifier guessed a higher-sensitivity category for that slice.
+    emails = [span for span in spans if span.detector == "regex" and span.category == "EMAIL"]
+    spans = [span for span in spans if not (
+        span.category in {"PHONE", "STUDENT_ID"}
+        and any(email.start <= span.start and span.end <= email.end for email in emails))]
     spans.sort(key=lambda s: (s.start, -(s.end - s.start)))
     merged: List[Span] = [spans[0]]
 

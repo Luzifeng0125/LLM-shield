@@ -13,6 +13,7 @@ from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
+from typing import Literal
 
 from . import config as C
 from .m1_access.file_loader import (MAX_BYTES, SUPPORTED, ParseError,
@@ -20,12 +21,13 @@ from .m1_access.file_loader import (MAX_BYTES, SUPPORTED, ParseError,
                                     parse_upload)
 from .m1_access.loader import list_materials, load_material
 from .m1_access.identity import check_provide, check_read
-from .m2_detect.pipeline import build_detectors
+from .m2_detect.pipeline import DetectionError, build_detectors
 from .m4_necessity.model import get_model
 from .m8_audit.audit import get_auditor
 from .pipeline import preview_only, run_pipeline
 from .schema import Material, ShieldRequest
 from .chat import STORE, ChatError, send_turn, snapshot
+from .notice import notice_request, review_roster
 
 def _warmup() -> None:
     """启动预热。
@@ -73,6 +75,45 @@ class RunRequest(BaseModel):
 
 class PreviewRequest(RunRequest):
     pass
+
+
+class RosterReviewRequest(BaseModel):
+    model_config = {"extra": "forbid"}
+    identity: str = "student_leader"
+    text: str = Field(min_length=1, max_length=24000)
+
+
+class NoticeDraftRequest(BaseModel):
+    model_config = {"extra": "forbid"}
+    identity: str = "student_leader"
+    activity_name: str = Field(min_length=1, max_length=80)
+    items: List[Literal["check_in", "join_group", "verify_contact"]] = Field(min_length=1, max_length=3)
+    send_model: bool = True
+
+
+@app.post("/api/notice/review")
+def api_roster_review(r: RosterReviewRequest):
+    try:
+        return review_roster(r.identity, r.text)
+    except PermissionError as exc:
+        raise HTTPException(403, str(exc))
+    except ValueError as exc:
+        raise HTTPException(400, str(exc))
+    except DetectionError:
+        raise HTTPException(503, "本机识别暂不可用；名单未发送给生成模型")
+
+
+@app.post("/api/notice/draft")
+def api_notice_draft(r: NoticeDraftRequest):
+    if not isinstance(C.identities().get(r.identity), dict):
+        raise HTTPException(400, "未知身份")
+    try:
+        req = notice_request(r.identity, r.activity_name, r.items)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc))
+    # The normal model-only decision and all egress checks still apply to the
+    # separately submitted brief. No roster is loaded or merged at this stage.
+    return run_pipeline(req, send_model=r.send_model).to_dict()
 
 
 class ChatCreateRequest(BaseModel):
@@ -236,6 +277,8 @@ def _build_request(r: RunRequest) -> ShieldRequest:
                                 ("接收方", r.recipient, C.recipients())):
         if not isinstance(choices.get(value), dict):
             raise HTTPException(400, f"未知{key}: {value}")
+    if C.tasks()[r.task].get("workflow") == "notice":
+        raise HTTPException(400, "此任务请使用名单本机核对与通知入口，名单不能提交给通用生成流程")
     materials: List[Material] = []
     for doc_id in r.doc_ids:
         try:
@@ -296,3 +339,7 @@ if WEB_DIR.exists():
     @app.get("/chat")
     def chat_page():
         return RedirectResponse("/", status_code=307)
+
+    @app.get("/notice")
+    def notice_page():
+        return FileResponse(WEB_DIR / "notice.html")

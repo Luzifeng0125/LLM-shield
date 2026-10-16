@@ -1,0 +1,18 @@
+body { overflow: auto; display: block; height: auto; min-height: 100%; }
+.notice-layout { max-width: 1360px; margin: 28px auto; padding: 0 24px 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.notice-panel { min-width: 0; background: var(--surface); color: var(--label); border: 1px solid var(--sep); border-radius: 18px; padding: 26px; }
+.notice-panel h2 { margin: 0 0 14px; font-size: 20px; }
+.notice-panel p { font-size: 14px; line-height: 1.7; color: var(--label-2); }
+.notice-panel label { display: block; margin: 16px 0 8px; font-size: 14px; }
+.notice-panel textarea, .notice-panel input:not([type=checkbox]), .notice-panel select { width: 100%; padding: 10px 12px; border: 1px solid var(--sep); border-radius: 9px; background: var(--surface-2); color: var(--label); font: inherit; box-sizing: border-box; }
+.notice-panel textarea { resize: vertical; line-height: 1.7; }
+.notice-panel fieldset { margin: 20px 0; border: 1px solid var(--sep); border-radius: 10px; padding: 12px; }
+.notice-panel .notice-check { display: flex; align-items: center; gap: 9px; margin: 12px 0; }
+.notice-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.notice-table-wrap { overflow-x: auto; }
+.notice-panel table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.notice-panel td, .notice-panel th { padding: 9px; text-align: left; border-bottom: 1px solid var(--sep); overflow-wrap: anywhere; }
+.notice-panel pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; line-height: 1.9; padding: 16px; background: var(--surface-2); border-radius: 10px; }
+.notice-panel pre:empty { display: none; }
+.notice-panel .notice-mode { padding: 10px 14px; background: var(--sys-blue-soft); border-radius: 9px; }
+@media (max-width: 850px) { .notice-layout { grid-template-columns: 1fr; padding: 0 14px 30px; } .notice-panel { padding: 20px; } .topbar { height: auto; min-height: 64px; padding: 14px; gap: 14px; flex-wrap: wrap; } }

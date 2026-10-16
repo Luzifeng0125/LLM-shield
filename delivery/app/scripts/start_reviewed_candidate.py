@@ -15,25 +15,30 @@ DEFAULT_ARTIFACT = (DELIVERY / "数据集" / "复核与训练执行包_20261014"
 sys.path.insert(0, str(APP))
 
 
-def configure_local_candidate(artifact: Path, device: str) -> None:
+def configure_local_candidate(artifact: Path, device: str, action_model: Path | None = None,
+                              decoding: str = "greedy") -> None:
     """Process-only overrides take precedence over the app's .env settings."""
     os.environ.update({
         "LLM_MODE": "mock",
         "SHIELD_REVIEWED_NER_MODEL_DIR": str(artifact),
         "SHIELD_REVIEWED_NER_DEVICE": device,
+        "SHIELD_REVIEWED_NER_DECODING": decoding,
         "SHIELD_USE_CAMPUS_NER": "false",
+        "SHIELD_USE_GLINER": "false",
         "HF_HUB_OFFLINE": "1",
         "TRANSFORMERS_OFFLINE": "1",
         "HF_HUB_DISABLE_TELEMETRY": "1",
         "TOKENIZERS_PARALLELISM": "false",
     })
+    if action_model is not None:
+        os.environ["SHIELD_ACTION_MODEL_PATH"] = str(action_model.expanduser().resolve())
 
 
-def preflight(artifact: Path, device: str) -> dict:
+def preflight(artifact: Path, device: str, action_model: Path | None = None, decoding: str = "greedy") -> dict:
     """Load the selected detector and score a software fixture entirely locally."""
     if not artifact.is_dir() or not (artifact / "artifact_manifest.json").is_file():
         raise ValueError("候选模型目录或 artifact_manifest.json 不存在")
-    configure_local_candidate(artifact, device)
+    configure_local_candidate(artifact, device, action_model, decoding)
     from llm_shield.config import llm_settings
     from llm_shield.m2_detect.pipeline import build_detectors, detect_and_segment
     from llm_shield.m4_necessity.model import get_model
@@ -66,6 +71,8 @@ def preflight(artifact: Path, device: str) -> dict:
         "external_model_called": False, "device": device, "artifact_dir": str(artifact),
         "detectors": [detector.name for detector in detectors],
         "fixture_detected_spans": len(spans), "action_model_backend": decision_model.backend,
+        "action_model_path": str(decision_model.model_path),
+        "ner_decoding": reviewed[0].decoding,
         "action_score_check": "passed",
     }
 
@@ -76,6 +83,8 @@ def main(argv=None) -> int:
     parser.add_argument("--model-dir", type=Path, default=DEFAULT_ARTIFACT,
                         help="包含 artifact_manifest.json 和 model 子目录的候选产物目录")
     parser.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
+    parser.add_argument("--action-model", type=Path, help="本机动作候选权重；不会覆盖原权重")
+    parser.add_argument("--ner-decoding", choices=("greedy", "bio_viterbi"), default="greedy")
     parser.add_argument("--port", type=int, default=8788)
     args = parser.parse_args(argv)
     if not 1024 <= args.port <= 65535:
@@ -86,7 +95,7 @@ def main(argv=None) -> int:
     print("=" * 64, flush=True)
     artifact = args.model_dir.expanduser().resolve()
     # Set offline/mock constraints before optional model libraries are imported.
-    configure_local_candidate(artifact, "cpu")
+    configure_local_candidate(artifact, "cpu", args.action_model, args.ner_decoding)
     try:
         import torch
         torch.set_num_threads(4)
@@ -95,7 +104,7 @@ def main(argv=None) -> int:
             device = "cuda" if torch.cuda.is_available() else "cpu"
         if device == "cuda" and not torch.cuda.is_available():
             raise RuntimeError("指定了 CUDA，但本机 GPU 不可用；可改用 --device cpu")
-        report = preflight(artifact, device)
+        report = preflight(artifact, device, args.action_model, args.ner_decoding)
     except Exception as exc:
         print(f"候选版启动预检失败（{type(exc).__name__}）：{exc}", file=sys.stderr, flush=True)
         return 1

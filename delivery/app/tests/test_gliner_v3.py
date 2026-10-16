@@ -2,7 +2,7 @@
 
 覆盖：
 1. CharSplitter 中文按字、ASCII 整串、偏移正确（v3 最关键的修复）。
-2. GLiNERDetector 模型缺失时优雅降级（available=False，detect 返回空）。
+2. GLiNERDetector 模型缺失时拒绝推理，避免被误认为没有敏感信息。
 3. build_detectors(use_gliner=False) 默认不含 gliner（行为不变）。
 4. 标签→类别映射完整（14 类）。
 
@@ -38,10 +38,15 @@ check("ASCII 数字整串（'15063763788' 是单个 token）", any(t == "1506376
 check("偏移正确（每个 token 切片 == token）", all(text[s:e] == t for t, s, e in toks))
 check("token 数合理（< 全文长度，说明真的切分了）", len(toks) > 5)
 
-print("=== 2. GLiNERDetector 优雅降级 ===")
+print("=== 2. GLiNERDetector 失败时暂停 ===")
 d = GLiNERDetector(model_dir="Z:/不存在的目录/xxx")
 check("模型缺失 → available=False", d.available is False)
-check("模型缺失 → detect 返回空", d.detect("张三的电话是13800138000") == [])
+try:
+    d.detect("张三的电话是13800138000")
+except RuntimeError:
+    check("模型缺失 → detect 拒绝继续", True)
+else:
+    check("模型缺失 → detect 拒绝继续", False)
 
 print("=== 3. build_detectors 默认不含 gliner ===")
 dets = build_detectors(use_gliner=False)

@@ -189,6 +189,21 @@ def encode_rows(tokenizer, rows, max_length):
     return encoded
 
 
+def balanced_sample_weights(rows, power):
+    """Train-only document sampling; labels/text and source IDs stay unchanged.
+
+    Rarer categories receive more draws, capped implicitly by the support ratio.
+    Negative examples retain unit weight. Power zero preserves uniform sampling.
+    """
+    require(math.isfinite(power) and 0 <= power <= 1, "balance_power must be between 0 and 1")
+    categories = [{entity["category"] for entity in row["entities"]} for row in rows]
+    support = Counter(category for row_categories in categories for category in row_categories)
+    highest = max(support.values(), default=1)
+    weights = [max(((highest / support[category]) ** power for category in row_categories), default=1.0)
+               for row_categories in categories]
+    return weights, dict(sorted(support.items()))
+
+
 def metric(tp, fp, fn):
     return {"tp": tp, "fp": fp, "fn": fn, "gold_entities": tp + fn,
             "predicted_entities": tp + fp, "precision": tp / (tp + fp) if tp + fp else 0.0,
@@ -253,6 +268,8 @@ def get_parser():
     parser.add_argument("--patience", type=int, default=3)
     parser.add_argument("--min-epochs", type=int, default=4)
     parser.add_argument("--torch-threads", type=int, default=4)
+    parser.add_argument("--balance-power", type=float, default=0.0,
+                        help="Train-only rare-category oversampling power in [0,1]; zero preserves original sampling")
     return parser
 
 
@@ -269,6 +286,8 @@ def train(args):
     require((base_model / "model.safetensors").is_file() or
             (base_model / "model.safetensors.index.json").is_file(), "Safe local model weights required")
     train_rows, train_meta = load_gold(args.train, "train")
+    balance_power = getattr(args, "balance_power", 0.0)
+    sample_weights, category_support = balanced_sample_weights(train_rows, balance_power)
     validation_rows, validation_meta = load_gold(args.validation, "validation")
     separation = check_separation(train_rows, validation_rows)
     main_rows = [row for row in validation_rows if row["origin_kind"] == "ner"]
@@ -308,8 +327,11 @@ def train(args):
     model.to(device)
     collate = DataCollatorForTokenClassification(tokenizer, padding=True, label_pad_token_id=-100)
     generator = torch.Generator().manual_seed(args.seed)
-    loader = torch.utils.data.DataLoader(train_encoded, batch_size=args.batch_size, shuffle=True,
-                                        collate_fn=collate, generator=generator, num_workers=0)
+    sampler = (torch.utils.data.WeightedRandomSampler(sample_weights, len(train_encoded),
+                                                     replacement=True, generator=generator)
+               if balance_power else None)
+    loader = torch.utils.data.DataLoader(train_encoded, batch_size=args.batch_size, shuffle=sampler is None,
+                                        sampler=sampler, collate_fn=collate, generator=generator, num_workers=0)
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01)
     total_steps = len(loader) * args.epochs
     warmup = max(1, int(total_steps * 0.1))
@@ -331,6 +353,11 @@ def train(args):
         "max_length": args.max_length, "stride": inference_stride,
         "input_manifest": {"train": train_meta, "validation": validation_meta},
         "split_separation": separation, "created_utc": datetime.now(timezone.utc).isoformat(),
+        "training_sampling": {"method": "weighted_with_replacement" if sampler is not None else "uniform_shuffle",
+                              "balance_power": balance_power, "category_document_support": category_support,
+                              "draws_per_epoch": len(train_rows), "unique_source_rows": len(train_rows),
+                              "min_weight": min(sample_weights), "max_weight": max(sample_weights),
+                              "label_or_text_augmentation": False},
         "base_model": {"path": str(base_model), "files_sha256": {
             str(path.relative_to(base_model)): file_hash(path) for path in sorted(base_files)}},
         "code_sha256": {str(Path(path).resolve()): file_hash(path)

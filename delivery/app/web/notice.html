@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>名单核对与通知 · 隐盾</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/notice.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-text"><h1>名单核对与通知</h1><p class="sub">名单留在本机，通知只使用单独填写的活动概要</p></div>
+    <a class="btn" href="/">返回对话</a>
+  </header>
+  <main class="notice-layout">
+    <section class="notice-panel">
+      <h2>1. 本机核对名单</h2>
+      <p>粘贴名单后查看识别出的字段。识别结果不代表信息已由本人确认；未识别的内容仍可在原文中核对。</p>
+      <label for="identity">当前身份</label><select id="identity"></select>
+      <form id="reviewForm">
+        <label for="roster">名单原文 · 仅供本机核对</label>
+        <textarea id="roster" rows="10" maxlength="24000" required placeholder="在此粘贴名单，最多 24000 字符。"></textarea>
+        <div class="notice-actions"><button class="btn primary" id="reviewButton">本机识别</button><button type="button" class="btn" id="clearRoster">清空名单与识别结果</button></div>
+      </form>
+      <p id="reviewStatus" role="status"></p>
+      <div class="notice-table-wrap"><table id="reviewTable" hidden><thead><tr><th>字段</th><th>原值（本机）</th><th>原文位置</th></tr></thead><tbody id="reviewRows"></tbody></table></div>
+    </section>
+    <section class="notice-panel">
+      <h2>2. 起草通用通知</h2>
+      <p>此处只提交活动名称和选定事项。名单、识别结果和人员代号均不加入生成请求。</p>
+      <p id="mode" class="notice-mode" role="status">正在读取生成服务状态…</p>
+      <form id="draftForm">
+        <label for="activityName">公开活动名称</label>
+        <input id="activityName" maxlength="80" required placeholder="例如：校园科技体验日" autocomplete="off">
+        <fieldset><legend>通知事项</legend>
+          <label class="notice-check"><input type="checkbox" name="item" value="check_in" checked> 提醒签到</label>
+          <label class="notice-check"><input type="checkbox" name="item" value="join_group" checked> 提醒加入活动通知群</label>
+          <label class="notice-check"><input type="checkbox" name="item" value="verify_contact" checked> 提醒通过私下渠道核对资料</label>
+        </fieldset>
+        <p>时间、地点和群链接尚未提供，草稿会提示另行通知。</p>
+        <button class="btn primary" id="draftButton" disabled>生成通知草稿</button>
+      </form>
+      <p id="draftStatus" role="status"></p>
+      <details id="outgoingDetails" hidden><summary>查看发给生成模型的活动概要</summary><pre id="outgoing"></pre></details>
+      <pre id="draft" aria-live="polite"></pre>
+    </section>
+  </main>
+  <script src="/static/notice.js"></script>
+</body>
+</html>

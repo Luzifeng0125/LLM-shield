@@ -20,10 +20,28 @@ from .model import MODEL_PATH, NecessityModel, build_feature_text
 GEN_DIR = DATA_DIR / "generated"
 
 
-def load_synthetic() -> List[dict]:
+def synthetic_label(segment, task_key: str, recipient_key: str, identity_key: str) -> Action:
+    """Offline weak teacher only; never called to select an online action."""
+    from ..m3_decide.constraints import action_applicable, check_hard
+
+    cats = {span.category for span in segment.spans}
+    main_category = ("PERSON_NAME" if "PERSON_NAME" in cats
+                     else max(sorted(cats), key=category_level))
+    prefer = tasks().get(task_key, {}).get("prefer", {})
+    selected = Action(prefer.get(main_category, "DELETE"))
+    if (not action_applicable(selected, segment, task_key)
+            or not all(check.passed for check in check_hard(
+                selected, segment, task_key, recipient_key, identity_key))):
+        selected = (Action.DELETE if task_key == "project_intro"
+                    and all(check.passed for check in check_hard(
+                        Action.DELETE, segment, task_key, recipient_key, identity_key))
+                    else Action.PAUSE)
+    return selected
+
+
+def load_synthetic(*, detectors=None) -> List[dict]:
     """离线规则教师仅用于启动标签，在线决策不调用此函数。"""
     from ..m2_detect.pipeline import detect_and_segment
-    from ..m3_decide.constraints import action_applicable, check_hard
 
     path = GEN_DIR / "cases_dev.jsonl"
     if not path.exists():
@@ -34,32 +52,16 @@ def load_synthetic() -> List[dict]:
     for case in cases:
         task_key = case["task"]
         task_cfg = tasks().get(task_key, {})
-        prefer = task_cfg.get("prefer", {})
         identity_key = case.get("identity", "student_leader")
-        _, segments = detect_and_segment(case["text"], case.get("columns"), case.get("rows"))
+        _, segments = detect_and_segment(case["text"], case.get("columns"), case.get("rows"),
+                                         detectors=detectors)
         for segment in segments:
             if not segment.spans:
                 continue
-            cats = {s.category for s in segment.spans}
-            # 以人物任务为主的句段需保持整段一致的处理，其他类别取最高敏感级别。
-            # 这是离线弱标签假设；人工标签应在 --samples 中替换它。
-            main_category = ("PERSON_NAME" if "PERSON_NAME" in cats
-                             else max(sorted(cats), key=category_level))
-            action = Action(prefer.get(main_category, "DELETE"))
             for recipient_key, recipient_cfg in recipients().items():
                 if not isinstance(recipient_cfg, dict):
                     continue
-                selected = action
-                if (not action_applicable(selected, segment, task_key)
-                        or not all(check.passed for check in check_hard(
-                            selected, segment, task_key, recipient_key, identity_key))):
-                    # 项目公开介绍无需个人身份。混合“姓名+预算+电话”不能整体泛化，
-                    # 但删除实体值仍保留模块等公开事实。该标签只在离线训练时生成，
-                    # 不能把“首选动作不安全”一概误标成“请求无法处理”。
-                    selected = (Action.DELETE if task_key == "project_intro"
-                                and all(check.passed for check in check_hard(
-                                    Action.DELETE, segment, task_key, recipient_key, identity_key))
-                                else Action.PAUSE)
+                selected = synthetic_label(segment, task_key, recipient_key, identity_key)
                 description = case.get("user_instruction", "") or task_cfg.get("desc", "")
                 samples.append({
                     "feature": build_feature_text(

@@ -26,6 +26,7 @@ BIO_LABELS = ("O",) + tuple(
 )
 
 _COMPLETE_ID_CARD = re.compile(r"(?:[0-9]{15}|[0-9]{17}[0-9Xx])\Z")
+_PERSON_EDGE_SEPARATORS = frozenset("，。；：、！？,.;:!?—–")
 
 
 def _complete_id_card_span(text: str, start: int, end: int) -> bool:
@@ -40,6 +41,17 @@ def _complete_id_card_span(text: str, start: int, end: int) -> bool:
         return False
     adjacent = (text[start - 1] if start > 0 else "", text[end] if end < len(text) else "")
     return not any(character and (character.isdigit() or character in "Xx") for character in adjacent)
+
+
+def _complete_student_number(text: str, start: int, end: int) -> bool:
+    """Numeric student IDs follow the existing 8–12 digit schema, never year fragments."""
+    value = text[start:end]
+    if not value.isdecimal():
+        return True  # Do not discard semantic alphanumeric IDs.
+    if not re.fullmatch(r"[0-9]{8,12}", value):
+        return False
+    return not ((start > 0 and text[start - 1].isdecimal())
+                or (end < len(text) and text[end].isdecimal()))
 
 
 def _label_map(label2id: Mapping) -> dict[str, int]:
@@ -123,8 +135,38 @@ def decode_bio(text: str, offsets: Sequence, label_ids: Sequence,
     return entities
 
 
+def constrained_bio_labels(log_probabilities, id2label):
+    """Maximum-score legal BIO sequence; I-X may only follow B-X or I-X."""
+    import numpy as np
+
+    emissions = np.asarray(log_probabilities, dtype=np.float64)
+    if emissions.size == 0:
+        return []
+    labels = [id2label[index] for index in range(len(id2label))]
+    if emissions.ndim != 2 or emissions.shape[1] != len(labels) or not np.isfinite(emissions).all():
+        raise ValueError("BIO decoding requires finite per-label scores")
+    transitions = np.zeros((len(labels), len(labels)), dtype=np.float64)
+    first = emissions[0].copy()
+    for current, label in enumerate(labels):
+        if label.startswith("I-"):
+            first[current] = -np.inf
+            transitions[:, current] = [0.0 if previous in {"B-" + label[2:], label} else -np.inf
+                                       for previous in labels]
+    scores, backpointers = first, []
+    for emission in emissions[1:]:
+        candidates = scores[:, None] + transitions
+        previous = candidates.argmax(axis=0)
+        scores = candidates[previous, np.arange(len(labels))] + emission
+        backpointers.append(previous)
+    chosen = [int(scores.argmax())]
+    for previous in reversed(backpointers):
+        chosen.append(int(previous[chosen[-1]]))
+    return list(reversed(chosen))
+
+
 def predict_entities(model, tokenizer, texts: Sequence[str], device,
-                     max_length: int = 256, batch_size: int = 8, stride: int = 64) -> list[list[dict]]:
+                     max_length: int = 256, batch_size: int = 8, stride: int = 64,
+                     decoding: str = "greedy") -> list[list[dict]]:
     """Predict complete texts using overlapping token windows and original offsets.
 
     For a token occurring in several windows, use the prediction with the most
@@ -133,6 +175,8 @@ def predict_entities(model, tokenizer, texts: Sequence[str], device,
     """
     import torch
 
+    if decoding not in {"greedy", "bio_viterbi"}:
+        raise ValueError("Unknown BIO decoding strategy")
     if isinstance(texts, str) or any(not isinstance(text, str) for text in texts):
         raise TypeError("texts 必须是字符串序列")
     texts = list(texts)
@@ -170,6 +214,7 @@ def predict_entities(model, tokenizer, texts: Sequence[str], device,
                     or len(logits.shape) != 3 or logits.shape[-1] != len(BIO_LABELS)):
                 raise ValueError("模型输出维度与 29 类 BIO 标签不一致")
             probabilities, predictions = torch.softmax(logits, dim=-1).max(dim=-1)
+            emissions = torch.log_softmax(logits, dim=-1).cpu().tolist() if decoding == "bio_viterbi" else None
             predictions = predictions.cpu().tolist()
             probabilities = probabilities.cpu().tolist()
             for local_index, (predicted, confidence) in enumerate(zip(predictions, probabilities)):
@@ -186,13 +231,17 @@ def predict_entities(model, tokenizer, texts: Sequence[str], device,
                     quality = (min(rank, len(real_tokens) - rank - 1), confidence[index])
                     existing = selected[sample].get(offset)
                     if existing is None or quality > existing[0]:
-                        selected[sample][offset] = (quality, predicted[index], confidence[index])
+                        selected[sample][offset] = (quality, predicted[index], confidence[index],
+                                                   emissions[local_index][index] if emissions is not None else None)
     result = []
     for text, tokens in zip(texts, selected):
         ordered = sorted(tokens)
+        labels = ([tokens[offset][1] for offset in ordered] if decoding == "greedy" else
+                  constrained_bio_labels([tokens[offset][3] for offset in ordered], id2label))
+        confidence = ([tokens[offset][2] for offset in ordered] if decoding == "greedy" else
+                      [math.exp(tokens[offset][3][label]) for offset, label in zip(ordered, labels)])
         result.append(decode_bio(
-            text, ordered, [tokens[offset][1] for offset in ordered],
-            [tokens[offset][2] for offset in ordered], id2label=id2label,
+            text, ordered, labels, confidence, id2label=id2label,
         ))
     return result
 
@@ -296,15 +345,18 @@ class ReviewedNERDetector(Detector):
 
     name = "reviewed_ner"
 
-    def __init__(self, model_dir, device: str = "cpu", *, batch_size: int = 8):
+    def __init__(self, model_dir, device: str = "cpu", *, batch_size: int = 8, decoding: str = "greedy"):
         self.model_dir = Path(model_dir).expanduser().resolve()
         self.device = device
         self.batch_size = batch_size
+        self.decoding = decoding
         self.available = False
         self.reason = ""
         self.model = self.tokenizer = None
         self.manifest: dict = {}
         try:
+            if decoding not in {"greedy", "bio_viterbi"}:
+                raise ValueError("Unknown BIO decoding strategy")
             directory, self.manifest = _validate_artifact(self.model_dir)
             from transformers import AutoModelForTokenClassification, AutoTokenizer
             self.tokenizer = AutoTokenizer.from_pretrained(
@@ -337,10 +389,26 @@ class ReviewedNERDetector(Detector):
             self.model, self.tokenizer, [text], self.device,
             max_length=max_length, batch_size=self.batch_size,
             stride=self.manifest["stride"],
+            decoding=self.decoding,
         )[0]
-        return [Span(
-            item["start"], item["end"], item["text"], item["category"],
-            item["confidence"], self.name, f"reviewed_ner_{item['category']}",
-        ) for item in entities
-            if item["category"] != "ID_CARD"
-            or _complete_id_card_span(text, item["start"], item["end"])]
+        spans = []
+        for item in entities:
+            start, end, category = item["start"], item["end"], item["category"]
+            if not 0 <= start < end <= len(text):
+                raise ValueError("Invalid model entity offsets")
+            if category == "PERSON_NAME":
+                # Sentence separators cannot be part of a person's name.
+                # Internal hyphens, middle dots, apostrophes and spaces remain.
+                while start < end and text[start] in _PERSON_EDGE_SEPARATORS:
+                    start += 1
+                while start < end and text[end - 1] in _PERSON_EDGE_SEPARATORS:
+                    end -= 1
+                if start == end:
+                    continue
+            if category == "ID_CARD" and not _complete_id_card_span(text, start, end):
+                continue
+            if category == "STUDENT_ID" and not _complete_student_number(text, start, end):
+                continue
+            spans.append(Span(start, end, text[start:end], category, item["confidence"],
+                              self.name, f"reviewed_ner_{category}"))
+        return spans

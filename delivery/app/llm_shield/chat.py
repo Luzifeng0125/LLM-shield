@@ -61,6 +61,8 @@ class ChatStore:
     def create(self, identity: str, task: str, description: str = "") -> ChatSession:
         if not isinstance(C.tasks().get(task), dict) or not isinstance(C.identities().get(identity), dict):
             raise ChatError("未知任务或身份")
+        if C.tasks()[task].get("workflow") == "notice":
+            raise ChatError("此任务请使用名单本机核对与通知入口")
         allowed, _ = check_provide(identity, "external_model")
         if not allowed:
             raise ChatError("该身份未获授权向外部模型发送内容", 403)
@@ -170,8 +172,9 @@ def send_turn(session: ChatSession, materials: list[Material]) -> dict:
         retained = session.allowed_values | {
             s.text for segment, decision in zip(segments, decisions)
             if decision.action == Action.RETAIN for s in segment.spans}
-        response = EgressGateway().send_conversation(session.task, messages, session.identity,
-                                                     private_spans, retained)
+        response = EgressGateway(generated_pseudonyms=set(
+            staged_mapping.export(session.session_id).values())).send_conversation(
+                session.task, messages, session.identity, private_spans, retained)
         if not response["allowed"]:
             return paused(response.get("error") or "外发检查拒绝，本轮未加入历史", descriptions)
         if sum(len(m["content"]) for m in messages) + len(response["text"]) > MAX_HISTORY_CHARS:

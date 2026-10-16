@@ -25,9 +25,10 @@ def verify(args):
     torch.set_num_threads(4)
     os.environ["SHIELD_REVIEWED_NER_MODEL_DIR"] = str(args.model.resolve())
     os.environ["SHIELD_REVIEWED_NER_DEVICE"] = args.device
+    os.environ["SHIELD_REVIEWED_NER_DECODING"] = args.decoding
     from llm_shield.m2_detect.pipeline import build_detectors, detect_all
     started = time.perf_counter()
-    chain = build_detectors(use_campus_ner=False)
+    chain = build_detectors(use_campus_ner=False, use_gliner=False)
     candidate = next(detector for detector in chain if detector.name == "reviewed_ner")
     load_seconds = time.perf_counter() - started
     if not candidate.available:
@@ -58,6 +59,7 @@ def verify(args):
     manifest = candidate.manifest
     report = {"split": "validation", "documents": len(rows), "test_evaluated": False,
               "model_dir": str(args.model.resolve()), "device": args.device,
+              "decoding": args.decoding,
               "data_sha256": evaluation.sha256(args.data),
               "detectors": [type(detector).__name__ for detector in chain],
               "model_load_seconds": load_seconds, "scores": scores,
@@ -80,4 +82,5 @@ if __name__ == "__main__":
     parser.add_argument("--app", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
+    parser.add_argument("--decoding", choices=("greedy", "bio_viterbi"), default="greedy")
     verify(parser.parse_args())

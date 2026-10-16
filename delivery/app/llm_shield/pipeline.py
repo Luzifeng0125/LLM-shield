@@ -163,7 +163,7 @@ def run_pipeline(req: ShieldRequest, send_model: bool = True) -> PipelineResult:
         warnings.insert(0, f"存在片段被暂停外发：{applied['pause_reason']}")
 
     # ---------------------------------------------------------- ⑦⑧ 外发与观测
-    gateway = EgressGateway(get_auditor())
+    gateway = EgressGateway(get_auditor(), generated_pseudonyms=set(applied["mapping"].values()))
     bmap = _pick_boundary_recipients(req.recipient)
 
     # 边界 1：发送给模型

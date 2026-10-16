@@ -35,3 +35,22 @@ def test_unknown_device_is_refused(monkeypatch):
     monkeypatch.setattr(pipeline.cfg, 'reviewed_ner_settings', lambda: ('fixture-model', 'unknown'))
     with pytest.raises(pipeline.DetectionError):
         pipeline.build_detectors(False)
+
+
+def test_decoding_is_part_of_detector_cache_key(monkeypatch):
+    pipeline._reviewed_detector.cache_clear()
+    calls = []
+    def factory(path, device, decoding="greedy"):
+        calls.append(decoding)
+        return SimpleNamespace(available=True, decoding=decoding)
+    monkeypatch.setattr(pipeline, "ReviewedNERDetector", factory)
+    original = pipeline._reviewed_detector("fixture", "cpu", "greedy")
+    candidate = pipeline._reviewed_detector("fixture", "cpu", "bio_viterbi")
+    assert original is not candidate and candidate.decoding == "bio_viterbi"
+    assert calls == ["greedy", "bio_viterbi"]
+    pipeline._reviewed_detector.cache_clear()
+
+
+def test_unknown_decoding_fails_closed():
+    with pytest.raises(pipeline.DetectionError):
+        pipeline._reviewed_detector("fixture", "cpu", "unknown")

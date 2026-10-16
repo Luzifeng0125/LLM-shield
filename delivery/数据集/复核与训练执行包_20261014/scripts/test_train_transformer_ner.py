@@ -89,6 +89,20 @@ class AlignmentTests(unittest.TestCase):
 
 
 class GoldBoundaryTests(unittest.TestCase):
+    def test_balancing_uses_document_support_and_preserves_negatives(self):
+        common = [{"entities": [{"category": "PHONE"}] * 2} for _ in range(4)]
+        rows = common + [{"entities": [{"category": "LOCATION"}]}] + [{"entities": []}]
+        weights, support = ner.balanced_sample_weights(rows, 0.5)
+        self.assertEqual(support, {"LOCATION": 1, "PHONE": 4})
+        self.assertEqual(weights, [1.0, 1.0, 1.0, 1.0, 2.0, 1.0])
+        self.assertEqual(ner.balanced_sample_weights(rows, 0)[0], [1.0] * 6)
+        self.assertEqual(len(rows[0]["entities"]), 2)
+
+    def test_balancing_rejects_invalid_power(self):
+        for power in (-0.1, 1.1, float("nan"), float("inf")):
+            with self.subTest(power=power), self.assertRaises(ValueError):
+                ner.balanced_sample_weights([{"entities": []}], power)
+
     def test_full_29_label_schema(self):
         self.assertEqual(len(ner.CATEGORIES), 14)
         self.assertEqual(len(ner.BIO_LABELS), 29)

@@ -231,6 +231,34 @@ def test_application_id_format_guard_does_not_change_other_categories(tmp_path, 
     assert len(result) == 1 and result[0].category == "STUDENT_ID"
 
 
+@pytest.mark.parametrize("text,start,end,accepted", [
+    ("2026级", 0, 4, False), ("2026级", 3, 4, False),
+    ("学号2026123456。", 2, 12, True), ("1234567890123", 1, 11, False),
+    ("学号A2026-001。", 2, 11, True), ("学号12345678。", 2, 10, True),
+])
+def test_student_numeric_guard_rejects_years_and_number_fragments(text, start, end, accepted):
+    assert ner._complete_student_number(text, start, end) is accepted
+
+
+@pytest.mark.parametrize("value,expected", [
+    ("周星澜—", "周星澜"), ("，沈若川；", "沈若川"),
+    ("Anne-Marie O’Connor—", "Anne-Marie O’Connor"), ("阿依·麦合木提", "阿依·麦合木提"),
+    ("—；", None),
+])
+def test_person_boundaries_trim_only_sentence_edge_separators(tmp_path, monkeypatch, value, expected):
+    detector = ner.ReviewedNERDetector(tmp_path / "missing")
+    detector.available = True
+    detector.manifest = {"max_length": 256, "stride": 64}
+    text = "记录：" + value + "。"
+    prediction = {"start": 3, "end": 3 + len(value), "text": value,
+                  "category": "PERSON_NAME", "confidence": .99}
+    monkeypatch.setattr(ner, "predict_entities", lambda *args, **kwargs: [[prediction]])
+    spans = detector.detect(text)
+    assert [span.text for span in spans] == ([expected] if expected else [])
+    assert all(span.text == text[span.start:span.end] for span in spans)
+    assert prediction["text"] == value
+
+
 def test_overflow_reassembles_entity_once_and_covers_late_text():
     torch = pytest.importorskip("torch")
     labels = {name: index for index, name in enumerate(ner.BIO_LABELS)}

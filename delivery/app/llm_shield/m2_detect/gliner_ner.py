@@ -10,8 +10,8 @@ CampusNERDetector 完全相同的 Detector 接口，可热替换。
 2. **只贡献语义类实体**（默认 PERSON_NAME / ORG / LOCATION / DORM / SENSITIVE_ATTR）：
    格式类（电话/邮箱/学号/证件/银行卡/密钥/微信/预算/成绩）由正则底座负责，
    避免证件号误报与重叠边界冲突。可通过 ``categories`` 参数调整。
-3. **优雅降级**：模型缺失 / 依赖未装 / 加载失败时 available=False，detect() 返回
-   空列表，主链路不受影响（与 CampusNERDetector 一致）。
+3. **失败时暂停**：模型缺失 / 依赖未装 / 加载失败时 available=False；显式启用后
+   不能把加载或推理失败当作“未发现敏感信息”，由流水线暂停处理。
 
 模型：urchade/gliner_multi-v2.1（Apache-2.0）+ 人工 gold 微调。
 实测（docs/评测报告-独立手写集field_v1.md）：独立手写集上 13 类 F1 0.8383、
@@ -20,6 +20,7 @@ CampusNERDetector 完全相同的 Detector 接口，可热替换。
 """
 from __future__ import annotations
 
+import math
 from pathlib import Path
 from typing import Iterable, List, Optional
 
@@ -119,7 +120,9 @@ class GLiNERDetector(Detector):
             self.available = False
 
     def detect(self, text: str, columns=None, rows=None) -> List[Span]:
-        if not self.available or not text or not (self.semantic_labels or self.format_labels):
+        if not self.available or not (self.semantic_labels or self.format_labels):
+            raise RuntimeError("已启用的 GLiNER 识别模型不可用，已暂停处理")
+        if not text:
             return []
         # GLiNER 是双向编码器，配置 max_len（本项目 384 个 token）封顶；长文本需滑窗。
         # 窗口间重叠 32 个 token，避免实体被窗口边界切断；重复 span 由下游 merge_spans 去重。
@@ -138,8 +141,14 @@ class GLiNERDetector(Detector):
                         cat = LABEL_TO_CATEGORY.get(p.get("label"))
                         if cat is None or cat not in self.categories:
                             continue
-                        start = offset + int(p["start"])
-                        end = offset + int(p["end"])
+                        local_start, local_end = p["start"], p["end"]
+                        score = float(p.get("score", self.threshold))
+                        if (type(local_start) is not int or type(local_end) is not int
+                                or not 0 <= local_start < local_end <= len(chunk)
+                                or not math.isfinite(score) or not 0.0 <= score <= 1.0):
+                            raise ValueError("GLiNER 返回无效实体位置或置信度")
+                        start = offset + local_start
+                        end = offset + local_end
                         key = (start, end, cat)
                         if key in seen:
                             continue
@@ -149,13 +158,13 @@ class GLiNERDetector(Detector):
                             end=end,
                             text=text[start:end],
                             category=cat,
-                            confidence=min(float(p.get("score", self.threshold)), 1.0),
+                            confidence=score,
                             detector="gliner",
                             rule_id="gliner_" + p.get("label", ""),
                         ))
                 if offset + max_len >= len(text):
                     break
         except Exception:
-            # 推理异常按"未检出"处理，不抛原异常（异常消息可能含输入原文）
-            return []
+            # 原异常可能含输入材料；只向流水线传递固定错误，暂停整次请求。
+            raise RuntimeError("GLiNER 识别失败，已暂停处理") from None
         return spans

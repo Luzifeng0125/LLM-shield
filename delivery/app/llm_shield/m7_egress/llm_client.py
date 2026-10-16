@@ -37,6 +37,15 @@ class MockLLM(BaseLLM):
     _CODE_RE = __import__("re").compile(r"(人员[甲乙丙丁戊己庚辛壬癸\d]+|组织[甲乙丙丁戊己庚辛壬癸\d]+)")
 
     def chat(self, system: str, user: str, **kwargs) -> str:
+        if "活动通知助手" in system:
+            from ..notice import NOTICE_ITEMS
+            title = next((line.removeprefix("活动名称：") for line in user.splitlines()
+                          if line.startswith("活动名称：")), "活动")
+            items = [item for item in NOTICE_ITEMS.values() if item in user]
+            return ("【模拟模型输出 · 通知草稿】\n" + title + "活动通知\n\n"
+                    + "各位参与者：\n" + "\n".join(items)
+                    + "\n\n活动时间、地点等具体安排将另行通知。"
+                    + "\n（本地模拟草稿，未调用外部模型。）")
         task_hint = ""
         for key in ("活动统计", "会议纪要", "项目介绍", "对外介绍"):
             if key in system:

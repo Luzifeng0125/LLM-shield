@@ -115,6 +115,20 @@ def reviewed_ner_settings() -> tuple[str, str]:
             os.getenv("SHIELD_REVIEWED_NER_DEVICE", "cpu").strip().lower())
 
 
+def reviewed_ner_decoding() -> str:
+    """Explicit candidate BIO decoding; default preserves original argmax behavior."""
+    load_env()
+    return os.getenv("SHIELD_REVIEWED_NER_DECODING", "greedy").strip().lower()
+
+
+def action_model_path() -> Path:
+    """本机动作候选权重；相对路径以 app 为根，留空使用交付权重。"""
+    load_env()
+    configured = os.getenv("SHIELD_ACTION_MODEL_PATH", "").strip()
+    path = Path(configured).expanduser() if configured else ROOT / "models" / "necessity_action.joblib"
+    return (path if path.is_absolute() else ROOT / path).resolve()
+
+
 def llm_settings() -> Dict[str, Any]:
     """大模型接入设置（模块 ⑦）。
 

@@ -6,6 +6,18 @@
 # ============================================================
 version: tasks-v0.1
 
+activity_notice:
+  name: 名单本机核对与通知草稿
+  desc: 仅根据单独提供的公开活动名称和通知事项生成通用通知
+  purpose: 名单只在本机核对，生成模型不接收名单、人员代号或个人统计明细
+  workflow: notice
+  must_retain: [EVENT_NAME, PUBLIC_FACT]
+  never_send: [PERSON_NAME, PHONE, EMAIL, WECHAT, STUDENT_ID, ID_CARD, BANK_CARD, API_KEY, DORM, GRADE, SENSITIVE_ATTR, BUDGET]
+  completion_criteria:
+    - 名单未进入生成请求
+    - 通知仅使用单独提供的活动概要
+    - 不编造时间地点或群链接
+
 activity_stats:
   name: 活动统计与总结
   desc: 统计一次校园活动的参与情况并生成总结文案
