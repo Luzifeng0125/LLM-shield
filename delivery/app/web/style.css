@@ -1,249 +1,143 @@
 /* ============================================================
-   隐盾 LLM-Shield · 前端设计系统
-   依据：Apple Human Interface Guidelines（官方原文核对）
-        + apple.com 网页视觉语言（官方样式表实读）
+   隐盾 LLM-Shield · 前端设计系统 · 苹果发布会风格（Keynote 风）
+   ------------------------------------------------------------
+   设计语言：借鉴 Apple 发布会 Keynote 的视觉特征，而非 iOS App 风格。
 
-   ── 三原则落地 ──
-   Clarity   层级靠字重/字号/间距建立，不靠描边；分隔线仅发丝级
-   Depth     材质（Material）分层，营造 Z 轴；阴影极浅且带方向
-   Deference 内容占满，控件浮于其上并让位；侧栏需时可收
+   ── Keynote 的三个签名 ──
+   1. 永远深色：近黑底 + 大面积「极光」彩色渐变（蓝 → 紫 → 青），
+      随窗口缓慢流动，营造「发布会现场」的舞台感。
+   2. 大标题渐变文字 + 发光徽标：标题用白→蓝→紫的渐变描边文字，
+      盾形徽标带柔和光晕与呼吸动效。
+   3. 动态效果克制而丝滑：面板入场、消息气泡弹簧式浮现、提示词卡
+      逐个错峰升起、输入胶囊聚焦时泛光。全部用 CSS 动画实现，
+      尊重 prefers-reduced-motion / prefers-reduced-transparency。
 
-   ── 材质层级纪律（HIG Materials 原文）──
-   ① "Don't use Liquid Glass in the content layer."
-      → 玻璃只用于「控件与导航层」：顶栏、侧栏、输入胶囊、弹窗、下拉弹层。
-      → 内容层（对话区、提示词卡、处理详情、附件标签）一律用普通
-        表面色 / standard material，绝不套 backdrop-filter。
-   ② "Don't stack glass on glass." / "avoid overcrowding or layering
-      Liquid Glass elements on top of each other."
-      → 同一条链路上只允许一层玻璃。侧栏已是玻璃，其内部按钮
-        只用填充色反馈；输入胶囊与下拉弹层各自独立成层，不与侧栏叠加。
-   ③ 厚度按语义选（文字越多越厚）：
-      · sidebar  文字密集 → regular 厚  rgba(255,255,255,.84)
-      · topbar   短标签   → regular 中  rgba(255,255,255,.76)
-      · composer 输入区   → regular 厚  rgba(255,255,255,.88)
-      · modal    整段文字 → thick  最厚 rgba(250,250,252,.92)
-      · picker   选项列表 → 同 modal，文字最多
-   ④ 玻璃之上叠「鲜艳色」（vibrant）以保证对比（HIG 原文要求）。
-   ⑤ "Use Liquid Glass effects sparingly. … Limit these effects to the
-      most important functional elements." → 全页玻璃控件数克制，
-      不新增装饰性玻璃。
+   ── 材质纪律 ──
+   玻璃只用于「导航 / 控件层」（顶栏、侧栏、输入胶囊、弹窗、下拉弹层），
+   且玻璃上叠一层彩色发丝线与彩色辉光，对应 Keynote 的「有色玻璃」。
+   内容层（对话、消息、提示词卡、处理详情、附件）用实色深灰卡片。
 
-   ── 排版纪律（HIG Typography 原文）──
-   · 字号沿用 iOS 文本样式：17 正文 / 15 subhead / 13 footnote / 11 caption2
-   · "In general, avoid light font weights." → 仅用 400 / 500 / 600 / 700
-   · 中文行高比拉丁文放宽（1.5 左右），属对 CJK 的有意适配
-   · 中文**字距必须归零**：Apple 自己的样式表写
-     `.typography-headline:lang(zh){ letter-spacing: 0em }`，
-     而西文用 -.022em。汉字套西文负字距会挤在一起。
-
-   ── 交互纪律 ──
-   · 主要交互控件 ≥ 44×44（HIG 最小值）；密集次级控件放宽至 36–40
-     并说明原因：本页面主要为桌面指针操作，非触屏
-   · 色彩克制：页面底色用 iOS systemGroupedBackground #F2F2F7，
-     强调色仅 iOS systemBlue 一支；"Refrain from adding color to the
-     background of multiple controls."
-   · 禁用态统一用 Apple 自家值 .42（深色 .36），不各自写魔法值
+   ── 无障碍 ──
+   · 中文一律 letter-spacing: 0（汉字套西文负字距会挤在一起）。
+   · 点按目标 ≥44px；深底白字对比度 ≥ 12:1，远超 WCAG AA。
+   · 保留 prefers-reduced-motion / -transparency 降级。
    ============================================================ */
 
-/* ---------------- 设计令牌 ----------------
-   全部颜色一律走令牌，实现层不再出现硬编码 hex。
-   这样深色外观只需在文件末尾覆写令牌，组件规则一行都不用改。
-   （HIG Color 原文：Avoid hard-coding system color values；
-     "Embrace colors that adapt to the current appearance."） */
 :root {
-  /* ---- iOS 系统色（填充用途）----
-     注：--sys-blue 用于「填充」（按钮底、气泡底、进度条），其上白字取
-     17pt 大字档；文本场景一律用对应的 *-text 令牌，保证 ≥4.5:1 */
-  --sys-blue: #007aff;
-  --sys-blue-hover: #0a6ff0;
-  --sys-blue-text: #0062d6;                /* 蓝字专用：白底 5.65:1、气泡上 5.06:1 */
-  --sys-green: #34c759;
-  --sys-red: #ff3b30;
-  --sys-orange: #ff9500;
-  --sys-purple: #af52de;
+  /* ---- 发布会强调色：一支渐变，三个锚点 ---- */
+  --k-blue: #0a84ff;
+  --k-violet: #7c5cff;
+  --k-cyan: #2ee6d6;
 
-  /* ---- 淡色底（软填充）---- */
-  --sys-blue-soft: rgba(0, 122, 255, .1);
-  --danger-soft: rgba(255, 59, 48, .1);
-  --warn-soft: rgba(255, 149, 0, .12);
-  --ok-soft: rgba(52, 199, 89, .12);
-  --purple-soft: rgba(175, 82, 222, .12);
+  --sys-blue: #0a84ff;
+  --sys-blue-hover: #3d9bff;
+  --sys-blue-text: #7ab8ff;                /* 深底蓝字，≥ 7:1 */
+  --sys-green: #30d158;
+  --sys-red: #ff453a;
+  --sys-orange: #ff9f0a;
+  --sys-purple: #a17cff;
 
-  /* ---- 语义状态色（供圆点/描边等「填充」用途）---- */
-  --ok: #34c759;
-  --warn: #ff9500;
-  --danger: #ff3b30;
+  /* ---- 淡色软底 ---- */
+  --sys-blue-soft: rgba(10, 132, 255, .2);
+  --danger-soft: rgba(255, 69, 58, .2);
+  --warn-soft: rgba(255, 159, 10, .2);
+  --ok-soft: rgba(48, 209, 88, .2);
+  --purple-soft: rgba(124, 92, 255, .22);
 
-  /* ---- 状态文字色（独立令牌，实测见文件末对比度表）---- */
-  --ok-text: #1a7f39;
-  --warn-text: #9c5c00;
-  --danger-text: #c62a20;
-  --info-text: #0a5cb8;                    /* 蓝色提示条上的文字 */
-  --purple-text: #8e3cb4;
+  /* ---- 状态填充色 ---- */
+  --ok: #30d158;
+  --warn: #ff9f0a;
+  --danger: #ff453a;
 
-  /* ---- 系统灰阶与文本角色（HIG：label / secondaryLabel / tertiaryLabel）
-     实测对比度（浅色）：label 21.0:1 / label-2 10.94:1 / label-3 5.30:1，
-     最差背景（蓝浅底）仍有 4.61:1。
-     —— Apple 原生 tertiaryLabel(#8E8E93) 仅 3.44:1，故本项目取更深的
-        #6b6b70，同时满足 HIG 易读性与 WCAG 4.5:1 ---- */
-  --label: #000;
-  --label-2: #3c3c43;
-  --label-3: #6b6b70;
-  --label-4: rgba(60, 60, 67, .3);
-  --sep: rgba(60, 60, 67, .29);
-  --sep-vibrant: rgba(60, 60, 67, .18);    /* 玻璃/卡片上的发丝线 */
-  --fill: rgba(120, 120, 128, .12);        /* 控件默认底 */
-  --fill-hover: rgba(120, 120, 128, .18);
-  --fill-2: rgba(120, 120, 128, .08);      /* 更弱的静态底 */
+  /* ---- 状态文字色 ---- */
+  --ok-text: #5fd97c;
+  --warn-text: #ffb340;
+  --danger-text: #ff8a80;
+  --info-text: #7ab8ff;
+  --purple-text: #b79aff;
 
-  /* ---- 表面色 ----
-     浅色：grouped 底 #f2f2f7 比内容面 #ffffff 深，内容自然「浮起」
-     深色：反过来，grouped 底 #000 比内容面 #1c1c1e 深，
-           对应 HIG Dark Mode 的 base（后退）/ elevated（前进）模型 ---- */
-  --bg-grouped: #f2f2f7;
-  --surface: #ffffff;
-  --surface-2: #f9f9fb;                    /* 内容层卡片 */
-  --surface-3: #f2f2f7;                    /* 对话内次级块 */
-  --row-bg: rgba(255, 255, 255, .78);      /* 文件库行 */
-  --row-bg-on: var(--sys-blue-soft);
-  --switch-off: rgba(120, 120, 128, .26);  /* iOS 开关关闭态轨道 */
-  --badge-bg: rgba(255, 255, 255, .85);    /* 状态块内的浅色徽章 */
-  --mask: rgba(0, 0, 0, .3);               /* 弹窗遮罩 */
-  --bubble-assistant: #f2f2f7;             /* 收件人气泡 = systemGray6 */
-  --bg-grad-1: #fbfbfd;
-  --bg-grad-2: #f2f2f7;
-  --bg-grad-3: #eef0f5;
-  --bg-tint: rgba(0, 122, 255, .05);
-  --scroll-thumb: rgba(120, 120, 128, .28);
-  --scroll-thumb-hover: rgba(120, 120, 128, .45);
-  --material-fallback: #ffffff;            /* 毛玻璃/降透明度降级底 */
+  /* ---- 深色文本层级（永远深色，不再跟随系统切明暗）---- */
+  --label: #ffffff;
+  --label-2: rgba(255, 255, 255, .78);
+  --label-3: rgba(255, 255, 255, .55);
+  --label-4: rgba(255, 255, 255, .3);
+  --sep: rgba(255, 255, 255, .16);
+  --sep-vibrant: rgba(255, 255, 255, .12);
+  --fill: rgba(255, 255, 255, .12);
+  --fill-hover: rgba(255, 255, 255, .2);
+  --fill-2: rgba(255, 255, 255, .08);
 
-  /* ---- 玻璃材质（按语义分档，见文件头说明③）---- */
-  --glass-sidebar: rgba(255, 255, 255, .84);
-  --glass-topbar: rgba(255, 255, 255, .76);
-  --glass-composer: rgba(255, 255, 255, .88);
-  --glass-modal: rgba(250, 250, 252, .92);
-  --glass-hairline: rgba(255, 255, 255, .72);
-  /* 模糊与 Apple 自家导航条一致（apple.com globalnav-scrim） */
-  --blur: saturate(180%) blur(20px);
+  /* ---- 表面（base 后退 / elevated 前进）---- */
+  --bg-grouped: #050507;                    /* 舞台底色 */
+  --surface: #121217;                       /* 内容面 */
+  --surface-2: #1a1a21;
+  --surface-3: #1a1a21;
+  --row-bg: rgba(255, 255, 255, .05);
+  --row-bg-on: rgba(10, 132, 255, .2);
+  --switch-off: rgba(255, 255, 255, .24);
+  --badge-bg: rgba(255, 255, 255, .14);
+  --mask: rgba(0, 0, 0, .6);
+  --bubble-assistant: #1a1a21;
+  --scroll-thumb: rgba(255, 255, 255, .2);
+  --scroll-thumb-hover: rgba(255, 255, 255, .36);
 
-  /* ---- 字体：SF Pro 优先 ----
-     ⚠ 不走自托管 webfont。Apple 字体授权只允许「为 Apple 平台软件做
-     UI mockup」，明文禁止用于 website content 与网络多机分发。
-     用系统字体栈（-apple-system / BlinkMacSystemFont）在 macOS 上
-     经系统机制得到 SF Pro，不涉及分发，这也是 Apple 自家中文页面的做法。 */
+  /* ---- 有色玻璃（Keynote：玻璃上带彩）---- */
+  --glass-sidebar: rgba(22, 22, 28, .66);
+  --glass-topbar: rgba(16, 16, 21, .6);
+  --glass-composer: rgba(22, 22, 28, .78);
+  --glass-modal: rgba(28, 28, 34, .9);
+  --glass-hairline: rgba(255, 255, 255, .12);
+  --glass-glow: rgba(10, 132, 255, .14);     /* 玻璃边缘的一层蓝色辉光 */
+  --blur: saturate(180%) blur(24px);
+  --material-fallback: #16161c;
+
+  /* ---- 字体 ---- */
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
                "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei", "Segoe UI",
                "Helvetica Neue", sans-serif;
   --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Consolas, monospace;
 
-  /* ---- 流体根字号：整个界面随窗口宽度等比放大 ----
-     ⚠ 这是全项目唯一一处「响应式尺寸」开关，也是第 8 轮补修的关键。
-
-     实测（.workbuddy/tmp/viewport-probe.js，逐档量同一套尺寸）：
-       窗口 1280 → 应用宽 1280，正文 18px，标题 34px
-       窗口 1512 → 应用宽 1440，正文 18px，标题 34px
-       窗口 1920 → 应用宽 1440，正文 18px，标题 34px   ← 两侧各空 240px
-       窗口 2560 → 应用宽 1440，正文 18px，标题 34px   ← 两侧各空 560px
-     **字号在任何窗口下都不变**，而 max-width 把应用钉死在 1440px。
-     用户连说三次「字太小 / 还是有点小」，前两次只加了 8px、2px，
-     在宽屏上根本看不出来 —— 真正的问题不是那 2px。
-
-     做法：给根字号一个 clamp。因为**所有尺寸都用 rem**
-     （字阶、侧栏宽、内容列宽、点按目标、控件高度），
-     这一行就让整个界面等比放大，而比例关系完全不变
-     （每行字数、控件与文字的相对大小都保持原样）。
-
-     用户缩放依然有效：clamp 的下界与中间项都写成 rem，
-     而根元素 font-size 里的 rem 按规范取**初始值**
-     （= 用户设定的浏览器默认字号），所以用户调大默认字号时，
-     整个 clamp 区间整体上移，不会被这行覆盖掉。
-
-     实测根字号：1280→18.6  1440→19.0  1512→19.2  1920→20.3  2560→22.0
-     即最窄窗口比原来大 16%，1512 大 20%，2560 大 37%。
-
-     间距令牌（--sp-*）与圆角仍留在 px：字号变大而间距不变，
-     版面会自然变紧凑 —— 正好一并缓解用户说的「太空」。 */
+  /* ---- 流体根字号 ---- */
   font-size: clamp(1rem, .946rem + .268vw, 1.5rem);
 
-  /* ---- 字阶：对齐 iOS 文本样式 ----
-     用 rem（= 用户根字号）而非 px。
-     HIG Layout 明确要求支持 Dynamic Type（"horizontally adjacent views may
-     need to stack vertically… containers may need to grow in height so that
-     text isn't cropped"）；Web 上的等价物就是 rem + em 自适应尺寸：
-     用户放大浏览器文字时，行高、控件与点按目标会一起长大，不会裁切。
+  /* ---- 字阶 ---- */
+  --fs-11: .75rem;
+  --fs-12: .8125rem;
+  --fs-13: .875rem;
+  --fs-15: 1rem;
+  --fs-17: 1.125rem;
+  --fs-20: 1.375rem;
+  --fs-28: 2.125rem;
 
-     ⚠ 第 8 轮整体上调一档：用户反馈「字太小」。宽屏桌面浏览器
-     （1512px）下 17px 正文在大片留白里显得很小，故正文提到 18px，
-     其余按 iOS 比例同步上移。令牌名保持不变（--fs-17 仍指正文一档），
-     只改数值，组件规则一行不用动。
-     这些数值是**根字号为 16px 时**的等效像素，实际渲染值随上面的
-     clamp 一起放大（1512 窗口下正文实测约 21.6px）。 */
-  --fs-11: .75rem;     /* 12 Caption 2 */
-  --fs-12: .8125rem;   /* 13 Caption 1 */
-  --fs-13: .875rem;    /* 14 Footnote */
-  --fs-15: 1rem;       /* 16 Subhead */
-  --fs-17: 1.125rem;   /* 18 Body  ← 正文 */
-  --fs-20: 1.375rem;   /* 22 Title 3 */
-  --fs-28: 2.125rem;   /* 34 Large Title ← 页面大标题 */
-
-  /* ---- 内容列宽 ----
-     HIG 要求限制文本宽度以保证可读性，但 760px 在 1512px 宽屏上
-     两侧各留 170px 空白，用户反馈「右边太空」。
-     48rem：根字号 16px 时 = 768px；但根字号会随窗口涨到 19–22px，
-     所以实际是 920–1060px，正文约 43–48 字/行 —— 字号和列宽同步长，
-     每行字数因此保持稳定，不会因为屏幕大就变成难读的长行。
-     消息、状态条、处理详情、输入胶囊共用这一个令牌，
-     保证左右边缘对齐成同一列。 */
   --col: 48rem;
 
-  /* ---- 间距：8pt 栅格 + 4pt 细分 ---- */
-  --sp-1: 4px;
-  --sp-2: 8px;
-  --sp-3: 12px;
-  --sp-4: 16px;
-  --sp-5: 20px;
-  --sp-6: 24px;
+  /* ---- 间距 ---- */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px;
+  --sp-4: 16px; --sp-5: 20px; --sp-6: 24px;
 
-  /* ---- 圆角：Squircle 倾向 ---- */
-  --r-xs: 10px;
-  --r-sm: 12px;
-  --r-md: 16px;
-  --r-lg: 20px;
-  --r-xl: 24px;
-  --r-pill: 999px;
+  /* ---- 圆角 ---- */
+  --r-xs: 10px; --r-sm: 12px; --r-md: 16px;
+  --r-lg: 20px; --r-xl: 24px; --r-pill: 999px;
 
-  /* ---- 点按目标 ----
-     HIG 最小 44×44pt。改用 em 派生：默认 2.75rem = 44px，
-     用户放大字号时点按目标同步变大，始终达标。 */
+  /* ---- 点按目标 ---- */
   --tap: 2.75rem;
-  /* 主操作按钮的宽松高度。52px，比最小点按目标高 8px。
-     只给「当前视图唯一的主操作」用（这里是侧栏的「新对话」）。 */
   --tap-lg: 3.25rem;
 
-  /* ---- 极浅方向性阴影（HIG：绝不用生硬黑阴影）---- */
-  --shadow-1: 0 1px 3px rgba(0, 0, 0, .04), 0 4px 20px rgba(0, 0, 0, .04);
-  --shadow-2: 0 2px 6px rgba(0, 0, 0, .05), 0 12px 32px rgba(0, 0, 0, .07);
-  --shadow-3: 0 8px 20px rgba(0, 0, 0, .08), 0 24px 56px rgba(0, 0, 0, .12);
-  --shadow-accent: 0 2px 10px rgba(0, 122, 255, .26);
-  --shadow-accent-lg: 0 3px 14px rgba(0, 122, 255, .2);
+  /* ---- 阴影（深色下以辉光为主）---- */
+  --shadow-1: 0 2px 12px rgba(0, 0, 0, .45);
+  --shadow-2: 0 4px 22px rgba(0, 0, 0, .55);
+  --shadow-3: 0 14px 48px rgba(0, 0, 0, .7);
+  --shadow-accent: 0 2px 16px rgba(10, 132, 255, .4);
+  --shadow-accent-lg: 0 4px 24px rgba(10, 132, 255, .34);
 
-  /* ---- 动效：弹簧曲线（出现带轻微回弹）---- */
+  /* ---- 动效 ---- */
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --dur-fast: 200ms;
   --dur-base: 340ms;
 
-  /* ---- 键盘焦点环 ----
-     HIG Accessibility 要求「键盘操作时焦点必须清晰可见」。
-     统一令牌，避免每个组件各写一遍魔法值。 */
-  --focus-ring: 0 0 0 3.5px rgba(0, 122, 255, .16);
-
-  /* ---- 禁用态不透明度 ----
-     取 Apple 自家 apple.com 样式表的值：浅色 .42 / 深色 .36
-     （--sk-link-disabled-opacity / --sk-button-disabled-opacity）。
-     置灰要「看得见但不可用」，不能淡到读不出来。 */
-  --disabled-opacity: .42;
+  --focus-ring: 0 0 0 3.5px rgba(10, 132, 255, .3);
+  --disabled-opacity: .38;
 }
 
 /* ---------------- 重置与基础 ---------------- */
@@ -253,13 +147,12 @@ html { height: 100%; }
 
 body {
   margin: 0;
-  /* 纵向 flex：顶栏增高（放大字号时）主区自动让位，不会溢出 */
   display: flex; flex-direction: column;
   height: 100%;
   color: var(--label);
   font-family: var(--font-sans);
   font-size: var(--fs-17);
-  font-weight: 400;                        /* 不用 Light */
+  font-weight: 400;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -267,49 +160,45 @@ body {
   overflow: hidden;
 }
 
-/* 背景层：以 systemGroupedBackground 为底，仅一层极淡方向性提亮。
-   HIG 要求「color sparingly」——不做多彩光斑堆叠。 */
-.app-bg {
-  position: fixed; inset: 0; z-index: -1; pointer-events: none;
-  background:
-    radial-gradient(64rem 42rem at 12% -14%, var(--bg-tint), transparent 62%),
-    linear-gradient(168deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 46%, var(--bg-grad-3) 100%);
-}
-
 h1, h2, h3, p { margin: 0; }
 :focus-visible { outline: 2px solid var(--sys-blue); outline-offset: 2px; border-radius: 6px; }
 
-/* 玻璃材质：按用途分散定义（顶栏 / 侧栏 / 输入胶囊 / 弹窗 / 下拉弹层），
-   不提供通用 .glass 类——避免被误用到内容层。 */
-
-/* 无障碍：HIG 要求尊重「降低透明度」设置 */
-@media (prefers-reduced-transparency: reduce) {
-  .topbar, .config, .composer-capsule, .modal, .picker-pop {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-  }
-  .topbar { background: var(--material-fallback); }
-  .config { background: var(--material-fallback); }
-  .composer-capsule { background: var(--material-fallback); }
-  .modal { background: var(--material-fallback); }
-  .picker-pop { background: var(--material-fallback); }
+/* ---------------- 背景：流动极光 ---------------- */
+.app-bg {
+  position: fixed; inset: 0; z-index: -1; overflow: hidden;
+  background: #050507;
 }
-
-/* 降级：内核不支持毛玻璃时退回实色，保证可读性不依赖特效 */
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .topbar { background: var(--material-fallback); }
-  .config { background: var(--material-fallback); }
-  .composer-capsule { background: var(--material-fallback); }
-  .modal { background: var(--material-fallback); }
-  .picker-pop { background: var(--material-fallback); }
+.app-bg::before,
+.app-bg::after {
+  content: ''; position: absolute; border-radius: 50%;
+  filter: blur(90px); opacity: .55; will-change: transform;
 }
+.app-bg::before {
+  width: 62vw; height: 62vw; left: -16vw; top: -24vh;
+  background: radial-gradient(circle, rgba(10, 132, 255, .6), transparent 68%);
+  animation: auroraA 26s ease-in-out infinite alternate;
+}
+.app-bg::after {
+  width: 56vw; height: 56vw; right: -14vw; bottom: -26vh;
+  background: radial-gradient(circle, rgba(124, 92, 255, .55), transparent 68%);
+  animation: auroraB 34s ease-in-out infinite alternate;
+}
+.app-bg .aurora-cyan {
+  position: absolute; width: 48vw; height: 48vw; left: 30vw; top: 20vh;
+  border-radius: 50%; filter: blur(90px); opacity: .4;
+  background: radial-gradient(circle, rgba(46, 230, 214, .5), transparent 68%);
+  animation: auroraC 40s ease-in-out infinite alternate;
+}
+@keyframes auroraA { to { transform: translate(14vw, 12vh) scale(1.18); } }
+@keyframes auroraB { to { transform: translate(-12vw, -14vh) scale(1.22); } }
+@keyframes auroraC { to { transform: translate(-8vw, 10vh) scale(1.15); } }
 
-/* ---------------- 顶栏（导航层 → 玻璃） ---------------- */
+/* ---------------- 顶栏（导航层 → 玻璃 + 彩色辉光） ---------------- */
 .topbar {
   position: relative; z-index: 30;
   display: flex; align-items: center; justify-content: space-between;
   gap: var(--sp-5);
-  height: 64px; flex-shrink: 0;            /* 不参与压缩，保证导航条完整 */
+  height: 64px; flex-shrink: 0;
   padding: 0 26px;
   background: var(--glass-topbar);
   backdrop-filter: var(--blur);
@@ -318,24 +207,28 @@ h1, h2, h3, p { margin: 0; }
 }
 
 .brand { display: flex; align-items: center; gap: 11px; min-width: 0; }
-.logo { width: 32px; height: 32px; flex-shrink: 0; display: inline-flex; }
-.logo svg { display: block; filter: drop-shadow(0 2px 6px rgba(0, 122, 255, .28)); }
-
+.logo { width: 34px; height: 34px; flex-shrink: 0; display: inline-flex; }
+.logo svg {
+  display: block;
+  filter: drop-shadow(0 0 10px rgba(10, 132, 255, .65)) drop-shadow(0 2px 8px rgba(10, 132, 255, .4));
+  animation: logoGlow 4.5s ease-in-out infinite;
+}
+@keyframes logoGlow {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(10,132,255,.55)) drop-shadow(0 2px 6px rgba(10,132,255,.35)); }
+  50%      { filter: drop-shadow(0 0 18px rgba(124,92,255,.8)) drop-shadow(0 2px 10px rgba(10,132,255,.5)); }
+}
 
 .brand-text { min-width: 0; }
-/* 中文字距归零。
-   依据：Apple 自己的 apple.com 样式表对中文明确覆写
-   `.typography-headline:lang(zh){ letter-spacing: 0em }`，
-   而西文用的是 -.022em。汉字套西文负字距会挤在一起，是纯 bug 不是风格。 */
 .brand-text h1 {
-  font-size: var(--fs-17); font-weight: 700;      /* HIG：标题用 Bold */
+  font-size: var(--fs-17); font-weight: 700;
   letter-spacing: 0; line-height: 1.3;
+  background: linear-gradient(100deg, #fff 30%, #9cc4ff 75%, #c9b8ff 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-.sub { font-size: var(--fs-13); color: var(--label-3); }   /* Footnote */
+.sub { font-size: var(--fs-13); color: var(--label-3); }
 
 .topbar-right { display: flex; align-items: center; gap: 10px; }
 
-/* 圆形玻璃图标按钮 —— 尺寸用 --tap，默认 44×44 满足 HIG 最小点按目标 */
 .icon-glass {
   width: var(--tap); height: var(--tap); padding: 0; flex-shrink: 0;
   display: inline-flex; align-items: center; justify-content: center;
@@ -350,11 +243,9 @@ h1, h2, h3, p { margin: 0; }
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='3' y='4' width='18' height='16' rx='4' stroke='black' stroke-width='1.8' fill='none'/%3E%3Cpath d='M10 4v16' stroke='black' stroke-width='1.8'/%3E%3C/svg%3E") center/contain no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='3' y='4' width='18' height='16' rx='4' stroke='black' stroke-width='1.8' fill='none'/%3E%3Cpath d='M10 4v16' stroke='black' stroke-width='1.8'/%3E%3C/svg%3E") center/contain no-repeat;
 }
-.icon-glass:hover { background: var(--material-fallback); color: var(--sys-blue-text); }
-
+.icon-glass:hover { background: var(--fill); color: var(--sys-blue-text); }
 .icon-glass:active { transform: scale(.94); }
 
-/* 服务状态胶囊（玻璃之上用鲜艳色，HIG 明确要求） */
 .service-status {
   display: inline-flex; align-items: center; gap: 7px;
   padding: 6px 14px; border-radius: var(--r-pill);
@@ -377,47 +268,41 @@ h1, h2, h3, p { margin: 0; }
 .service-status.error::before { background: var(--danger); }
 
 @keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(0, 122, 255, .38); }
-  70% { box-shadow: 0 0 0 6px rgba(0, 122, 255, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(10, 132, 255, .5); }
+  70% { box-shadow: 0 0 0 6px rgba(10, 132, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(10, 132, 255, 0); }
 }
 
 /* ---------------- 按钮 ---------------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 7px;
   padding: 0 18px;
-  min-height: var(--tap);                 /* HIG 最小点按目标，随字号自适应 */
+  min-height: var(--tap);
   font-size: var(--fs-15); font-weight: 590; line-height: 1;
   font-family: inherit;
   border-radius: var(--r-sm);
   cursor: pointer;
-  border: none;                           /* Clarity：去掉描边 */
+  border: none;
   background: var(--fill);
   color: var(--label);
-  transition: background var(--dur-fast), transform var(--dur-fast), opacity var(--dur-fast);
+  transition: background var(--dur-fast), transform var(--dur-fast), opacity var(--dur-fast),
+              box-shadow var(--dur-fast);
 }
 .btn svg { flex-shrink: 0; }
 .btn:hover { background: var(--fill-hover); }
-.btn:active { transform: scale(.96); }    /* 物理按压感 */
+.btn:active { transform: scale(.96); }
 
 .btn.primary {
-  background: var(--sys-blue);
+  background: linear-gradient(120deg, #1a90ff, #0a84ff 55%, #5a4dff);
   color: #fff;
   box-shadow: var(--shadow-accent);
 }
-.btn.primary:hover { background: var(--sys-blue-hover); }
+.btn.primary:hover { filter: brightness(1.08); }
 
-/* 次级小按钮：桌面指针场景放宽至 36，仍保留足量内边距便于命中 */
-.btn.compact {
-  min-height: 2.25rem; padding: 0 12px;
-  font-size: var(--fs-13); font-weight: 500;
-  border-radius: var(--r-xs);
-}
-
+.btn.compact { min-height: 2.25rem; padding: 0 12px; font-size: var(--fs-13); font-weight: 500; border-radius: var(--r-xs); }
 .btn:disabled { opacity: var(--disabled-opacity); cursor: not-allowed; }
 .btn:disabled:active { transform: none; }
 
-/* 破坏性操作：默认极弱，悬停才显红 */
 .icon-btn {
   width: var(--tap); height: var(--tap); padding: 0; flex: 0 0 var(--tap);
   display: inline-flex; align-items: center; justify-content: center;
@@ -436,12 +321,12 @@ h1, h2, h3, p { margin: 0; }
 /* ---------------- 文本框 ---------------- */
 textarea {
   width: 100%;
-  min-height: var(--tap);                  /* HIG 最小点按目标 */
+  min-height: var(--tap);
   padding: 12px 14px;
   font-size: var(--fs-15);
   font-family: inherit;
   color: var(--label);
-  background: var(--surface);              /* 内容层：实色，不套玻璃 */
+  background: var(--surface);
   border: none;
   border-radius: var(--r-sm);
   box-shadow: inset 0 0 0 1px var(--sep-vibrant);
@@ -449,48 +334,29 @@ textarea {
   resize: vertical; line-height: 1.5; min-height: 4.125rem;
 }
 textarea:hover { background: var(--surface-2); }
-textarea:focus {
-  outline: none;
-  background: var(--surface);
-  box-shadow: inset 0 0 0 1px var(--sys-blue), var(--focus-ring);
-}
+textarea:focus { outline: none; background: var(--surface); box-shadow: inset 0 0 0 1px var(--sys-blue), var(--focus-ring); }
 ::placeholder { color: var(--label-3); opacity: 1; }
 
-/* ============================================================
-   Pull-down 选择器（Apple HIG "Pull-down buttons"）
-   ------------------------------------------------------------
-   为什么不用原生 <select>：
-   ① 原生下拉只能显示一行文字，无法在选择时给出「一句场景示例」，
-      而这正是用户判断该选哪一个的依据。
-   ② 后端只有 3 个任务模板，直接铺给用户看「活动统计与总结」这类宏大名字，
-      用户无法判断该选哪个 —— 具体意图由 intents.js 展开成 12 项。
-   自建组件的纪律：
-   · 触发按钮与弹层属**控件层**，可以玻璃；弹层用 thick 档（文字最多）
-   · 每个选项 ≥44px 点按目标；勾选位始终占位，保证标签左对齐不跳动
-   · 键盘全可达：↑↓ / Home / End / Enter / Esc / 输入即搜索
-   · 圆角同心：弹层 16px − 内边距 6px = 选项 10px（concentric 原则）
-   ============================================================ */
+/* ---------------- Pull-down 选择器 ---------------- */
 .picker { position: relative; }
 
 .picker-trigger {
   display: flex; align-items: center; gap: 10px;
   width: 100%; text-align: left;
-  min-height: 4.25rem;                     /* 两行：名称 + 示例 */
+  min-height: 4.25rem;
   padding: 11px 13px;
   font-family: inherit; font-size: var(--fs-15); color: var(--label);
-  background: var(--surface);
-  border: none; border-radius: var(--r-md);
-  box-shadow: inset 0 0 0 1px var(--sep-vibrant);
+  background: var(--surface-2);
+  border: 1px solid var(--sep-vibrant); border-radius: var(--r-md);
   cursor: pointer;
-  transition: background var(--dur-fast), box-shadow var(--dur-fast), transform var(--dur-fast);
+  transition: background var(--dur-fast), border-color var(--dur-fast), box-shadow var(--dur-fast), transform var(--dur-fast);
 }
-.picker-trigger:hover { background: var(--surface-2); }
-.picker-trigger:focus-visible { outline: none; box-shadow: inset 0 0 0 1px var(--sys-blue), var(--focus-ring); }
+.picker-trigger:hover { background: var(--surface); border-color: var(--sep); }
+.picker-trigger:focus-visible { outline: none; border-color: var(--sys-blue); box-shadow: var(--focus-ring); }
 .picker-trigger:active { transform: scale(.99); }
 .picker-trigger:disabled { opacity: var(--disabled-opacity); cursor: not-allowed; }
 .picker-trigger:disabled:active { transform: none; }
 
-/* 单行变体（身份只有名称，没有示例行） */
 .picker-trigger.is-compact { min-height: var(--tap); align-items: center; }
 .picker-trigger.is-compact .picker-name { font-weight: 500; }
 
@@ -505,7 +371,6 @@ textarea:focus {
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
-/* 折叠箭头：纯 CSS 描边，展开时翻 180°（HIG：状态必须可见） */
 .picker-chevron {
   flex-shrink: 0; width: 9px; height: 9px; margin-right: 3px;
   border-right: 1.8px solid var(--label-3);
@@ -516,7 +381,6 @@ textarea:focus {
 [aria-expanded="true"] > .picker-chevron,
 [aria-expanded="true"] .picker-chevron { transform: rotate(-135deg) translate(-2px, -2px); }
 
-/* ---- 弹出列表：控件层，thick 玻璃（文字最多的档位） ---- */
 .picker-pop {
   position: fixed; z-index: 80;
   display: flex; flex-direction: column;
@@ -526,7 +390,7 @@ textarea:focus {
   -webkit-backdrop-filter: var(--blur);
   border: 1px solid var(--glass-hairline);
   border-radius: var(--r-md);
-  box-shadow: var(--shadow-3);
+  box-shadow: var(--shadow-3), 0 0 0 1px var(--glass-glow);
   animation: popIn 240ms var(--ease-spring) both;
 }
 .picker-pop.is-up { transform-origin: bottom left; }
@@ -539,7 +403,7 @@ textarea:focus {
   display: flex; align-items: center; gap: 7px;
   flex-shrink: 0; padding: 7px 10px; margin-bottom: 4px;
   border-bottom: 1px solid var(--sep-vibrant);
-  cursor: text;                            /* 整行可点即聚焦（见 chat.js） */
+  cursor: text;
 }
 .picker-search-ico { flex-shrink: 0; display: inline-flex; color: var(--label-3); }
 .picker-search input {
@@ -550,30 +414,14 @@ textarea:focus {
 .picker-search input:focus { outline: none; }
 .picker-search input::placeholder { color: var(--label-3); }
 
-.picker-list {
-  flex: 1; min-height: 0; overflow-y: auto;
-  display: flex; flex-direction: column; gap: 1px;
-  overscroll-behavior: contain;
-}
-/* 分组标题：HIG 允许用分组帮助扫读，但「不要超过约三组」 */
-.picker-group {
-  flex-shrink: 0;                          /* 见下方 .picker-option 的说明 */
-  padding: 9px 10px 4px;
-  font-size: var(--fs-11); font-weight: 600; color: var(--label-3);
-  letter-spacing: 0;                       /* 中文不加字距（见 .brand-text h1 说明） */
-}
+.picker-list { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 1px; overscroll-behavior: contain; }
+.picker-group { flex-shrink: 0; padding: 9px 10px 4px; font-size: var(--fs-11); font-weight: 600; color: var(--label-3); letter-spacing: 0; }
 
 .picker-option {
-  /* ⚠ flex-shrink: 0 是必须的，不是可选优化。
-     .picker-list 是可滚动的纵向 flex 容器；flex 项默认 flex-shrink: 1，
-     12 个选项放不下时会被**压扁**到 min-height（44px），
-     而「名称 + 说明」两行实际需要约 58px —— 多出来的字就溢出到
-     相邻行上，看起来像乱码。可滚动列表里的项必须禁止收缩。
-     已加断言：每个选项 scrollHeight <= clientHeight。 */
   flex-shrink: 0;
   display: flex; align-items: flex-start; gap: 8px;
   width: 100%; text-align: left;
-  min-height: var(--tap);                  /* HIG 最小点按目标 */
+  min-height: var(--tap);
   padding: 9px 10px;
   font-family: inherit; color: var(--label);
   background: transparent; border: none; border-radius: var(--r-xs);
@@ -584,16 +432,7 @@ textarea:focus {
 .picker-option:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--sys-blue); }
 .picker-option:active { transform: scale(.99); }
 
-.picker-check {
-  flex-shrink: 0; width: 16px; height: 16px; margin-top: 2px;
-  display: inline-flex; align-items: center; justify-content: center;
-  color: transparent;                     /* 占位，避免选中时标签跳动 */
-}
-/* 选中行：用「行底色 + 勾选」表达选中，文字仍走 label 系列。
-   为什么不把选中行的文字染成蓝色：实测深色下 #409cff 压在
-   蓝底 #233e5a 上只有 3.89:1，达不到正文 4.5:1 —— 肉眼完全看不出，
-   只有跑 contrast-check.js 才会暴露。勾选图标属图形元素，按 WCAG
-   1.4.11 只需 3:1，故可以保留强调色。 */
+.picker-check { flex-shrink: 0; width: 16px; height: 16px; margin-top: 2px; display: inline-flex; align-items: center; justify-content: center; color: transparent; }
 .picker-option.is-selected { background: var(--sys-blue-soft); }
 .picker-option.is-selected .picker-check { color: var(--sys-blue-text); }
 .picker-option.is-selected .picker-opt-name { font-weight: 600; }
@@ -601,33 +440,11 @@ textarea:focus {
 
 .picker-opt-text { flex: 1; min-width: 0; }
 .picker-opt-name { display: block; font-size: var(--fs-15); font-weight: 500; line-height: 1.4; }
-.picker-opt-desc {
-  display: block; margin-top: 2px;
-  font-size: var(--fs-12); color: var(--label-3); line-height: 1.45;
-}
-.picker-opt-meta {
-  display: inline-block; margin-top: 5px;
-  padding: 1px 7px; border-radius: var(--r-pill);
-  font-size: var(--fs-11); font-weight: 500;
-  background: var(--fill-2); color: var(--label-3);
-}
-.picker-empty {
-  padding: 22px 14px; text-align: center;
-  font-size: var(--fs-13); color: var(--label-3);
-}
+.picker-opt-desc { display: block; margin-top: 2px; font-size: var(--fs-12); color: var(--label-3); line-height: 1.45; }
+.picker-opt-meta { display: inline-block; margin-top: 5px; padding: 1px 7px; border-radius: var(--r-pill); font-size: var(--fs-11); font-weight: 500; background: var(--fill-2); color: var(--label-3); }
+.picker-empty { padding: 22px 14px; text-align: center; font-size: var(--fs-13); color: var(--label-3); }
 
-/* ============================================================
-   额外处理要求：一行按钮原地展开
-   ------------------------------------------------------------
-   上一版把「处理要求」和「身份」一起塞进折叠的「高级设置」，用户
-   根本不知道里面有东西。现在：身份常驻（它决定能读哪些材料），
-   处理要求保留为可选，但入口是一整行按钮，填了会在行内显示摘要。
-   HIG 依据：
-   · "with more advanced functionality hidden by default"（默认折叠）
-   · "Provide a descriptive label … like 'Advanced Options.'"（标签说明里面是什么）
-   · "prefer letting people modify task-specific options without going to
-      your settings area"（任务相关选项就地改，不要塞进全局设置）
-   ============================================================ */
+/* ---------------- 额外处理要求 ---------------- */
 .add-req {
   display: flex; align-items: center; gap: 9px;
   width: 100%; text-align: left;
@@ -636,42 +453,26 @@ textarea:focus {
   font-family: inherit; font-size: var(--fs-15); font-weight: 500;
   color: var(--sys-blue-text);
   background: var(--fill-2);
-  border: none; border-radius: var(--r-sm);
+  border: 1px solid var(--sep-vibrant); border-radius: var(--r-sm);
   cursor: pointer;
-  transition: background var(--dur-fast), color var(--dur-fast), transform var(--dur-fast);
+  transition: background var(--dur-fast), color var(--dur-fast), border-color var(--dur-fast), transform var(--dur-fast);
 }
-.add-req:hover { background: var(--fill); }
+.add-req:hover { background: var(--fill); border-color: var(--sep); }
 .add-req:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 .add-req:active { transform: scale(.99); }
 .add-req:disabled { opacity: var(--disabled-opacity); cursor: not-allowed; }
 .add-req:disabled:active { transform: none; }
 
-/* 展开指示沿用全局的折叠箭头 —— 与上面两个选择器、下面「隐私与服务说明」
-   用的是同一种符号，且状态由 [aria-expanded="true"] 驱动旋转。
-   为什么不用「＋ / −」：本页的约定是「箭头 = 就地展开更多」，已有 4 处在用。
-   再加一套加减号等于让用户学两种约定，违反 HIG 的 Consistency；
-   语义交给文案（"添加要求（可选）"），可操作性交给箭头。 */
-.add-req-text {
-  flex: 1; min-width: 0;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
+.add-req-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .add-req .picker-chevron { border-color: currentColor; }
-.add-req.has-value { background: var(--sys-blue-soft); }
+.add-req.has-value { background: var(--sys-blue-soft); border-color: var(--sys-blue); }
 
-.req-body { margin-top: 10px; animation: railIn 260ms var(--ease-out) both; }
-.req-foot {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 10px; margin-top: 6px;
-}
-.req-count {
-  font-size: var(--fs-12); color: var(--label-3);
-  font-variant-numeric: tabular-nums;
-}
+.req-body { margin-top: 10px; animation: riseIn 280ms var(--ease-out) both; }
+.req-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 6px; }
+.req-count { font-size: var(--fs-12); color: var(--label-3); font-variant-numeric: tabular-nums; }
 .link-btn {
   padding: 4px 6px; border: none; background: none;
-  min-height: 1.75rem;                     /* macOS 最小控件 28×28pt
-                                              （HIG accessibility 表：macOS
-                                              default 28 / minimum 20） */
+  min-height: 1.75rem;
   font-family: inherit; font-size: var(--fs-12); font-weight: 500;
   color: var(--sys-blue-text); border-radius: 8px; cursor: pointer;
   transition: background var(--dur-fast), opacity var(--dur-fast);
@@ -682,13 +483,7 @@ textarea:focus {
 
 /* ---------------- 侧栏区块 ---------------- */
 .sec { margin-top: var(--sp-5); }
-/* 区块小标题：Apple 的「eyebrow」样式。
-   注意中文不做 text-transform / 不加字距 —— 那两条是给拉丁字母设计的，
-   用在汉字上只会让字距不均，反而更乱。 */
-.sec-title {
-  font-size: var(--fs-13); font-weight: 600; color: var(--label-3);
-  margin-bottom: var(--sp-3);
-}
+.sec-title { font-size: var(--fs-13); font-weight: 600; color: var(--label-3); margin-bottom: var(--sp-3); letter-spacing: 0; }
 .sec-hint { font-size: var(--fs-13); color: var(--label-3); line-height: 1.5; margin-bottom: var(--sp-3); }
 .sec-footnote { margin-top: var(--sp-3); font-size: var(--fs-12); color: var(--label-3); line-height: 1.5; }
 
@@ -719,15 +514,10 @@ textarea:focus {
 .settings[open] > summary,
 .processing[open] > summary { margin-bottom: var(--sp-3); }
 
-.chat-note {
-  color: var(--label-3);
-  line-height: 1.6;
-  font-size: var(--fs-12);          /* Caption 1：辅助信息 */
-  margin: var(--sp-4) 0;
-}
+.chat-note { color: var(--label-3); line-height: 1.6; font-size: var(--fs-12); margin: var(--sp-4) 0; }
 .chat-note:last-child { margin-bottom: 0; }
 
-/* ---------------- 模型状态（徽章） ---------------- */
+/* ---------------- 模型状态 ---------------- */
 .model-status {
   display: flex; align-items: center; gap: 9px;
   margin-top: var(--sp-5);
@@ -742,7 +532,7 @@ textarea:focus {
   background: var(--label-4); flex-shrink: 0;
 }
 .model-status.is-ok { background: var(--ok-soft); color: var(--ok-text); }
-.model-status.is-ok::before { background: var(--ok); box-shadow: 0 0 0 3px rgba(52, 199, 89, .18); }
+.model-status.is-ok::before { background: var(--ok); box-shadow: 0 0 0 3px rgba(48, 209, 88, .2); }
 .model-status.is-error { background: var(--danger-soft); color: var(--danger-text); }
 .model-status.is-error::before { background: var(--danger); }
 
@@ -751,39 +541,30 @@ textarea:focus {
   padding: 2px 9px; border-radius: var(--r-pill);
   font-size: var(--fs-11); font-weight: 600;
   background: var(--badge-bg); color: inherit;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
 }
 
-/* ---------------- 文件库：iOS 拨动开关 ----------------
-   尺寸对齐 iOS UISwitch（51×31pt），行高 ≥44 保证点按目标 */
+/* ---------------- 文件库 ---------------- */
 .material-list { margin-top: 2px; }
 .material-list:empty { display: none; }
-.material-empty {
-  padding: 18px 16px; text-align: center;
-  font-size: var(--fs-13); color: var(--label-3);
-  background: var(--fill-2); border-radius: var(--r-sm);
-}
+.material-empty { padding: 18px 16px; text-align: center; font-size: var(--fs-13); color: var(--label-3); background: var(--fill-2); border-radius: var(--r-sm); }
 
 .material-row {
   display: flex; align-items: center; gap: 10px;
   min-height: 56px; padding: 8px 12px;
-  background: var(--row-bg);              /* 内容层：实色卡，非玻璃 */
-  border-radius: var(--r-sm);
+  background: var(--row-bg);
+  border: 1px solid var(--sep-vibrant); border-radius: var(--r-sm);
   margin-bottom: 7px;
-  transition: background var(--dur-fast);
+  transition: background var(--dur-fast), border-color var(--dur-fast);
 }
 .material-row:last-child { margin-bottom: 0; }
-.material-row.is-on { background: var(--row-bg-on); }
+.material-row.is-on { background: var(--row-bg-on); border-color: var(--sys-blue); }
 
 .mat-main { flex: 1; min-width: 0; }
-.mat-name {
-  font-size: var(--fs-13); color: var(--label); font-weight: 500;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
+.mat-name { font-size: var(--fs-13); color: var(--label); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .mat-state { font-size: var(--fs-11); color: var(--label-3); margin-top: 1px; }
 .material-row.is-on .mat-state { color: var(--sys-blue-text); font-weight: 500; }
 
-/* iOS UISwitch 比例：51 × 31（用 rem 派生，随字号自适应） */
 .mat-switch {
   position: relative; flex-shrink: 0;
   width: 3.1875rem; height: 1.9375rem;
@@ -797,7 +578,7 @@ textarea:focus {
   content: ''; position: absolute; top: 2px; left: 2px;
   width: 1.6875rem; height: 1.6875rem; border-radius: 50%;
   background: #fff;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, .15), 0 1px 1px rgba(0, 0, 0, .16);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, .3), 0 1px 1px rgba(0, 0, 0, .3);
   transition: transform var(--dur-base) var(--ease-spring);
 }
 .mat-switch:checked { background: var(--sys-green); }
@@ -819,164 +600,42 @@ textarea:focus {
 .mat-del:hover { background: var(--danger-soft); color: var(--danger); }
 .mat-del:active { transform: scale(.92); }
 
-/* ---------------- 滚动条（细、浅） ---------------- */
+/* ---------------- 滚动条 ---------------- */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--scroll-thumb-hover); }
 ::-webkit-scrollbar-track { background: transparent; }
 
-/* ---------------- 降级动效 ---------------- */
+/* ---------------- 通用入场动画 ---------------- */
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------------- 降级：降低透明度 / 不支持毛玻璃 ---------------- */
+@media (prefers-reduced-transparency: reduce) {
+  .topbar, .config, .composer-capsule, .modal, .picker-pop { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .topbar { background: #101015; }
+  .config { background: #121217; }
+  .composer-capsule { background: #16161c; }
+  .modal { background: #1c1c22; }
+  .picker-pop { background: #1c1c22; }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .topbar { background: #101015; }
+  .config { background: #121217; }
+  .composer-capsule { background: #16161c; }
+  .modal { background: #1c1c22; }
+  .picker-pop { background: #1c1c22; }
+}
+
+/* ---------------- 降级：减少动效 ---------------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
   }
-  .service-status.busy::before { animation: none; }
+  .app-bg::before, .app-bg::after, .app-bg .aurora-cyan,
+  .service-status.busy::before, .logo svg { animation: none !important; }
 }
-
-/* ============================================================
-   深色外观（跟随系统 —— 不提供应用内外观开关）
-
-   HIG Dark Mode 原文：
-   ① "Avoid offering an app-specific appearance setting."
-      → 因此本项目**不做**明暗切换按钮，一律跟随系统
-        prefers-color-scheme，与 Apple 自家应用一致。
-   ② "In Dark Mode, the system uses two sets of background colors —
-      called base and elevated. The base colors are dimmer, making
-      background interfaces appear to recede, and the elevated colors
-      are brighter, making foreground interfaces appear to advance."
-      → 深色下：页面底 = base(#000) 后退；内容面 = elevated(#1c1c1e) 前进。
-        这与浅色「白底 + 灰底」是相反的方向，不是把浅色反相。
-   ③ "Soften the color of white backgrounds."（避免刺眼纯白/纯黑）
-      → 内容面用 #1c1c1e 而非 #000；文字用 #fff 而非纯白铺满。
-   ④ "Aim for sufficient color contrast in all appearances…
-      no lower than 4.5:1." → 本文件末附深色实测对比度表。
-
-   实现方式：只覆写令牌，组件规则一行未改——这正是令牌化的收益。
-   ============================================================ */
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* 系统色在深色下提亮（iOS 深色 systemBlue = #0A84FF） */
-    --sys-blue: #0a84ff;
-    --sys-blue-hover: #3d9bff;
-    --sys-blue-text: #409cff;              /* 深色底 6.90:1 */
-    --sys-green: #30d158;
-    --sys-red: #ff453a;
-    --sys-orange: #ff9f0a;
-    --sys-purple: #bf5af2;
-
-    --sys-blue-soft: rgba(10, 132, 255, .22);
-    --danger-soft: rgba(255, 69, 58, .2);
-    --warn-soft: rgba(255, 159, 10, .2);
-    --ok-soft: rgba(48, 209, 88, .2);
-    --purple-soft: rgba(191, 90, 242, .22);
-
-    /* 状态点（填充） */
-    --ok: #30d158;
-    --warn: #ff9f0a;
-    --danger: #ff453a;
-
-    /* 状态文字色：改用深色下的亮色变体 */
-    --ok-text: #5ddb79;
-    --warn-text: #ffb340;
-    --danger-text: #ff8078;
-    --info-text: #74b6ff;
-    --purple-text: #cf8ef5;
-
-    /* 文本层级：白 → 浅灰（不是把浅色的黑灰反相） */
-    --label: #ffffff;
-    --label-2: rgba(235, 235, 245, .62);
-    --label-3: rgba(235, 235, 245, .62);   /* 提到与 label-2 同级，
-                                              因 Apple 原生 tertiary 在
-                                              深色下仅 3.22:1，不达标 */
-    --label-4: rgba(235, 235, 245, .32);
-    --sep: rgba(84, 84, 88, .65);
-    --sep-vibrant: rgba(84, 84, 88, .8);
-    --fill: rgba(120, 120, 128, .36);
-    --fill-hover: rgba(120, 120, 128, .48);
-    --fill-2: rgba(120, 120, 128, .24);
-
-    /* base / elevated 双层背景（HIG Dark Mode 核心机制） */
-    --bg-grouped: #000000;                 /* base：后退 */
-    --surface: #1c1c1e;                    /* elevated：前进 */
-    --surface-2: #2c2c2e;                  /* elevated 2：块中块 */
-    --surface-3: #2c2c2e;
-    --row-bg: #2c2c2e;
-    --row-bg-on: rgba(10, 132, 255, .24);
-    --switch-off: rgba(120, 120, 128, .4);
-    --badge-bg: rgba(255, 255, 255, .16);
-    --mask: rgba(0, 0, 0, .55);
-    --bubble-assistant: #2c2c2e;           /* 收件人气泡 */
-    --bg-grad-1: #101012;
-    --bg-grad-2: #000000;
-    --bg-grad-3: #000000;
-    --bg-tint: rgba(10, 132, 255, .09);
-    --scroll-thumb: rgba(235, 235, 245, .24);
-    --scroll-thumb-hover: rgba(235, 235, 245, .4);
-    --material-fallback: #1c1c1e;
-
-    /* 深色玻璃：用黑玻璃而非白玻璃（HIG：深色下材质取其亮度方向） */
-    --glass-sidebar: rgba(28, 28, 30, .82);
-    --glass-topbar: rgba(28, 28, 30, .72);
-    --glass-composer: rgba(28, 28, 30, .86);
-    --glass-modal: rgba(44, 44, 46, .92);
-    --glass-hairline: rgba(255, 255, 255, .09);
-
-    /* 阴影：深色下靠阴影区分层级是无效的，改用「更亮的表面 + 发丝线」，
-       故统一收敛阴影强度（HIG：深色下用材料与描边表达层级） */
-    --shadow-1: 0 1px 3px rgba(0, 0, 0, .5);
-    --shadow-2: 0 2px 10px rgba(0, 0, 0, .55);
-    --shadow-3: 0 12px 40px rgba(0, 0, 0, .68);
-    --shadow-accent: 0 2px 12px rgba(10, 132, 255, .36);
-    --shadow-accent-lg: 0 3px 16px rgba(10, 132, 255, .3);
-
-    /* 深色下焦点环要用亮蓝且更实，否则在 #1c1c1e 上看不见 */
-    --focus-ring: 0 0 0 3.5px rgba(10, 132, 255, .3);
-    --disabled-opacity: .36;
-  }
-
-  /* 深色下 SVG 徽标描边需要更亮才不糊 */
-  .logo svg { filter: drop-shadow(0 2px 8px rgba(10, 132, 255, .4)); }
-}
-
-/* ---------------- 对比度实测（WCAG 2.1 公式）
-   复跑方式：node .workbuddy/tmp/contrast-check.js（当前全部通过）
-   ▸ 浅色（全部达标，最差 4.75:1）
-     正文 #000 / 白底 ................ 21.00
-     正文 #000 / 卡片 #f9f9fb ........ 19.97
-     正文 #000 / 气泡 #f2f2f7 ........ 18.82
-     次级 #3c3c43 / 白底 ............. 10.94
-     辅助 #6b6b70 / 白底 .............  5.30
-     辅助 #6b6b70 / 卡片 .............  5.04
-     辅助 #6b6b70 / 气泡 ............   4.75   ← 最差场景，仍达标
-     蓝字 #0062d6 / 白底 ............   5.65
-     状态文字 / 各自淡色底 ........... 4.60–5.72
-     用户气泡 白字 / #007aff ........   4.02   → 17pt 大字档，≥3:1 达标
-     ▸ 下拉选择器（弹层实底 #fafafc，选中行 #e1edfc）
-     选中标题 #000 ................... 17.72
-     选中说明 #3c3c43 ................  9.23
-     未选说明 #6b6b70 ................  5.08
-     勾选蓝 #0062d6（图形，3:1）......  4.77
-     ▸ 额外要求按钮底（#f4f4f7）蓝字 ...  5.05
-   ▸ 深色（全部达标，最差 4.92:1）
-     正文 #ffffff / base #000 ........ 21.00
-     正文 #ffffff / elevated #1c1c1e . 17.01
-     正文 #ffffff / elevated2 #2c2c2e  13.94
-     次级 rgba(235,235,245,.62) / #1c1c1e . 6.24
-     次级 rgba(235,235,245,.62) / #2c2c2e . 5.49   ← 最差场景，仍达标
-     蓝字 #409cff / #1c1c1e ..........  6.01
-     蓝字 #409cff / #2c2c2e ..........  4.92   ← 最差场景，仍达标
-     状态文字 / 各自淡色底 ........... 5.34–6.49
-     用户气泡 白字 / #0a84ff ........   3.65   → 17pt 大字档，≥3:1 达标
-     ▸ 下拉选择器（弹层实底 #2a2a2c，选中行 #233e5a）
-     选中标题 #ffffff ................ 11.01
-     选中说明 .62 ....................  4.64
-     未选说明 .62 ....................  5.65
-     勾选蓝 #409cff（图形，3:1）......  3.89
-     ▸ 额外要求按钮底（#2e2e32）蓝字 ...  4.78
-   ▸ 关于深色辅助灰：Apple 原生 tertiaryLabel 深色值仅 3.22:1（不达标），
-     故本项目的 label-3 在深色下与 label-2 同级（.62），实测 ≥5.49:1。
-   ▸ 关于「选中行文字为何不染蓝」：深色下 #409cff 压 #233e5a 仅 3.89:1，
-     正文不达标；改为 label 系列文字 + 蓝勾选（图形按 3:1 判定）。
-     这个坑肉眼看不出来，是 contrast-check.js 抓出来的。 */

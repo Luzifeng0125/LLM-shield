@@ -13,8 +13,10 @@ CampusNERDetector 完全相同的 Detector 接口，可热替换。
 3. **优雅降级**：模型缺失 / 依赖未装 / 加载失败时 available=False，detect() 返回
    空列表，主链路不受影响（与 CampusNERDetector 一致）。
 
-模型：urchade/gliner_multi-v2.1（Apache-2.0）+ 人工 gold 微调，
-test 微平均 F1 0.946（微调后）、0.594（零样本）。
+模型：urchade/gliner_multi-v2.1（Apache-2.0）+ 人工 gold 微调。
+实测（docs/评测报告-独立手写集field_v1.md）：独立手写集上 13 类 F1 0.8383、
+语义 5 类 0.8777；同源旧 gold 上分别为 1.0000 / 0.9244（后者因旧集格式类取值
+被模型背下模板，不代表真实泛化）。
 """
 from __future__ import annotations
 
@@ -44,12 +46,15 @@ LABEL_TO_CATEGORY = {
     "敏感个人属性": "SENSITIVE_ATTR",
 }
 
-# GLiNER 默认负责的类别：除身份证外全部 13 类。
+# 13 类（除身份证外）——保留给需要显式全量推理的场景。
 # 身份证号由正则（GB 11643 校验位）权威判定，避免 GLiNER 把 10 位学号误报成 18 位
 # 身份证（微调模型在 test 上有 12 个 ID_CARD 误报，是唯一的 FP 来源）。
 GLINER_CATEGORIES = tuple(c for c in LABEL_TO_CATEGORY.values() if c != "ID_CARD")
 
-# 兼容旧名：语义类仅是 GLiNER 覆盖的子集（历史遗留，不再作为默认）
+# 语义类：GLiNER 的**默认**覆盖范围。
+# 依据 docs/评测报告-独立手写集field_v1.md 的实测：格式类（电话/邮箱/学号/银行卡/
+# 密钥/微信/预算/成绩）交给概率模型会让精度下降（高敏类别 F1 0.865→0.770），
+# 这些类别由带校验位的正则底座负责更稳；GLiNER 的净价值集中在语义类。
 SEMANTIC_CATEGORIES = ("PERSON_NAME", "ORG", "LOCATION", "DORM", "SENSITIVE_ATTR")
 _SEMANTIC_SET = set(SEMANTIC_CATEGORIES)
 
@@ -68,7 +73,12 @@ class GLiNERDetector(Detector):
     ):
         self.model_dir = Path(model_dir) if model_dir else Path(cfg.gliner_model_dir())
         self.threshold = threshold
-        self.categories = set(categories) if categories is not None else set(GLINER_CATEGORIES)
+        # 默认只负责语义类：格式类由正则底座（含校验位）权威判定。
+        # 实测（docs/评测报告-独立手写集field_v1.md）13 类标签一起推理时，
+        # 模型在独立集上的 F1 0.8383、误报 45；收窄到语义 5 类后 F1 0.8777、
+        # 误报 30，且高敏类别 F1 从 0.770 回到 0.857。需要显式覆盖时传
+        # categories=GLINER_CATEGORIES 即可恢复 13 类。
+        self.categories = set(categories) if categories is not None else set(SEMANTIC_CATEGORIES)
         self.device = device
         self.available = False
         self.reason = ""

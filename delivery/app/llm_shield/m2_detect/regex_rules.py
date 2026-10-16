@@ -119,11 +119,29 @@ RULES: List[dict] = [
         "pattern": re.compile(r"(Bearer\s+[A-Za-z0-9._\-]{16,})"),
         "group": 1, "confidence": 0.95, "validator": None, "ctx": [],
     },
+    {
+        # GitHub 个人访问令牌（ghp_/gho_/ghu_/ghs_/ghr_）
+        "category": "API_KEY", "rule_id": "api_key_ghp",
+        "pattern": re.compile(r"(?<![A-Za-z0-9])(gh[pousr]_[A-Za-z0-9]{20,})"),
+        "group": 1, "confidence": 0.95, "validator": None, "ctx": [],
+    },
+    {
+        # AWS Access Key ID（AKIA + 16 位大写/数字）
+        "category": "API_KEY", "rule_id": "api_key_aws",
+        "pattern": re.compile(r"(?<![A-Za-z0-9])(AKIA[0-9A-Z]{16})(?![0-9A-Z])"),
+        "group": 1, "confidence": 0.90, "validator": None, "ctx": [],
+    },
     # ---- 微信号 / QQ ----
     {
         "category": "WECHAT", "rule_id": "wechat_id",
-        "pattern": re.compile(r"(?:微信(?:号)?|wx|WeChat)\s*[:：]?\s*([A-Za-z][-_A-Za-z0-9]{5,19})"),
+        "pattern": re.compile(r"(?:微信(?:号)?|wx|WeChat)\s*(?:是|为|[:：])?\s*([A-Za-z][-_A-Za-z0-9]{5,19})"),
         "group": 1, "confidence": 0.93, "validator": None, "ctx": [],
+    },
+    {
+        # 裸微信 ID：wxid_/wx_ 前缀，无需「微信」字样也能识别
+        "category": "WECHAT", "rule_id": "wechat_bare",
+        "pattern": re.compile(r"(?<![A-Za-z0-9])(wxid_[A-Za-z0-9_-]{6,}|wx_[A-Za-z0-9_-]{6,})(?![A-Za-z0-9])"),
+        "group": 1, "confidence": 0.85, "validator": None, "ctx": [],
     },
     {
         "category": "WECHAT", "rule_id": "qq_id",
@@ -158,6 +176,17 @@ RULES: List[dict] = [
         "category": "GRADE", "rule_id": "score",
         "pattern": re.compile(r"(?:成绩|分数|得分|平均分)\s*[:：]?\s*(\d{1,3}(?:\.\d)?)\s*分?"),
         "group": 1, "confidence": 0.88, "validator": None, "ctx": [],
+    },
+    {
+        # 裸分数：「高等数学92分」「成绩: 93分」这类写法没有「成绩/得分」关键词，
+        # 旧 rule_id=score 抓不到，只能靠 GLiNER 兜底——这正是「模型看起来很有用」
+        # 的一部分其实是在补正则的漏洞。用 require_ctx + 学科/评分上下文词
+        # 收紧，避免把「30分钟」这类时间误判成成绩（(?!钟|制) 挡掉 分钟/分制）。
+        "category": "GRADE", "rule_id": "score_bare",
+        "pattern": re.compile(r"(?<!\d)(\d{1,3}(?:\.\d)?分)(?!钟|制)"),
+        "group": 1, "confidence": 0.88, "validator": None, "require_ctx": True,
+        "ctx": ["考试", "成绩", "分数", "得分", "评分", "考核", "测验", "满分", "及格",
+                "绩", "科目", "数学", "英语", "语文", "综测", "学分", "名次", "线代", "高数"],
     },
 ]
 

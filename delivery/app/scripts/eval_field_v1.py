@@ -39,14 +39,14 @@ from eval_gold import LEVEL_GROUPS, match, prf          # noqa: E402  复用同�
 from llm_shield.config import category_level            # noqa: E402
 from llm_shield.m2_detect.entity_rules import EntityDetector            # noqa: E402
 from llm_shield.m2_detect.gliner_ner import (                           # noqa: E402
-    GLiNERDetector, SEMANTIC_CATEGORIES)
+    GLINER_CATEGORIES, GLiNERDetector)
 from llm_shield.m2_detect.pipeline import build_detectors, detect_all   # noqa: E402
 from llm_shield.m2_detect.regex_rules import RegexDetector              # noqa: E402
 
 CONFIGS = [
     ("配置 1｜纯正则 + 词典（基线）", "base"),
-    ("配置 2｜+ GLiNER v3（默认 13 类）", "gliner_all"),
-    ("配置 3｜+ GLiNER v3（仅 5 个语义类）", "gliner_semantic"),
+    ("配置 2｜+ GLiNER v3（显式 13 类）", "gliner_all"),
+    ("配置 3｜+ GLiNER v3（语义 5 类，当前默认）", "gliner_semantic"),
 ]
 
 
@@ -55,14 +55,13 @@ def make_detectors(kind: str):
     if kind == "base":
         return build_detectors(use_gliner=False), ""
     if kind == "gliner_all":
-        dets = build_detectors(use_gliner=True)
-    else:
-        # 只让 GLiNER 负责语义类，格式类（电话/邮箱/学号/证件/银行卡/密钥/
-        # 微信/预算/成绩）交回正则底座——这些类别正则有校验位与边界断言，
-        # 精度高于概率模型。GLiNER 的增量价值应集中在人名/机构/地点/宿舍/
-        # 敏感属性上，而不是覆盖正则已经做对的部分。
+        # 显式传 13 类，用于与语义类默认值做对照（不改线上默认行为）
         dets = [RegexDetector(), EntityDetector(detect_org_location=False),
-                GLiNERDetector(categories=SEMANTIC_CATEGORIES)]
+                GLiNERDetector(categories=GLINER_CATEGORIES)]
+    else:
+        # 线上默认：只让 GLiNER 负责语义类，格式类交回正则底座
+        # （正则带校验位与边界断言，精度高于概率模型）。
+        dets = build_detectors(use_gliner=True)
     gl = next((d for d in dets if isinstance(d, GLiNERDetector)), None)
     return dets, (gl.reason if gl else "")
 
