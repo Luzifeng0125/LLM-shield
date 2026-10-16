@@ -127,6 +127,27 @@ def gliner_model_dir() -> str:
     return str(model_dir() / "gliner_v3")
 
 
+# ---------------------------------------------------------------- 系统提示词
+# 按任务给，避免把敏感原文塞进 system。
+#
+# ⚠ 措辞是有约束的：这些模板会和脱敏后的材料拼成一个载荷，而外发前会对**整个
+# 载荷**重跑识别器。实测两个措辞会被识别器误判并拦掉全部外发：
+#   · 「（已脱敏）」   → 被判成 SENSITIVE_ATTR（绝对禁止类别）
+#   · 「会议纪要助手」 → 被判成 PERSON_NAME
+# 改动本表前请先跑一遍识别器确认干净（tests/test_egress_safety.py 有回归项）。
+SYSTEM_PROMPTS = {
+    "activity_stats": "你是校园活动总结助手。请基于以下内容撰写活动统计与总结。",
+    "meeting_minutes": "你是文本整理助手。请基于以下内容整理会议纪要与任务分派。",
+    "project_intro": "你是项目文案助手。请基于以下内容改写为可对外发布的项目介绍。",
+}
+DEFAULT_SYSTEM_PROMPT = "你是文本处理助手。"
+
+
+def system_prompt(task_key: str) -> str:
+    """取该任务的系统提示词；未知任务回退到通用模板。"""
+    return SYSTEM_PROMPTS.get(task_key, DEFAULT_SYSTEM_PROMPT)
+
+
 def llm_settings() -> Dict[str, Any]:
     """大模型接入设置（模块 ⑦）。
 

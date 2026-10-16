@@ -10,7 +10,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from llm_shield.m3_decide.decision import decide_segment
 from llm_shield.m4_necessity.model import (
-    MODEL_PATH, ModelUnavailableError, NecessityModel, build_feature_text,
+    FEATURE_SPLIT, FEATURE_VERSION, MODEL_PATH, ModelUnavailableError,
+    NecessityModel, build_feature_text,
 )
 from llm_shield.schema import Action, Segment, Span
 
@@ -95,9 +96,16 @@ class ModelDecisionTests(unittest.TestCase):
         segment.text = "公开信息" * 50 + "末尾的重要实体"
         feature = build_feature_text(segment, "meeting_minutes", "external_model",
                                      task_description="自定义任务", identity_key="student_leader")
+        # 版本号从常量取，避免每次升 FEATURE_VERSION 都要改测试
         for expected in ("自定义任务", "末尾的重要实体", segment.context,
-                         "[IDENTITY]student_leader", "[SCHEMA]2"):
+                         "[IDENTITY]student_leader", f"[SCHEMA]{FEATURE_VERSION}"):
             self.assertIn(expected, feature)
+        # 特征必须按「结构化 [|SPLIT|] 内容」分段：两段在训练时权重不同
+        self.assertIn(FEATURE_SPLIT, feature)
+        structured, _, content = feature.partition(FEATURE_SPLIT)
+        self.assertIn("[CAT]", structured)
+        self.assertNotIn("[TEXT]", structured)
+        self.assertIn("[TEXT]", content)
 
     def test_unknown_entity_category_pauses(self):
         segment = name_segment()

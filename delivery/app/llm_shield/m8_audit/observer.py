@@ -93,7 +93,11 @@ def _restriction(category: str, recipient_key: str,
 def check_category_leakage(payload: str, recipient_key: str,
                            *, task_key: Optional[str] = None,
                            identity_key: Optional[str] = None) -> List[dict]:
-    """类别级泄露检测：对载荷重新识别，看是否残留接收方禁止的类别。"""
+    """类别级泄露检测：对载荷重新识别，看是否残留接收方禁止的类别。
+
+    检测结果若落在**系统自己发出的代号**之内则豁免：代号按定义不是原始敏感值，
+    而「负责人人员甲负责…」这类句子会让语义识别器把代号尾字当成人名。
+    """
     if not payload:
         return []
 
@@ -103,8 +107,15 @@ def check_category_leakage(payload: str, recipient_key: str,
     scanned = (payload if budget_banned else
                _AGG_SAFE_RE.sub(lambda match: " " * len(match.group(0)), payload))
 
+    from ..m6_transform.mapping import get_table
+    table = get_table()
+
     hits: List[dict] = []
     for s in detect_all(scanned):
+        if not s.text:
+            continue
+        if table.is_placeholder(s.text):
+            continue
         reason = _restriction(s.category, recipient_key, task_key, identity_key)
         if reason:
             hits.append({

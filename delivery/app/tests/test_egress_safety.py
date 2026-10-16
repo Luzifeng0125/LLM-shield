@@ -127,6 +127,30 @@ class EgressSafetyTests(unittest.TestCase):
         self.assertIn("PHONE", result["record"].leaked_categories)
         send.assert_not_called()
 
+    def test_shipped_system_prompts_are_detector_clean(self):
+        """系统提示词会与脱敏材料拼成同一个载荷并整体复扫，模板自身不得触发识别器。
+
+        这是实测踩过的坑（启用 GLiNER 后 100% 复现）：
+          · 旧措辞「（已脱敏）」被判 SENSITIVE_ATTR —— 属绝对禁止类别，
+            会让**每一次**外发都被拦，整个应用不可用；
+          · 旧措辞「会议纪要助手」被判 PERSON_NAME。
+        注意本项**不能**靠豁免模板来通过：模板若真含敏感值必须照拦
+        （见上一条测试）；正确做法是保证模板本身干净，所以这里做回归。
+        """
+        from llm_shield.config import DEFAULT_SYSTEM_PROMPT, SYSTEM_PROMPTS
+        from llm_shield.m2_detect.pipeline import DetectionError, build_detectors
+        from llm_shield.m2_detect.pipeline import detect_all
+
+        for task_key, prompt in {**SYSTEM_PROMPTS, "_default": DEFAULT_SYSTEM_PROMPT}.items():
+            with self.subTest(task=task_key):
+                try:
+                    hits = detect_all(prompt, detectors=build_detectors(use_gliner=True))
+                except DetectionError as exc:      # 本机没有 GLiNER 权重
+                    self.skipTest(str(exc))
+                self.assertEqual(
+                    [(h.category, h.text) for h in hits], [],
+                    f"{task_key} 的系统提示词被识别器误报，会拦掉全部外发")
+
     def test_model_error_text_is_not_released(self):
         with patch.object(gateway, "chat_with_fallback", return_value={
             "text": "[错误]", "engine": "error", "error": "unavailable"
