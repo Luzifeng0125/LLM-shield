@@ -11,33 +11,57 @@ from ..schema import Segment, Span
 from .base import Detector
 from .campus_ner import CampusNERDetector
 from .entity_rules import EntityDetector
+from .gliner_ner import GLiNERDetector
 from .regex_rules import RegexDetector
 
 # 句子切分符
 _SENT_SPLIT_RE = re.compile(r"(?<=[。！？；;!?\n])")
+
+# 昂贵检测器（GLiNER / campus NER）的模块级单例缓存。
+# 这些模型加载约 10s、占 ~1.1GB 内存，绝不能每次请求都重建；
+# RegexDetector / EntityDetector 零依赖、构造极轻，每次新建即可。
+_gliner_singleton: Optional[GLiNERDetector] = None
+_campus_singleton: Optional[CampusNERDetector] = None
 
 
 class DetectionError(RuntimeError):
     """识别服务异常或结果无效；错误说明不含材料原文。"""
 
 
-def build_detectors(use_campus_ner: Optional[bool] = None) -> List[Detector]:
+def build_detectors(use_campus_ner: Optional[bool] = None,
+                    use_gliner: Optional[bool] = None) -> List[Detector]:
     """构建识别器链。
 
     :param use_campus_ner: 是否接入 ★ 领域预训练 NER。
         传 None 时按配置决定（config.use_campus_ner()，默认关闭）——
         领域模型推理约 576ms/2000字，会超出「规则+识别路径 P95 ≤ 500ms」的指标，
         因此默认走规则底座，需要时再显式开启。
+    :param use_gliner: 是否接入 GLiNER v3 语义实体识别（A 层）。
+        传 None 时按配置决定（config.use_gliner()，默认关闭）——
+        GLiNER 负责语义类+格式类（除身份证外的 13 类），身份证由正则权威判定。
     """
+    global _gliner_singleton, _campus_singleton
+
     if use_campus_ner is None:
         use_campus_ner = cfg.use_campus_ner()
+    if use_gliner is None:
+        use_gliner = cfg.use_gliner()
 
-    detectors: List[Detector] = [RegexDetector(), EntityDetector()]
+    detectors: List[Detector] = [RegexDetector(), EntityDetector(detect_org_location=not use_gliner)]
     if use_campus_ner:
-        ner = CampusNERDetector()
+        if _campus_singleton is None:
+            _campus_singleton = CampusNERDetector()
+        ner = _campus_singleton
         if not ner.available:
             raise DetectionError("已启用的领域识别模型不可用，已暂停处理")
         detectors.append(ner)
+    if use_gliner:
+        if _gliner_singleton is None:
+            _gliner_singleton = GLiNERDetector()
+        gliner = _gliner_singleton
+        if not gliner.available:
+            raise DetectionError("已启用的 GLiNER 识别模型不可用，已暂停处理")
+        detectors.append(gliner)
     return detectors
 
 
@@ -45,7 +69,10 @@ def merge_spans(spans: List[Span], text: Optional[str] = None) -> List[Span]:
     """合并重叠片段。
 
     规则：
-    - 同类别重叠 → 取并集，置信度取高；
+    - 同类别重叠 → 取**置信度更高**的那一个的精确边界（不再强制取并集）：
+      模型（GLiNER）边界精确、词典/启发式边界偏宽（会把「的地点为/活动将在/这次承办
+      单位叫」等引入词一并框入），并集会产生 FP；按置信度选精确者能同时兼顾
+      格式类（正则置信 1.0 胜 GLiNER）与语义类（GLiNER ~0.9 胜词典 0.75-0.82）。
     - 跨类别重叠 → 对整个重叠区间采用更严格类别，绝不丢弃区间两端的原文。
     - 合并后的 text 始终对应原始字符区间；不修改识别器提供的对象。
     """
@@ -67,9 +94,16 @@ def merge_spans(spans: List[Span], text: Optional[str] = None) -> List[Span]:
     bans = set(cfg.rules().get("hard_constraints", {}).get("absolute_ban", []))
     direct = {"PERSON_NAME", "PHONE", "EMAIL", "STUDENT_ID", "WECHAT"}
 
+    # 跨类别冲突时的检测器可信度：正则带格式/校验位验证（GB 11643、Luhn），
+    # 是权威判定；模型是概率猜测。模型可能以更高的"自信"覆盖正则的正确结果
+    # （实测 v3c 把身份证以 1.0 分判成 API_KEY，盖掉正则 0.99 的 ID_CARD）。
+    # 语义类正则不做，因此该排序不会削弱 GLiNER 在语义类上的优势。
+    _DETECTOR_RANK = {"regex": 3, "campus_ner": 2, "gliner": 2, "entity": 1}
+
     def priority(span: Span):
         return (span.category in bans, category_level(span.category),
-                span.category in direct, span.confidence, span.end - span.start)
+                span.category in direct, _DETECTOR_RANK.get(span.detector, 0),
+                span.confidence, span.end - span.start)
 
     for cur in spans[1:]:
         last = merged[-1]
@@ -77,6 +111,12 @@ def merge_spans(spans: List[Span], text: Optional[str] = None) -> List[Span]:
             merged.append(cur)
             continue
         # 存在重叠
+        if last.category == cur.category:
+            # 同类别：取置信度更高的精确边界（更紧者优先，兼顾精度）
+            winner = max((last, cur), key=lambda s: (s.confidence, -(s.end - s.start)))
+            merged[-1] = winner
+            continue
+        # 跨类别：取并集 + 更严格类别（安全优先，不丢原文）
         start, end = last.start, max(last.end, cur.end)
         union_text = (text[start:end] if text is not None else
                       last.text + cur.text[max(0, last.end - cur.start):])
@@ -138,16 +178,25 @@ def segmentize(text: str, spans: Optional[List[Span]] = None) -> List[Segment]:
     return segments
 
 
-def attach_spans(segments: List[Segment], spans: List[Span], context_window: int = 30) -> None:
-    """把全局坐标的 Span 挂到所属 Segment 上，并填充局部上下文。"""
+def attach_spans(segments: List[Segment], spans: List[Span],
+                 text: Optional[str] = None, context_window: int = 30) -> None:
+    """把全局坐标的 Span 挂到所属 Segment 上，并填充局部上下文。
+
+    :param text: 全文。传入时 seg.context 取前后各 context_window 字的真实窗口，
+        而非仅本段文本（此前 left/right 算了却没用，min() 是空操作，导致
+        [CONTEXT] 永远等于 [TEXT]，"模型读上下文"形同虚设）。
+    """
     if any(not any(segment.start <= span.start and span.end <= segment.end
                    for segment in segments) for span in spans):
         raise DetectionError("敏感实体未完整归属处理片段，已暂停处理")
     for seg in segments:
         seg.spans = [s for s in spans if s.start >= seg.start and s.end <= seg.end]
-        left = max(0, seg.start - context_window)
-        right = min(len(seg.text) + seg.start + context_window, seg.start + len(seg.text) + context_window)
-        seg.context = seg.text  # 上下文默认取本段文本（调用方可注入前后段）
+        if text is not None:
+            ctx_start = max(0, seg.start - context_window)
+            ctx_end = min(len(text), seg.end + context_window)
+            seg.context = text[ctx_start:ctx_end]
+        else:
+            seg.context = seg.text  # 无全文时退化为本段文本（调用方可再注入）
 
 
 def detect_and_segment(text: str, columns=None, rows=None,
@@ -155,5 +204,5 @@ def detect_and_segment(text: str, columns=None, rows=None,
     """识别 + 分段，返回 (全局 spans, segments)。"""
     spans = detect_all(text, columns=columns, rows=rows, detectors=detectors)
     segments = segmentize(text, spans)
-    attach_spans(segments, spans)
+    attach_spans(segments, spans, text=text)
     return spans, segments

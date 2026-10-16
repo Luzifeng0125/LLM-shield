@@ -97,6 +97,12 @@ class EntityDetector(Detector):
 
     name = "entity"
 
+    def __init__(self, detect_org_location: bool = True):
+        """当 GLiNER 语义模型激活时，词典的 ORG/LOCATION 贪婪正则会产生边界过宽的
+        误报（把「写作/记录为/的地点为」等引入词一并框入），故可由调用方关闭，
+        改由 GLiNER 提供精确边界。人名/敏感属性/列名检测仍保留。"""
+        self.detect_org_location = detect_org_location
+
     # 姓名：复姓或单姓 + 1~2 个汉字
     #
     # 注意：这里刻意**不加**「前一个字符必须是非汉字」的前瞻断言。
@@ -150,8 +156,9 @@ class EntityDetector(Detector):
             return spans
 
         spans += self._detect_sensitive_attrs(text)
-        spans += self._detect_org(text)
-        spans += self._detect_location(text)
+        if self.detect_org_location:
+            spans += self._detect_org(text)
+            spans += self._detect_location(text)
         spans += self._detect_person(text)
         spans += self._detect_from_columns(text, columns, rows)
         return spans

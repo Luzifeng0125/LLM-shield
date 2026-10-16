@@ -79,6 +79,26 @@ def use_campus_ner() -> bool:
         "1", "true", "yes", "on")
 
 
+def use_gliner() -> bool:
+    """是否启用 GLiNER v3 语义实体识别（模块 ② / v3 A 层的模型增强）。
+
+    默认 **关闭**。GLiNER 只负责**语义类**（人名/组织/地点/宿舍/敏感属性），
+    格式类（电话/邮箱/学号/证件/银行卡/密钥/微信/预算/成绩）仍由正则底座负责。
+
+    启用：.env 设置 SHIELD_USE_GLINER=true；模型路径用 SHIELD_GLINER_MODEL_DIR
+    覆盖（默认 D:\\project\\models\\gliner_v3，必须在 ASCII 路径，见 gliner_ner.py）。
+    """
+    load_env()
+    return os.getenv("SHIELD_USE_GLINER", "false").strip().lower() in (
+        "1", "true", "yes", "on")
+
+
+def gliner_model_dir() -> str:
+    """GLiNER v3 模型目录（必须在 ASCII 路径，sentencepiece 不支持中文路径）。"""
+    load_env()
+    return os.getenv("SHIELD_GLINER_MODEL_DIR", r"D:\project\models\gliner_v3")
+
+
 def llm_settings() -> Dict[str, Any]:
     """大模型接入设置（模块 ⑦）。
 

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>隐盾 · 实体级人工 gold 标注</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --panel:#fff; --line:#e3e6eb; --text:#1f2328;
+    --muted:#6b7280; --accent:#2563eb; --accent-soft:#dbeafe;
+    --warn:#b45309; --ok:#15803d;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+       font:14px/1.7 "Microsoft YaHei","PingFang SC",system-ui,sans-serif}
+  .wrap{max-width:960px;margin:0 auto;padding:24px 20px 60px}
+  h1{font-size:20px;margin:0 0 4px}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:18px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;
+         padding:14px 16px;margin-bottom:14px}
+  button{font:inherit;padding:6px 14px;border:1px solid var(--line);border-radius:6px;
+         background:#fff;color:var(--text);cursor:pointer}
+  button:hover{border-color:var(--accent);color:var(--accent)}
+  button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  button.primary:hover{opacity:.9;color:#fff}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  button.cat{border:1px solid var(--line);background:#fff;border-radius:16px;
+             padding:4px 12px;margin:3px;font-size:13px}
+  button.cat:hover{background:var(--accent-soft);border-color:var(--accent)}
+  input[type=text]{font:inherit;padding:5px 10px;border:1px solid var(--line);
+                   border-radius:6px;width:180px}
+  .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .bar{display:flex;align-items:center;justify-content:space-between;gap:10px;
+       margin-bottom:10px;flex-wrap:wrap}
+  #progress{font-variant-numeric:tabular-nums;color:var(--muted);font-size:13px}
+  #caseMeta{font-size:12px;color:var(--muted);margin-bottom:6px}
+  #textArea{background:var(--panel);border:1px solid var(--line);border-radius:8px;
+            padding:16px 18px;font-size:15px;line-height:2;min-height:120px;
+            white-space:pre-wrap;word-break:break-word;user-select:text}
+  mark{background:#fde68a;border-radius:3px;padding:1px 0}
+  mark.done{background:#bbf7d0}
+  .hint{color:var(--muted);font-size:12px;margin:8px 0}
+  .selbox{margin-top:8px;padding:8px 10px;background:var(--accent-soft);
+          border-radius:6px;font-size:13px;display:none}
+  table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+  th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left}
+  th{color:var(--muted);font-weight:600}
+  .tag{display:inline-block;padding:1px 7px;border-radius:10px;font-size:12px;
+       background:#eef2ff;color:#3730a3}
+  .tag.unc{background:#fee2e2;color:#991b1b}
+  .empty{color:var(--muted);padding:10px 0}
+  .note{white-space:pre-wrap;background:#fffbeb;border:1px solid #fde68a;
+        border-radius:6px;padding:10px 12px;font-size:12.5px;color:#78350f}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>隐盾 · 实体级人工 gold 标注</h1>
+  <div class="sub">标出文本中应当受保护的敏感信息片段与类别。标注结果用于评估识别器的真实准确率。</div>
+
+  <div class="panel">
+    <div class="row">
+      <button id="loadTask">① 载入任务 JSON</button>
+      <input type="file" id="taskFile" accept=".json" hidden>
+      <button id="loadPrev" disabled>② 载入已有标注（续标）</button>
+      <input type="file" id="prevFile" accept=".json" hidden>
+      <button id="exportBtn" class="primary" disabled>③ 导出标注 JSON</button>
+      <span style="margin-left:auto">标注者：
+        <input type="text" id="annotator" placeholder="姓名/编号">
+      </span>
+    </div>
+    <div class="hint" id="hintLoad">先载入 <code>data/gold/gold_task.json</code>（由 <code>scripts/build_gold_task.py</code> 生成）。</div>
+  </div>
+
+  <div id="work" style="display:none">
+    <div class="bar">
+      <div class="row">
+        <button id="prevCase">← 上一条</button>
+        <span id="progress"></span>
+        <button id="nextCase">下一条 →</button>
+      </div>
+      <div id="counts" style="color:var(--muted);font-size:13px"></div>
+    </div>
+
+    <div id="caseMeta"></div>
+    <div id="textArea"></div>
+
+    <div class="selbox" id="selbox">
+      已选中：<b id="selText"></b>
+      <span style="color:var(--muted)">（点击下方类别按钮完成标注）</span>
+    </div>
+
+    <div style="margin-top:14px">
+      <div style="font-weight:600;margin-bottom:6px">类别（先选中文本，再点类别）</div>
+      <div id="catBar" class="row"></div>
+      <div class="row" style="margin-top:8px">
+        <label style="font-size:13px"><input type="checkbox" id="unc"> 该条标为「存疑」</label>
+        <span class="hint" style="margin:0">存疑条目仍会参与评测，但会在导出中标记出来</span>
+      </div>
+    </div>
+
+    <div style="margin-top:18px">
+      <div style="font-weight:600">本条已标注</div>
+      <div id="entityList"></div>
+    </div>
+  </div>
+
+  <div id="instr" class="note" style="display:none;margin-top:16px"></div>
+</div>
+
+<script>
+const DEFAULT_CATS = {
+  PHONE:'手机号', EMAIL:'电子邮箱', ID_CARD:'身份证号', BANK_CARD:'银行卡号',
+  STUDENT_ID:'学号', API_KEY:'密钥/口令', WECHAT:'微信号/QQ', BUDGET:'预算/金额',
+  PERSON_NAME:'姓名', ORG:'机构/社团名', LOCATION:'地点', DORM:'宿舍号',
+  GRADE:'成绩/绩点', SENSITIVE_ATTR:'敏感个人属性'
+};
+
+let TASK = null;          // {categories, cases:[{id,source,text}]}
+let ANN  = {};            // caseId -> [{start,end,text,category,uncertain}]
+let idx  = 0;
+let pendingSel = null;    // {start,end,text}
+
+const $ = id => document.getElementById(id);
+
+/* ---------- 载入任务 ---------- */
+$('loadTask').onclick = () => $('taskFile').click();
+$('taskFile').onchange = e => readJson(e.target.files[0], d => {
+  if(!d.cases || !d.cases.length){ alert('任务文件里没有 cases'); return; }
+  TASK = d;
+  ANN = {};
+  idx = 0;
+  $('instr').textContent = d.instruction || '';
+  $('instr').style.display = d.instruction ? 'block' : 'none';
+  renderCatBar();
+  $('work').style.display = 'block';
+  $('exportBtn').disabled = false;
+  $('loadPrev').disabled = false;
+  $('hintLoad').textContent = '任务已载入：' + d.cases.length + ' 条单元。标注会自动暂存在本机浏览器，可随时导出。';
+  restoreLocal();
+  render();
+});
+
+/* ---------- 载入已有标注（续标） ---------- */
+$('loadPrev').onclick = () => $('prevFile').click();
+$('prevFile').onchange = e => readJson(e.target.files[0], d => {
+  if(!d.cases){ alert('不是有效的标注文件'); return; }
+  if(d.annotator) $('annotator').value = d.annotator;
+  let n = 0;
+  d.cases.forEach(c => { if(c.entities && c.entities.length){ ANN[c.id] = c.entities; n++; } });
+  // 定位到第一条未标注的
+  const first = TASK.cases.findIndex(c => !(ANN[c.id]||[]).length);
+  if(first >= 0) idx = first;
+  alert('已恢复 ' + n + ' 条已有标注');
+  saveLocal(); render();
+});
+
+function readJson(file, cb){
+  if(!file) return;
+  const r = new FileReader();
+  r.onload = () => { try{ cb(JSON.parse(r.result)); }catch(err){ alert('JSON 解析失败：'+err); } };
+  r.readAsText(file, 'utf-8');
+}
+
+/* ---------- 类别按钮 ---------- */
+function renderCatBar(){
+  const cats = (TASK && TASK.categories) || DEFAULT_CATS;
+  $('catBar').innerHTML = '';
+  Object.keys(cats).forEach(k => {
+    const b = document.createElement('button');
+    b.className = 'cat';
+    b.textContent = cats[k] + ' · ' + k;
+    b.onclick = () => addEntity(k);
+    $('catBar').appendChild(b);
+  });
+}
+
+/* ---------- 渲染当前条 ---------- */
+function render(){
+  const c = TASK.cases[idx];
+  $('progress').textContent = `第 ${idx+1} / ${TASK.cases.length} 条`;
+  $('caseMeta').textContent = `ID：${c.id}　来源：${c.source||'-'}　字数：${c.text.length}`;
+  renderText(c);
+  renderList(c);
+  renderCounts();
+  $('prevCase').disabled = idx === 0;
+  $('nextCase').disabled = idx === TASK.cases.length - 1;
+  pendingSel = null; $('selbox').style.display = 'none';
+}
+
+function renderText(c){
+  const ents = (ANN[c.id]||[]).slice().sort((a,b)=>a.start-b.start);
+  const box = $('textArea');
+  box.innerHTML = '';
+  let pos = 0;
+  ents.forEach(e => {
+    if(e.start > pos) box.appendChild(document.createTextNode(c.text.slice(pos, e.start)));
+    const m = document.createElement('mark');
+    m.className = e.uncertain ? '' : 'done';
+    m.textContent = c.text.slice(e.start, e.end);
+    box.appendChild(m);
+    pos = Math.max(pos, e.end);
+  });
+  if(pos < c.text.length) box.appendChild(document.createTextNode(c.text.slice(pos)));
+}
+
+function renderList(c){
+  const ents = (ANN[c.id]||[]).slice().sort((a,b)=>a.start-b.start);
+  const cats = (TASK && TASK.categories) || DEFAULT_CATS;
+  const box = $('entityList');
+  if(!ents.length){ box.innerHTML = '<div class="empty">尚未标注</div>'; return; }
+  let h = '<table><tr><th>类别</th><th>文本</th><th>位置</th><th></th></tr>';
+  ents.forEach((e,i) => {
+    const unc = e.uncertain ? ' <span class="tag unc">存疑</span>' : '';
+    h += `<tr><td><span class="tag">${cats[e.category]||e.category}</span>${unc}</td>
+          <td>${esc(e.text)}</td><td>[${e.start},${e.end})</td>
+          <td><button data-i="${i}">删除</button></td></tr>`;
+  });
+  box.innerHTML = h + '</table>';
+  box.querySelectorAll('button[data-i]').forEach(b => {
+    b.onclick = () => {
+      const list = ANN[c.id]; const i = +b.dataset.i;
+      // 用内容定位（排序后索引不可靠）
+      const real = list.indexOf(ents[i]);
+      list.splice(real < 0 ? i : real, 1);
+      saveLocal(); render();
+    };
+  });
+}
+
+function renderCounts(){
+  const cats = (TASK && TASK.categories) || DEFAULT_CATS;
+  const done = TASK.cases.filter(c => (ANN[c.id]||[]).length).length;
+  const total = Object.values(ANN).reduce((s,a)=>s+(a?a.length:0),0);
+  $('counts').textContent = `已标注 ${done}/${TASK.cases.length} 条　实体合计 ${total} 个　类别 ${Object.keys(cats).length} 种`;
+}
+
+/* ---------- 选区 → 偏移 ---------- */
+$('textArea').addEventListener('mouseup', () => {
+  const sel = window.getSelection();
+  if(!sel || sel.isCollapsed){ pendingSel=null; $('selbox').style.display='none'; return; }
+  const box = $('textArea');
+  if(!box.contains(sel.anchorNode) || !box.contains(sel.focusNode)){
+    pendingSel=null; $('selbox').style.display='none'; return;
+  }
+  const start = offsetIn(box, sel.anchorNode, sel.anchorOffset);
+  const end   = offsetIn(box, sel.focusNode, sel.focusOffset);
+  const s = Math.min(start,end), e = Math.max(start,end);
+  if(e <= s){ pendingSel=null; $('selbox').style.display='none'; return; }
+  pendingSel = {start:s, end:e, text:TASK.cases[idx].text.slice(s,e)};
+  $('selText').textContent = pendingSel.text;
+  $('selbox').style.display = 'block';
+  $('unc').checked = false;
+});
+
+function offsetIn(container, node, offset){
+  const r = document.createRange();
+  r.selectNodeContents(container);
+  r.setEnd(node, offset);
+  return r.toString().length;
+}
+
+/* ---------- 加实体 ---------- */
+function addEntity(cat){
+  if(!pendingSel){ alert('请先在上方文本中选中要标注的片段'); return; }
+  const c = TASK.cases[idx];
+  const list = ANN[c.id] || (ANN[c.id] = []);
+  const overlap = list.some(e => pendingSel.start < e.end && e.start < pendingSel.end);
+  if(overlap){ alert('该片段与已有标注重叠，请先删除冲突项'); return; }
+  list.push({start:pendingSel.start, end:pendingSel.end,
+             text:pendingSel.text, category:cat, uncertain:$('unc').checked});
+  saveLocal(); render();
+}
+
+/* ---------- 导航 ---------- */
+$('prevCase').onclick = () => { if(idx>0){ idx--; render(); } };
+$('nextCase').onclick = () => { if(idx<TASK.cases.length-1){ idx++; render(); } };
+document.addEventListener('keydown', e => {
+  if(e.target.tagName === 'INPUT') return;
+  if(e.key === 'ArrowLeft')  $('prevCase').click();
+  if(e.key === 'ArrowRight') $('nextCase').click();
+});
+
+/* ---------- 本地暂存 ---------- */
+function saveLocal(){
+  if(!TASK) return;
+  try{
+    localStorage.setItem('goldann:'+TASK.created, JSON.stringify({annotator:$('annotator').value, ann:ANN}));
+  }catch(err){}
+}
+function restoreLocal(){
+  if(!TASK) return;
+  try{
+    const raw = localStorage.getItem('goldann:'+TASK.created);
+    if(!raw) return;
+    const d = JSON.parse(raw);
+    if(d.annotator) $('annotator').value = d.annotator;
+    if(d.ann && Object.keys(d.ann).length){ ANN = d.ann; }
+  }catch(err){}
+}
+$('annotator').addEventListener('input', saveLocal);
+
+/* ---------- 导出 ---------- */
+$('exportBtn').onclick = () => {
+  const cases = TASK.cases.map(c => ({
+    id:c.id, source:c.source||'', text:c.text, entities:(ANN[c.id]||[]).slice().sort((a,b)=>a.start-b.start)
+  }));
+  const out = {
+    schema:1, type:'human_gold_entity_annotation',
+    annotator:$('annotator').value || '',
+    exported_at:new Date().toISOString(),
+    source_task:TASK.created || '',
+    categories:(TASK.categories)||DEFAULT_CATS,
+    cases:cases
+  };
+  const total = cases.reduce((s,c)=>s+c.entities.length,0);
+  const unc = cases.reduce((s,c)=>s+c.entities.filter(e=>e.uncertain).length,0);
+  const name = `gold_${out.annotator||'未署名'}_${new Date().toISOString().slice(0,10)}.json`;
+  const blob = new Blob([JSON.stringify(out,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name; a.click();
+  alert(`已导出 ${name}\n标注单元 ${cases.length} 条，实体 ${total} 个（存疑 ${unc} 个）\n\n下一步：\npython scripts/eval_gold.py --gold ${name}`);
+};
+
+function esc(s){ return String(s).replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+</script>
+</body>
+</html>
