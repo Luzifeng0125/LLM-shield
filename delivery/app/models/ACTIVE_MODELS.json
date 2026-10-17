@@ -1,0 +1,24 @@
+{
+  "updated": "2026-10-17",
+  "release": "local-verified-roster-notice",
+  "llm_mode": "mock",
+  "port": 8789,
+  "ner": {
+    "name": "ner_bert_v1",
+    "artifact_dir": "models/reviewed_ner",
+    "weights_sha256": "ad33e844e95151190b892861badea77fa559bb8fe54ca9ed2adab4ab8829698a",
+    "decoding": "bio_viterbi"
+  },
+  "action": {
+    "name": "segment_coverage_v2",
+    "weights_sha256": "28640b11e2ca296b145a3a87ac8f973e8eae2ad3274d93c68be281de781ecc0f",
+    "path": "models/necessity_action.joblib",
+    "training_report": "models/action_training_report.json"
+  },
+  "rejected_candidates": [
+    "ner_bert_balanced_v2_20261017",
+    "ner_bert_lr2e5_seed17_20261017",
+    "ner_bert_average_20261017"
+  ],
+  "note": "Paths are relative to delivery/app. Runtime and active models no longer depend on legacy directory junctions."
+}

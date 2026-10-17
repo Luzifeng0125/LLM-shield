@@ -10,8 +10,7 @@ import sys
 
 APP = Path(__file__).resolve().parents[1]
 DELIVERY = APP.parent
-DEFAULT_ARTIFACT = (DELIVERY / "数据集" / "复核与训练执行包_20261014" / "outputs" /
-                    "gold_run_20261016" / "ner_bert_v1")
+DEFAULT_ARTIFACT = APP / "models" / "reviewed_ner"
 sys.path.insert(0, str(APP))
 
 

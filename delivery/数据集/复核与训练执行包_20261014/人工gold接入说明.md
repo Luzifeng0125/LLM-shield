@@ -1,5 +1,7 @@
 # 人工 gold 导入、训练与独立验证
 
+> 当前状态（2026-10-17）：既有人工 gold 已验收并训练，统一入口为 delivery/启动隐盾.cmd（8789，mock）。当前 NER 已迁到 delivery/app/models/reviewed_ner；失败候选仅保留证据。以下早期指标与流程供追溯，不是最新验收结论。后续工作以根目录 AI_EXECUTION_PLAN.md 为准。
+
 本流程接收已导出的 `train_gold.jsonl`、`validation_gold.jsonl`、`test_gold.jsonl`。现已完成数据验收、基线、中文 BERT 实体模型训练、上下文动作模型 v2，以及实体模型的本地应用接入。原始 gold 和模型产物放在被 Git 忽略的 `outputs/` 内。
 
 ## 2026-10-16 最新结果：训练与候选接入已完成
@@ -7,8 +9,8 @@
 本轮汇总见 [improvement_summary.json](outputs/gold_run_20261016/improvement_summary.json)；其中保留旧基线、两个新模型指标、文件完整性检查和软件验收证据。
 
 - **实体模型已经实际训练**：`google-bert/bert-base-chinese`，14 类实体 / 29 类 BIO，使用 152 行训练数据；在 116 行验证视图中的 56 个独立 NER 单位上选最佳轮次。第 4 轮最佳，第 7 轮早停；权重保存与重载的预测一致。没有使用测试集训练、选参或评分。
-- **BERT 单模型**：严格实体 precision 100%、recall 98.91%、F1 **99.45%**（91 TP / 0 FP / 1 FN）；55/56 个单位完全正确，12 个无实体单位均无误报。独立评分脚本与真实 CPU 适配器复算一致。模型及训练记录见 [ner_bert_v1](outputs/gold_run_20261016/ner_bert_v1/)，独立复算见 [summary.json](outputs/gold_run_20261016/ner_bert_v1_independent_score/summary.json)。
-- **应用组合检测链**：旧规则 + 新 BERT 的严格实体 F1 **96.74%**（89 TP / 3 FP / 3 FN），原规则基线为 **55.78%**。53/56 个单位完全正确，12 个无实体单位均无误报。其剩余 3 例是旧规则把机构、地点的边界扩宽；不应把单模型 99.45% 当作应用组合链指标。[最终应用验证报告](outputs/gold_run_20261016/ner_app_integration_final/summary.json) 同时记录 CPU 延迟、4,799 字含 emoji 长文本滑窗检查和当前代码指纹。
+- **BERT 单模型**：严格实体 precision 100%、recall 98.91%、F1 **99.45%**（91 TP / 0 FP / 1 FN）；55/56 个单位完全正确，12 个无实体单位均无误报。独立评分脚本与真实 CPU 适配器复算一致。模型及训练记录见 [当前 NER 目录](../../app/models/reviewed_ner/)，独立复算见 [summary.json](outputs/gold_run_20261016/ner_bert_v1_independent_score/summary.json)。
+- **应用组合检测链**：旧规则 + 新 BERT 的严格实体 F1 **96.74%**（89 TP / 3 FP / 3 FN），原规则基线为 **55.78%**。53/56 个单位完全正确，12 个无实体单位均无误报。其剩余 3 例是旧规则把机构、地点的边界扩宽；不应把单模型 99.45% 当作应用组合链指标。[最新组合验证报告](outputs/gold_run_20261016/ner_app_viterbi_boundaries_20261017/summary.json) 同时记录 CPU 延迟、4,799 字含 emoji 长文本滑窗检查和当前代码指纹。
 - **上下文动作 v2 已训练**：独立保留当前文本、历史用户文本、任务说明和可信配置四类特征。60 个验证动作全部命中，12/12 个应暂停请求均预测暂停，48 个其他请求无误暂停，12/12 段对话全部动作正确。训练内部按来源分组的三折留出为 59/60，未用验证集调参数。详见 [动作指标](outputs/gold_run_20261016/policy_context_v2/metrics.json)。该模型仍是整请求/轮次动作实验产物，**尚未替换应用的分段动作模型**。
 - **应用适配器已接入**：显式配置路径后才加载候选模型，检查来源、标签、模型文件存在性和哈希；模型不可用时暂停处理。保留原文 Unicode 偏移、长文本滑窗和模型缓存。真实冒烟发现的“12 位数字片段误标身份证”已修复；应用层拒绝截断的身份证片段，完整合成号码仍按语义处理，不额外用校验位否决人审标注。训练权重与共享 BIO 推理未变，应用层修订指纹另存于最终应用报告。
 - **检查结果**：应用及训练全套回归 160 项、81 个子检查通过；格式防护修改后，受影响的适配器/识别/外发回归 71 项、16 个子检查通过；实际候选模型的整流程冒烟 38/38 通过。XML 与 [冒烟日志](outputs/gold_run_20261016/candidate_smoke.log) 已归档。旧应用动作权重 SHA-256 仍为 `691a1f820648c0b1f85e35b2dca061aae0f309516672f8b5c4eb21020abc4e46`。
@@ -18,12 +20,12 @@
 
 ## 直接使用本地候选版
 
-交付目录新增 [启动人工gold候选版.cmd](../../启动人工gold候选版.cmd)。双击后，等待预检成功，打开 `http://127.0.0.1:8788/`。该入口实际加载新实体模型，同时明确使用**本地模拟回复**，不调用外部大模型。旧启动入口、`.env` 和原动作权重保持原状。窗口关闭或按 Ctrl+C 即停止。
+交付目录新增 [启动隐盾.cmd](../../启动隐盾.cmd)。双击后，等待预检成功，打开 `http://127.0.0.1:8789/`。该入口实际加载新实体模型，同时明确使用**本地模拟回复**，不调用外部大模型。清理后统一入口加载已验证的 segment_coverage_v2；`.env` 未改写。窗口关闭或按 Ctrl+C 即停止。
 
 该入口自动选择 CUDA / CPU，预加载实体模型和现有动作模型。无需重新训练。也可从交付目录只做预检：
 
 ```powershell
-& './runtime/training_env/Scripts/python.exe' -X utf8 './app/scripts/start_reviewed_candidate.py' --check-only
+& './启动隐盾.cmd' --check-only
 ```
 
 真实训练环境为独立 `runtime/training_env`：Python 3.12、PyTorch 2.11.0+cu128、Transformers 4.57.6，已验证 RTX 5060 Laptop CUDA 运算。版本清单见 [training_environment_lock.txt](outputs/gold_run_20261016/training_environment_lock.txt)。基础权重经 ModelScope 下载，其 SHA-256 与 [官方权重页面](https://huggingface.co/google-bert/bert-base-chinese/blob/main/model.safetensors) 一致：`3404a1ffd8da507042e8161013ba2a4fc49858b4e3f8fbf5ce5724f94883aec3`。下载传输分支及实际文件指纹单独记录，不把镜像 master 宣称为已锁定的官方 revision。
@@ -45,11 +47,11 @@ $run = 'outputs/gold_run_20261016'
   --baseline "$run/policy_baseline" --out "$run/policy_context_rerun"
 
 & $trainingPython -X utf8 scripts/verify_reviewed_ner_app.py `
-  --data "$run/gold/validation_gold.jsonl" --model "$run/ner_bert_v1" `
-  --app '../../app' --out "$run/ner_app_rerun" --device cpu
+  --data "$run/gold/validation_gold.jsonl" --model ../../app/models/reviewed_ner `
+  --app '../../app' --out "$run/ner_app_rerun" --device cpu --decoding bio_viterbi
 
 & $trainingPython -X utf8 scripts/verify_candidate_service.py `
-  --model "$run/ner_bert_v1" --out "$run/candidate_service_rerun.json" --device cuda
+  --model ../../app/models/reviewed_ner --out "$run/candidate_service_rerun.json" --device cuda
 ```
 
 无 GPU 时将 `--device cuda` 改为 `--device cpu`。所有评估入口均限制在验证集；默认 `evaluate_gold_ner.py` 固定为原规则链，不受候选模型环境变量污染。
@@ -70,7 +72,7 @@ $run = 'outputs/gold_run_20261016'
 在本执行包目录打开 PowerShell。每次运行使用新的输出目录；脚本拒绝覆盖已有结果。
 
 ```powershell
-$reviewPython = '..\..\runtime\python\python.exe'
+$reviewPython = '..\..\runtime\training_env\Scripts\python.exe'
 $run = 'outputs/gold_run_20261016'
 
 & $reviewPython -X utf8 scripts/prepare_reviewed_gold.py `
@@ -105,4 +107,4 @@ $run = 'outputs/gold_run_20261016'
 
 实体候选已可本地运行。下一阶段的研究任务是把整请求动作 v2 与应用的分段执行语义对齐，扩大独立场景和真实外发行为验收；不能把该 joblib 直接覆盖应用现有动作文件。封存测试应等候选、参数和验收口径冻结后一次性执行。验证集剩余错误已保留，不通过改动 gold 或逐例硬编码消除。
 
-不要通过旧的“重新训练”入口推断此批 gold 已被使用：旧入口仍读取旧的合成开发案例。
+旧的“重新训练”入口已删除；后续训练直接使用明确的数据与输出参数，见根目录执行计划。

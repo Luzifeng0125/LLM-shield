@@ -17,6 +17,7 @@ outputs/*
 # 保留当前运行必需的小型动作模型；可选大模型权重不入库。
 models/*
 !models/necessity_action.joblib
+!models/ACTIVE_MODELS.json
 pretrained/
 *.bin
 *.safetensors

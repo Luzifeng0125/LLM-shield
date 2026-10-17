@@ -3,6 +3,8 @@
 !/.gitignore
 !/.gitattributes
 !/README.md
+!/AI_EXECUTION_PLAN.md
+!/启动隐盾.cmd
 !/delivery/
 !/tools/
 !/docs/
@@ -16,6 +18,7 @@
 **/venv/
 **/node_modules/
 **/runtime/
+/delivery/app/models/reviewed_ner/
 **/__pycache__/
 **/.pytest_cache/
 **/pytest-cache-files-*/
@@ -31,21 +34,5 @@
 **/*.p12
 **/*.pfx
 
-# The active synthetic review package is shared; human reviews stay local.
-/delivery/人工复核/*
-!/delivery/人工复核/使用说明.md
-!/delivery/人工复核/第二台电脑验收.md
-!/delivery/人工复核/当前试标.json
-!/delivery/人工复核/试标运行/
-/delivery/人工复核/试标运行/*
-!/delivery/人工复核/试标运行/a08ca7f5ced1/
-/delivery/人工复核/试标运行/a08ca7f5ced1/*
-!/delivery/人工复核/试标运行/a08ca7f5ced1/evidence.json
-!/delivery/人工复核/试标运行/a08ca7f5ced1/独立复核.html
+# Human review output remains local; source review tools live under delivery/数据集.
 /delivery/交付文件清单.json
-
-# Rendered intermediate files can be regenerated from the retained scripts.
-/tools/submission/docx_qa/
-/tools/submission/slides_qa/
-/tools/submission/draft.pptx*
-/tools/qa/automated_review_ui_only.json

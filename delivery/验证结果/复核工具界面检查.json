@@ -1,8 +1,0 @@
-{
-  "units": 9,
-  "prejudgment_before_output": true,
-  "export_and_resume": true,
-  "no_network_requests": true,
-  "javascript_errors": [],
-  "generated_annotations_are_automated_test_only": true
-}

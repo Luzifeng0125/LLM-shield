@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "updated": "2026-10-17",
+  "task": "本地清理、保留最新已验证隐盾、编写直到交付的 AI 计划",
+  "current_request_status": "complete",
+  "project_status": "development_not_final_release",
+  "plan": "AI_EXECUTION_PLAN.md",
+  "workspace": "D:/challenge_AI",
+  "active_models": "delivery/app/models/ACTIVE_MODELS.json",
+  "cleanup_record": "docs/清理记录_20261017.json",
+  "preserved_personal_materials": {
+    "path": "个人资料",
+    "groups": 6,
+    "content_modified": false
+  },
+  "active_service": {
+    "url": "http://127.0.0.1:8789/",
+    "notice_url": "http://127.0.0.1:8789/notice",
+    "mode": "mock",
+    "last_verified_pid": 58692,
+    "pid_note": "仅代表本次验证进程；后续操作必须重新核实归属。",
+    "start": "启动隐盾.cmd"
+  },
+  "completed_this_request": [
+    "三处目录链接迁为 delivery 内实体目录，运行不依赖旧日期目录。",
+    "当前 NER 与动作权重集中到 app/models 并验证 SHA-256。",
+    "六组个人资料完整移动，未修改内容。",
+    "删除旧版、重复包、未采用候选大权重、缓存与过期工具。",
+    "统一启动、停止、Python 与验证入口，修正维护文档旧路径。",
+    "完成独立 smoke、完整回归、真实本机 HTTP 与无头浏览器验收。",
+    "写完 AI 执行计划与本状态文件；未提交或推送 Git。"
+  ],
+  "cleanup": {
+    "removed_files": 24808,
+    "removed_file_bytes": 1922089115,
+    "bytes_note": "删除文件的逻辑大小之和，不含两份先由补丁移除的少量脚本；不是磁盘空闲空间精确测量。"
+  },
+  "validation": {
+    "smoke": {
+      "passed": 38,
+      "failed": 0,
+      "execution": "delivery/运行验证.cmd 的第一步"
+    },
+    "pytest": {
+      "passed": 290,
+      "subtests_passed": 90,
+      "failed": 0,
+      "warnings": 1,
+      "warning": "Starlette/httpx 弃用提示，未造成失败",
+      "report": "delivery/app/outputs/verification/pytest.xml"
+    },
+    "live_notice": {
+      "status": "passed",
+      "tp": 20,
+      "fp": 0,
+      "fn": 0,
+      "external_model_called": false,
+      "report": "delivery/app/outputs/verification_after_cleanup/notice/summary.json"
+    },
+    "browser": {
+      "status": "passed",
+      "widths": [
+        1440,
+        390
+      ],
+      "outside_requests": 0,
+      "page_errors": 0,
+      "report": "delivery/app/outputs/verification_after_cleanup/browser/summary.json"
+    },
+    "model_hashes": "passed",
+    "git_diff_check": "passed",
+    "sandbox_note": "受限环境发生临时目录/回环套接字错误；完整回归与实际接口/浏览器验收改为已获准的正常本机权限执行。"
+  },
+  "phases": [
+    {
+      "id": "A",
+      "name": "整理后基线确认",
+      "status": "complete"
+    },
+    {
+      "id": "B",
+      "name": "地点/机构/宿舍对照数据",
+      "status": "next",
+      "first_action": "先核对训练集类别覆盖，设计来源分组的对照材料与标签边界；生成内容标为开发/弱监督，不标为人工 gold。"
+    },
+    {
+      "id": "C",
+      "name": "NER 训练比较与替换门槛",
+      "status": "pending",
+      "depends_on": [
+        "B"
+      ]
+    },
+    {
+      "id": "D",
+      "name": "动作与执行语义一致性",
+      "status": "pending",
+      "depends_on": [
+        "C"
+      ]
+    },
+    {
+      "id": "E",
+      "name": "端到端与真实公开通知生成",
+      "status": "pending",
+      "depends_on": [
+        "C",
+        "D"
+      ]
+    },
+    {
+      "id": "F",
+      "name": "冻结、独立终测与提交材料",
+      "status": "pending",
+      "depends_on": [
+        "E"
+      ]
+    },
+    {
+      "id": "G",
+      "name": "可重建打包与干净环境验收",
+      "status": "pending",
+      "depends_on": [
+        "F"
+      ]
+    },
+    {
+      "id": "H",
+      "name": "最终交付与交接",
+      "status": "pending",
+      "depends_on": [
+        "G"
+      ]
+    }
+  ],
+  "known_open_items": [
+    "公共活动地点仍可能被识别为 DORM，12 个动作开发例通过 11 个。",
+    "开发 field_v1、地点探针、调试名单均不能用作新盲测；需独立新验收材料。",
+    "当前通知为 mock，真实外部模型文案质量尚未验收。",
+    "venv 依赖本机基础 Python，完整版本尚未完成干净环境重建与正式包验收。",
+    "保留的 Word/PPT/申报材料需在最终冻结后同步。",
+    "新增人工 gold 需要实际人工复核；缺少凭证或人审时明确询问，不伪造通过。"
+  ],
+  "github_model_check_20261017": {
+    "status": "downloaded_not_fused",
+    "origin_main": "ebb42dcd9a7578f31a7ee53bf7472ec1999cf106",
+    "only_model_blob_absent_locally": "delivery/app/models/necessity_action.joblib feature v3",
+    "github_sha256": "cbfed4ca422a1a6d416ce1b5f488649816c261b6acc86ffc173887c8dfed1b9f",
+    "saved_copy": "delivery/app/outputs/github_model_fusion_20261017/necessity_action_github_feature_v3.joblib",
+    "active_models_unchanged": true,
+    "local_hashes_match_plan": true,
+    "fusion": "未融合。v3 与当前 segment_coverage_v2 特征空间不同，不能参数平均，也未通过替换门槛。GLiNER 微调权重不在 GitHub 仓库内。"
+  },
+  "next_user_request_guidance": "用户再次要求继续时从阶段 B 开始，不重复清理或要求重复首轮人工复核。不要把 GitHub feature v3 动作权重或未入库的 GLiNER 目录当成可以覆盖当前 reviewed_ner 与 segment_coverage_v2 的融合结果。"
+}

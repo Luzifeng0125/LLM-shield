@@ -3,13 +3,12 @@ const fs = require('node:fs');
 const path = require('node:path');
 const assert = require('node:assert/strict');
 const {chromium} = require('C:/Users/nicholas/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core');
-const root = path.resolve(__dirname, '../../隐盾整合交付_20261012');
-const screenshots = path.join(root, '验证结果/界面截图');
+const root = path.resolve(__dirname, '../../delivery');
+const screenshots = path.join(root, 'app/outputs/browser_qa/screenshots');
 fs.mkdirSync(screenshots, {recursive:true});
-const portablePython = path.join(root, 'runtime/python/python.exe');
-const python = fs.existsSync(portablePython) ? portablePython : path.join(root, 'app/.venv/Scripts/python.exe');
+const python = path.join(root, 'runtime/training_env/Scripts/python.exe');
 const origin = 'http://127.0.0.1:8798';
-const app = spawn(python, ['-B','-X','utf8','run.py','--host','127.0.0.1','--port','8798'], {
+const app = spawn(python, ['-B','-X','utf8','scripts/start_reviewed_candidate.py','--ner-decoding','bio_viterbi','--action-model','models/necessity_action.joblib','--port','8798'], {
   cwd: root + '/app', env: {...process.env, LLM_MODE: 'mock'}, windowsHide: true, stdio: 'pipe'
 });
 let browser, uploaded, sessionId;
@@ -19,7 +18,7 @@ const sleep = ms => new Promise(r => setTimeout(r,ms));
 (async () => {
   try {
     let ready = false;
-    for (let n=0;n<60;n++) {
+    for (let n=0;n<240;n++) {
       try { if ((await fetch(origin + '/api/config')).ok) {ready=true;break;} } catch {}
       await sleep(500);
     }
@@ -77,7 +76,7 @@ const sleep = ms => new Promise(r => setTimeout(r,ms));
     assert.equal(await page.locator('a[href="/chat"]').count(),0);
     assert.deepEqual(errors,[]);
     const result={portable_server_started:true,single_conversation_entry:true,attachment_and_two_turns:true,remove_and_readd_attachment:true,delete_local_material:true,api_status_explicit:true,sensitive_values_absent_in_visible_history:true,mobile_no_horizontal_overflow:true,recreate_after_session_expiry:true,clear_session:true,javascript_errors:errors,mode:'mock'};
-    fs.writeFileSync(root+'/验证结果/网页交互检查.json',JSON.stringify(result,null,2),'utf8');
+    fs.writeFileSync(root+'/app/outputs/browser_qa/summary.json',JSON.stringify(result,null,2),'utf8');
     console.log(JSON.stringify(result));
   } finally {
     if (uploaded) await fetch(origin+'/api/upload/'+uploaded,{method:'DELETE'}).catch(()=>{});

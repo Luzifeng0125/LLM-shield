@@ -1,8 +1,11 @@
 @echo off
+setlocal
 chcp 65001 >nul
-cd /d "%~dp0app"
-echo LLM-Shield - local Python environment
-echo Conversation: http://127.0.0.1:8787/
-echo Keep this window open. Press Ctrl+C to stop.
-call "..\运行Python.cmd" -X utf8 run.py --host 127.0.0.1 --port 8787
-if errorlevel 1 pause
+set "PYTHONUTF8=1"
+set "PYTHONDONTWRITEBYTECODE=1"
+if not exist "%~dp0runtime\training_env\Scripts\python.exe" (
+  echo Current Python environment missing: runtime\training_env
+  exit /b 1
+)
+"%~dp0runtime\training_env\Scripts\python.exe" -B -X utf8 "%~dp0app\scripts\start_reviewed_candidate.py" --action-model "%~dp0app\models\necessity_action.joblib" --ner-decoding bio_viterbi --port 8789 %*
+exit /b %errorlevel%
