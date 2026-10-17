@@ -12,7 +12,7 @@
 
 ## 2. 接手时必须先确认的事实
 
-工作根目录 `D:/challenge_AI`。核心路径：
+以下 `D:/challenge_AI` 是原开发机的历史工作根目录，不是 Git 克隆的固定位置。当前仓库可检出到任意路径；执行时以本文件所在目录为根。克隆缺少大权重和原运行环境时，先按 `docs/从GitHub安装与验证.md` 安装并验证。核心相对路径：
 
 - APP = `delivery/app`。
 - PY = `delivery/runtime/training_env/Scripts/python.exe`。

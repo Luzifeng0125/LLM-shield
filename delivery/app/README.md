@@ -2,7 +2,9 @@
 
 维护入口见 [根目录说明](../../README.md)，完整后续工作见 [AI 执行计划](../../AI_EXECUTION_PLAN.md)。
 
-本机从上一级“启动隐盾.cmd”启动。当前配置为人工 gold BERT + BIO 约束解码 + segment_coverage_v2 动作模型，端口 8789，模拟回复。直接运行 run.py 会使用另一套环境配置，不作为本次验收入口。
+本机从上一级“启动隐盾.cmd”启动。当前配置为人工 gold BERT + BIO 约束解码 + segment_coverage_v2 动作模型，端口 8789，模拟回复。全新克隆先按[安装与验证说明](../../../docs/从GitHub安装与验证.md)建立环境并取得 reviewed_ner 权重。直接运行 run.py 会使用另一套环境配置，不作为本次验收入口。
+
+需要真实 DeepSeek 通用对话时，使用仓库根目录的 `启动通用对话.cmd`。它设置 `LLM_MODE=real`，在当前克隆缺少 BERT 权重时使用规则识别基线；配置密钥失败会返回错误，不会显示离线演示回复。此入口与上面的已验证名单模式不同，必须用独立材料验证识别和外发效果。
 
 ## 主要目录
 
@@ -24,4 +26,4 @@
 
 ## 环境
 
-本机 Python 为 ../runtime/training_env/Scripts/python.exe，实际安装版本记录在 ../runtime/requirements-current.txt。requirements-lock.txt 是较早的基础依赖快照，requirements-gpu.txt 是可选训练依赖范围，均不能单独证明当前完整环境可在干净机器重建。下一阶段须生成可重建依赖与权重分发方案并实际验收。
+原开发机 Python 为 ../runtime/training_env/Scripts/python.exe，该环境不随 Git 分发。安装脚本建立 app/.venv，使用 requirements-lock.txt 安装基础依赖，按需用 requirements-reviewed-inference.txt 安装 NER 推理依赖。模型权重仍须从授权训练产物单独取得；本次安装不能单独证明完整环境在另一台机器已验收。

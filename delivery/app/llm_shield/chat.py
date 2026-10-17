@@ -10,6 +10,7 @@ from dataclasses import dataclass, field, replace
 from . import config as C
 from .m1_access.identity import check_provide, check_read
 from .m1_access.loader import flatten_material
+from .chat_retrieval import exact_count_for_chat, select_for_chat
 from .m2_detect.pipeline import DetectionError, detect_and_segment
 from .m3_decide.decision import decide_all
 from .m4_necessity.model import get_model, necessity_scorer
@@ -132,14 +133,35 @@ def send_turn(session: ChatSession, materials: list[Material]) -> dict:
             return paused("包含无权读取的材料，本轮未发送")
         if not check_provide(session.identity, "external_model")[0]:
             return paused("外发权限已失效，本轮未发送")
-        pieces = [flatten_material(m) for m in access.allowed_materials]
+        question = "\n".join(m.text for m in materials if m.doc_id == "chat-input")
+        exact = exact_count_for_chat(access.allowed_materials, question)
+        if exact is not None:
+            safe_question, answer = exact
+            gateway = EgressGateway()
+            if not all(gateway.precheck("external_model", session.identity, content,
+                                       task_key=session.task)["allowed"]
+                       for content in (safe_question, answer)):
+                return paused("本机统计结果未通过敏感信息复检")
+            messages = session.messages + [{"role": "user", "content": safe_question},
+                                           {"role": "assistant", "content": answer}]
+            if sum(len(item["content"]) for item in messages) > MAX_HISTORY_CHARS:
+                return paused("上下文超过容量上限，请新建会话")
+            session.messages = messages
+            session.touched_at = time.monotonic()
+            return {"ok": True, "paused": False, "session_id": session.session_id,
+                    "messages": copy.deepcopy(messages), "turns": len(messages) // 2,
+                    "sanitized_user": safe_question, "reply": answer,
+                    "engine": "local", "warning": "", "decisions": []}
+        selected = select_for_chat(access.allowed_materials, question,
+                                   max_chars=MAX_TURN_CHARS)
+        pieces = [flatten_material(m) for m in selected]
         if not pieces or sum(len(p) for p in pieces) > MAX_TURN_CHARS:
             return paused("本轮材料为空或超过 24000 字符，请缩短或拆分后重试")
         # 每份材料独立识别，保留各自表头和行上下文，再调整全局位置。
         text = "\n".join(pieces)
         spans, segments, offset = [], [], 0
         try:
-            for material, piece in zip(access.allowed_materials, pieces):
+            for material, piece in zip(selected, pieces):
                 found, parts = detect_and_segment(piece, material.columns, material.rows)
                 shifted = [replace(s, start=s.start + offset, end=s.end + offset) for s in found]
                 spans.extend(shifted)

@@ -86,6 +86,8 @@ def flatten_material(m: Material) -> str:
     parts = [m.title, m.text]
     if m.rows and m.columns:
         for row in m.rows:
-            cells = [f"{col}: {row.get(col, '')}" for col in m.columns]
-            parts.append("；".join(cells))
+            cells = [f"{col}: {value}" for col in m.columns
+                     if (value := str(row.get(col, "") or "").strip())]
+            if cells:
+                parts.append("；".join(cells))
     return "\n".join(p for p in parts if p)

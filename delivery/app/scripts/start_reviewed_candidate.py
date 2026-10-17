@@ -96,6 +96,10 @@ def main(argv=None) -> int:
     # Set offline/mock constraints before optional model libraries are imported.
     configure_local_candidate(artifact, "cpu", args.action_model, args.ner_decoding)
     try:
+        if not artifact.is_dir() or not (artifact / "artifact_manifest.json").is_file():
+            raise FileNotFoundError(
+                "缺少 reviewed_ner 模型产物；Git 仓库未包含大权重。"
+                "请按 docs/从GitHub安装与验证.md 放置并校验模型后重试")
         import torch
         torch.set_num_threads(4)
         device = args.device

@@ -715,6 +715,9 @@ el('file').onchange = async () => {
       const form = new FormData(); form.append('file', file);
       const result = await api('/api/upload', { method: 'POST', body: form });
       files.push({ id: result.doc_id, title: result.title }); await refreshLibrary();
+      if (result.worksheets > 1) {
+        notice(`已导入 ${result.worksheets} 个工作表，当前选中第一个；其他工作表可在材料库中选择。`);
+      }
     }
     notice('文件已加入本轮。输入问题后发送，也可以直接发送文件。');
   } catch (error) { notice(error.message, true); } finally { el('file').value = ''; setBusy(false); }

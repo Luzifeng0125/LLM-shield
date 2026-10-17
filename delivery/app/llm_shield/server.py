@@ -18,7 +18,7 @@ from typing import Literal
 from . import config as C
 from .m1_access.file_loader import (MAX_BYTES, SUPPORTED, ParseError,
                                     delete_upload, maybe_parse_table,
-                                    parse_upload)
+                                    parse_uploads)
 from .m1_access.loader import list_materials, load_material
 from .m1_access.identity import check_provide, check_read
 from .m2_detect.pipeline import DetectionError, build_detectors
@@ -235,14 +235,15 @@ async def api_upload(file: UploadFile = File(...)):
 
     解析在本地完成，只保留提取出的文本/表格，不保存原始二进制文件。
     """
-    data = await file.read()
+    data = await file.read(MAX_BYTES + 1)
     try:
-        mat = parse_upload(data, file.filename or "upload.txt")
+        materials = parse_uploads(data, file.filename or "upload.txt")
     except ParseError as e:
         raise HTTPException(400, str(e))
-    except Exception as e:
-        raise HTTPException(500, f"上传处理失败：{type(e).__name__}: {e}")
+    except Exception:
+        raise HTTPException(500, "上传处理失败，请检查文件格式后重试") from None
 
+    mat = materials[0]
     preview = (mat.text or "")[:200]
     if not preview and mat.rows:
         preview = "表格列：" + "、".join(str(c) for c in (mat.columns or []))
@@ -254,6 +255,9 @@ async def api_upload(file: UploadFile = File(...)):
         "n_chars": len(mat.text or ""),
         "n_rows": len(mat.rows or []),
         "columns": mat.columns,
+        "worksheets": len(materials),
+        "documents": [{"doc_id": item.doc_id, "title": item.title,
+                       "n_rows": len(item.rows or [])} for item in materials],
     }
 
 

@@ -15,6 +15,7 @@ import io
 import json
 import re
 import time
+import zipfile
 from pathlib import Path
 from typing import Optional, Tuple
 
@@ -100,25 +101,101 @@ def _parse_csv(data: bytes, title: str) -> Tuple[str, Optional[list], Optional[l
 
 
 def _parse_excel(data: bytes, title: str) -> Tuple[str, Optional[list], Optional[list]]:
+    sheets = _parse_excel_sheets(data)
+    if not sheets:
+        return "", None, None
+    _, text, columns, rows = sheets[0]
+    return text, columns, rows
+
+
+_SHEET_XML = re.compile(r"xl/worksheets/sheet\d+\.xml\Z")
+_VALIDATION_TAG = re.compile(rb"<(?:[A-Za-z_][\w.-]*:)?dataValidation\b[^>]*>")
+_VALIDATION_ID = re.compile(rb'\s+id="[^"]*"')
+_HEADER_NAMES = {
+    "序号", "姓名", "名字", "电话", "手机号", "手机号码", "联系电话", "联系方式",
+    "学号", "学院", "专业", "校区", "班级", "性别", "民族", "宿舍", "宿舍号",
+    "身份证", "身份证号", "邮箱", "微信", "备注", "住址", "家庭住址", "职务",
+    "单位", "部门", "年级", "车辆编号", "地区", "地址", "职责",
+}
+
+
+def _compatible_excel_bytes(data: bytes) -> bytes:
+    """Ignore WPS's unsupported validation ID, keeping source cells unchanged."""
+    try:
+        source = zipfile.ZipFile(io.BytesIO(data))
+    except zipfile.BadZipFile as exc:
+        raise ParseError("Excel 文件不是有效的 xlsx 压缩包") from exc
+    with source:
+        entries = source.infolist()
+        if sum(item.file_size for item in entries) > 100 * 1024 * 1024:
+            raise ParseError("Excel 解压后内容过大")
+        patches = {}
+        for item in entries:
+            if not _SHEET_XML.fullmatch(item.filename):
+                continue
+            payload = source.read(item)
+            fixed = _VALIDATION_TAG.sub(
+                lambda match: _VALIDATION_ID.sub(b"", match.group()), payload)
+            if fixed != payload:
+                patches[item.filename] = fixed
+        if not patches:
+            return data
+        output = io.BytesIO()
+        with zipfile.ZipFile(output, "w") as target:
+            target.comment = source.comment
+            for item in entries:
+                target.writestr(item, patches.get(item.filename, source.read(item)))
+        return output.getvalue()
+
+
+def _excel_header_index(rows: list[list[str]]) -> int:
+    candidates = list(range(min(10, len(rows))))
+    scores = [sum(cell.replace(" ", "") in _HEADER_NAMES for cell in rows[i] if cell)
+              for i in candidates]
+    if scores and max(scores) >= 2:
+        return max(candidates, key=lambda i: (scores[i], -i))
+    return next((i for i in candidates if sum(bool(cell) for cell in rows[i]) >= 2), 0)
+
+
+def _parse_excel_sheets(data: bytes) -> list[tuple[str, str, Optional[list], Optional[list]]]:
     try:
         from openpyxl import load_workbook
     except ImportError as e:
         raise ParseError("未安装 openpyxl，无法解析 Excel：pip install openpyxl") from e
-
-    wb = load_workbook(io.BytesIO(data), data_only=True, read_only=True)
-    ws = wb[wb.sheetnames[0]]
-    rows_raw = []
-    for row in ws.iter_rows(values_only=True):
-        cells = ["" if c is None else str(c).strip() for c in row]
-        if any(cells):
-            rows_raw.append(cells)
-    wb.close()
-    if len(rows_raw) < 2:
-        return "\n".join(" ".join(r) for r in rows_raw), None, None
-    columns = rows_raw[0]
-    rows = [{columns[i]: (r[i] if i < len(r) else "") for i in range(len(columns))}
-            for r in rows_raw[1:]]
-    return "", columns, rows          # 正文留空，内容全在 rows 里
+    wb = load_workbook(io.BytesIO(_compatible_excel_bytes(data)),
+                       data_only=True, read_only=True)
+    result = []
+    try:
+        for ws in wb.worksheets:
+            rows_raw = []
+            for row in ws.iter_rows(values_only=True):
+                cells = ["" if c is None else str(c).strip() for c in row]
+                if any(cells):
+                    rows_raw.append(cells)
+            if not rows_raw:
+                continue
+            if len(rows_raw) < 2:
+                result.append((ws.title, " ".join(rows_raw[0]), None, None))
+                continue
+            header_index = _excel_header_index(rows_raw)
+            raw_columns = rows_raw[header_index]
+            columns, used = [], set()
+            for i, raw in enumerate(raw_columns):
+                base = raw or f"列{i + 1}"
+                name, suffix = base, 2
+                while name in used:
+                    name = f"{base}_{suffix}"
+                    suffix += 1
+                columns.append(name)
+                used.add(name)
+            rows = [{columns[i]: (row[i] if i < len(row) else "")
+                     for i in range(len(columns))}
+                    for row in rows_raw[header_index + 1:]
+                    if any(row)]
+            result.append((ws.title, "", columns, rows))
+    finally:
+        wb.close()
+    return result
 
 
 def _parse_docx(data: bytes, title: str) -> Tuple[str, Optional[list], Optional[list]]:
@@ -211,6 +288,43 @@ def parse_upload(data: bytes, filename: str) -> Material:
     )
     save_upload(mat)
     return mat
+
+
+def parse_uploads(data: bytes, filename: str) -> list[Material]:
+    """Store each nonempty Excel worksheet as an independently selectable material.
+
+    The chat policy expects one coherent set of columns per material. Keeping
+    sheets separate avoids silently dropping tabs or mixing unrelated schemas.
+    Other file types retain the single-material upload behavior.
+    """
+    ext = Path(filename).suffix.lower()
+    if ext not in EXCEL_EXT:
+        return [parse_upload(data, filename)]
+    if len(data) > MAX_BYTES:
+        raise ParseError(f"文件过大（{len(data)/1024/1024:.1f}MB），上限 5MB")
+    if not data:
+        raise ParseError("文件为空")
+    try:
+        sheets = _parse_excel_sheets(data)
+    except ParseError:
+        raise
+    except Exception as exc:
+        raise ParseError(f"Excel 解析失败：{type(exc).__name__}") from None
+    materials = []
+    for sheet_name, text, columns, rows in sheets:
+        if not text.strip() and not rows:
+            continue
+        material = Material(
+            doc_id=_safe_doc_id(f"{filename}_{sheet_name}"),
+            doc_type="uploaded", title=f"{Path(filename).name} / {sheet_name}",
+            text=text.strip(), rows=rows, columns=columns,
+        )
+        materials.append(material)
+    if not materials:
+        raise ParseError("未能从 Excel 工作表中提取到任何内容")
+    for material in materials:
+        save_upload(material)
+    return materials
 
 
 def maybe_parse_table(text: str) -> Tuple[str, Optional[list], Optional[list]]:

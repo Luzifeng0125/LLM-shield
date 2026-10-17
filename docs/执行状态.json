@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "updated": "2026-10-17",
-  "task": "本地清理、保留最新已验证隐盾、编写直到交付的 AI 计划",
-  "current_request_status": "complete",
+  "task": "GitHub 融合版与原本地版对照、克隆安装与软件验证",
+  "current_request_status": "software_verified_model_artifact_missing",
   "project_status": "development_not_final_release",
   "plan": "AI_EXECUTION_PLAN.md",
-  "workspace": "D:/challenge_AI",
+  "workspace": "当前 Git 克隆根目录；原开发机历史路径 D:/challenge_AI",
   "active_models": "delivery/app/models/ACTIVE_MODELS.json",
   "cleanup_record": "docs/清理记录_20261017.json",
   "preserved_personal_materials": {
@@ -14,14 +14,15 @@
     "content_modified": false
   },
   "active_service": {
+    "status": "not_running_in_this_clone",
     "url": "http://127.0.0.1:8789/",
     "notice_url": "http://127.0.0.1:8789/notice",
     "mode": "mock",
-    "last_verified_pid": 58692,
-    "pid_note": "仅代表本次验证进程；后续操作必须重新核实归属。",
+    "last_verified_pid": null,
+    "pid_note": "此 Git 克隆未启动 8789 维护服务；原机历史 PID 不再表示当前服务。",
     "start": "启动隐盾.cmd"
   },
-  "completed_this_request": [
+  "historical_cleanup_completed": [
     "三处目录链接迁为 delivery 内实体目录，运行不依赖旧日期目录。",
     "当前 NER 与动作权重集中到 app/models 并验证 SHA-256。",
     "六组个人资料完整移动，未修改内容。",
@@ -36,13 +37,14 @@
     "bytes_note": "删除文件的逻辑大小之和，不含两份先由补丁移除的少量脚本；不是磁盘空闲空间精确测量。"
   },
   "validation": {
+    "scope_note": "smoke 和 pytest 数字是本次 Git 克隆结果；live_notice、browser 为原机历史证据，不代表此克隆当前服务已启动。",
     "smoke": {
       "passed": 38,
       "failed": 0,
       "execution": "delivery/运行验证.cmd 的第一步"
     },
     "pytest": {
-      "passed": 290,
+      "passed": 297,
       "subtests_passed": 90,
       "failed": 0,
       "warnings": 1,
@@ -67,7 +69,7 @@
       "page_errors": 0,
       "report": "delivery/app/outputs/verification_after_cleanup/browser/summary.json"
     },
-    "model_hashes": "passed",
+    "model_hashes": "动作权重已校验；Git 缺少 reviewed_ner 权重，完整预检未通过",
     "git_diff_check": "passed",
     "sandbox_note": "受限环境发生临时目录/回环套接字错误；完整回归与实际接口/浏览器验收改为已获准的正常本机权限执行。"
   },
@@ -142,6 +144,7 @@
     "新增人工 gold 需要实际人工复核；缺少凭证或人审时明确询问，不伪造通过。"
   ],
   "github_model_check_20261017": {
+    "historical": true,
     "status": "downloaded_not_fused",
     "origin_main": "ebb42dcd9a7578f31a7ee53bf7472ec1999cf106",
     "only_model_blob_absent_locally": "delivery/app/models/necessity_action.joblib feature v3",
@@ -151,5 +154,17 @@
     "local_hashes_match_plan": true,
     "fusion": "未融合。v3 与当前 segment_coverage_v2 特征空间不同，不能参数平均，也未通过替换门槛。GLiNER 微调权重不在 GitHub 仓库内。"
   },
-  "next_user_request_guidance": "用户再次要求继续时从阶段 B 开始，不重复清理或要求重复首轮人工复核。不要把 GitHub feature v3 动作权重或未入库的 GLiNER 目录当成可以覆盖当前 reviewed_ner 与 segment_coverage_v2 的融合结果。"
+  "repository_sync_20261017": {
+    "local_checkout": "D:/project/LLM-shield",
+    "original_project_preserved": "D:/project/隐盾",
+    "smoke_passed": 38,
+    "pytest_passed": 297,
+    "pytest_skipped": 1,
+    "pytest_subtests_passed": 90,
+    "reviewed_ner_available_in_git": false,
+    "full_8789_precheck": "blocked_by_missing_reviewed_ner_artifact",
+    "real_api_verified": false,
+    "private_workbooks_committed": false
+  },
+  "next_user_request_guidance": "继续迁移时先对照 docs/版本对照与取舍_20261017.md，逐模块验证原本地版和 Git 版，不要整目录覆盖。缺少 reviewed_ner 大权重时不能声称完整维护模式运行通过；真实 DeepSeek 联调需要本机密钥和公开合成材料。"
 }

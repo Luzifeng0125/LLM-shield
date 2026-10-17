@@ -50,6 +50,19 @@ def test_two_turns_keep_stable_codes_and_sanitized_history(setup_chat):
     assert "张明" not in str(history) and "13812345678" not in str(history)
 
 
+def test_exact_table_count_stays_local(setup_chat):
+    _, store, calls = setup_chat
+    session = store.create("student_leader", "activity_stats")
+    rows = [{"专业": "网络空间安全" if i % 25 == 0 else "其他专业"}
+            for i in range(310)]
+    result = chat.send_turn(session, [Material("table", "uploaded", "专业表", "", rows, ["专业"]),
+                                      Material("chat-input", "uploaded", "", "帮我统计网络空间安全专业有多少人")])
+    assert result["ok"] and result["engine"] == "local"
+    assert "共有 13 人" in result["reply"]
+    assert not calls
+    assert len(store.get(session.session_id).messages) == 2
+
+
 def test_model_failure_preserves_previous_history(setup_chat, monkeypatch):
     client, store, calls = setup_chat
     sid = new_session(client)

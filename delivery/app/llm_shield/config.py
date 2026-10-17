@@ -138,7 +138,7 @@ def llm_settings() -> Dict[str, Any]:
     return {
         "mode": os.getenv("LLM_MODE", "auto").lower(),
         "provider": os.getenv("LLM_PROVIDER", "deepseek"),
-        "base_url": os.getenv("LLM_BASE_URL", "https://api.deepseek.com/v1"),
+        "base_url": os.getenv("LLM_BASE_URL", "https://api.deepseek.com"),
         "api_key": os.getenv("LLM_API_KEY", "").strip(),
         "model": os.getenv("LLM_MODEL", "deepseek-flash"),
         "timeout": float(os.getenv("LLM_TIMEOUT", "60")),
