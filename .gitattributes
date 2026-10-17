@@ -16,3 +16,9 @@
 *.pdf binary
 *.png binary
 *.joblib binary
+*.model binary
+*.bin binary
+
+# 模型产物按原始字节存储：不做换行归一化，避免校验哈希漂移。
+delivery/app/models/gliner_v3/tokenizer.json binary
+delivery/app/models/gliner_v3/spm.model binary

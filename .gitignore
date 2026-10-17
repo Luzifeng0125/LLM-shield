@@ -11,7 +11,9 @@
 
 # Local migrated reports and diagnostics are never repository sources.
 /local/
-/delivery/app/models/gliner_v3/
+
+# GLiNER 识别模型的配置与分词器随仓库分发；1.1 GB 权重本体由
+# delivery/app/.gitignore 的 *.bin 规则排除，哈希见 models/ACTIVE_MODELS.json。
 
 # Local credentials, environments, uploaded materials and generated traces.
 **/.env

@@ -18,6 +18,18 @@ outputs/*
 models/*
 !models/necessity_action.joblib
 !models/ACTIVE_MODELS.json
+
+# GLiNER 识别模型：配置与分词器入库（约 20 MB），便于核对模型结构与版本；
+# 1.1 GB 的 pytorch_model.bin 由下方 *.bin 规则排除，整文件哈希见 ACTIVE_MODELS.json。
+!models/gliner_v3/
+models/gliner_v3/*
+!models/gliner_v3/added_tokens.json
+!models/gliner_v3/config.json
+!models/gliner_v3/gliner_config.json
+!models/gliner_v3/special_tokens_map.json
+!models/gliner_v3/spm.model
+!models/gliner_v3/tokenizer.json
+!models/gliner_v3/tokenizer_config.json
 pretrained/
 *.bin
 *.safetensors

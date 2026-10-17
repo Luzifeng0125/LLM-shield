@@ -179,7 +179,8 @@ python scripts/benchmark_local.py   # 只测本地处理耗时，不外呼、不
 delivery/app/models/
 ├── ACTIVE_MODELS.json        # 活动模型清单与哈希（权威来源）
 ├── necessity_action.joblib   # 决策模型 m4，feature v3，约 1 MB，随仓库分发
-└── gliner_v3/                # 识别模型 m2，约 1.1 GB，不随仓库分发
+└── gliner_v3/                # 识别模型 m2：配置与分词器（约 20 MB）随仓库分发；
+                              # 1.1 GB 的 pytorch_model.bin 不随仓库分发，需自备
 ```
 
 清单见 [`models/ACTIVE_MODELS.json`](delivery/app/models/ACTIVE_MODELS.json)：
@@ -192,8 +193,7 @@ delivery/app/models/
 | Campus NER（RoBERTa） | 已移除 | 无本机权重，叠加收益无证据 |
 | reviewed_ner BERT | 仅离线评测代码 | 在线管线不导入、不加载，其历史分数不代表当前版本 |
 
-要自行启用 GLiNER：取 `urchade/gliner_multi-v2.1`（Apache-2.0）与对应 tokenizer，
-用 `delivery/app/` 下脚本微调后放到**纯 ASCII 路径**，并在 `.env` 中设 `SHIELD_USE_GLINER=true`。
+仓库内已包含 `gliner_v3` 的 `config.json`、`gliner_config.json`、`tokenizer.*`、`spm.model` 等模型配置与分词器，缺的只是 1.1 GB 的 `pytorch_model.bin`。要补齐权重：以 `urchade/gliner_multi-v2.1`（Apache-2.0）为底座，用 `delivery/app/` 下脚本微调后放到**纯 ASCII 路径**的 `delivery/app/models/gliner_v3/`，用 `ACTIVE_MODELS.json` 里的 `weights_sha256` 校验，并在 `.env` 中设 `SHIELD_USE_GLINER=true`。
 
 ## 实测效果
 
