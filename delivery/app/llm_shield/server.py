@@ -28,6 +28,8 @@ from .pipeline import preview_only, run_pipeline
 from .schema import Material, ShieldRequest
 from .chat import STORE, ChatError, send_turn, snapshot
 from .notice import notice_request, review_roster
+from .metrics import snapshot as metrics_snapshot
+from .runtime import readiness
 
 def _warmup() -> None:
     """启动预热。
@@ -44,12 +46,22 @@ def _warmup() -> None:
         print(f"[预热] 必要性判别模型已就绪：{model.backend}")
     except Exception as exc:
         print(f"[预热] 本地决策模型不可用，将暂停外发：{exc}")
+    if C.use_gliner():
+        try:
+            gliner = next(item for item in build_detectors() if item.name == "gliner")
+            gliner.detect("预热")
+            print(f"[预热] GLiNER 已就绪：{gliner.device}")
+        except Exception as exc:
+            print(f"[预热] GLiNER 不可用（{type(exc).__name__}），请求将暂停处理")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     _warmup()
-    yield
+    try:
+        yield
+    finally:
+        STORE.close()
 
 
 app = FastAPI(title="隐盾 LLM-Shield", version="0.1.0",
@@ -177,6 +189,16 @@ def api_chat_turn(session_id: str, r: ChatTurnRequest):
 # ---------------------------------------------------------------- 配置接口
 
 
+@app.get("/api/health")
+def api_health():
+    return {**readiness(), **STORE.stats()}
+
+
+@app.get("/api/metrics")
+def api_metrics():
+    return {"latency": metrics_snapshot()}
+
+
 @app.get("/api/config")
 def api_config(include_builtin: bool = False):
     """返回任务模板 / 身份 / 接收方 / 材料清单，以及当前模型后端状态。
@@ -201,9 +223,10 @@ def api_config(include_builtin: bool = False):
             "necessity_reason": get_model().reason,
             "necessity_available": get_model().available,
             "decision_policy": "model_only",
-            "campus_ner": {
-                "available": any(d.name == "campus_ner" for d in build_detectors()),
-                "note": "敏感识别使用规则底座；领域 NER 需配置显式启用",
+            "recognizer": {
+                "detectors": ["regex", "entity"] + (["gliner"] if C.use_gliner() else []),
+                "gliner_enabled": C.use_gliner(),
+                "note": "格式类由正则验证；GLiNER 负责语义类。就绪情况见 /api/health。",
             },
             "llm": {
                 "mode": C.llm_settings()["mode"],

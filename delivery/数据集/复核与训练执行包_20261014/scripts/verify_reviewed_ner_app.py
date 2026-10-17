@@ -4,7 +4,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
 from pathlib import Path
 import statistics
 import sys
@@ -23,13 +22,12 @@ def verify(args):
     sys.path.insert(0, str(app))
     import torch
     torch.set_num_threads(4)
-    os.environ["SHIELD_REVIEWED_NER_MODEL_DIR"] = str(args.model.resolve())
-    os.environ["SHIELD_REVIEWED_NER_DEVICE"] = args.device
-    os.environ["SHIELD_REVIEWED_NER_DECODING"] = args.decoding
     from llm_shield.m2_detect.pipeline import build_detectors, detect_all
+    from eval.reviewed_ner import ReviewedNERDetector
     started = time.perf_counter()
-    chain = build_detectors(use_campus_ner=False, use_gliner=False)
-    candidate = next(detector for detector in chain if detector.name == "reviewed_ner")
+    candidate = ReviewedNERDetector(args.model.resolve(), device=args.device, decoding=args.decoding)
+    # Explicit offline experiment; the online app never enables this candidate.
+    chain = build_detectors(use_gliner=False) + [candidate]
     load_seconds = time.perf_counter() - started
     if not candidate.available:
         raise RuntimeError(candidate.reason)

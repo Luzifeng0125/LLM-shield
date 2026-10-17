@@ -5,18 +5,19 @@ import copy
 import secrets
 import threading
 import time
-from dataclasses import dataclass, field, replace
+from dataclasses import dataclass, field
 
 from . import config as C
-from .m1_access.identity import check_provide, check_read
-from .m1_access.loader import flatten_material
 from .chat_retrieval import exact_count_for_chat, select_for_chat
-from .m2_detect.pipeline import DetectionError, detect_and_segment
-from .m3_decide.decision import decide_all
+from .m1_access.identity import check_provide
+from .m1_access.identity import check_read
+from .m2_detect.pipeline import build_detectors, detect_and_segment
 from .m4_necessity.model import get_model, necessity_scorer
 from .m6_transform.anonymizer import apply_decisions
 from .m6_transform.mapping import MappingTable
 from .m7_egress.gateway import EgressGateway
+from .metrics import observe
+from .processing import ProcessingFailure, analyze
 from .schema import Action, Material, Span
 
 MAX_SESSIONS = 64
@@ -54,10 +55,38 @@ class ChatStore:
 
     def _expire(self):
         now = time.monotonic()
-        expired = [sid for sid, s in self.sessions.items()
-                   if now - s.touched_at > SESSION_TTL_SECONDS and not s.lock.locked()]
-        for sid in expired:
-            del self.sessions[sid]
+        for sid, session in list(self.sessions.items()):
+            if now - session.touched_at <= SESSION_TTL_SECONDS:
+                continue
+            if not session.lock.acquire(blocking=False):
+                continue
+            try:
+                self._clear(session)
+                del self.sessions[sid]
+            finally:
+                session.lock.release()
+
+    @staticmethod
+    def _clear(session: ChatSession) -> None:
+        session.active = False
+        session.messages.clear()
+        session.private_spans.clear()
+        session.allowed_values.clear()
+        session.mapping.clear_session(session.session_id)
+
+    def stats(self) -> dict:
+        with self.lock:
+            self._expire()
+            return {"active_sessions": len(self.sessions), "max_sessions": MAX_SESSIONS,
+                    "ttl_seconds": SESSION_TTL_SECONDS}
+
+    def close(self) -> None:
+        """Clear process-local private state when the server shuts down."""
+        with self.lock:
+            for session in self.sessions.values():
+                with session.lock:
+                    self._clear(session)
+            self.sessions.clear()
 
     def create(self, identity: str, task: str, description: str = "") -> ChatSession:
         if not isinstance(C.tasks().get(task), dict) or not isinstance(C.identities().get(identity), dict):
@@ -93,11 +122,7 @@ class ChatStore:
             if not session.lock.acquire(blocking=False):
                 raise ChatError("本轮正在处理，请完成后再清除会话", 409)
             try:
-                session.active = False
-                session.messages.clear()
-                session.private_spans.clear()
-                session.allowed_values.clear()
-                session.mapping.clear_session(sid)
+                self._clear(session)
                 del self.sessions[sid]
             finally:
                 session.lock.release()
@@ -116,6 +141,7 @@ def snapshot(session: ChatSession) -> dict:
 def send_turn(session: ChatSession, materials: list[Material]) -> dict:
     if not session.lock.acquire(blocking=False):
         raise ChatError("上一轮仍在处理，请勿重复提交", 409)
+    started = time.perf_counter()
     try:
         if not session.active:
             raise ChatError("会话已清除，请新建会话", 404)
@@ -126,16 +152,14 @@ def send_turn(session: ChatSession, materials: list[Material]) -> dict:
 
         if len(session.messages) // 2 >= MAX_TURNS:
             return paused("已达单会话轮数上限，请新建会话；历史不会被静默截断")
-        if not get_model().available:
-            return paused("本地动作模型不可用，本轮未发送")
-        access = check_read(session.identity, materials)
-        if not access.ok or access.denied_docs:
-            return paused("包含无权读取的材料，本轮未发送")
-        if not check_provide(session.identity, "external_model")[0]:
-            return paused("外发权限已失效，本轮未发送")
+        context = "\n".join(m["content"] for m in session.messages[-4:])[-2000:]
         question = "\n".join(m.text for m in materials if m.doc_id == "chat-input")
-        exact = exact_count_for_chat(access.allowed_materials, question)
+        exact = exact_count_for_chat(materials, question)
         if exact is not None:
+            access = check_read(session.identity, materials)
+            provided, _ = check_provide(session.identity, "external_model")
+            if not access.ok or access.denied_docs or not provided:
+                return paused("当前身份无权处理该材料")
             safe_question, answer = exact
             gateway = EgressGateway()
             if not all(gateway.precheck("external_model", session.identity, content,
@@ -144,7 +168,7 @@ def send_turn(session: ChatSession, materials: list[Material]) -> dict:
                 return paused("本机统计结果未通过敏感信息复检")
             messages = session.messages + [{"role": "user", "content": safe_question},
                                            {"role": "assistant", "content": answer}]
-            if sum(len(item["content"]) for item in messages) > MAX_HISTORY_CHARS:
+            if sum(len(m["content"]) for m in messages) > MAX_HISTORY_CHARS:
                 return paused("上下文超过容量上限，请新建会话")
             session.messages = messages
             session.touched_at = time.monotonic()
@@ -152,34 +176,29 @@ def send_turn(session: ChatSession, materials: list[Material]) -> dict:
                     "messages": copy.deepcopy(messages), "turns": len(messages) // 2,
                     "sanitized_user": safe_question, "reply": answer,
                     "engine": "local", "warning": "", "decisions": []}
-        selected = select_for_chat(access.allowed_materials, question,
-                                   max_chars=MAX_TURN_CHARS)
-        pieces = [flatten_material(m) for m in selected]
-        if not pieces or sum(len(p) for p in pieces) > MAX_TURN_CHARS:
-            return paused("本轮材料为空或超过 24000 字符，请缩短或拆分后重试")
-        # 每份材料独立识别，保留各自表头和行上下文，再调整全局位置。
-        text = "\n".join(pieces)
-        spans, segments, offset = [], [], 0
+        materials = select_for_chat(materials, question, max_chars=MAX_TURN_CHARS)
         try:
-            for material, piece in zip(selected, pieces):
-                found, parts = detect_and_segment(piece, material.columns, material.rows)
-                shifted = [replace(s, start=s.start + offset, end=s.end + offset) for s in found]
-                spans.extend(shifted)
-                for part in parts:
-                    part.spans = [s for s in shifted if offset + part.start <= s.start and s.end <= offset + part.end]
-                    part.start += offset
-                    part.end += offset
-                    part.seg_id = f"chat_{len(segments)}"
-                    segments.append(part)
-                offset += len(piece) + 1
-        except DetectionError:
-            return paused("敏感信息识别失败，本轮未发送")
-        context = "\n".join(m["content"] for m in session.messages[-4:])[-2000:]
-        decisions = decide_all(segments, session.task, "external_model", session.identity,
-                               necessity_scorer, task_description=session.task_description,
-                               context=context)
+            analysis = analyze(session.identity, session.task, "external_model", materials,
+                               task_description=session.task_description, context=context,
+                               max_source_chars=MAX_TURN_CHARS,
+                               model_loader=get_model, detector_builder=build_detectors,
+                               detect=detect_and_segment, scorer=necessity_scorer)
+        except ProcessingFailure as exc:
+            if exc.stage == "size":
+                return paused("本轮材料为空或超过 24000 字符，请缩短或拆分后重试")
+            if exc.stage == "access":
+                return paused("包含无权读取的材料，本轮未发送")
+            if exc.stage == "model":
+                return paused("本地动作模型不可用，本轮未发送")
+            if exc.stage == "detect":
+                return paused("敏感信息识别失败，本轮未发送")
+            if exc.stage == "capacity":
+                return paused(str(exc))
+            return paused("外发权限已失效，本轮未发送")
+        text, spans, segments, decisions = (analysis.text, analysis.spans,
+                                            analysis.segments, analysis.decisions)
         descriptions = [d.to_dict() for d in decisions]
-        rejected = next((d for d in decisions if d.action == Action.PAUSE), None)
+        rejected = analysis.paused
         if rejected:
             return paused(rejected.reason, descriptions)
         staged_mapping = copy.deepcopy(session.mapping)
@@ -194,9 +213,11 @@ def send_turn(session: ChatSession, materials: list[Material]) -> dict:
         retained = session.allowed_values | {
             s.text for segment, decision in zip(segments, decisions)
             if decision.action == Action.RETAIN for s in segment.spans}
+        model_started = time.perf_counter()
         response = EgressGateway(generated_pseudonyms=set(
             staged_mapping.export(session.session_id).values())).send_conversation(
                 session.task, messages, session.identity, private_spans, retained)
+        observe("chat_model_ms", (time.perf_counter() - model_started) * 1000)
         if not response["allowed"]:
             return paused(response.get("error") or "外发检查拒绝，本轮未加入历史", descriptions)
         if sum(len(m["content"]) for m in messages) + len(response["text"]) > MAX_HISTORY_CHARS:
@@ -211,4 +232,5 @@ def send_turn(session: ChatSession, materials: list[Material]) -> dict:
                 "sanitized_user": safe_user, "reply": response["text"], "engine": response["engine"],
                 "warning": response.get("error", ""), "decisions": descriptions}
     finally:
+        observe("chat_total_ms", (time.perf_counter() - started) * 1000)
         session.lock.release()

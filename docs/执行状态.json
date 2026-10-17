@@ -1,170 +1,48 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "updated": "2026-10-17",
-  "task": "GitHub 融合版与原本地版对照、克隆安装与软件验证",
-  "current_request_status": "software_verified_model_artifact_missing",
-  "project_status": "development_not_final_release",
-  "plan": "AI_EXECUTION_PLAN.md",
-  "workspace": "当前 Git 克隆根目录；原开发机历史路径 D:/challenge_AI",
+  "task": "实际融合本地与GitHub版本，统一目录，启用GLiNER并移除在线冗余模型",
+  "workspace": "D:/project/LLM-shield",
+  "source": "delivery/app",
   "active_models": "delivery/app/models/ACTIVE_MODELS.json",
-  "cleanup_record": "docs/清理记录_20261017.json",
-  "preserved_personal_materials": {
-    "path": "个人资料",
-    "groups": 6,
-    "content_modified": false
-  },
-  "active_service": {
-    "status": "not_running_in_this_clone",
-    "url": "http://127.0.0.1:8789/",
-    "notice_url": "http://127.0.0.1:8789/notice",
-    "mode": "mock",
-    "last_verified_pid": null,
-    "pid_note": "此 Git 克隆未启动 8789 维护服务；原机历史 PID 不再表示当前服务。",
-    "start": "启动隐盾.cmd"
-  },
-  "historical_cleanup_completed": [
-    "三处目录链接迁为 delivery 内实体目录，运行不依赖旧日期目录。",
-    "当前 NER 与动作权重集中到 app/models 并验证 SHA-256。",
-    "六组个人资料完整移动，未修改内容。",
-    "删除旧版、重复包、未采用候选大权重、缓存与过期工具。",
-    "统一启动、停止、Python 与验证入口，修正维护文档旧路径。",
-    "完成独立 smoke、完整回归、真实本机 HTTP 与无头浏览器验收。",
-    "写完 AI 执行计划与本状态文件；未提交或推送 Git。"
-  ],
-  "cleanup": {
-    "removed_files": 24808,
-    "removed_file_bytes": 1922089115,
-    "bytes_note": "删除文件的逻辑大小之和，不含两份先由补丁移除的少量脚本；不是磁盘空闲空间精确测量。"
+  "architecture": {
+    "gliner_enabled": true,
+    "campus_ner_removed": true,
+    "reviewed_ner": "offline_evaluation_only",
+    "action_feature_version": 3,
+    "llm_mode": "real",
+    "default_port": 8787
   },
   "validation": {
-    "scope_note": "smoke 和 pytest 数字是本次 Git 克隆结果；live_notice、browser 为原机历史证据，不代表此克隆当前服务已启动。",
-    "smoke": {
-      "passed": 38,
-      "failed": 0,
-      "execution": "delivery/运行验证.cmd 的第一步"
-    },
-    "pytest": {
-      "passed": 297,
-      "subtests_passed": 90,
-      "failed": 0,
-      "warnings": 1,
-      "warning": "Starlette/httpx 弃用提示，未造成失败",
-      "report": "delivery/app/outputs/verification/pytest.xml"
-    },
-    "live_notice": {
-      "status": "passed",
-      "tp": 20,
-      "fp": 0,
-      "fn": 0,
-      "external_model_called": false,
-      "report": "delivery/app/outputs/verification_after_cleanup/notice/summary.json"
-    },
-    "browser": {
-      "status": "passed",
-      "widths": [
-        1440,
-        390
-      ],
-      "outside_requests": 0,
-      "page_errors": 0,
-      "report": "delivery/app/outputs/verification_after_cleanup/browser/summary.json"
-    },
-    "model_hashes": "动作权重已校验；Git 缺少 reviewed_ner 权重，完整预检未通过",
-    "git_diff_check": "passed",
-    "sandbox_note": "受限环境发生临时目录/回环套接字错误；完整回归与实际接口/浏览器验收改为已获准的正常本机权限执行。"
-  },
-  "phases": [
-    {
-      "id": "A",
-      "name": "整理后基线确认",
-      "status": "complete"
-    },
-    {
-      "id": "B",
-      "name": "地点/机构/宿舍对照数据",
-      "status": "next",
-      "first_action": "先核对训练集类别覆盖，设计来源分组的对照材料与标签边界；生成内容标为开发/弱监督，不标为人工 gold。"
-    },
-    {
-      "id": "C",
-      "name": "NER 训练比较与替换门槛",
-      "status": "pending",
-      "depends_on": [
-        "B"
-      ]
-    },
-    {
-      "id": "D",
-      "name": "动作与执行语义一致性",
-      "status": "pending",
-      "depends_on": [
-        "C"
-      ]
-    },
-    {
-      "id": "E",
-      "name": "端到端与真实公开通知生成",
-      "status": "pending",
-      "depends_on": [
-        "C",
-        "D"
-      ]
-    },
-    {
-      "id": "F",
-      "name": "冻结、独立终测与提交材料",
-      "status": "pending",
-      "depends_on": [
-        "E"
-      ]
-    },
-    {
-      "id": "G",
-      "name": "可重建打包与干净环境验收",
-      "status": "pending",
-      "depends_on": [
-        "F"
-      ]
-    },
-    {
-      "id": "H",
-      "name": "最终交付与交接",
-      "status": "pending",
-      "depends_on": [
-        "G"
-      ]
-    }
-  ],
-  "known_open_items": [
-    "公共活动地点仍可能被识别为 DORM，12 个动作开发例通过 11 个。",
-    "开发 field_v1、地点探针、调试名单均不能用作新盲测；需独立新验收材料。",
-    "当前通知为 mock，真实外部模型文案质量尚未验收。",
-    "venv 依赖本机基础 Python，完整版本尚未完成干净环境重建与正式包验收。",
-    "保留的 Word/PPT/申报材料需在最终冻结后同步。",
-    "新增人工 gold 需要实际人工复核；缺少凭证或人审时明确询问，不伪造通过。"
-  ],
-  "github_model_check_20261017": {
-    "historical": true,
-    "status": "downloaded_not_fused",
-    "origin_main": "ebb42dcd9a7578f31a7ee53bf7472ec1999cf106",
-    "only_model_blob_absent_locally": "delivery/app/models/necessity_action.joblib feature v3",
-    "github_sha256": "cbfed4ca422a1a6d416ce1b5f488649816c261b6acc86ffc173887c8dfed1b9f",
-    "saved_copy": "delivery/app/outputs/github_model_fusion_20261017/necessity_action_github_feature_v3.joblib",
-    "active_models_unchanged": true,
-    "local_hashes_match_plan": true,
-    "fusion": "未融合。v3 与当前 segment_coverage_v2 特征空间不同，不能参数平均，也未通过替换门槛。GLiNER 微调权重不在 GitHub 仓库内。"
-  },
-  "repository_sync_20261017": {
-    "local_checkout": "D:/project/LLM-shield",
-    "original_project_preserved": "D:/project/隐盾",
     "smoke_passed": 38,
-    "pytest_passed": 297,
-    "pytest_skipped": 1,
-    "pytest_subtests_passed": 90,
-    "reviewed_ner_available_in_git": false,
-    "full_8789_precheck": "blocked_by_missing_reviewed_ner_artifact",
-    "real_api_verified": false,
-    "private_workbooks_committed": false
+    "pytest_passed": 307,
+    "subtests_passed": 95,
+    "gliner_device": "cuda",
+    "local_models": "passed",
+    "local_roster": "passed",
+    "local_whole_table_count": "passed",
+    "real_deepseek_public_round_trip": "passed",
+    "sample_round_trip_ms": 1831
   },
-  "next_user_request_guidance": "继续迁移时先对照 docs/版本对照与取舍_20261017.md，逐模块验证原本地版和 Git 版，不要整目录覆盖。缺少 reviewed_ner 大权重时不能声称完整维护模式运行通过；真实 DeepSeek 联调需要本机密钥和公开合成材料。"
+  "private_files": "ignored .env, uploads, GLiNER weights and local archive; not uploaded",
+  "backup": "D:/project-backups",
+  "remaining": [
+    "独立新材料上的模型精度与大表P95需要进一步验收",
+    "其他机器的CUDA环境和权重分发未验收",
+    "历史BERT成绩不代表当前GLiNER融合版"
+  ],
+  "active_service": {
+    "pid": 88116,
+    "url": "http://127.0.0.1:8787/",
+    "verified": true,
+    "gliner_enabled": true,
+    "mode": "real"
+  },
+  "old_source": {
+    "archived": true,
+    "active_code_copies": 1,
+    "old_path_empty": true,
+    "empty_directory_removal": "blocked_by_current_Codex_WorkBuddy_directory_handles"
+  },
+  "retired_model_bases": "D:/project-backups/retired-models-20261017"
 }

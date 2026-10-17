@@ -13,7 +13,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
-    parser.add_argument("--port", type=int, default=8789)
+    parser.add_argument("--port", type=int, default=8787)
     args = parser.parse_args()
     local = (APP / "outputs").resolve()
     if args.out.exists() or not all(path.resolve().is_relative_to(local) for path in (args.input, args.out)):

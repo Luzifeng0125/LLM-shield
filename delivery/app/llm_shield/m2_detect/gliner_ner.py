@@ -1,7 +1,6 @@
 """GLiNER v3 识别器（可插拔）—— A 层语义实体检测。
 
-对应 v3 架构 L2 识别层的模型部分。实现与 RegexDetector / EntityDetector /
-CampusNERDetector 完全相同的 Detector 接口，可热替换。
+对应识别层的模型部分，与 RegexDetector / EntityDetector 共用 Detector 接口。
 
 设计要点
 --------
@@ -10,8 +9,7 @@ CampusNERDetector 完全相同的 Detector 接口，可热替换。
 2. **只贡献语义类实体**（默认 PERSON_NAME / ORG / LOCATION / DORM / SENSITIVE_ATTR）：
    格式类（电话/邮箱/学号/证件/银行卡/密钥/微信/预算/成绩）由正则底座负责，
    避免证件号误报与重叠边界冲突。可通过 ``categories`` 参数调整。
-3. **失败时暂停**：模型缺失 / 依赖未装 / 加载失败时 available=False；显式启用后
-   不能把加载或推理失败当作“未发现敏感信息”，由流水线暂停处理。
+3. 模型不可用或推理失败时，在线识别链暂停请求，避免把故障当作无敏感信息。
 
 模型：urchade/gliner_multi-v2.1（Apache-2.0）+ 人工 gold 微调。
 实测（docs/评测报告-独立手写集field_v1.md）：独立手写集上 13 类 F1 0.8383、
@@ -100,7 +98,8 @@ class GLiNERDetector(Detector):
             self.reason = "未安装 gliner，执行 pip install gliner peft"
             return
         try:
-            self.model = GLiNER.from_pretrained(str(self.model_dir), load_tokenizer=True)
+            self.model = GLiNER.from_pretrained(str(self.model_dir), load_tokenizer=True,
+                                               local_files_only=True)
             # ★ 关键修复：换用字符级中文分词，避免实体边界错位
             self.model.data_processor.words_splitter = CharSplitter()
             import torch
@@ -120,51 +119,70 @@ class GLiNERDetector(Detector):
             self.available = False
 
     def detect(self, text: str, columns=None, rows=None) -> List[Span]:
-        if not self.available or not (self.semantic_labels or self.format_labels):
+        return self.detect_many([text])[0]
+
+    def detect_many(self, texts: List[str]) -> List[List[Span]]:
+        """Batch windows from several materials without mixing their coordinates."""
+        outputs: List[List[Span]] = [[] for _ in texts]
+        if not self.available:
             raise RuntimeError("已启用的 GLiNER 识别模型不可用，已暂停处理")
-        if not text:
-            return []
+        if not (self.semantic_labels or self.format_labels):
+            return outputs
         # GLiNER 是双向编码器，配置 max_len（本项目 384 个 token）封顶；长文本需滑窗。
         # 窗口间重叠 32 个 token，避免实体被窗口边界切断；重复 span 由下游 merge_spans 去重。
         max_len = int(getattr(self.model.config, "max_len", 384))
         step = max(1, max_len - 32)
-        spans: List[Span] = []
-        seen = set()
-        try:
+        windows: List[str] = []
+        locations: List[tuple[int, int]] = []
+        for document_index, text in enumerate(texts):
             for offset in range(0, len(text), step):
-                chunk = text[offset:offset + max_len]
-                for label_group in (self.semantic_labels, self.format_labels):
-                    if not label_group:
-                        continue
-                    out = self.model.predict_entities(chunk, label_group, threshold=self.threshold)
-                    for p in out:
-                        cat = LABEL_TO_CATEGORY.get(p.get("label"))
-                        if cat is None or cat not in self.categories:
-                            continue
-                        local_start, local_end = p["start"], p["end"]
-                        score = float(p.get("score", self.threshold))
-                        if (type(local_start) is not int or type(local_end) is not int
-                                or not 0 <= local_start < local_end <= len(chunk)
-                                or not math.isfinite(score) or not 0.0 <= score <= 1.0):
-                            raise ValueError("GLiNER 返回无效实体位置或置信度")
-                        start = offset + local_start
-                        end = offset + local_end
-                        key = (start, end, cat)
-                        if key in seen:
-                            continue
-                        seen.add(key)
-                        spans.append(Span(
-                            start=start,
-                            end=end,
-                            text=text[start:end],
-                            category=cat,
-                            confidence=score,
-                            detector="gliner",
-                            rule_id="gliner_" + p.get("label", ""),
-                        ))
+                windows.append(text[offset:offset + max_len])
+                locations.append((document_index, offset))
                 if offset + max_len >= len(text):
                     break
+        if not windows:
+            return outputs
+        seen = [set() for _ in texts]
+        try:
+            for label_group in (self.semantic_labels, self.format_labels):
+                if not label_group:
+                    continue
+                # Bound memory for requests containing many long attachments.
+                for batch_start in range(0, len(windows), 16):
+                    batch = windows[batch_start:batch_start + 16]
+                    results = self.model.inference(batch, label_group,
+                                                   threshold=self.threshold)
+                    if len(results) != len(batch):
+                        raise RuntimeError("incomplete GLiNER result")
+                    for (document_index, offset), window, out in zip(
+                            locations[batch_start:batch_start + 16], batch, results):
+                        text = texts[document_index]
+                        for p in out:
+                            cat = LABEL_TO_CATEGORY.get(p.get("label"))
+                            if cat is None or cat not in self.categories:
+                                continue
+                            begin, finish = p["start"], p["end"]
+                            score = float(p.get("score", self.threshold))
+                            if (type(begin) is not int or type(finish) is not int
+                                    or not 0 <= begin < finish <= len(window)
+                                    or not math.isfinite(score) or not 0 <= score <= 1):
+                                raise ValueError("Invalid GLiNER entity prediction")
+                            start = offset + begin
+                            end = offset + finish
+                            key = (start, end, cat)
+                            if key in seen[document_index]:
+                                continue
+                            seen[document_index].add(key)
+                            outputs[document_index].append(Span(
+                                start=start,
+                                end=end,
+                                text=text[start:end],
+                                category=cat,
+                                confidence=score,
+                                detector="gliner",
+                                rule_id="gliner_" + p.get("label", ""),
+                            ))
         except Exception:
-            # 原异常可能含输入材料；只向流水线传递固定错误，暂停整次请求。
-            raise RuntimeError("GLiNER 识别失败，已暂停处理") from None
-        return spans
+            # 上层 detect_all 会将异常转成不含原文的 DetectionError 并暂停外发。
+            raise RuntimeError("GLiNER inference failed") from None
+        return outputs

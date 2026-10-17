@@ -1,6 +1,6 @@
-param([ValidateRange(1024, 65535)][int]$Port = 8789)
+param([ValidateRange(1024, 65535)][int]$Port = 8787)
 $ErrorActionPreference = 'Stop'
-$launcher = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot 'app\scripts\start_reviewed_candidate.py'))
+$launcher = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot 'app\scripts\start_service.py'))
 $connections = @(Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue)
 if (-not $connections) { Write-Output "No listener on port $Port."; exit 0 }
 foreach ($ownerId in @($connections.OwningProcess | Select-Object -Unique)) {

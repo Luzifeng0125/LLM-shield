@@ -94,6 +94,27 @@ class MappingTable:
 
     # ------------------------------------------------------------ 管理
 
+    def is_placeholder(self, text: str) -> bool:
+        """``text`` 是否落在本进程已发出的某个代号之内。
+
+        外发前会对**脱敏后的载荷**重跑一次识别器（模块 ⑧ 类别级泄露检查）。
+        而「负责人人员甲负责海报设计」这样的句子会让语义识别器把代号尾字
+        （如「甲」）当成一个人名 —— 于是系统把自己生成的占位符判成泄露，
+        把整条本已合规的请求拦掉。实测 10 个天干代号在「负责人X」上下文里
+        全部会被误标，换代号格式（``人员-甲`` / ``〔人员甲〕`` / ``P1``）也一样，
+        所以必须在判定侧豁免，而不是改格式。
+
+        代号按定义不是原始敏感值，豁免它不会放过任何真实信息。
+        判定用「检测结果是否为某个代号的子串」，因此 ``甲``、``人员甲``
+        都会被豁免，而 ``李思远`` 这类真实姓名不会被误豁免。
+        """
+        needle = (text or "").strip()
+        if not needle:
+            return False
+        return any(needle in code
+                   for backward in self._backward.values()
+                   for code in backward)
+
     def export(self, session_id: str) -> Dict[str, str]:
         """导出某会话的映射（供前端「对照」面板展示，不落盘）。"""
         return dict(self._forward.get(session_id, {}))

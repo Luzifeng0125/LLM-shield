@@ -75,7 +75,7 @@
   padding: 20px 0 0;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(180deg, #15151b, var(--surface));
+  background: linear-gradient(180deg, #ffffff, #fcfcfe);
   border: 1px solid var(--sep-vibrant);
   box-shadow: var(--shadow-1);
   animation: panelIn 620ms var(--ease-out) both;
@@ -90,7 +90,7 @@
 .chat-heading h2 {
   font-size: var(--fs-28); font-weight: 700; line-height: 1.25;
   letter-spacing: 0;
-  background: linear-gradient(100deg, #fff 25%, #a8ccff 65%, #cfc2ff 100%);
+  background: linear-gradient(100deg, #1d1d1f 20%, #0071e3 65%, #6e4bd8 100%);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .heading-text { min-width: 0; }
@@ -149,7 +149,7 @@
 .is-assistant .avatar {
   background: linear-gradient(160deg, #3d9bff, #5a4dff);
   color: #fff;
-  box-shadow: 0 0 12px rgba(10, 132, 255, .5);
+  box-shadow: 0 2px 8px rgba(0, 113, 227, .28);
 }
 .is-user .avatar { background: var(--surface-3); color: var(--label-2); }
 
@@ -173,7 +173,7 @@
   border-bottom-left-radius: 6px;
 }
 .is-user .bubble-text {
-  background: linear-gradient(170deg, #2b9bff, #0a84ff 60%, #5a4dff);
+  background: linear-gradient(140deg, #147ce5, #0071e3 55%, #5a4dff);
   color: #fff;
   border-bottom-right-radius: 6px;
   box-shadow: var(--shadow-accent-lg);
@@ -184,9 +184,9 @@
 .empty-conversation .shield-icon {
   width: 86px; height: 86px; margin: 0 auto 24px;
   border-radius: 26px;
-  background: linear-gradient(160deg, rgba(10,132,255,.2), rgba(124,92,255,.16));
-  box-shadow: 0 0 34px rgba(10, 132, 255, .28), var(--shadow-2);
-  border: 1px solid rgba(255, 255, 255, .14);
+  background: linear-gradient(160deg, rgba(0, 113, 227, .1), rgba(110, 75, 216, .08));
+  box-shadow: 0 8px 30px rgba(0, 113, 227, .16), var(--shadow-2);
+  border: 1px solid rgba(0, 113, 227, .14);
   display: flex; align-items: center; justify-content: center;
   color: var(--sys-blue-text);
   animation: floatIcon 720ms var(--ease-spring) both, floaty 6s ease-in-out 720ms infinite;
@@ -204,7 +204,7 @@
   font-size: var(--fs-28);
   font-weight: 600; letter-spacing: 0;
   margin-bottom: 8px;
-  background: linear-gradient(100deg, #fff 22%, #9cc4ff 60%, #c9b8ff 100%);
+  background: linear-gradient(100deg, #1d1d1f 18%, #0071e3 62%, #6e4bd8 100%);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .empty-sub { font-size: var(--fs-15); color: var(--label-3); margin-bottom: 30px; line-height: 1.55; }
@@ -237,7 +237,7 @@
   transform: translateY(-2px);
   background: var(--surface-2);
   border-color: var(--sys-blue);
-  box-shadow: 0 6px 22px rgba(10, 132, 255, .16);
+  box-shadow: 0 6px 20px rgba(0, 113, 227, .12);
 }
 .prompt-chip:active { transform: scale(.98); }
 .prompt-chip:disabled { opacity: var(--disabled-opacity); cursor: not-allowed; transform: none; }
@@ -274,7 +274,7 @@
   transition: box-shadow var(--dur-fast), border-color var(--dur-fast);
 }
 .composer-capsule:focus-within {
-  box-shadow: var(--shadow-3), 0 0 0 1px rgba(10, 132, 255, .35), 0 0 26px rgba(10, 132, 255, .2);
+  box-shadow: var(--shadow-3), 0 0 0 1px rgba(0, 113, 227, .3), 0 0 20px rgba(0, 113, 227, .12);
   border-color: var(--sys-blue);
 }
 
@@ -307,7 +307,7 @@
   flex-shrink: 0; width: 2.25rem; height: 2.25rem; padding: 0;
   display: inline-flex; align-items: center; justify-content: center;
   border: none; border-radius: 50%; cursor: pointer;
-  background: linear-gradient(140deg, #2b9bff, #0a84ff 55%, #5a4dff);
+  background: linear-gradient(140deg, #147ce5, #0071e3 55%, #5a4dff);
   color: #fff;
   box-shadow: var(--shadow-accent);
   transition: transform var(--dur-fast) var(--ease-spring),
@@ -387,7 +387,7 @@
 .modal-body { font-size: var(--fs-13); color: var(--label-2); line-height: 1.55; margin-bottom: 20px; }
 .modal-actions { display: flex; gap: 10px; }
 .modal-actions .btn { flex: 1; min-width: 0; }
-.btn.danger { background: linear-gradient(120deg, #ff5a4e, #ff453a); color: #fff; }
+.btn.danger { background: linear-gradient(120deg, #ef4a3f, #e0342a); color: #fff; }
 .btn.danger:hover { filter: brightness(.92); }
 
 @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }

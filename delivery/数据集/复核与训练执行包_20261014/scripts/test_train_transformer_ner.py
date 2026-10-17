@@ -77,7 +77,7 @@ class AlignmentTests(unittest.TestCase):
 
     def test_alignment_roundtrips_through_application_bio_decoder(self):
         sys.path.insert(0, str(ner.APP))
-        from llm_shield.m2_detect.reviewed_ner import decode_bio
+        from eval.reviewed_ner import decode_bio
         text = "🙂张三ab cd"
         gold = [entity(text, 1, 3), entity(text, 3, 8, "EMAIL")]
         offsets = [(0, 0), (0, 1), (1, 2), (2, 3), (3, 5), (6, 8), (0, 0)]

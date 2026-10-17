@@ -1,0 +1,7 @@
+# Runtime dependencies used by the merged GLiNER profile.
+torch>=2.6,<3
+transformers==4.57.6
+gliner==0.2.29
+peft>=0.17,<1
+sentencepiece>=0.2,<0.3
+safetensors>=0.4

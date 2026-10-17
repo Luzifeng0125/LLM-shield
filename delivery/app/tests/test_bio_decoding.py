@@ -4,7 +4,7 @@ from itertools import product
 import numpy as np
 import pytest
 
-from llm_shield.m2_detect.reviewed_ner import constrained_bio_labels
+from eval.reviewed_ner import constrained_bio_labels
 
 
 def test_optimal_sequence_cannot_start_with_inside_label_or_change_its_type():

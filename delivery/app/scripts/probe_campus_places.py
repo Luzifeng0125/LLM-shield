@@ -42,7 +42,7 @@ def main():
         raise ValueError("Use a new report path")
     import torch
     torch.set_num_threads(4)
-    from llm_shield.m2_detect.reviewed_ner import ReviewedNERDetector
+    from eval.reviewed_ner import ReviewedNERDetector
     from llm_shield.m2_detect.entity_rules import EntityDetector
     from llm_shield.m2_detect.regex_rules import RegexDetector
     from llm_shield.m2_detect.pipeline import detect_all

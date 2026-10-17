@@ -1,29 +1,9 @@
 # 隐盾应用
 
-维护入口见 [根目录说明](../../README.md)，完整后续工作见 [AI 执行计划](../../AI_EXECUTION_PLAN.md)。
+应用只有这一份实现。入口为仓库根目录的“启动隐盾.cmd”，端口 8787。代码与本机 GLiNER 权重都在本目录内；密钥从 .env 读取。
 
-本机从上一级“启动隐盾.cmd”启动。当前配置为人工 gold BERT + BIO 约束解码 + segment_coverage_v2 动作模型，端口 8789，模拟回复。全新克隆先按[安装与验证说明](../../../docs/从GitHub安装与验证.md)建立环境并取得 reviewed_ner 权重。直接运行 run.py 会使用另一套环境配置，不作为本次验收入口。
+对话、预览、单次运行共用 processing.py 和 material_processing.py；GLiNER 单例加载，批量处理材料窗口。格式标识符由正则与校验规则识别，语义类别由 GLiNER 与词典补充。动作模型 feature v3 与其权重配套，不兼容的候选不能直接替换。
 
-需要真实 DeepSeek 通用对话时，使用仓库根目录的 `启动通用对话.cmd`。它设置 `LLM_MODE=real`，在当前克隆缺少 BERT 权重时使用规则识别基线；配置密钥失败会返回错误，不会显示离线演示回复。此入口与上面的已验证名单模式不同，必须用独立材料验证识别和外发效果。
+Campus NER 已移除。eval/reviewed_ner.py 仅由离线 BERT 比较脚本显式使用，在线识别管线没有该模型开关。模型清单见 models/ACTIVE_MODELS.json；安装和验证命令见根目录 README。
 
-## 主要目录
-
-- llm_shield：资料加载、实体识别、动作分类与约束、信息转换、外发检查及接口。
-- web：通用对话页面和独立名单/通知页面。
-- config：任务、身份、接收方与类别配置。
-- models：当前动作权重、人工 gold NER、ACTIVE_MODELS.json 与动作训练报告。
-- scripts、eval、tests：训练、开发诊断、评分及软件回归。
-- data：仍被训练与测试引用的数据；合成、人工审核和开发探针必须分开解释。
-- outputs：本地证据及私有输入，Git 忽略。不得整体上传或分享。
-
-## 当前能力边界
-
-名单 review 接口不创建生成网关；draft 接口只接受公开活动字段，拒绝名单、材料 ID、自由任务文本和聊天历史。通用处理入口不能调用专用 activity_notice 任务。
-
-动作由分类模型选择，安全约束只能阻止不允许的动作；不能为通过用例改成规则选动作。三边界检查覆盖模型请求、用户展示和模拟工具外发。当前未验证真实生成文案质量，也没有向参与者发送通知。
-
-校园公共地点与宿舍仍有类别混淆。具体失败、候选未采用原因及下一轮数据工作见根目录计划。可选识别适配器有测试和用途，但未被当前统一启动入口启用。
-
-## 环境
-
-原开发机 Python 为 ../runtime/training_env/Scripts/python.exe，该环境不随 Git 分发。安装脚本建立 app/.venv，使用 requirements-lock.txt 安装基础依赖，按需用 requirements-reviewed-inference.txt 安装 NER 推理依赖。模型权重仍须从授权训练产物单独取得；本次安装不能单独证明完整环境在另一台机器已验收。
+config、web、tests 分别保存配置、前端与回归；data/uploads、outputs、.env 和本机大权重被 Git 忽略。/api/health 用于就绪检查，/api/metrics 返回有界的阶段耗时统计。

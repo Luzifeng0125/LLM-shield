@@ -15,7 +15,7 @@
    · 每个可点元素 ≥44px（--tap），键盘可达，ARIA 用 listbox/option 语义。 */
 
 const el = id => document.getElementById(id);
-let sessionId = null, files = [], library = [], busy = false, ready = false;
+let sessionId = null, files = [], library = [], busy = false, ready = false, localReady = false;
 
 const MAX_TURNS = 20;
 
@@ -69,13 +69,15 @@ function setApiStatus(text, tone = 'default') {
   el('apiStatus').className = 'service-status' + (tone === 'default' ? '' : ' ' + tone);
 }
 
-function setModelStatus(ok) {
+function setModelStatus(health) {
+  const ok = health.ready_local;
   const box = el('modelStatus');
   box.className = 'model-status' + (ok ? ' is-ok' : ' is-error');
   box.replaceChildren();
   const text = document.createElement('span');
   text.className = 'model-status-text';
-  text.textContent = ok ? '本地脱敏决策模型已就绪' : '本地模型不可用，发送将暂停';
+  text.textContent = ok ? `本地处理已就绪（${health.detectors.join(' + ')}）`
+    : '本地模型或识别器不可用，请检查模型配置后重启';
   box.append(text);
   if (ok) {
     const badge = document.createElement('span');
@@ -95,7 +97,7 @@ function autoGrow() {
 /* 是否已有可发送内容 */
 function syncSendState() {
   const has = el('message').value.trim().length > 0 || files.length > 0;
-  el('send').disabled = !ready || busy || !has;
+  el('send').disabled = !ready || !localReady || busy || !has;
 }
 
 /* ---------------- 通用：Pull-down 选择器（Apple HIG） ----------------
@@ -714,10 +716,8 @@ el('file').onchange = async () => {
     for (const file of selected) {
       const form = new FormData(); form.append('file', file);
       const result = await api('/api/upload', { method: 'POST', body: form });
-      files.push({ id: result.doc_id, title: result.title }); await refreshLibrary();
-      if (result.worksheets > 1) {
-        notice(`已导入 ${result.worksheets} 个工作表，当前选中第一个；其他工作表可在材料库中选择。`);
-      }
+        files.push({ id: result.doc_id, title: result.title }); await refreshLibrary();
+        if (result.worksheets > 1) notice(`已读取 ${result.worksheets} 个工作表。当前选中首表，其余可在资料库中选择。`);
     }
     notice('文件已加入本轮。输入问题后发送，也可以直接发送文件。');
   } catch (error) { notice(error.message, true); } finally { el('file').value = ''; setBusy(false); }
@@ -725,10 +725,11 @@ el('file').onchange = async () => {
 
 el('composer').onsubmit = async event => {
   event.preventDefault();
-  if (busy || !ready) return;
+  if (busy || !ready || !localReady) return;
   if (!el('message').value.trim() && !files.length) return notice('请输入问题或添加文件。', true);
   setBusy(true);
   setApiStatus('正在本机脱敏…', 'busy');
+  const waitingStatus = setTimeout(() => setApiStatus('正在检查内容并等待回答…', 'busy'), 800);
   try {
     if (!sessionId) await createSession();
     const result = await api(`/api/chat/${encodeURIComponent(sessionId)}/messages`, {
@@ -738,21 +739,33 @@ el('composer').onsubmit = async event => {
     render(result); showDecisions(result.decisions);
     if (!result.ok) {
       setApiStatus('本轮已暂停', 'warn');
-      notice(result.pause_reason, true);
+      const reason = result.pause_reason || '本轮未通过安全检查';
+      const action = /繁忙/.test(reason) ? '请稍后重试。'
+        : /超过|容量|上限/.test(reason) ? '请缩短材料或新建对话。'
+        : /模型不可用|识别失败/.test(reason) ? '请检查本地模型配置并重启服务。'
+        : /真实模型|HTTP \d+/.test(reason) ? '请检查 DeepSeek 服务状态或稍后重试。'
+        : '请检查材料和任务设置后重试。';
+      notice(`${reason} ${action}本轮未加入对话历史。`, true);
       return;
     }
     el('message').value = ''; files = []; autoGrow();
     if (result.engine === 'real') {
       setApiStatus('本轮真实 API 调用成功', 'ok');
       notice('已收到真实生成服务的回答。发送内容和回答均已通过复检。' + (result.warning || ''));
+    } else if (result.engine === 'local') {
+      setApiStatus('本机全表统计完成', 'ok');
+      notice('已按完整表格精确统计，本轮未调用外部模型。');
     } else {
       setApiStatus('本轮为离线演示回复', 'warn');
       notice('离线演示完成。发送内容和回答均已通过复检。' + (result.warning || ''));
     }
   } catch (error) {
     setApiStatus('本轮未完成', 'error');
-    notice(error.message, true);
-  } finally { setBusy(false); }
+    if (error.status === 404 && sessionId) {
+      sessionId = null; render({}); showDecisions();
+      notice('服务已重启或会话已过期，已准备新对话。请再次发送当前问题。', true);
+    } else notice(error.message, true);
+  } finally { clearTimeout(waitingStatus); setBusy(false); }
 };
 
 /* ---------------- 初始化 ---------------- */
@@ -760,7 +773,7 @@ let taskPicker = null, identityPicker = null;
 
 async function initialize() {
   try {
-    const config = await api('/api/config');
+    const [config, health] = await Promise.all([api('/api/config'), api('/api/health')]);
     configTasks = config.tasks || {};
     configIdentities = config.identities || {};
 
@@ -794,7 +807,8 @@ async function initialize() {
 
     syncTaskDisplay(); syncIdentityDisplay(); syncReqSummary();
 
-    setModelStatus(!!config.models.necessity_available);
+    localReady = !!health.ready_to_chat;
+    setModelStatus(health);
     const llm = config.models.llm;
     if (llm.mode === 'mock') setApiStatus('离线演示 · 未调用真实 API', 'warn');
     else if (llm.has_key) setApiStatus('API 已配置 · 发送时连接', 'ok');

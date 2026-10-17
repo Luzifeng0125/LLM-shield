@@ -17,7 +17,8 @@ def detector(predict):
     instance.semantic_labels = ["人名"]
     instance.format_labels = []
     instance.threshold = 0.5
-    instance.model = SimpleNamespace(config=SimpleNamespace(max_len=40), predict_entities=predict)
+    instance.model = SimpleNamespace(config=SimpleNamespace(max_len=40),
+        inference=lambda batch, labels, **kwargs: [predict(text, labels, **kwargs) for text in batch])
     return instance
 
 

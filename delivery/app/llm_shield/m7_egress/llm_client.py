@@ -3,7 +3,7 @@
 三种模式（.env 的 LLM_MODE）：
   mock —— 强制本地模拟，完全离线，演示与自动化评测可复现
   real —— 强制真实 API，失败即报错
-  auto —— 兼容离线演示；正式联调使用 real，失败即暂停
+  auto —— 未配置密钥时离线演示；已配置密钥时真实调用，失败即暂停
 
 安全约定：API Key 从本机配置读取，仅通过认证头发送给配置的服务端，不写日志。
 """
@@ -16,6 +16,17 @@ from typing import Dict, List, Optional
 import httpx
 
 from ..config import llm_settings
+
+
+def _public_api_error(exc: Exception) -> str:
+    """Expose a useful failure class without leaking upstream bodies or keys."""
+    if isinstance(exc, httpx.HTTPStatusError):
+        return f"真实模型请求失败（HTTP {exc.response.status_code}）"
+    if isinstance(exc, httpx.TimeoutException):
+        return "真实模型请求超时"
+    if isinstance(exc, httpx.RequestError):
+        return "真实模型网络连接失败"
+    return f"真实模型调用失败（{type(exc).__name__}）"
 
 
 class BaseLLM:
@@ -163,7 +174,7 @@ def get_llm_client(force: Optional[str] = None) -> BaseLLM:
     mode = (force or s["mode"]).lower()
     if mode == "mock":
         client: BaseLLM = MockLLM()
-    elif not s["api_key"]:
+    elif not s["api_key"] and mode != "real":
         client = MockLLM()
     else:
         client = OpenAICompatLLM(s["base_url"], s["api_key"], s["model"], s["timeout"])
@@ -174,7 +185,7 @@ def get_llm_client(force: Optional[str] = None) -> BaseLLM:
 
 
 def chat_with_fallback(system: str, user: str, **kwargs) -> Dict[str, str]:
-    """带降级的调用：auto 模式下真实 API 失败自动回落 Mock，并说明原因。
+    """Run the real API when configured; never disguise its failure as a reply.
 
     :return: {"text": ..., "engine": "real"/"mock", "error": ...}
     """
@@ -189,12 +200,7 @@ def chat_with_fallback(system: str, user: str, **kwargs) -> Dict[str, str]:
             text = client.chat(system, user, **kwargs)
             return {"text": text, "engine": "real", "error": ""}
         except Exception as exc:
-            if mode == "real":
-                return {"text": "", "engine": "error", "error": "生成服务调用失败，请检查本地配置"}
-            # auto → 回落
-            text = MockLLM().chat(system, user, **kwargs)
-            return {"text": text, "engine": "mock",
-                    "error": "生成服务调用失败，本轮使用离线演示回复"}
+            return {"text": "", "engine": "error", "error": _public_api_error(exc)}
 
     return {"text": MockLLM().chat(system, user, **kwargs), "engine": "mock", "error": ""}
 
@@ -203,7 +209,6 @@ def chat_messages_with_fallback(messages: List[dict]) -> Dict[str, str]:
     """发送服务端构造且已整体检查的多轮消息；不展示供应商内部推理字段。"""
     settings = llm_settings()
     mode = settings["mode"]
-    error = ""
     if mode == "real" or (mode == "auto" and settings["api_key"]):
         try:
             if not settings["api_key"]:
@@ -211,13 +216,11 @@ def chat_messages_with_fallback(messages: List[dict]) -> Dict[str, str]:
             client = OpenAICompatLLM(settings["base_url"], settings["api_key"],
                                      settings["model"], settings["timeout"])
             return {"text": client.chat_messages(messages), "engine": "real", "error": ""}
-        except Exception:
+        except Exception as exc:
             # 供应商异常可能含请求体或凭据，不能回传给界面或历史。
-            if mode == "real":
-                return {"text": "", "engine": "error", "error": "生成服务调用失败，请检查本地配置"}
-            error = "生成服务调用失败，本轮使用离线演示回复"
+            return {"text": "", "engine": "error", "error": _public_api_error(exc)}
     user_messages = [m["content"] for m in messages if m["role"] == "user"]
     reply = (f"【离线演示回复】\n已接收第 {len(user_messages)} 轮处理后的消息。\n\n"
              f"本轮输入：\n{user_messages[-1][:1200]}\n\n"
              "此回复用于验证会话与防护流程。接入真实生成服务后可获得任务回答。")
-    return {"text": reply, "engine": "mock", "error": error}
+    return {"text": reply, "engine": "mock", "error": ""}

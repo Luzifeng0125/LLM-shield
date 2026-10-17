@@ -61,7 +61,7 @@ def main():
     if args.ner_model:
         import torch
         torch.set_num_threads(4)
-        from llm_shield.m2_detect.reviewed_ner import ReviewedNERDetector
+        from eval.reviewed_ner import ReviewedNERDetector
         ner = ReviewedNERDetector(args.ner_model, device="cuda" if torch.cuda.is_available() else "cpu",
                                    decoding=args.ner_decoding)
         if not ner.available:

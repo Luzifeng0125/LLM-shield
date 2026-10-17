@@ -1,4 +1,0 @@
-# Inference only. Select a CUDA-specific PyTorch wheel separately if needed.
-torch>=2.6,<3
-transformers>=4.46,<5
-safetensors>=0.4

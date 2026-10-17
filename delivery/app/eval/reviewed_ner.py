@@ -1,4 +1,4 @@
-"""Local, explicitly enabled BERT NER trained on the reviewed gold dataset.
+"""Offline BERT NER comparison adapter; never imported by the online detector chain.
 
 The trainer and application share offset handling and BIO decoding here. Artifact
 metadata records provenance; it cannot independently certify human review.
@@ -12,8 +12,8 @@ from pathlib import Path
 import re
 from typing import Mapping, Sequence
 
-from .base import Detector
-from ..schema import Span
+from llm_shield.m2_detect.base import Detector
+from llm_shield.schema import Span
 
 
 ENTITY_CATEGORIES = tuple(sorted({

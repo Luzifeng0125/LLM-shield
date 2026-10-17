@@ -8,7 +8,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from llm_shield.m2_detect import reviewed_ner as ner
+from eval import reviewed_ner as ner
 from llm_shield.m2_detect.entity_rules import EntityDetector
 from llm_shield.m2_detect.pipeline import DetectionError, detect_and_segment
 from llm_shield.m2_detect.regex_rules import RegexDetector

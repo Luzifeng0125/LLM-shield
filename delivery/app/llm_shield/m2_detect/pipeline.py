@@ -2,85 +2,57 @@
 from __future__ import annotations
 
 import re
+import threading
 from dataclasses import replace
-from functools import lru_cache
 from typing import List, Optional, Tuple
 
 from .. import config as cfg
 from ..config import category_level
 from ..schema import Segment, Span
 from .base import Detector
-from .campus_ner import CampusNERDetector
 from .entity_rules import EntityDetector
 from .gliner_ner import GLiNERDetector
 from .regex_rules import RegexDetector
-from .reviewed_ner import ReviewedNERDetector
 
 # 句子切分符
 _SENT_SPLIT_RE = re.compile(r"(?<=[。！？；;!?\n])")
 
-# 昂贵检测器（GLiNER / campus NER）的模块级单例缓存。
-# 这些模型加载约 10s、占 ~1.1GB 内存，绝不能每次请求都重建；
+# 昂贵检测器（GLiNER）的模块级单例缓存。
+# 模型加载约 8s、占 ~1.1GB 内存，绝不能每次请求都重建；
 # RegexDetector / EntityDetector 零依赖、构造极轻，每次新建即可。
 _gliner_singleton: Optional[GLiNERDetector] = None
-_campus_singleton: Optional[CampusNERDetector] = None
+_gliner_lock = threading.Lock()
 
 
 class DetectionError(RuntimeError):
     """识别服务异常或结果无效；错误说明不含材料原文。"""
 
 
-@lru_cache(maxsize=1)
-def _reviewed_detector(model_dir: str, device: str, decoding: str = "greedy") -> ReviewedNERDetector:
-    """人工 gold NER 候选检测器（按目录+设备缓存，避免重复加载）。"""
-    if device not in {"cpu", "cuda"}:
-        raise DetectionError("人工 gold NER 设备配置必须是 cpu 或 cuda")
-    if decoding not in {"greedy", "bio_viterbi"}:
-        raise DetectionError("人工 gold NER 解码配置无效")
-    options = {"decoding": decoding} if decoding != "greedy" else {}
-    detector = ReviewedNERDetector(model_dir, device=device, **options)
-    if not detector.available:
-        raise DetectionError("已启用的人工 gold NER 模型不可用，已暂停处理")
-    return detector
-
-
-def build_detectors(use_campus_ner: Optional[bool] = None,
-                    use_gliner: Optional[bool] = None) -> List[Detector]:
+def build_detectors(use_gliner: Optional[bool] = None) -> List[Detector]:
     """构建识别器链。
 
-    :param use_campus_ner: 是否接入 ★ 领域预训练 NER。
-        传 None 时按配置决定（config.use_campus_ner()，默认关闭）——
-        领域模型推理约 576ms/2000字，会超出「规则+识别路径 P95 ≤ 500ms」的指标，
-        因此默认走规则底座，需要时再显式开启。
-    :param use_gliner: 是否接入 GLiNER v3 语义实体识别（A 层）。
-        传 None 时按配置决定（config.use_gliner()，默认关闭）——
-        GLiNER 负责语义类+格式类（除身份证外的 13 类），身份证由正则权威判定。
+    识别层只有两条路，各司其职、不重叠：
 
-    另有一条**独立于上述开关**的可选链路：人工 gold NER 候选模型。
-    只要 ``SHIELD_REVIEWED_NER_MODEL_DIR`` 非空就会被接入（config.reviewed_ner_settings()），
-    与 GLiNER 可同时开启，两者结果由 merge_spans 统一归并。
+    · **正则 + 词典底座**（总是启用）：格式类由带校验位的正则权威判定
+      （身份证 GB 11643、银行卡 Luhn）；词典负责在 GLiNER 关闭时兜底人名/机构/地点。
+    · **GLiNER 语义模型**（可选）：只负责语义 5 类（人名/机构/地点/宿舍/敏感属性），
+      格式类交回正则——实测这样分工比让模型覆盖 13 类精度更高
+      （独立集 F1 0.9068 vs 0.8443，见 docs/评测报告-独立手写集field_v1.md）。
+
+    :param use_gliner: 是否接入 GLiNER 语义识别。传 None 时按配置决定
+        （config.use_gliner()，默认开启）。
     """
-    global _gliner_singleton, _campus_singleton
+    global _gliner_singleton
 
-    if use_campus_ner is None:
-        use_campus_ner = cfg.use_campus_ner()
     if use_gliner is None:
         use_gliner = cfg.use_gliner()
 
     detectors: List[Detector] = [RegexDetector(), EntityDetector(detect_org_location=not use_gliner)]
-    reviewed_path, reviewed_device = cfg.reviewed_ner_settings()
-    if reviewed_path:
-        detectors.append(_reviewed_detector(reviewed_path, reviewed_device, cfg.reviewed_ner_decoding()))
-    if use_campus_ner:
-        if _campus_singleton is None:
-            _campus_singleton = CampusNERDetector()
-        ner = _campus_singleton
-        if not ner.available:
-            raise DetectionError("已启用的领域识别模型不可用，已暂停处理")
-        detectors.append(ner)
     if use_gliner:
         if _gliner_singleton is None:
-            _gliner_singleton = GLiNERDetector()
+            with _gliner_lock:
+                if _gliner_singleton is None:
+                    _gliner_singleton = GLiNERDetector()
         gliner = _gliner_singleton
         if not gliner.available:
             raise DetectionError("已启用的 GLiNER 识别模型不可用，已暂停处理")
@@ -111,9 +83,6 @@ def merge_spans(spans: List[Span], text: Optional[str] = None) -> List[Span]:
             span.text = text[span.start:span.end]
         elif len(span.text) != span.end - span.start:
             raise DetectionError("识别结果的文本长度与位置不一致，已暂停处理")
-    # A complete email token has one boundary. Digits in its local part are
-    # not a separate telephone/student field, even if a numeric detector or
-    # token classifier guessed a higher-sensitivity category for that slice.
     emails = [span for span in spans if span.detector == "regex" and span.category == "EMAIL"]
     spans = [span for span in spans if not (
         span.category in {"PHONE", "STUDENT_ID"}
@@ -128,7 +97,7 @@ def merge_spans(spans: List[Span], text: Optional[str] = None) -> List[Span]:
     # 是权威判定；模型是概率猜测。模型可能以更高的"自信"覆盖正则的正确结果
     # （实测 v3c 把身份证以 1.0 分判成 API_KEY，盖掉正则 0.99 的 ID_CARD）。
     # 语义类正则不做，因此该排序不会削弱 GLiNER 在语义类上的优势。
-    _DETECTOR_RANK = {"regex": 3, "campus_ner": 2, "gliner": 2, "entity": 1}
+    _DETECTOR_RANK = {"regex": 3, "gliner": 2, "entity": 1}
 
     def priority(span: Span):
         return (span.category in bans, category_level(span.category),

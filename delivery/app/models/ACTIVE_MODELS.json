@@ -1,24 +1,33 @@
 {
   "updated": "2026-10-17",
-  "release": "local-verified-roster-notice",
-  "llm_mode": "mock",
-  "port": 8789,
+  "release": "merged-gliner-feature-v3",
+  "llm_mode": "real",
+  "port": 8787,
   "ner": {
-    "name": "ner_bert_v1",
-    "artifact_dir": "models/reviewed_ner",
-    "weights_sha256": "ad33e844e95151190b892861badea77fa559bb8fe54ca9ed2adab4ab8829698a",
-    "decoding": "bio_viterbi"
+    "name": "gliner_v3",
+    "artifact_dir": "models/gliner_v3",
+    "weights_sha256": "3e7d4c3d704920e78fc0a8d65a768aaab4e095d0ae8c0da2fb96615d4883a360",
+    "categories": [
+      "PERSON_NAME",
+      "ORG",
+      "LOCATION",
+      "DORM",
+      "SENSITIVE_ATTR"
+    ],
+    "device": "auto",
+    "origin": "existing_local_weights; training provenance not independently reverified"
   },
   "action": {
-    "name": "segment_coverage_v2",
-    "weights_sha256": "28640b11e2ca296b145a3a87ac8f973e8eae2ad3274d93c68be281de781ecc0f",
+    "name": "structured_content_v3",
+    "feature_version": 3,
+    "weights_sha256": "cbfed4ca422a1a6d416ce1b5f488649816c261b6acc86ffc173887c8dfed1b9f",
     "path": "models/necessity_action.joblib",
-    "training_report": "models/action_training_report.json"
+    "origin": "existing_local_feature_v3_artifact"
   },
-  "rejected_candidates": [
-    "ner_bert_balanced_v2_20261017",
-    "ner_bert_lr2e5_seed17_20261017",
-    "ner_bert_average_20261017"
+  "format_detection": "regex_and_validators",
+  "inactive_runtime_models": [
+    "Campus NER",
+    "reviewed_ner BERT"
   ],
-  "note": "Paths are relative to delivery/app. Runtime and active models no longer depend on legacy directory junctions."
+  "note": "Paths relative to delivery/app. GLiNER is enabled by the single supported launcher; BERT adapter remains offline evaluation code only."
 }

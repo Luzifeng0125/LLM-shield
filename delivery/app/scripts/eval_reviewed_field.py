@@ -15,7 +15,7 @@ sys.path.insert(0, str(APP / "scripts"))
 from eval_field_v1 import FIELD_JSONL, cases_from_jsonl, evaluate
 from llm_shield.m2_detect.entity_rules import EntityDetector
 from llm_shield.m2_detect.regex_rules import RegexDetector
-from llm_shield.m2_detect.reviewed_ner import ReviewedNERDetector
+from eval.reviewed_ner import ReviewedNERDetector
 
 
 def main():

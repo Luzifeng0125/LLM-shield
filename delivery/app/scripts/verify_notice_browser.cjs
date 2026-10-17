@@ -19,7 +19,7 @@ async function main() {
   const {chromium} = require(arg("--playwright-package"));
   const source = JSON.parse(fs.readFileSync(input, "utf8").replace(/^\uFEFF/, ""));
   const privateValues = Object.values(source.expected_entities).flat();
-  const base = "http://127.0.0.1:8789";
+  const base = "http://127.0.0.1:8787";
   const browser = await chromium.launch({headless: true, executablePath: arg("--browser")});
   let stage = "configuration";
   const requests = [], pageErrors = [], outside = [];

@@ -1,6 +1,6 @@
 param(
     [string]$PythonPath = "",
-    [switch]$WithNer
+    [switch]$BaseOnly
 )
 
 $ErrorActionPreference = "Stop"
@@ -42,10 +42,10 @@ if (-not (Test-Path -LiteralPath $venvPython)) {
 
 & $venvPython -m pip install -r (Join-Path $appDir "requirements-lock.txt")
 if ($LASTEXITCODE -ne 0) { throw "Base dependency installation failed." }
-if ($WithNer) {
-    & $venvPython -m pip install -r (Join-Path $appDir "requirements-reviewed-inference.txt")
-    if ($LASTEXITCODE -ne 0) { throw "NER inference dependency installation failed." }
+if (-not $BaseOnly) {
+    & $venvPython -m pip install -r (Join-Path $appDir "requirements-gliner.txt")
+    if ($LASTEXITCODE -ne 0) { throw "GLiNER dependency installation failed." }
 }
 
 Write-Host "Python environment ready: $venvPython"
-Write-Host "The reviewed_ner model is not in Git. See the GitHub installation guide under docs before starting the maintained profile."
+Write-Host "Place authorized GLiNER weights under app/models/gliner_v3. See the installation guide under docs."
