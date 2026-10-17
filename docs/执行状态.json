@@ -24,6 +24,15 @@
     "real_deepseek_public_round_trip": "passed",
     "sample_round_trip_ms": 1831
   },
+  "last_revalidation": {
+    "at": "2026-10-17T10:47+08:00",
+    "scope": "smoke + pytest (tests + 数据集/复核与训练执行包_20261014/scripts, mock mode)",
+    "smoke_passed": 38,
+    "smoke_failed": 0,
+    "pytest_passed": 402,
+    "pytest_failed": 0,
+    "pytest_skipped": 0
+  },
   "private_files": "ignored .env, uploads, GLiNER weights and local archive; not uploaded",
   "backup": "D:/project-backups",
   "remaining": [
