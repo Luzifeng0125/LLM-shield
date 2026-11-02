@@ -424,3 +424,7 @@
   .turns-wrap { flex: 0 0 auto; white-space: nowrap; }
   .turns-label { white-space: nowrap; }
 }
+.evaluation-link{display:block;padding:12px 4px;font-size:13px;text-decoration:underline;text-underline-offset:3px}
+.stage-trace{list-style:none;padding:0;margin:12px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px}
+.trace-stage{padding:10px 12px;border:1px solid var(--line, #d8dee6);border-radius:8px;display:flex;flex-direction:column;gap:4px;font-size:12px}
+.trace-stage strong{font-size:13px}.trace-stage.not_run,.trace-stage.skipped{opacity:.7}.trace-stage.blocked{border-style:dashed}

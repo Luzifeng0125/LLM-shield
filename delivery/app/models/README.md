@@ -2,6 +2,8 @@
 
 发布整理日期：2026-11-02。这里的动作分类器使用 TF-IDF 与逻辑回归；GLiNER 是另一条实体识别链路。
 
+补充：官方 `gliner_multi-v2.1` 的完整1.16 GB权重已下载至本机 `gliner_official_multi_v2.1` 并完成严格加载和GPU评测；五份动作权重已从GitHub重新下载校验。见[分阶段实测报告](../../../04_技术文档/模型补齐与分阶段实测_20261102.md)。官方对照不替代缺失的项目微调权重，也未据合成结果晋级必要性候选。
+
 ## 本次分发的权重
 
 - `necessity_action.joblib`：现有默认模型，特征版本 3。
@@ -37,4 +39,4 @@ python -X utf8 delivery/app/scripts/verify_model_release.py --load
 
 `gliner_v3` 只分发已有配置和分词器；默认识别所需的 `pytorch_model.bin` 在本机也缺失，预期哈希见活动清单。仅下载本仓库不能完成真实 GLiNER 启动验收。
 
-`gliner_official_multi_v2.1`、`reviewed_ner`、运行环境、历史实验目录和上传材料继续留在本地；它们不是本次分发的校园动作候选。不会把其他 GLiNER 下载文件当作缺失的微调权重。
+`gliner_official_multi_v2.1`、`reviewed_ner`、运行环境、历史实验目录和上传材料继续留在本地。可用 `scripts/download_verified_models.py` 下载固定版本官方识别权重与校验过的必要性权重，随后自动准备离线配置。`启动官方模型测试.cmd` 显式选择官方对照与mock生成；原默认启动路径仍要求原微调权重。

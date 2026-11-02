@@ -31,6 +31,7 @@ from .chat import STORE, ChatError, send_turn, snapshot
 from .notice import notice_request, review_roster
 from .metrics import snapshot as metrics_snapshot
 from .runtime import readiness
+from .evaluation_report import evaluation_summary
 
 def _warmup() -> None:
     """启动预热。
@@ -204,6 +205,16 @@ def api_health():
 @app.get("/api/metrics")
 def api_metrics():
     return {"latency": metrics_snapshot()}
+
+
+@app.get("/api/evaluation")
+def api_evaluation():
+    return evaluation_summary()
+
+
+@app.get("/evaluation")
+def evaluation_page():
+    return FileResponse(WEB_DIR / "evaluation.html")
 
 
 @app.get("/api/config")

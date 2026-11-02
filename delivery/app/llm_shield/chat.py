@@ -19,6 +19,8 @@ from .m7_egress.gateway import EgressGateway
 from .metrics import observe
 from .material_policy import is_expired, material_denial, material_scope, SourcePolicyError
 from .processing import ProcessingFailure, analyze
+from .stage_trace import StageTrace
+from .m5_utility.estimator import estimate
 from .schema import Action, Material, Span
 
 MAX_SESSIONS = 64
@@ -181,13 +183,17 @@ def _send_turn(session: ChatSession, materials: list[Material]) -> dict:
     if not session.lock.acquire(blocking=False):
         raise ChatError("上一轮仍在处理，请勿重复提交", 409)
     started = time.perf_counter()
+    trace = StageTrace()
     try:
         if not session.active:
             raise ChatError("会话已清除，请新建会话", 404)
-        def paused(reason, decisions=None):
+        def paused(reason, decisions=None, stage=None):
+            if stage:
+                trace.mark(stage, "blocked", "本阶段未通过，本轮已暂停")
             return {"ok": False, "paused": True, "pause_reason": reason,
                     "messages": copy.deepcopy(session.messages), "decisions": decisions or [],
-                    "session_id": session.session_id, "turns": len(session.messages) // 2}
+                    "session_id": session.session_id, "turns": len(session.messages) // 2,
+                    "stages": trace.items}
 
         if len(session.messages) // 2 >= MAX_TURNS:
             return paused("已达单会话轮数上限，请新建会话；历史不会被静默截断")
@@ -204,7 +210,11 @@ def _send_turn(session: ChatSession, materials: list[Material]) -> dict:
             access = check_read(session.identity, materials)
             provided, _ = check_provide(session.identity, "external_model")
             if not access.ok or access.denied_docs or not provided:
-                return paused("当前身份无权处理该材料")
+                return paused("当前身份无权处理该材料", stage="access")
+            trace.mark("access", "passed", "已核对本轮材料读取与处理权限")
+            for key in ("detect", "policy", "constraints", "transform", "utility", "gateway"):
+                trace.mark(key, "skipped", "本机精确统计路径，本轮不经过此阶段")
+            trace.mark("output", "passed", "本机统计完成，未调用生成模型")
             safe_question, answer = exact
             gateway = EgressGateway()
             if not all(gateway.precheck("external_model", session.identity, content,
@@ -222,7 +232,8 @@ def _send_turn(session: ChatSession, materials: list[Material]) -> dict:
             return {"ok": True, "paused": False, "session_id": session.session_id,
                     "messages": copy.deepcopy(messages), "turns": len(messages) // 2,
                     "sanitized_user": safe_question, "reply": answer,
-                    "engine": "local", "warning": "本机统计结果仅在本机显示，不随后续历史外发。", "decisions": []}
+                    "engine": "local", "warning": "本机统计结果仅在本机显示，不随后续历史外发。", "decisions": [],
+                    "stages": trace.items}
         materials = select_for_chat(materials, question, max_chars=MAX_TURN_CHARS,
                                     task_key=session.task, task_description=session.task_description)
         try:
@@ -232,28 +243,50 @@ def _send_turn(session: ChatSession, materials: list[Material]) -> dict:
                                model_loader=get_model, detector_builder=build_detectors,
                                detect=detect_and_segment, scorer=necessity_scorer)
         except ProcessingFailure as exc:
+            failed = {"model": "policy", "detect": "detect", "access": "access", "provide": "access"}.get(exc.stage, "access")
+            if exc.stage in {"model", "detect", "size", "capacity"}:
+                trace.mark("access", "passed", "已核对材料读取与接收方权限")
             if exc.stage == "size":
-                return paused("本轮材料为空或超过 24000 字符，请缩短或拆分后重试")
+                return paused("本轮材料为空或超过 24000 字符，请缩短或拆分后重试", stage=failed)
             if exc.stage == "access":
-                return paused("包含无权读取的材料，本轮未发送")
+                return paused("包含无权读取的材料，本轮未发送", stage=failed)
             if exc.stage == "model":
-                return paused("本地动作模型不可用，本轮未发送")
+                return paused("本地动作模型不可用，本轮未发送", stage=failed)
             if exc.stage == "detect":
-                return paused("敏感信息识别失败，本轮未发送")
+                return paused("敏感信息识别失败，本轮未发送", stage=failed)
             if exc.stage == "capacity":
                 return paused(str(exc))
             return paused("外发权限已失效，本轮未发送")
         text, spans, segments, decisions = (analysis.text, analysis.spans,
                                             analysis.segments, analysis.decisions)
         descriptions = [d.to_dict() for d in decisions]
+        trace.mark("access", "passed", "已核对材料读取与接收方权限", analysis.timings.get("access_ms"))
+        trace.mark("detect", "passed", f"识别到 {len(spans)} 处敏感实体，形成 {len(segments)} 个处理单元", analysis.timings.get("detect_ms"))
+        scored = sum(bool(d.necessity_scores) for d in decisions)
+        unscored = sum(bool(d.categories) and not d.necessity_scores for d in decisions)
+        trace.mark("policy", "blocked" if unscored else ("passed" if scored else "skipped"),
+                   f"{unscored} 个敏感单元未取得有效动作概率" if unscored else
+                   (f"{scored} 个敏感单元取得动作概率；概率不是准确率" if scored else "本轮没有需要模型评分的敏感单元"))
+        checked = sum(bool(d.hard_checks) for d in decisions)
+        trace.mark("constraints", "passed" if checked else "skipped",
+                   (f"已对 {checked} 个单元检查动作可执行性、用途与接收方权限；动作评分与约束合计 {analysis.timings.get('decide_ms', 0):.2f} ms"
+                    if checked else "本轮没有进入硬约束检查的模型动作"))
         rejected = analysis.paused
         if rejected:
-            return paused(rejected.reason, descriptions)
+            return paused(rejected.reason, descriptions, stage="constraints" if rejected.hard_checks else "policy")
         staged_mapping = copy.deepcopy(session.mapping)
         applied = apply_decisions(text, segments, decisions, session.session_id, staged_mapping)
+        trace.mark("transform", "passed", "已按通过检查的动作生成脱敏内容；原值映射仅留在本机")
         safe_user = applied["sanitized_text"].strip()
         if not safe_user:
             return paused("处理后没有可发送内容，请补充非敏感任务信息", descriptions)
+        utility = estimate(safe_user, session.task, applied.get("aggregates"), decisions)
+        if not utility["evaluated"]:
+            trace.mark("utility", "skipped", "当前任务尚无本地完整性自检规则")
+        elif utility["warnings"]:
+            trace.mark("utility", "warning", f"规则自检提示 {len(utility['warnings'])} 项待核对；此提示不改变模型动作或权限")
+        else:
+            trace.mark("utility", "passed", "规则自检未发现已定义的完整性缺项；不代表人工确认任务已完成")
         messages = session.messages + [{"role": "user", "content": safe_user}]
         if sum(len(m["content"]) for m in messages) > MAX_HISTORY_CHARS:
             return paused("上下文超过容量上限，请新建会话；历史不会被静默截断", descriptions)
@@ -267,9 +300,15 @@ def _send_turn(session: ChatSession, materials: list[Material]) -> dict:
         response = EgressGateway(generated_pseudonyms=set(
             staged_mapping.export(session.session_id).values())).send_conversation(
                 session.task, outgoing_messages, session.identity, private_spans, retained)
+        trace.mark("gateway", "passed" if response.get("input_checked") else "blocked",
+                   "完整发送载荷已通过复检" if response.get("input_checked") else "发送链路未完成，未确认通过外发前复检")
         observe("chat_model_ms", (time.perf_counter() - model_started) * 1000)
         if not response["allowed"]:
+            if response.get("input_checked"):
+                trace.mark("output", "blocked", "生成或回答复检未通过")
             return paused(response.get("error") or "外发检查拒绝，本轮未加入历史", descriptions)
+        trace.mark("output", "passed", "模拟生成与回答复检通过，未调用真实 API" if response["engine"] == "mock"
+                   else "生成与回答复检通过")
         if sum(len(m["content"]) for m in messages) + len(response["text"]) > MAX_HISTORY_CHARS:
             return paused("回答使上下文超过容量，本轮未写入历史，请新建会话", descriptions)
         session.messages = messages + [{"role": "assistant", "content": response["text"]}]
@@ -281,7 +320,8 @@ def _send_turn(session: ChatSession, materials: list[Material]) -> dict:
         return {"ok": True, "paused": False, "session_id": session.session_id,
                 "messages": copy.deepcopy(session.messages), "turns": len(session.messages) // 2,
                 "sanitized_user": safe_user, "reply": response["text"], "engine": response["engine"],
-                "warning": response.get("error", ""), "decisions": descriptions}
+                "warning": response.get("error", ""), "decisions": descriptions,
+                "stages": trace.items}
     finally:
         observe("chat_total_ms", (time.perf_counter() - started) * 1000)
         session.lock.release()

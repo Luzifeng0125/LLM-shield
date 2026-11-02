@@ -1,0 +1,44 @@
+{
+  "files": [
+    {
+      "file": "browser_validation.json",
+      "sha256": "62d667c1b5b5e96390fa8493214d4dbe8b68fc29457ebd1e9ec7d473cfa85b00",
+      "size_bytes": 2464
+    },
+    {
+      "file": "diagnostic_predictions.json",
+      "sha256": "d89ede2ad64c8fd3730102e58ba8f1640f552947f3ff4c64450b19c0f997e9fb",
+      "size_bytes": 39358
+    },
+    {
+      "file": "model_download_receipt.json",
+      "sha256": "c62ac6589e8833adb0d519a33abac8566a2a0d0db69c2d4afb50457d968c2509",
+      "size_bytes": 3656
+    },
+    {
+      "file": "protocol.json",
+      "sha256": "8af5994ba3004c5370f629146bee5c4c85fec97fa9013b11f2143332a0ba289d",
+      "size_bytes": 575
+    },
+    {
+      "file": "software_validation.json",
+      "sha256": "f721297462dfe54db6172589d17710d3501dc9a3a6431c05f3b1cdfe0c3089a3",
+      "size_bytes": 270
+    },
+    {
+      "file": "summary.json",
+      "sha256": "b694c0b00b8e07ba26a98a3e884962d80b97ecca03b817eaf8d5e6defb4de4a7",
+      "size_bytes": 209901
+    },
+    {
+      "file": "summary.primary.json",
+      "sha256": "20da10de317773b2dd072f733fd232c9cd79a8da1d343688f4a7c1f9c09ed7f3",
+      "size_bytes": 207038
+    },
+    {
+      "file": "tokenizer_validation.json",
+      "sha256": "03e7d229cd9c4fa918a34f11fe963926ee0c29a7aba908dbcd644e2f71e3fc49",
+      "size_bytes": 260
+    }
+  ]
+}

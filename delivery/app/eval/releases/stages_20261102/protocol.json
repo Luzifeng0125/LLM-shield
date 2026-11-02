@@ -1,0 +1,19 @@
+{
+  "diagnostics_sha256_before": "fae4c63698bb68a25e06d3ea2cdc3cb49f6818200977023807ca500bfd20d538",
+  "training_performed": false,
+  "threshold": 0.5,
+  "cloud_api_called": false,
+  "environment": {
+    "gpu": "NVIDIA GeForce RTX 5060 Laptop GPU",
+    "device": "cuda",
+    "gliner_load_ms": 14877.68,
+    "packages": {
+      "torch": "2.11.0+cu128",
+      "gliner": "0.2.29",
+      "transformers": "4.57.6",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0"
+    },
+    "official_weight_sha256": "2100142f31627531497850659dcb3821c99d5e71c08a8e01a98e4b11ef32a199"
+  }
+}

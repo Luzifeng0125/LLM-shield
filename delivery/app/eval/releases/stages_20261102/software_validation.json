@@ -1,0 +1,9 @@
+{
+  "passed": 454,
+  "skipped": 5,
+  "subtests_passed": 27,
+  "skip_reason": "Original project gliner_v3 fine-tuned weights unavailable; official GPU profile tested separately",
+  "final_stage_api_checks_passed": 4,
+  "generation": "mock",
+  "cloud_api_called": false
+}

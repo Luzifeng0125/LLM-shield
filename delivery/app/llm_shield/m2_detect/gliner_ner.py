@@ -99,7 +99,7 @@ class GLiNERDetector(Detector):
             return
         try:
             self.model = GLiNER.from_pretrained(str(self.model_dir), load_tokenizer=True,
-                                               local_files_only=True)
+                                               local_files_only=True, strict=True)
             # ★ 关键修复：换用字符级中文分词，避免实体边界错位
             self.model.data_processor.words_splitter = CharSplitter()
             import torch

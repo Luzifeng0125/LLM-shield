@@ -1,0 +1,31 @@
+{
+  "dataset": "stage_diagnostics_20261102",
+  "provenance": "AI-authored synthetic mechanism diagnostics; not independent human evaluation",
+  "training_allowed": false,
+  "cases": [
+    {"id":"D01","text":"沈予安负责整理器材。","quote":"沈予安","category":"PERSON_NAME","ask":"整理分工，用稳定代号对应每位负责人。","recipient":"external_model","expected":"PSEUDONYMIZE"},
+    {"id":"D02","text":"沈予安负责整理器材。","quote":"沈予安","category":"PERSON_NAME","ask":"老师在本机核对，保留负责人姓名。","recipient":"viewer_teacher","expected":"RETAIN"},
+    {"id":"D03","text":"沈予安负责整理器材。","quote":"沈予安","category":"PERSON_NAME","ask":"只介绍需要做的工作，不提具体人员。","recipient":"external_model","expected":"DELETE"},
+    {"id":"D04","text":"到场人员是沈予安。","quote":"沈予安","category":"PERSON_NAME","ask":"只统计参加人数，不列出个人。","recipient":"external_model","task":"activity_stats","expected":"LOCAL_AGGREGATE"},
+    {"id":"D05","text":"场地费用为7200元。","quote":"7200元","category":"BUDGET","ask":"老师在本机按明细核对精确费用。","recipient":"viewer_teacher","expected":"RETAIN"},
+    {"id":"D06","text":"场地费用为7200元。","quote":"7200元","category":"BUDGET","ask":"给老师的本机纪要只说明金额量级。","recipient":"viewer_teacher","expected":"GENERALIZE"},
+    {"id":"D07","text":"场地费用为7200元。","quote":"7200元","category":"BUDGET","ask":"请外部模型原样核算这笔精确金额。","recipient":"external_model","expected":"PAUSE"},
+    {"id":"D08","text":"场地费用为7200元。","quote":"7200元","category":"BUDGET","ask":"整理值日安排，不需要费用信息。","recipient":"external_model","expected":"DELETE"},
+    {"id":"D09","text":"联系电话是13900001234。","quote":"13900001234","category":"PHONE","ask":"整理工作安排，不需要联系方式。","recipient":"external_model","expected":"DELETE"},
+    {"id":"D10","text":"联络邮箱为stage@example.org。","quote":"stage@example.org","category":"EMAIL","ask":"整理事项，不需要邮箱。","recipient":"external_model","expected":"DELETE"},
+    {"id":"D11","text":"学号为2026123456。","quote":"2026123456","category":"STUDENT_ID","ask":"整理值日分工，不列出学号。","recipient":"external_model","expected":"DELETE"},
+    {"id":"D12","text":"住在南苑3栋508宿舍。","quote":"南苑3栋508宿舍","category":"DORM","ask":"写活动总结，不需要住宿信息。","recipient":"external_model","expected":"DELETE"},
+    {"id":"D13","text":"期末成绩为87分。","quote":"87分","category":"GRADE","ask":"给老师整理补交提醒，不列出分数。","recipient":"viewer_teacher","expected":"DELETE"},
+    {"id":"D14","text":"个人情况写着患有抑郁症。","quote":"抑郁症","category":"SENSITIVE_ATTR","ask":"整理任务安排，删除健康情况。","recipient":"external_model","expected":"DELETE"},
+    {"id":"D15","text":"本次公开活动由澄光文学社承办。","quote":"澄光文学社","category":"ORG","ask":"介绍活动，保留公开承办社团。","recipient":"external_model","task":"project_intro","expected":"RETAIN"},
+    {"id":"D16","text":"公开讲座在明德楼101教室举行。","quote":"明德楼101教室","category":"LOCATION","ask":"介绍讲座，保留公开举办地点。","recipient":"external_model","task":"project_intro","expected":"RETAIN"},
+    {"id":"D17","text":"沈予安负责校对。","quote":"沈予安","category":"PERSON_NAME","ask":"公开介绍工作，不列出个人姓名。","recipient":"egress_tool_public","task":"project_intro","expected":"DELETE"},
+    {"id":"D18","text":"沈予安负责校对。","quote":"沈予安","category":"PERSON_NAME","ask":"必须在公开页面原样列出负责人姓名。","recipient":"egress_tool_public","expected":"PAUSE"},
+    {"id":"D19","text":"沈予安负责校对。","quote":"沈予安","category":"PERSON_NAME","ask":"将分工发给外部生成服务。","recipient":"external_model","identity":"external_partner","expected":"PAUSE"},
+    {"id":"D20","text":"转账卡号为6222021234567890128。","quote":"6222021234567890128","category":"BANK_CARD","ask":"整理活动纪要，不带银行卡。","recipient":"external_model","expected":"DELETE"},
+    {"id":"D21","text":"沈予安负责校对。","quote":"沈予安","category":"PERSON_NAME","ask":"同组同学只需代号和事项的对应关系。","recipient":"viewer_peer","expected":"PSEUDONYMIZE"},
+    {"id":"D22","text":"打印费用为1800元。","quote":"1800元","category":"BUDGET","ask":"老师在本机核对账目，按原始金额保留。","recipient":"viewer_teacher","expected":"RETAIN"},
+    {"id":"D23","text":"打印费用为1800元。","quote":"1800元","category":"BUDGET","ask":"给外部模型的纪要只需费用量级。","recipient":"external_model","expected":"PAUSE"},
+    {"id":"D24","text":"本次成绩为91分。","quote":"91分","category":"GRADE","ask":"老师只需要知道谁待补交，不需要成绩。","recipient":"viewer_teacher","expected":"DELETE"}
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "fast_class": "DebertaV2TokenizerFast",
+  "slow_class": "DebertaV2Tokenizer",
+  "strings_compared": 135,
+  "token_id_mismatches": 0,
+  "mismatch_indices": [],
+  "scope": "Parity on benchmark and diagnostic strings; does not prove parity for all inputs."
+}

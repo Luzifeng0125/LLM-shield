@@ -602,9 +602,19 @@ function render(data) {
   if (scroller) scroller.scrollTop = scroller.scrollHeight;
 }
 
-function showDecisions(decisions = []) {
+function showDecisions(decisions = [], stages = []) {
   el('decisions').replaceChildren();
-  el('processing').hidden = !decisions.length;
+  el('stageTrace').replaceChildren();
+  el('processing').hidden = !decisions.length && !stages.length;
+  const statuses = {passed: '通过', blocked: '暂停', skipped: '跳过', not_run: '未执行', warning: '需核对'};
+  for (const item of stages) {
+    const row = document.createElement('li'); row.className = 'trace-stage ' + item.status;
+    const heading = document.createElement('strong');
+    heading.textContent = `${item.title} · ${statuses[item.status] || '未知'}`;
+    const detail = document.createElement('span');
+    detail.textContent = item.detail + (Number.isFinite(item.elapsed_ms) ? `（${item.elapsed_ms} ms）` : '');
+    row.append(heading, detail); el('stageTrace').append(row);
+  }
   for (const item of decisions) {
     const row = document.createElement('div'); row.className = 'decision';
     const badge = document.createElement('span');
@@ -738,7 +748,7 @@ el('composer').onsubmit = async event => {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text: el('message').value, doc_ids: files.map(f => f.id) })
     });
-    render(result); showDecisions(result.decisions);
+    render(result); showDecisions(result.decisions, result.stages);
     if (!result.ok) {
       setApiStatus('本轮已暂停', 'warn');
       const reason = result.pause_reason || '本轮未通过安全检查';

@@ -1,0 +1,99 @@
+{
+  "gliner_profile": "official_multi_v2.1",
+  "generation": "mock",
+  "external_requests": [],
+  "page_errors": [],
+  "viewports": [
+    {
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "overflow": false
+    }
+  ],
+  "health": {
+    "ready_local": true,
+    "ready_to_chat": true,
+    "action_model_ready": true,
+    "recognizer_ready": true,
+    "detectors": [
+      "regex",
+      "entity",
+      "gliner"
+    ],
+    "gliner_enabled": true,
+    "llm_mode": "mock",
+    "real_api_configured": false,
+    "ready_for_real": false,
+    "single_process_sessions": true,
+    "max_parallel_analyses": 2,
+    "active_sessions": 0,
+    "max_sessions": 64,
+    "ttl_seconds": 1800
+  },
+  "chat": {
+    "ok": true,
+    "paused": false,
+    "engine": "mock",
+    "stages": [
+      {
+        "id": "access",
+        "title": "材料与权限",
+        "status": "passed",
+        "detail": "已核对材料读取与接收方权限",
+        "elapsed_ms": 0.01
+      },
+      {
+        "id": "detect",
+        "title": "实体识别",
+        "status": "passed",
+        "detail": "识别到 2 处敏感实体，形成 4 个处理单元",
+        "elapsed_ms": 174.93
+      },
+      {
+        "id": "policy",
+        "title": "必要性模型",
+        "status": "passed",
+        "detail": "2 个敏感单元取得动作概率；概率不是准确率",
+        "elapsed_ms": 7.11
+      },
+      {
+        "id": "constraints",
+        "title": "硬约束",
+        "status": "passed",
+        "detail": "已对 2 个单元检查动作可执行性、用途与接收方权限"
+      },
+      {
+        "id": "transform",
+        "title": "脱敏转换",
+        "status": "passed",
+        "detail": "已按通过检查的动作生成脱敏内容；原值映射仅留在本机"
+      },
+      {
+        "id": "utility",
+        "title": "任务完整性自检",
+        "status": "passed",
+        "detail": "规则自检未发现已定义的完整性缺项；不代表人工确认任务已完成"
+      },
+      {
+        "id": "gateway",
+        "title": "外发前复检",
+        "status": "passed",
+        "detail": "完整发送载荷已通过复检"
+      },
+      {
+        "id": "output",
+        "title": "生成与回答复检",
+        "status": "passed",
+        "detail": "模拟生成与回答复检通过，未调用真实 API"
+      }
+    ]
+  },
+  "passed": true
+}

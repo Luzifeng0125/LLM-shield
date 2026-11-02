@@ -140,6 +140,7 @@
         <div id="modelStatus" class="model-status" role="status">
           <span class="model-status-text">正在检查本地模型…</span>
         </div>
+        <a class="evaluation-link" href="/evaluation">查看模型与分阶段评测</a>
       </div>
     </aside>
 
@@ -165,6 +166,7 @@
         <div id="messages" class="chat-messages" aria-live="polite"></div>
         <details id="processing" class="processing" hidden>
           <summary>查看本轮隐私处理</summary>
+          <ol id="stageTrace" class="stage-trace"></ol>
           <div id="decisions"></div>
         </details>
       </div>

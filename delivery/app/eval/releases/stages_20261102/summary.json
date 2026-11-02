@@ -1,0 +1,5342 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-11-02T07:59:42.437334+00:00",
+  "profile": "official_gliner_multi_v2.1_baseline_not_original_finetune",
+  "cloud_api_called": false,
+  "default_models_promoted": false,
+  "environment": {
+    "gpu": "NVIDIA GeForce RTX 5060 Laptop GPU",
+    "device": "cuda",
+    "gliner_load_ms": 14877.68,
+    "packages": {
+      "torch": "2.11.0+cu128",
+      "gliner": "0.2.29",
+      "transformers": "4.57.6",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0"
+    },
+    "official_weight_sha256": "2100142f31627531497850659dcb3821c99d5e71c08a8e01a98e4b11ef32a199"
+  },
+  "parsing": {
+    "passed": 7,
+    "total": 7,
+    "checks": [
+      {
+        "format": "txt",
+        "passed": true
+      },
+      {
+        "format": "md",
+        "passed": true
+      },
+      {
+        "format": "csv",
+        "passed": true
+      },
+      {
+        "format": "json",
+        "passed": true
+      },
+      {
+        "format": "docx",
+        "passed": true
+      },
+      {
+        "format": "xlsx",
+        "passed": true
+      },
+      {
+        "format": "pdf",
+        "passed": true
+      }
+    ],
+    "scope": "Each format has one synthetic smoke fixture; scanned PDFs/OCR are not tested."
+  },
+  "ner": {
+    "dataset": "field_v1",
+    "sha256": "64a59ba4d72e01855fc65cc29d98abfe3a8f350f30d1d192b1ee2f30b9e4b807",
+    "documents": 87,
+    "gold_entities": 149,
+    "scope": "Existing hand-authored development benchmark, not a new blind test.",
+    "configurations": {
+      "format_regex": {
+        "label": "format_regex",
+        "n_cases": 87,
+        "total_ms": 7.42,
+        "modes": {
+          "cover": {
+            "overall": {
+              "precision": 0.9,
+              "recall": 0.9844,
+              "f1": 0.9403,
+              "tp": 63,
+              "fp": 7,
+              "fn": 1
+            },
+            "macro_f1": 0.9899,
+            "per_category": {
+              "API_KEY": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "BUDGET": {
+                "precision": 0.9091,
+                "recall": 0.9091,
+                "f1": 0.9091,
+                "tp": 10,
+                "fp": 1,
+                "fn": 1,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F036",
+                    "scenario": "采购预算",
+                    "text": "¥3,800",
+                    "context": "本次采购预算¥3,800，由校学生会科创部负责执行。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F035",
+                    "scenario": "制度通知",
+                    "text": "500元",
+                    "detector": "regex",
+                    "confidence": 0.88,
+                    "context": "关于规范财务报销流程的通知：自4月1日起，所有超过500元的支出需提前审批。"
+                  }
+                ]
+              },
+              "DORM": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 6,
+                "fn": 0,
+                "in_gold": false,
+                "missed": [],
+                "spurious": [
+                  {
+                    "case": "F003",
+                    "scenario": "宿舍通报",
+                    "text": "7栋312室",
+                    "detector": "regex",
+                    "confidence": 0.9,
+                    "context": "宿舍卫生检查通报：本周优秀宿舍有梅园7栋312室、梅园7栋315室；需整改的是桃李苑2栋408室。检查人陈佳怡。"
+                  },
+                  {
+                    "case": "F003",
+                    "scenario": "宿舍通报",
+                    "text": "7栋315室",
+                    "detector": "regex",
+                    "confidence": 0.9,
+                    "context": "宿舍卫生检查通报：本周优秀宿舍有梅园7栋312室、梅园7栋315室；需整改的是桃李苑2栋408室。检查人陈佳怡。"
+                  },
+                  {
+                    "case": "F003",
+                    "scenario": "宿舍通报",
+                    "text": "2栋408室",
+                    "detector": "regex",
+                    "confidence": 0.54,
+                    "context": "宿舍卫生检查通报：本周优秀宿舍有梅园7栋312室、梅园7栋315室；需整改的是桃李苑2栋408室。检查人陈佳怡。"
+                  },
+                  {
+                    "case": "F027",
+                    "scenario": "快递改址",
+                    "text": "A座812",
+                    "detector": "regex",
+                    "confidence": 0.85,
+                    "context": "您好，我的快递地址填错了，麻烦改到紫荆公寓A座812室，联系电话13600007777。"
+                  },
+                  {
+                    "case": "F045",
+                    "scenario": "信息登记表",
+                    "text": "7栋312室",
+                    "detector": "regex",
+                    "confidence": 0.9,
+                    "context": "学生信息登记表\n姓名：李思远\n学号：2023110245\n身份证号：110108200501152319\n宿舍：梅园7栋312室"
+                  },
+                  {
+                    "case": "H065",
+                    "scenario": "聊天",
+                    "text": "B座1010",
+                    "detector": "regex",
+                    "confidence": 0.85,
+                    "context": "我住在紫荆公寓B座1010室，晚上十点前都在。"
+                  }
+                ]
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 11,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "GRADE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 14,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "WECHAT": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              }
+            },
+            "by_level": {
+              "L1 低": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 0,
+                "categories": []
+              },
+              "L2 中": {
+                "precision": 0.7143,
+                "recall": 1.0,
+                "f1": 0.8333,
+                "tp": 15,
+                "fp": 6,
+                "fn": 0,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 0.9796,
+                "recall": 0.9796,
+                "f1": 0.9796,
+                "tp": 48,
+                "fp": 1,
+                "fn": 1,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "negative_total": 39,
+            "negative_with_fp": 3
+          },
+          "overlap": {
+            "overall": {
+              "precision": 0.9,
+              "recall": 0.9844,
+              "f1": 0.9403,
+              "tp": 63,
+              "fp": 7,
+              "fn": 1
+            },
+            "macro_f1": 0.9899,
+            "per_category": {
+              "API_KEY": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "BUDGET": {
+                "precision": 0.9091,
+                "recall": 0.9091,
+                "f1": 0.9091,
+                "tp": 10,
+                "fp": 1,
+                "fn": 1,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F036",
+                    "scenario": "采购预算",
+                    "text": "¥3,800",
+                    "context": "本次采购预算¥3,800，由校学生会科创部负责执行。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F035",
+                    "scenario": "制度通知",
+                    "text": "500元",
+                    "detector": "regex",
+                    "confidence": 0.88,
+                    "context": "关于规范财务报销流程的通知：自4月1日起，所有超过500元的支出需提前审批。"
+                  }
+                ]
+              },
+              "DORM": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 6,
+                "fn": 0,
+                "in_gold": false,
+                "missed": [],
+                "spurious": [
+                  {
+                    "case": "F003",
+                    "scenario": "宿舍通报",
+                    "text": "7栋312室",
+                    "detector": "regex",
+                    "confidence": 0.9,
+                    "context": "宿舍卫生检查通报：本周优秀宿舍有梅园7栋312室、梅园7栋315室；需整改的是桃李苑2栋408室。检查人陈佳怡。"
+                  },
+                  {
+                    "case": "F003",
+                    "scenario": "宿舍通报",
+                    "text": "7栋315室",
+                    "detector": "regex",
+                    "confidence": 0.9,
+                    "context": "宿舍卫生检查通报：本周优秀宿舍有梅园7栋312室、梅园7栋315室；需整改的是桃李苑2栋408室。检查人陈佳怡。"
+                  },
+                  {
+                    "case": "F003",
+                    "scenario": "宿舍通报",
+                    "text": "2栋408室",
+                    "detector": "regex",
+                    "confidence": 0.54,
+                    "context": "宿舍卫生检查通报：本周优秀宿舍有梅园7栋312室、梅园7栋315室；需整改的是桃李苑2栋408室。检查人陈佳怡。"
+                  },
+                  {
+                    "case": "F027",
+                    "scenario": "快递改址",
+                    "text": "A座812",
+                    "detector": "regex",
+                    "confidence": 0.85,
+                    "context": "您好，我的快递地址填错了，麻烦改到紫荆公寓A座812室，联系电话13600007777。"
+                  },
+                  {
+                    "case": "F045",
+                    "scenario": "信息登记表",
+                    "text": "7栋312室",
+                    "detector": "regex",
+                    "confidence": 0.9,
+                    "context": "学生信息登记表\n姓名：李思远\n学号：2023110245\n身份证号：110108200501152319\n宿舍：梅园7栋312室"
+                  },
+                  {
+                    "case": "H065",
+                    "scenario": "聊天",
+                    "text": "B座1010",
+                    "detector": "regex",
+                    "confidence": 0.85,
+                    "context": "我住在紫荆公寓B座1010室，晚上十点前都在。"
+                  }
+                ]
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 11,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "GRADE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 14,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "WECHAT": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              }
+            },
+            "by_level": {
+              "L1 低": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 0,
+                "categories": []
+              },
+              "L2 中": {
+                "precision": 0.7143,
+                "recall": 1.0,
+                "f1": 0.8333,
+                "tp": 15,
+                "fp": 6,
+                "fn": 0,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 0.9796,
+                "recall": 0.9796,
+                "f1": 0.9796,
+                "tp": 48,
+                "fp": 1,
+                "fn": 1,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "negative_total": 39,
+            "negative_with_fp": 3
+          },
+          "strict": {
+            "overall": {
+              "precision": 0.8857,
+              "recall": 0.9688,
+              "f1": 0.9254,
+              "tp": 62,
+              "fp": 8,
+              "fn": 2
+            },
+            "macro_f1": 0.9677,
+            "per_category": {
+              "API_KEY": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "BUDGET": {
+                "precision": 0.9091,
+                "recall": 0.9091,
+                "f1": 0.9091,
+                "tp": 10,
+                "fp": 1,
+                "fn": 1,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F036",
+                    "scenario": "采购预算",
+                    "text": "¥3,800",
+                    "context": "本次采购预算¥3,800，由校学生会科创部负责执行。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F035",
+                    "scenario": "制度通知",
+                    "text": "500元",
+                    "detector": "regex",
+                    "confidence": 0.88,
+                    "context": "关于规范财务报销流程的通知：自4月1日起，所有超过500元的支出需提前审批。"
+                  }
+                ]
+              },
+              "DORM": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 6,
+                "fn": 0,
+                "in_gold": false,
+                "missed": [],
+                "spurious": [
+                  {
+                    "case": "F003",
+                    "scenario": "宿舍通报",
+                    "text": "7栋312室",
+                    "detector": "regex",
+                    "confidence": 0.9,
+                    "context": "宿舍卫生检查通报：本周优秀宿舍有梅园7栋312室、梅园7栋315室；需整改的是桃李苑2栋408室。检查人陈佳怡。"
+                  },
+                  {
+                    "case": "F003",
+                    "scenario": "宿舍通报",
+                    "text": "7栋315室",
+                    "detector": "regex",
+                    "confidence": 0.9,
+                    "context": "宿舍卫生检查通报：本周优秀宿舍有梅园7栋312室、梅园7栋315室；需整改的是桃李苑2栋408室。检查人陈佳怡。"
+                  },
+                  {
+                    "case": "F003",
+                    "scenario": "宿舍通报",
+                    "text": "2栋408室",
+                    "detector": "regex",
+                    "confidence": 0.54,
+                    "context": "宿舍卫生检查通报：本周优秀宿舍有梅园7栋312室、梅园7栋315室；需整改的是桃李苑2栋408室。检查人陈佳怡。"
+                  },
+                  {
+                    "case": "F027",
+                    "scenario": "快递改址",
+                    "text": "A座812",
+                    "detector": "regex",
+                    "confidence": 0.85,
+                    "context": "您好，我的快递地址填错了，麻烦改到紫荆公寓A座812室，联系电话13600007777。"
+                  },
+                  {
+                    "case": "F045",
+                    "scenario": "信息登记表",
+                    "text": "7栋312室",
+                    "detector": "regex",
+                    "confidence": 0.9,
+                    "context": "学生信息登记表\n姓名：李思远\n学号：2023110245\n身份证号：110108200501152319\n宿舍：梅园7栋312室"
+                  },
+                  {
+                    "case": "H065",
+                    "scenario": "聊天",
+                    "text": "B座1010",
+                    "detector": "regex",
+                    "confidence": 0.85,
+                    "context": "我住在紫荆公寓B座1010室，晚上十点前都在。"
+                  }
+                ]
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 11,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "GRADE": {
+                "precision": 0.8,
+                "recall": 0.8,
+                "f1": 0.8,
+                "tp": 4,
+                "fp": 1,
+                "fn": 1,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "J080",
+                    "scenario": "排名公示",
+                    "text": "95.5分",
+                    "context": "综合测评排名公示：白宇轩 综测得分95.5分，排名第 3。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "J080",
+                    "scenario": "排名公示",
+                    "text": "95.5",
+                    "detector": "regex",
+                    "confidence": 0.88,
+                    "context": "综合测评排名公示：白宇轩 综测得分95.5分，排名第 3。"
+                  }
+                ]
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 14,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "WECHAT": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              }
+            },
+            "by_level": {
+              "L1 低": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 0,
+                "categories": []
+              },
+              "L2 中": {
+                "precision": 0.7143,
+                "recall": 1.0,
+                "f1": 0.8333,
+                "tp": 15,
+                "fp": 6,
+                "fn": 0,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 0.9592,
+                "recall": 0.9592,
+                "f1": 0.9592,
+                "tp": 47,
+                "fp": 2,
+                "fn": 2,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "negative_total": 39,
+            "negative_with_fp": 3
+          }
+        },
+        "latency": {
+          "p50_ms": 0.02,
+          "p95_ms": 0.05,
+          "scope": "Sequential single-document inference after warmup; includes merge."
+        },
+        "scope": "format_categories_only"
+      },
+      "rules_baseline": {
+        "label": "rules_baseline",
+        "n_cases": 87,
+        "total_ms": 7.31,
+        "modes": {
+          "cover": {
+            "overall": {
+              "precision": 0.8613,
+              "recall": 0.7919,
+              "f1": 0.8252,
+              "tp": 118,
+              "fp": 19,
+              "fn": 31
+            },
+            "macro_f1": 0.8697,
+            "per_category": {
+              "API_KEY": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "BUDGET": {
+                "precision": 0.9091,
+                "recall": 0.9091,
+                "f1": 0.9091,
+                "tp": 10,
+                "fp": 1,
+                "fn": 1,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F036",
+                    "scenario": "采购预算",
+                    "text": "¥3,800",
+                    "context": "本次采购预算¥3,800，由校学生会科创部负责执行。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F035",
+                    "scenario": "制度通知",
+                    "text": "500元",
+                    "detector": "regex",
+                    "confidence": 0.88,
+                    "context": "关于规范财务报销流程的通知：自4月1日起，所有超过500元的支出需提前审批。"
+                  }
+                ]
+              },
+              "DORM": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 6,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 11,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "GRADE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "LOCATION": {
+                "precision": 0.6667,
+                "recall": 0.8333,
+                "f1": 0.7407,
+                "tp": 10,
+                "fp": 5,
+                "fn": 2,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F005",
+                    "scenario": "班群通知",
+                    "text": "教三201",
+                    "context": "今晚19:00在教三201开班会，讨论校运会报名和班服订做。缺席的同学请提前跟班长说一声。"
+                  },
+                  {
+                    "case": "F042",
+                    "scenario": "答辩安排",
+                    "text": "创新创业学院路演厅",
+                    "context": "项目答辩安排：3月22日上午9:00，地点创新创业学院路演厅，请提前提交PPT。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F021",
+                    "scenario": "邮件",
+                    "text": "教务处",
+                    "detector": "entity",
+                    "confidence": 0.75,
+                    "context": "发件人：陈志强 <chenzq1998@163.com>\n收件人：教务处 <jwc@ncu.edu.cn>\n主题：关于重修选课的咨询\n老师您好，我是计算机学院2023级学生，学号2023110245，因故错过选课，请问能否补选？"
+                  },
+                  {
+                    "case": "F025",
+                    "scenario": "邮件",
+                    "text": "教务处",
+                    "detector": "entity",
+                    "confidence": 0.75,
+                    "context": "各位老师：教务处定于3月18日召开教学工作会议，请各系主任准时参加。会议材料见附件。"
+                  },
+                  {
+                    "case": "I075",
+                    "scenario": "联合举办",
+                    "text": "国际交流处",
+                    "detector": "entity",
+                    "confidence": 0.75,
+                    "context": "本项目由外国语学院与国际交流处联合举办，欢迎各位同学参加。"
+                  },
+                  {
+                    "case": "I076",
+                    "scenario": "实验室值守",
+                    "text": "运行日志并检查气体管路",
+                    "detector": "entity",
+                    "confidence": 0.75,
+                    "context": "实验室假期值守安排如下：3月20日至3月24日由邓子豪值守，地点在材料楼B404，值班期间如遇设备故障请拨打18900006666联系。值守人员需每日填写运行日志并检查气体管路、通风橱与水电气安全，离开前确认门窗锁闭。此安排已报学院备案，如有调整另行通知。"
+                  },
+                  {
+                    "case": "I076",
+                    "scenario": "实验室值守",
+                    "text": "离开前确认门",
+                    "detector": "entity",
+                    "confidence": 0.75,
+                    "context": "实验室假期值守安排如下：3月20日至3月24日由邓子豪值守，地点在材料楼B404，值班期间如遇设备故障请拨打18900006666联系。值守人员需每日填写运行日志并检查气体管路、通风橱与水电气安全，离开前确认门窗锁闭。此安排已报学院备案，如有调整另行通知。"
+                  }
+                ]
+              },
+              "ORG": {
+                "precision": 0.4444,
+                "recall": 0.4,
+                "f1": 0.4211,
+                "tp": 4,
+                "fp": 5,
+                "fn": 6,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F002",
+                    "scenario": "社团通知",
+                    "text": "远航文学社",
+                    "context": "各位同学：本学期的「书香校园」读书分享会由远航文学社承办，时间改到3月28日晚7点，地点在第三教学楼207教室。有问题请联系周雅雯。"
+                  },
+                  {
+                    "case": "F026",
+                    "scenario": "校招信息",
+                    "text": "未来人才科技有限公司",
+                    "context": "转发：某招聘平台（未来人才科技有限公司）校招信息，简历投递邮箱campus@futurehr.com，联系人郑一鸣，电话17700002222。"
+                  },
+                  {
+                    "case": "F036",
+                    "scenario": "采购预算",
+                    "text": "校学生会科创部",
+                    "context": "本次采购预算¥3,800，由校学生会科创部负责执行。"
+                  },
+                  {
+                    "case": "F038",
+                    "scenario": "项目简介",
+                    "text": "大学生创新创业中心",
+                    "context": "本项目由大学生创新创业中心主办，指导教师为黄丽华教授，团队成员共6人。"
+                  },
+                  {
+                    "case": "F044",
+                    "scenario": "合作方",
+                    "text": "云图数据服务有限公司",
+                    "context": "合作方云图数据服务有限公司提供技术支持，对接人谢明轩，企业邮箱xie.mingxuan@yuntu-dc.com。"
+                  },
+                  {
+                    "case": "I075",
+                    "scenario": "联合举办",
+                    "text": "国际交流处",
+                    "context": "本项目由外国语学院与国际交流处联合举办，欢迎各位同学参加。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F024",
+                    "scenario": "邮件",
+                    "text": "学期实验室",
+                    "detector": "entity",
+                    "confidence": 0.8,
+                    "context": "附件为本学期实验室排班表，如有疑问请联系管理员王磊，分机021-65430000。"
+                  },
+                  {
+                    "case": "F042",
+                    "scenario": "答辩安排",
+                    "text": "地点创新创业学院路",
+                    "detector": "entity",
+                    "confidence": 0.8,
+                    "context": "项目答辩安排：3月22日上午9:00，地点创新创业学院路演厅，请提前提交PPT。"
+                  },
+                  {
+                    "case": "G059",
+                    "scenario": "提醒",
+                    "text": "校园卡服务中心",
+                    "detector": "entity",
+                    "confidence": 0.8,
+                    "context": "校园卡余额充值提醒：请通过校园卡服务中心或自助机办理，勿向他人透露卡号与密码。"
+                  },
+                  {
+                    "case": "G060",
+                    "scenario": "公示",
+                    "text": "当选本届学生会",
+                    "detector": "entity",
+                    "confidence": 0.8,
+                    "context": "投票结果公示：候选人林浩然得票218票，当选本届学生会主席。"
+                  },
+                  {
+                    "case": "I076",
+                    "scenario": "实验室值守",
+                    "text": "安排已报学院",
+                    "detector": "entity",
+                    "confidence": 0.8,
+                    "context": "实验室假期值守安排如下：3月20日至3月24日由邓子豪值守，地点在材料楼B404，值班期间如遇设备故障请拨打18900006666联系。值守人员需每日填写运行日志并检查气体管路、通风橱与水电气安全，离开前确认门窗锁闭。此安排已报学院备案，如有调整另行通知。"
+                  }
+                ]
+              },
+              "PERSON_NAME": {
+                "precision": 0.8684,
+                "recall": 0.6471,
+                "f1": 0.7416,
+                "tp": 33,
+                "fp": 5,
+                "fn": 18,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F003",
+                    "scenario": "宿舍通报",
+                    "text": "陈佳怡",
+                    "context": "宿舍卫生检查通报：本周优秀宿舍有梅园7栋312室、梅园7栋315室；需整改的是桃李苑2栋408室。检查人陈佳怡。"
+                  },
+                  {
+                    "case": "F016",
+                    "scenario": "会议通知",
+                    "text": "何静怡",
+                    "context": "会议地点变更为行政楼第一会议室，请何静怡提前十分钟到场调试设备。"
+                  },
+                  {
+                    "case": "F018",
+                    "scenario": "人事说明",
+                    "text": "吴建平",
+                    "context": "关于更换社团指导教师的说明：原指导教师吴建平因工作调动离任，现由林芷若老师接任，联系邮箱linzr@ncu.edu.cn。"
+                  },
+                  {
+                    "case": "F021",
+                    "scenario": "邮件",
+                    "text": "陈志强",
+                    "context": "发件人：陈志强 <chenzq1998@163.com>\n收件人：教务处 <jwc@ncu.edu.cn>\n主题：关于重修选课的咨询\n老师您好，我是计算机学院2023级学生，学号2023110245，因故错过选课，请问能否补选？"
+                  },
+                  {
+                    "case": "F024",
+                    "scenario": "邮件",
+                    "text": "王磊",
+                    "context": "附件为本学期实验室排班表，如有疑问请联系管理员王磊，分机021-65430000。"
+                  },
+                  {
+                    "case": "F028",
+                    "scenario": "答辩安排",
+                    "text": "顾晓芸",
+                    "context": "毕业论文答辩安排已确定，答辩秘书顾晓芸，办公地点文科楼305。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F014",
+                    "scenario": "会议纪要",
+                    "text": "经手人",
+                    "detector": "entity",
+                    "confidence": 0.82,
+                    "context": "会议纪要摘录\n经手人：诸葛超\n联系方式：158 0123 4567"
+                  },
+                  {
+                    "case": "F029",
+                    "scenario": "报销单",
+                    "text": "经办人",
+                    "detector": "entity",
+                    "confidence": 0.82,
+                    "context": "活动经费报销单\n经办人：孙晓明\n联系电话：15800001111\n银行卡号：6217001234567893\n金额：1280元"
+                  },
+                  {
+                    "case": "F029",
+                    "scenario": "报销单",
+                    "text": "金额",
+                    "detector": "entity",
+                    "confidence": 0.82,
+                    "context": "活动经费报销单\n经办人：孙晓明\n联系电话：15800001111\n银行卡号：6217001234567893\n金额：1280元"
+                  },
+                  {
+                    "case": "H064",
+                    "scenario": "聊天",
+                    "text": "通知",
+                    "detector": "entity",
+                    "confidence": 0.82,
+                    "context": "通知：明天上午的课调到第二教学楼208，别走错了。"
+                  },
+                  {
+                    "case": "H068",
+                    "scenario": "聊天",
+                    "text": "别担心",
+                    "detector": "entity",
+                    "confidence": 0.82,
+                    "context": "别担心，这事我来张罗，你安心准备考试就行。"
+                  }
+                ]
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 14,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 0.4,
+                "recall": 0.3333,
+                "f1": 0.3636,
+                "tp": 2,
+                "fp": 3,
+                "fn": 4,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F046",
+                    "scenario": "特殊情况登记",
+                    "text": "家庭经济困难",
+                    "context": "特殊情况记录：家庭经济困难，已申请勤工助学岗位。辅导员：彭雪梅。"
+                  },
+                  {
+                    "case": "F047",
+                    "scenario": "健康档案",
+                    "text": "患有哮喘",
+                    "context": "健康档案备注：患有哮喘，剧烈运动需注意。紧急联系人：吴书宁，电话13500008888。"
+                  },
+                  {
+                    "case": "F048",
+                    "scenario": "心理跟进",
+                    "text": "持续接受心理疏导",
+                    "context": "心理测评跟进记录：该生持续接受心理疏导，请班主任注意保密。"
+                  },
+                  {
+                    "case": "F051",
+                    "scenario": "档案摘录",
+                    "text": "曾患肺结核",
+                    "context": "该生档案中记载：曾患肺结核，不影响正常学习。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F006",
+                    "scenario": "奖助通知",
+                    "text": "助学金",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "关于2026年春季学期国家助学金评定的通知：请符合条件的同学于3月20日前将申请表交至辅导员办公室。咨询电话0574-87650000。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "宗教",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "信仰",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  }
+                ]
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "WECHAT": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              }
+            },
+            "by_level": {
+              "L1 低": {
+                "precision": 0.5833,
+                "recall": 0.6364,
+                "f1": 0.6087,
+                "tp": 14,
+                "fp": 10,
+                "fn": 8,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 0.9153,
+                "recall": 0.75,
+                "f1": 0.8244,
+                "tp": 54,
+                "fp": 5,
+                "fn": 18,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 0.9259,
+                "recall": 0.9091,
+                "f1": 0.9174,
+                "tp": 50,
+                "fp": 4,
+                "fn": 5,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "negative_total": 17,
+            "negative_with_fp": 4
+          },
+          "overlap": {
+            "overall": {
+              "precision": 0.8551,
+              "recall": 0.7919,
+              "f1": 0.8223,
+              "tp": 118,
+              "fp": 20,
+              "fn": 31
+            },
+            "macro_f1": 0.8676,
+            "per_category": {
+              "API_KEY": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "BUDGET": {
+                "precision": 0.9091,
+                "recall": 0.9091,
+                "f1": 0.9091,
+                "tp": 10,
+                "fp": 1,
+                "fn": 1,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F036",
+                    "scenario": "采购预算",
+                    "text": "¥3,800",
+                    "context": "本次采购预算¥3,800，由校学生会科创部负责执行。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F035",
+                    "scenario": "制度通知",
+                    "text": "500元",
+                    "detector": "regex",
+                    "confidence": 0.88,
+                    "context": "关于规范财务报销流程的通知：自4月1日起，所有超过500元的支出需提前审批。"
+                  }
+                ]
+              },
+              "DORM": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 6,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 11,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "GRADE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "LOCATION": {
+                "precision": 0.6667,
+                "recall": 0.8333,
+                "f1": 0.7407,
+                "tp": 10,
+                "fp": 5,
+                "fn": 2,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F005",
+                    "scenario": "班群通知",
+                    "text": "教三201",
+                    "context": "今晚19:00在教三201开班会，讨论校运会报名和班服订做。缺席的同学请提前跟班长说一声。"
+                  },
+                  {
+                    "case": "F042",
+                    "scenario": "答辩安排",
+                    "text": "创新创业学院路演厅",
+                    "context": "项目答辩安排：3月22日上午9:00，地点创新创业学院路演厅，请提前提交PPT。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F021",
+                    "scenario": "邮件",
+                    "text": "教务处",
+                    "detector": "entity",
+                    "confidence": 0.75,
+                    "context": "发件人：陈志强 <chenzq1998@163.com>\n收件人：教务处 <jwc@ncu.edu.cn>\n主题：关于重修选课的咨询\n老师您好，我是计算机学院2023级学生，学号2023110245，因故错过选课，请问能否补选？"
+                  },
+                  {
+                    "case": "F025",
+                    "scenario": "邮件",
+                    "text": "教务处",
+                    "detector": "entity",
+                    "confidence": 0.75,
+                    "context": "各位老师：教务处定于3月18日召开教学工作会议，请各系主任准时参加。会议材料见附件。"
+                  },
+                  {
+                    "case": "I075",
+                    "scenario": "联合举办",
+                    "text": "国际交流处",
+                    "detector": "entity",
+                    "confidence": 0.75,
+                    "context": "本项目由外国语学院与国际交流处联合举办，欢迎各位同学参加。"
+                  },
+                  {
+                    "case": "I076",
+                    "scenario": "实验室值守",
+                    "text": "运行日志并检查气体管路",
+                    "detector": "entity",
+                    "confidence": 0.75,
+                    "context": "实验室假期值守安排如下：3月20日至3月24日由邓子豪值守，地点在材料楼B404，值班期间如遇设备故障请拨打18900006666联系。值守人员需每日填写运行日志并检查气体管路、通风橱与水电气安全，离开前确认门窗锁闭。此安排已报学院备案，如有调整另行通知。"
+                  },
+                  {
+                    "case": "I076",
+                    "scenario": "实验室值守",
+                    "text": "离开前确认门",
+                    "detector": "entity",
+                    "confidence": 0.75,
+                    "context": "实验室假期值守安排如下：3月20日至3月24日由邓子豪值守，地点在材料楼B404，值班期间如遇设备故障请拨打18900006666联系。值守人员需每日填写运行日志并检查气体管路、通风橱与水电气安全，离开前确认门窗锁闭。此安排已报学院备案，如有调整另行通知。"
+                  }
+                ]
+              },
+              "ORG": {
+                "precision": 0.4444,
+                "recall": 0.4,
+                "f1": 0.4211,
+                "tp": 4,
+                "fp": 5,
+                "fn": 6,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F002",
+                    "scenario": "社团通知",
+                    "text": "远航文学社",
+                    "context": "各位同学：本学期的「书香校园」读书分享会由远航文学社承办，时间改到3月28日晚7点，地点在第三教学楼207教室。有问题请联系周雅雯。"
+                  },
+                  {
+                    "case": "F026",
+                    "scenario": "校招信息",
+                    "text": "未来人才科技有限公司",
+                    "context": "转发：某招聘平台（未来人才科技有限公司）校招信息，简历投递邮箱campus@futurehr.com，联系人郑一鸣，电话17700002222。"
+                  },
+                  {
+                    "case": "F036",
+                    "scenario": "采购预算",
+                    "text": "校学生会科创部",
+                    "context": "本次采购预算¥3,800，由校学生会科创部负责执行。"
+                  },
+                  {
+                    "case": "F038",
+                    "scenario": "项目简介",
+                    "text": "大学生创新创业中心",
+                    "context": "本项目由大学生创新创业中心主办，指导教师为黄丽华教授，团队成员共6人。"
+                  },
+                  {
+                    "case": "F044",
+                    "scenario": "合作方",
+                    "text": "云图数据服务有限公司",
+                    "context": "合作方云图数据服务有限公司提供技术支持，对接人谢明轩，企业邮箱xie.mingxuan@yuntu-dc.com。"
+                  },
+                  {
+                    "case": "I075",
+                    "scenario": "联合举办",
+                    "text": "国际交流处",
+                    "context": "本项目由外国语学院与国际交流处联合举办，欢迎各位同学参加。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F024",
+                    "scenario": "邮件",
+                    "text": "学期实验室",
+                    "detector": "entity",
+                    "confidence": 0.8,
+                    "context": "附件为本学期实验室排班表，如有疑问请联系管理员王磊，分机021-65430000。"
+                  },
+                  {
+                    "case": "F042",
+                    "scenario": "答辩安排",
+                    "text": "地点创新创业学院路",
+                    "detector": "entity",
+                    "confidence": 0.8,
+                    "context": "项目答辩安排：3月22日上午9:00，地点创新创业学院路演厅，请提前提交PPT。"
+                  },
+                  {
+                    "case": "G059",
+                    "scenario": "提醒",
+                    "text": "校园卡服务中心",
+                    "detector": "entity",
+                    "confidence": 0.8,
+                    "context": "校园卡余额充值提醒：请通过校园卡服务中心或自助机办理，勿向他人透露卡号与密码。"
+                  },
+                  {
+                    "case": "G060",
+                    "scenario": "公示",
+                    "text": "当选本届学生会",
+                    "detector": "entity",
+                    "confidence": 0.8,
+                    "context": "投票结果公示：候选人林浩然得票218票，当选本届学生会主席。"
+                  },
+                  {
+                    "case": "I076",
+                    "scenario": "实验室值守",
+                    "text": "安排已报学院",
+                    "detector": "entity",
+                    "confidence": 0.8,
+                    "context": "实验室假期值守安排如下：3月20日至3月24日由邓子豪值守，地点在材料楼B404，值班期间如遇设备故障请拨打18900006666联系。值守人员需每日填写运行日志并检查气体管路、通风橱与水电气安全，离开前确认门窗锁闭。此安排已报学院备案，如有调整另行通知。"
+                  }
+                ]
+              },
+              "PERSON_NAME": {
+                "precision": 0.8684,
+                "recall": 0.6471,
+                "f1": 0.7416,
+                "tp": 33,
+                "fp": 5,
+                "fn": 18,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F003",
+                    "scenario": "宿舍通报",
+                    "text": "陈佳怡",
+                    "context": "宿舍卫生检查通报：本周优秀宿舍有梅园7栋312室、梅园7栋315室；需整改的是桃李苑2栋408室。检查人陈佳怡。"
+                  },
+                  {
+                    "case": "F016",
+                    "scenario": "会议通知",
+                    "text": "何静怡",
+                    "context": "会议地点变更为行政楼第一会议室，请何静怡提前十分钟到场调试设备。"
+                  },
+                  {
+                    "case": "F018",
+                    "scenario": "人事说明",
+                    "text": "吴建平",
+                    "context": "关于更换社团指导教师的说明：原指导教师吴建平因工作调动离任，现由林芷若老师接任，联系邮箱linzr@ncu.edu.cn。"
+                  },
+                  {
+                    "case": "F021",
+                    "scenario": "邮件",
+                    "text": "陈志强",
+                    "context": "发件人：陈志强 <chenzq1998@163.com>\n收件人：教务处 <jwc@ncu.edu.cn>\n主题：关于重修选课的咨询\n老师您好，我是计算机学院2023级学生，学号2023110245，因故错过选课，请问能否补选？"
+                  },
+                  {
+                    "case": "F024",
+                    "scenario": "邮件",
+                    "text": "王磊",
+                    "context": "附件为本学期实验室排班表，如有疑问请联系管理员王磊，分机021-65430000。"
+                  },
+                  {
+                    "case": "F028",
+                    "scenario": "答辩安排",
+                    "text": "顾晓芸",
+                    "context": "毕业论文答辩安排已确定，答辩秘书顾晓芸，办公地点文科楼305。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F014",
+                    "scenario": "会议纪要",
+                    "text": "经手人",
+                    "detector": "entity",
+                    "confidence": 0.82,
+                    "context": "会议纪要摘录\n经手人：诸葛超\n联系方式：158 0123 4567"
+                  },
+                  {
+                    "case": "F029",
+                    "scenario": "报销单",
+                    "text": "经办人",
+                    "detector": "entity",
+                    "confidence": 0.82,
+                    "context": "活动经费报销单\n经办人：孙晓明\n联系电话：15800001111\n银行卡号：6217001234567893\n金额：1280元"
+                  },
+                  {
+                    "case": "F029",
+                    "scenario": "报销单",
+                    "text": "金额",
+                    "detector": "entity",
+                    "confidence": 0.82,
+                    "context": "活动经费报销单\n经办人：孙晓明\n联系电话：15800001111\n银行卡号：6217001234567893\n金额：1280元"
+                  },
+                  {
+                    "case": "H064",
+                    "scenario": "聊天",
+                    "text": "通知",
+                    "detector": "entity",
+                    "confidence": 0.82,
+                    "context": "通知：明天上午的课调到第二教学楼208，别走错了。"
+                  },
+                  {
+                    "case": "H068",
+                    "scenario": "聊天",
+                    "text": "别担心",
+                    "detector": "entity",
+                    "confidence": 0.82,
+                    "context": "别担心，这事我来张罗，你安心准备考试就行。"
+                  }
+                ]
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 14,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 0.3333,
+                "recall": 0.3333,
+                "f1": 0.3333,
+                "tp": 2,
+                "fp": 4,
+                "fn": 4,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F046",
+                    "scenario": "特殊情况登记",
+                    "text": "家庭经济困难",
+                    "context": "特殊情况记录：家庭经济困难，已申请勤工助学岗位。辅导员：彭雪梅。"
+                  },
+                  {
+                    "case": "F047",
+                    "scenario": "健康档案",
+                    "text": "患有哮喘",
+                    "context": "健康档案备注：患有哮喘，剧烈运动需注意。紧急联系人：吴书宁，电话13500008888。"
+                  },
+                  {
+                    "case": "F048",
+                    "scenario": "心理跟进",
+                    "text": "持续接受心理疏导",
+                    "context": "心理测评跟进记录：该生持续接受心理疏导，请班主任注意保密。"
+                  },
+                  {
+                    "case": "F051",
+                    "scenario": "档案摘录",
+                    "text": "曾患肺结核",
+                    "context": "该生档案中记载：曾患肺结核，不影响正常学习。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F006",
+                    "scenario": "奖助通知",
+                    "text": "助学金",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "关于2026年春季学期国家助学金评定的通知：请符合条件的同学于3月20日前将申请表交至辅导员办公室。咨询电话0574-87650000。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "宗教",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "信仰",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "基督教",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  }
+                ]
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "WECHAT": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              }
+            },
+            "by_level": {
+              "L1 低": {
+                "precision": 0.5833,
+                "recall": 0.6364,
+                "f1": 0.6087,
+                "tp": 14,
+                "fp": 10,
+                "fn": 8,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 0.9153,
+                "recall": 0.75,
+                "f1": 0.8244,
+                "tp": 54,
+                "fp": 5,
+                "fn": 18,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 0.9091,
+                "recall": 0.9091,
+                "f1": 0.9091,
+                "tp": 50,
+                "fp": 5,
+                "fn": 5,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "negative_total": 17,
+            "negative_with_fp": 4
+          },
+          "strict": {
+            "overall": {
+              "precision": 0.7536,
+              "recall": 0.698,
+              "f1": 0.7247,
+              "tp": 104,
+              "fp": 34,
+              "fn": 45
+            },
+            "macro_f1": 0.7294,
+            "per_category": {
+              "API_KEY": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "BUDGET": {
+                "precision": 0.9091,
+                "recall": 0.9091,
+                "f1": 0.9091,
+                "tp": 10,
+                "fp": 1,
+                "fn": 1,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F036",
+                    "scenario": "采购预算",
+                    "text": "¥3,800",
+                    "context": "本次采购预算¥3,800，由校学生会科创部负责执行。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F035",
+                    "scenario": "制度通知",
+                    "text": "500元",
+                    "detector": "regex",
+                    "confidence": 0.88,
+                    "context": "关于规范财务报销流程的通知：自4月1日起，所有超过500元的支出需提前审批。"
+                  }
+                ]
+              },
+              "DORM": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 6,
+                "fn": 6,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F003",
+                    "scenario": "宿舍通报",
+                    "text": "梅园7栋312室",
+                    "context": "宿舍卫生检查通报：本周优秀宿舍有梅园7栋312室、梅园7栋315室；需整改的是桃李苑2栋408室。检查人陈佳怡。"
+                  },
+                  {
+                    "case": "F003",
+                    "scenario": "宿舍通报",
+                    "text": "梅园7栋315室",
+                    "context": "宿舍卫生检查通报：本周优秀宿舍有梅园7栋312室、梅园7栋315室；需整改的是桃李苑2栋408室。检查人陈佳怡。"
+                  },
+                  {
+                    "case": "F003",
+                    "scenario": "宿舍通报",
+                    "text": "桃李苑2栋408室",
+                    "context": "宿舍卫生检查通报：本周优秀宿舍有梅园7栋312室、梅园7栋315室；需整改的是桃李苑2栋408室。检查人陈佳怡。"
+                  },
+                  {
+                    "case": "F027",
+                    "scenario": "快递改址",
+                    "text": "紫荆公寓A座812室",
+                    "context": "您好，我的快递地址填错了，麻烦改到紫荆公寓A座812室，联系电话13600007777。"
+                  },
+                  {
+                    "case": "F045",
+                    "scenario": "信息登记表",
+                    "text": "梅园7栋312室",
+                    "context": "学生信息登记表\n姓名：李思远\n学号：2023110245\n身份证号：110108200501152319\n宿舍：梅园7栋312室"
+                  },
+                  {
+                    "case": "H065",
+                    "scenario": "聊天",
+                    "text": "紫荆公寓B座1010室",
+                    "context": "我住在紫荆公寓B座1010室，晚上十点前都在。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F003",
+                    "scenario": "宿舍通报",
+                    "text": "7栋312室",
+                    "detector": "regex",
+                    "confidence": 0.9,
+                    "context": "宿舍卫生检查通报：本周优秀宿舍有梅园7栋312室、梅园7栋315室；需整改的是桃李苑2栋408室。检查人陈佳怡。"
+                  },
+                  {
+                    "case": "F003",
+                    "scenario": "宿舍通报",
+                    "text": "7栋315室",
+                    "detector": "regex",
+                    "confidence": 0.9,
+                    "context": "宿舍卫生检查通报：本周优秀宿舍有梅园7栋312室、梅园7栋315室；需整改的是桃李苑2栋408室。检查人陈佳怡。"
+                  },
+                  {
+                    "case": "F003",
+                    "scenario": "宿舍通报",
+                    "text": "2栋408室",
+                    "detector": "regex",
+                    "confidence": 0.54,
+                    "context": "宿舍卫生检查通报：本周优秀宿舍有梅园7栋312室、梅园7栋315室；需整改的是桃李苑2栋408室。检查人陈佳怡。"
+                  },
+                  {
+                    "case": "F027",
+                    "scenario": "快递改址",
+                    "text": "A座812",
+                    "detector": "regex",
+                    "confidence": 0.85,
+                    "context": "您好，我的快递地址填错了，麻烦改到紫荆公寓A座812室，联系电话13600007777。"
+                  },
+                  {
+                    "case": "F045",
+                    "scenario": "信息登记表",
+                    "text": "7栋312室",
+                    "detector": "regex",
+                    "confidence": 0.9,
+                    "context": "学生信息登记表\n姓名：李思远\n学号：2023110245\n身份证号：110108200501152319\n宿舍：梅园7栋312室"
+                  },
+                  {
+                    "case": "H065",
+                    "scenario": "聊天",
+                    "text": "B座1010",
+                    "detector": "regex",
+                    "confidence": 0.85,
+                    "context": "我住在紫荆公寓B座1010室，晚上十点前都在。"
+                  }
+                ]
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 11,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "GRADE": {
+                "precision": 0.8,
+                "recall": 0.8,
+                "f1": 0.8,
+                "tp": 4,
+                "fp": 1,
+                "fn": 1,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "J080",
+                    "scenario": "排名公示",
+                    "text": "95.5分",
+                    "context": "综合测评排名公示：白宇轩 综测得分95.5分，排名第 3。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "J080",
+                    "scenario": "排名公示",
+                    "text": "95.5",
+                    "detector": "regex",
+                    "confidence": 0.88,
+                    "context": "综合测评排名公示：白宇轩 综测得分95.5分，排名第 3。"
+                  }
+                ]
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "LOCATION": {
+                "precision": 0.4,
+                "recall": 0.5,
+                "f1": 0.4444,
+                "tp": 6,
+                "fp": 9,
+                "fn": 6,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F005",
+                    "scenario": "班群通知",
+                    "text": "教三201",
+                    "context": "今晚19:00在教三201开班会，讨论校运会报名和班服订做。缺席的同学请提前跟班长说一声。"
+                  },
+                  {
+                    "case": "F008",
+                    "scenario": "实验室通知",
+                    "text": "材料楼B404",
+                    "context": "实验室安全培训通知：本周四14:00在材料楼B404举行，主讲人黄建国教授。报名邮箱safety@ncu.edu.cn。"
+                  },
+                  {
+                    "case": "F028",
+                    "scenario": "答辩安排",
+                    "text": "文科楼305",
+                    "context": "毕业论文答辩安排已确定，答辩秘书顾晓芸，办公地点文科楼305。"
+                  },
+                  {
+                    "case": "F042",
+                    "scenario": "答辩安排",
+                    "text": "创新创业学院路演厅",
+                    "context": "项目答辩安排：3月22日上午9:00，地点创新创业学院路演厅，请提前提交PPT。"
+                  },
+                  {
+                    "case": "H064",
+                    "scenario": "聊天",
+                    "text": "第二教学楼208",
+                    "context": "通知：明天上午的课调到第二教学楼208，别走错了。"
+                  },
+                  {
+                    "case": "I076",
+                    "scenario": "实验室值守",
+                    "text": "材料楼B404",
+                    "context": "实验室假期值守安排如下：3月20日至3月24日由邓子豪值守，地点在材料楼B404，值班期间如遇设备故障请拨打18900006666联系。值守人员需每日填写运行日志并检查气体管路、通风橱与水电气安全，离开前确认门窗锁闭。此安排已报学院备案，如有调整另行通知。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F008",
+                    "scenario": "实验室通知",
+                    "text": "材料楼",
+                    "detector": "entity",
+                    "confidence": 0.75,
+                    "context": "实验室安全培训通知：本周四14:00在材料楼B404举行，主讲人黄建国教授。报名邮箱safety@ncu.edu.cn。"
+                  },
+                  {
+                    "case": "F021",
+                    "scenario": "邮件",
+                    "text": "教务处",
+                    "detector": "entity",
+                    "confidence": 0.75,
+                    "context": "发件人：陈志强 <chenzq1998@163.com>\n收件人：教务处 <jwc@ncu.edu.cn>\n主题：关于重修选课的咨询\n老师您好，我是计算机学院2023级学生，学号2023110245，因故错过选课，请问能否补选？"
+                  },
+                  {
+                    "case": "F025",
+                    "scenario": "邮件",
+                    "text": "教务处",
+                    "detector": "entity",
+                    "confidence": 0.75,
+                    "context": "各位老师：教务处定于3月18日召开教学工作会议，请各系主任准时参加。会议材料见附件。"
+                  },
+                  {
+                    "case": "F028",
+                    "scenario": "答辩安排",
+                    "text": "办公地点文科楼",
+                    "detector": "entity",
+                    "confidence": 0.75,
+                    "context": "毕业论文答辩安排已确定，答辩秘书顾晓芸，办公地点文科楼305。"
+                  },
+                  {
+                    "case": "H064",
+                    "scenario": "聊天",
+                    "text": "第二教学楼",
+                    "detector": "entity",
+                    "confidence": 0.75,
+                    "context": "通知：明天上午的课调到第二教学楼208，别走错了。"
+                  },
+                  {
+                    "case": "I075",
+                    "scenario": "联合举办",
+                    "text": "国际交流处",
+                    "detector": "entity",
+                    "confidence": 0.75,
+                    "context": "本项目由外国语学院与国际交流处联合举办，欢迎各位同学参加。"
+                  }
+                ]
+              },
+              "ORG": {
+                "precision": 0.3333,
+                "recall": 0.3,
+                "f1": 0.3158,
+                "tp": 3,
+                "fp": 6,
+                "fn": 7,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F002",
+                    "scenario": "社团通知",
+                    "text": "远航文学社",
+                    "context": "各位同学：本学期的「书香校园」读书分享会由远航文学社承办，时间改到3月28日晚7点，地点在第三教学楼207教室。有问题请联系周雅雯。"
+                  },
+                  {
+                    "case": "F026",
+                    "scenario": "校招信息",
+                    "text": "未来人才科技有限公司",
+                    "context": "转发：某招聘平台（未来人才科技有限公司）校招信息，简历投递邮箱campus@futurehr.com，联系人郑一鸣，电话17700002222。"
+                  },
+                  {
+                    "case": "F036",
+                    "scenario": "采购预算",
+                    "text": "校学生会科创部",
+                    "context": "本次采购预算¥3,800，由校学生会科创部负责执行。"
+                  },
+                  {
+                    "case": "F037",
+                    "scenario": "项目申报",
+                    "text": "计算机学院学生会科创部",
+                    "context": "项目名称：校园二手书流转平台\n申报单位：计算机学院学生会科创部\n负责人：郑一鸣\n联系方式：17700002222 / zhengyiming@stu.edu.cn\n项目预算：8000元"
+                  },
+                  {
+                    "case": "F038",
+                    "scenario": "项目简介",
+                    "text": "大学生创新创业中心",
+                    "context": "本项目由大学生创新创业中心主办，指导教师为黄丽华教授，团队成员共6人。"
+                  },
+                  {
+                    "case": "F044",
+                    "scenario": "合作方",
+                    "text": "云图数据服务有限公司",
+                    "context": "合作方云图数据服务有限公司提供技术支持，对接人谢明轩，企业邮箱xie.mingxuan@yuntu-dc.com。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F024",
+                    "scenario": "邮件",
+                    "text": "学期实验室",
+                    "detector": "entity",
+                    "confidence": 0.8,
+                    "context": "附件为本学期实验室排班表，如有疑问请联系管理员王磊，分机021-65430000。"
+                  },
+                  {
+                    "case": "F037",
+                    "scenario": "项目申报",
+                    "text": "计算机学院学生会",
+                    "detector": "entity",
+                    "confidence": 0.8,
+                    "context": "项目名称：校园二手书流转平台\n申报单位：计算机学院学生会科创部\n负责人：郑一鸣\n联系方式：17700002222 / zhengyiming@stu.edu.cn\n项目预算：8000元"
+                  },
+                  {
+                    "case": "F042",
+                    "scenario": "答辩安排",
+                    "text": "地点创新创业学院路",
+                    "detector": "entity",
+                    "confidence": 0.8,
+                    "context": "项目答辩安排：3月22日上午9:00，地点创新创业学院路演厅，请提前提交PPT。"
+                  },
+                  {
+                    "case": "G059",
+                    "scenario": "提醒",
+                    "text": "校园卡服务中心",
+                    "detector": "entity",
+                    "confidence": 0.8,
+                    "context": "校园卡余额充值提醒：请通过校园卡服务中心或自助机办理，勿向他人透露卡号与密码。"
+                  },
+                  {
+                    "case": "G060",
+                    "scenario": "公示",
+                    "text": "当选本届学生会",
+                    "detector": "entity",
+                    "confidence": 0.8,
+                    "context": "投票结果公示：候选人林浩然得票218票，当选本届学生会主席。"
+                  },
+                  {
+                    "case": "I076",
+                    "scenario": "实验室值守",
+                    "text": "安排已报学院",
+                    "detector": "entity",
+                    "confidence": 0.8,
+                    "context": "实验室假期值守安排如下：3月20日至3月24日由邓子豪值守，地点在材料楼B404，值班期间如遇设备故障请拨打18900006666联系。值守人员需每日填写运行日志并检查气体管路、通风橱与水电气安全，离开前确认门窗锁闭。此安排已报学院备案，如有调整另行通知。"
+                  }
+                ]
+              },
+              "PERSON_NAME": {
+                "precision": 0.8684,
+                "recall": 0.6471,
+                "f1": 0.7416,
+                "tp": 33,
+                "fp": 5,
+                "fn": 18,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F003",
+                    "scenario": "宿舍通报",
+                    "text": "陈佳怡",
+                    "context": "宿舍卫生检查通报：本周优秀宿舍有梅园7栋312室、梅园7栋315室；需整改的是桃李苑2栋408室。检查人陈佳怡。"
+                  },
+                  {
+                    "case": "F016",
+                    "scenario": "会议通知",
+                    "text": "何静怡",
+                    "context": "会议地点变更为行政楼第一会议室，请何静怡提前十分钟到场调试设备。"
+                  },
+                  {
+                    "case": "F018",
+                    "scenario": "人事说明",
+                    "text": "吴建平",
+                    "context": "关于更换社团指导教师的说明：原指导教师吴建平因工作调动离任，现由林芷若老师接任，联系邮箱linzr@ncu.edu.cn。"
+                  },
+                  {
+                    "case": "F021",
+                    "scenario": "邮件",
+                    "text": "陈志强",
+                    "context": "发件人：陈志强 <chenzq1998@163.com>\n收件人：教务处 <jwc@ncu.edu.cn>\n主题：关于重修选课的咨询\n老师您好，我是计算机学院2023级学生，学号2023110245，因故错过选课，请问能否补选？"
+                  },
+                  {
+                    "case": "F024",
+                    "scenario": "邮件",
+                    "text": "王磊",
+                    "context": "附件为本学期实验室排班表，如有疑问请联系管理员王磊，分机021-65430000。"
+                  },
+                  {
+                    "case": "F028",
+                    "scenario": "答辩安排",
+                    "text": "顾晓芸",
+                    "context": "毕业论文答辩安排已确定，答辩秘书顾晓芸，办公地点文科楼305。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F014",
+                    "scenario": "会议纪要",
+                    "text": "经手人",
+                    "detector": "entity",
+                    "confidence": 0.82,
+                    "context": "会议纪要摘录\n经手人：诸葛超\n联系方式：158 0123 4567"
+                  },
+                  {
+                    "case": "F029",
+                    "scenario": "报销单",
+                    "text": "经办人",
+                    "detector": "entity",
+                    "confidence": 0.82,
+                    "context": "活动经费报销单\n经办人：孙晓明\n联系电话：15800001111\n银行卡号：6217001234567893\n金额：1280元"
+                  },
+                  {
+                    "case": "F029",
+                    "scenario": "报销单",
+                    "text": "金额",
+                    "detector": "entity",
+                    "confidence": 0.82,
+                    "context": "活动经费报销单\n经办人：孙晓明\n联系电话：15800001111\n银行卡号：6217001234567893\n金额：1280元"
+                  },
+                  {
+                    "case": "H064",
+                    "scenario": "聊天",
+                    "text": "通知",
+                    "detector": "entity",
+                    "confidence": 0.82,
+                    "context": "通知：明天上午的课调到第二教学楼208，别走错了。"
+                  },
+                  {
+                    "case": "H068",
+                    "scenario": "聊天",
+                    "text": "别担心",
+                    "detector": "entity",
+                    "confidence": 0.82,
+                    "context": "别担心，这事我来张罗，你安心准备考试就行。"
+                  }
+                ]
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 14,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 6,
+                "fn": 6,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F046",
+                    "scenario": "特殊情况登记",
+                    "text": "家庭经济困难",
+                    "context": "特殊情况记录：家庭经济困难，已申请勤工助学岗位。辅导员：彭雪梅。"
+                  },
+                  {
+                    "case": "F047",
+                    "scenario": "健康档案",
+                    "text": "患有哮喘",
+                    "context": "健康档案备注：患有哮喘，剧烈运动需注意。紧急联系人：吴书宁，电话13500008888。"
+                  },
+                  {
+                    "case": "F048",
+                    "scenario": "心理跟进",
+                    "text": "持续接受心理疏导",
+                    "context": "心理测评跟进记录：该生持续接受心理疏导，请班主任注意保密。"
+                  },
+                  {
+                    "case": "F049",
+                    "scenario": "家庭情况",
+                    "text": "低保家庭",
+                    "context": "家庭情况说明：低保家庭，父母均务农。学生本人：赵梦琪。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "信仰基督教",
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  },
+                  {
+                    "case": "F051",
+                    "scenario": "档案摘录",
+                    "text": "曾患肺结核",
+                    "context": "该生档案中记载：曾患肺结核，不影响正常学习。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F006",
+                    "scenario": "奖助通知",
+                    "text": "助学金",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "关于2026年春季学期国家助学金评定的通知：请符合条件的同学于3月20日前将申请表交至辅导员办公室。咨询电话0574-87650000。"
+                  },
+                  {
+                    "case": "F049",
+                    "scenario": "家庭情况",
+                    "text": "低保",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "家庭情况说明：低保家庭，父母均务农。学生本人：赵梦琪。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "宗教",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "信仰",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "信仰",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "基督教",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  }
+                ]
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "WECHAT": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              }
+            },
+            "by_level": {
+              "L1 低": {
+                "precision": 0.375,
+                "recall": 0.4091,
+                "f1": 0.3913,
+                "tp": 9,
+                "fp": 15,
+                "fn": 13,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 0.8136,
+                "recall": 0.6667,
+                "f1": 0.7328,
+                "tp": 48,
+                "fp": 11,
+                "fn": 24,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 0.8545,
+                "recall": 0.8545,
+                "f1": 0.8545,
+                "tp": 47,
+                "fp": 8,
+                "fn": 8,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "negative_total": 17,
+            "negative_with_fp": 4
+          }
+        },
+        "latency": {
+          "p50_ms": 0.07,
+          "p95_ms": 0.17,
+          "scope": "Sequential single-document inference after warmup; includes merge."
+        },
+        "scope": "all_categories"
+      },
+      "gliner_semantic": {
+        "label": "gliner_semantic",
+        "n_cases": 87,
+        "total_ms": 2667.38,
+        "modes": {
+          "cover": {
+            "overall": {
+              "precision": 0.71,
+              "recall": 0.8353,
+              "f1": 0.7676,
+              "tp": 71,
+              "fp": 29,
+              "fn": 14
+            },
+            "macro_f1": 0.6094,
+            "per_category": {
+              "DORM": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 6,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "LOCATION": {
+                "precision": 0.6667,
+                "recall": 0.5,
+                "f1": 0.5714,
+                "tp": 6,
+                "fp": 3,
+                "fn": 6,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F005",
+                    "scenario": "班群通知",
+                    "text": "教三201",
+                    "context": "今晚19:00在教三201开班会，讨论校运会报名和班服订做。缺席的同学请提前跟班长说一声。"
+                  },
+                  {
+                    "case": "F007",
+                    "scenario": "失物招领",
+                    "text": "图书馆三楼",
+                    "context": "【失物招领】在图书馆三楼捡到一个黑色钱包，内有校园卡一张。请失主联系许文博，微信xuwenbo_0326。"
+                  },
+                  {
+                    "case": "F009",
+                    "scenario": "社团通知",
+                    "text": "活动中心一楼",
+                    "context": "各位组长好，社团招新物料已经到货：海报80张、易拉宝6个、宣传单2000份。请各组派人到活动中心一楼领取。"
+                  },
+                  {
+                    "case": "F016",
+                    "scenario": "会议通知",
+                    "text": "行政楼第一会议室",
+                    "context": "会议地点变更为行政楼第一会议室，请何静怡提前十分钟到场调试设备。"
+                  },
+                  {
+                    "case": "F042",
+                    "scenario": "答辩安排",
+                    "text": "创新创业学院路演厅",
+                    "context": "项目答辩安排：3月22日上午9:00，地点创新创业学院路演厅，请提前提交PPT。"
+                  },
+                  {
+                    "case": "H066",
+                    "scenario": "聊天",
+                    "text": "图书馆南门",
+                    "context": "帮我带份饭，我在图书馆南门等你。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F017",
+                    "scenario": "季度总结",
+                    "text": "线上",
+                    "detector": "gliner",
+                    "confidence": 0.69,
+                    "context": "季度总结会\n时间：3月15日 14:30\n地点：线上（腾讯会议）\n参会：全体委员\n本次会议不涉及敏感信息。"
+                  },
+                  {
+                    "case": "H067",
+                    "scenario": "聊天",
+                    "text": "老地方",
+                    "detector": "gliner",
+                    "confidence": 0.501,
+                    "context": "周会改到周四晚7点，地点还是老地方。"
+                  },
+                  {
+                    "case": "K087",
+                    "scenario": "图书馆通知",
+                    "text": "图书馆",
+                    "detector": "gliner",
+                    "confidence": 0.564,
+                    "context": "图书馆开放时间调整为8:00至22:00，周末照常开放，自习座位共1200个。"
+                  }
+                ]
+              },
+              "ORG": {
+                "precision": 0.4737,
+                "recall": 0.9,
+                "f1": 0.6207,
+                "tp": 9,
+                "fp": 10,
+                "fn": 1,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F044",
+                    "scenario": "合作方",
+                    "text": "云图数据服务有限公司",
+                    "context": "合作方云图数据服务有限公司提供技术支持，对接人谢明轩，企业邮箱xie.mingxuan@yuntu-dc.com。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F009",
+                    "scenario": "社团通知",
+                    "text": "社团",
+                    "detector": "gliner",
+                    "confidence": 0.564,
+                    "context": "各位组长好，社团招新物料已经到货：海报80张、易拉宝6个、宣传单2000份。请各组派人到活动中心一楼领取。"
+                  },
+                  {
+                    "case": "F017",
+                    "scenario": "季度总结",
+                    "text": "腾讯会议",
+                    "detector": "gliner",
+                    "confidence": 0.515,
+                    "context": "季度总结会\n时间：3月15日 14:30\n地点：线上（腾讯会议）\n参会：全体委员\n本次会议不涉及敏感信息。"
+                  },
+                  {
+                    "case": "F021",
+                    "scenario": "邮件",
+                    "text": "教务处",
+                    "detector": "gliner",
+                    "confidence": 0.667,
+                    "context": "发件人：陈志强 <chenzq1998@163.com>\n收件人：教务处 <jwc@ncu.edu.cn>\n主题：关于重修选课的咨询\n老师您好，我是计算机学院2023级学生，学号2023110245，因故错过选课，请问能否补选？"
+                  },
+                  {
+                    "case": "F025",
+                    "scenario": "邮件",
+                    "text": "教务处",
+                    "detector": "gliner",
+                    "confidence": 0.807,
+                    "context": "各位老师：教务处定于3月18日召开教学工作会议，请各系主任准时参加。会议材料见附件。"
+                  },
+                  {
+                    "case": "G054",
+                    "scenario": "公告",
+                    "text": "学校",
+                    "detector": "gliner",
+                    "confidence": 0.691,
+                    "context": "2026年3月15日至3月20日，学校将进行消防安全检查，请各宿舍配合。"
+                  },
+                  {
+                    "case": "G056",
+                    "scenario": "统计表",
+                    "text": "计算机2301班",
+                    "detector": "gliner",
+                    "confidence": 0.791,
+                    "context": "班级人数统计：计算机2301班38人，计算机2302班41人。"
+                  }
+                ]
+              },
+              "PERSON_NAME": {
+                "precision": 0.7576,
+                "recall": 0.9804,
+                "f1": 0.8547,
+                "tp": 50,
+                "fp": 16,
+                "fn": 1,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F041",
+                    "scenario": "团队名单",
+                    "text": "上官云",
+                    "context": "团队成员名单：\n杨博文（组长）\n卢佳琪\n阿依古丽·买买提\n上官云"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F005",
+                    "scenario": "班群通知",
+                    "text": "同学",
+                    "detector": "gliner",
+                    "confidence": 0.524,
+                    "context": "今晚19:00在教三201开班会，讨论校运会报名和班服订做。缺席的同学请提前跟班长说一声。"
+                  },
+                  {
+                    "case": "F006",
+                    "scenario": "奖助通知",
+                    "text": "同学",
+                    "detector": "gliner",
+                    "confidence": 0.565,
+                    "context": "关于2026年春季学期国家助学金评定的通知：请符合条件的同学于3月20日前将申请表交至辅导员办公室。咨询电话0574-87650000。"
+                  },
+                  {
+                    "case": "F009",
+                    "scenario": "社团通知",
+                    "text": "各位组长",
+                    "detector": "gliner",
+                    "confidence": 0.633,
+                    "context": "各位组长好，社团招新物料已经到货：海报80张、易拉宝6个、宣传单2000份。请各组派人到活动中心一楼领取。"
+                  },
+                  {
+                    "case": "F017",
+                    "scenario": "季度总结",
+                    "text": "全体委员",
+                    "detector": "gliner",
+                    "confidence": 0.559,
+                    "context": "季度总结会\n时间：3月15日 14:30\n地点：线上（腾讯会议）\n参会：全体委员\n本次会议不涉及敏感信息。"
+                  },
+                  {
+                    "case": "F022",
+                    "scenario": "邮件",
+                    "text": "lisi2020@qq.com",
+                    "detector": "gliner",
+                    "confidence": 0.599,
+                    "context": "请把报名表发到zhaosheng@ncu.edu.cn，并抄送lisi2020@qq.com。"
+                  },
+                  {
+                    "case": "F048",
+                    "scenario": "心理跟进",
+                    "text": "该生",
+                    "detector": "gliner",
+                    "confidence": 0.66,
+                    "context": "心理测评跟进记录：该生持续接受心理疏导，请班主任注意保密。"
+                  }
+                ]
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 6,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F046",
+                    "scenario": "特殊情况登记",
+                    "text": "家庭经济困难",
+                    "context": "特殊情况记录：家庭经济困难，已申请勤工助学岗位。辅导员：彭雪梅。"
+                  },
+                  {
+                    "case": "F047",
+                    "scenario": "健康档案",
+                    "text": "患有哮喘",
+                    "context": "健康档案备注：患有哮喘，剧烈运动需注意。紧急联系人：吴书宁，电话13500008888。"
+                  },
+                  {
+                    "case": "F048",
+                    "scenario": "心理跟进",
+                    "text": "持续接受心理疏导",
+                    "context": "心理测评跟进记录：该生持续接受心理疏导，请班主任注意保密。"
+                  },
+                  {
+                    "case": "F049",
+                    "scenario": "家庭情况",
+                    "text": "低保家庭",
+                    "context": "家庭情况说明：低保家庭，父母均务农。学生本人：赵梦琪。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "信仰基督教",
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  },
+                  {
+                    "case": "F051",
+                    "scenario": "档案摘录",
+                    "text": "曾患肺结核",
+                    "context": "该生档案中记载：曾患肺结核，不影响正常学习。"
+                  }
+                ],
+                "spurious": []
+              }
+            },
+            "by_level": {
+              "L1 低": {
+                "precision": 0.5357,
+                "recall": 0.6818,
+                "f1": 0.6,
+                "tp": 15,
+                "fp": 13,
+                "fn": 7,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 0.7778,
+                "recall": 0.9825,
+                "f1": 0.8682,
+                "tp": 56,
+                "fp": 16,
+                "fn": 1,
+                "categories": [
+                  "DORM",
+                  "PERSON_NAME"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 6,
+                "categories": [
+                  "SENSITIVE_ATTR"
+                ]
+              }
+            },
+            "negative_total": 34,
+            "negative_with_fp": 16
+          },
+          "overlap": {
+            "overall": {
+              "precision": 0.6961,
+              "recall": 0.8353,
+              "f1": 0.7594,
+              "tp": 71,
+              "fp": 31,
+              "fn": 14
+            },
+            "macro_f1": 0.5808,
+            "per_category": {
+              "DORM": {
+                "precision": 0.75,
+                "recall": 1.0,
+                "f1": 0.8571,
+                "tp": 6,
+                "fp": 2,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": [
+                  {
+                    "case": "F045",
+                    "scenario": "信息登记表",
+                    "text": "312室",
+                    "detector": "gliner",
+                    "confidence": 0.563,
+                    "context": "学生信息登记表\n姓名：李思远\n学号：2023110245\n身份证号：110108200501152319\n宿舍：梅园7栋312室"
+                  },
+                  {
+                    "case": "H065",
+                    "scenario": "聊天",
+                    "text": "1010室",
+                    "detector": "gliner",
+                    "confidence": 0.7,
+                    "context": "我住在紫荆公寓B座1010室，晚上十点前都在。"
+                  }
+                ]
+              },
+              "LOCATION": {
+                "precision": 0.6667,
+                "recall": 0.5,
+                "f1": 0.5714,
+                "tp": 6,
+                "fp": 3,
+                "fn": 6,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F005",
+                    "scenario": "班群通知",
+                    "text": "教三201",
+                    "context": "今晚19:00在教三201开班会，讨论校运会报名和班服订做。缺席的同学请提前跟班长说一声。"
+                  },
+                  {
+                    "case": "F007",
+                    "scenario": "失物招领",
+                    "text": "图书馆三楼",
+                    "context": "【失物招领】在图书馆三楼捡到一个黑色钱包，内有校园卡一张。请失主联系许文博，微信xuwenbo_0326。"
+                  },
+                  {
+                    "case": "F009",
+                    "scenario": "社团通知",
+                    "text": "活动中心一楼",
+                    "context": "各位组长好，社团招新物料已经到货：海报80张、易拉宝6个、宣传单2000份。请各组派人到活动中心一楼领取。"
+                  },
+                  {
+                    "case": "F016",
+                    "scenario": "会议通知",
+                    "text": "行政楼第一会议室",
+                    "context": "会议地点变更为行政楼第一会议室，请何静怡提前十分钟到场调试设备。"
+                  },
+                  {
+                    "case": "F042",
+                    "scenario": "答辩安排",
+                    "text": "创新创业学院路演厅",
+                    "context": "项目答辩安排：3月22日上午9:00，地点创新创业学院路演厅，请提前提交PPT。"
+                  },
+                  {
+                    "case": "H066",
+                    "scenario": "聊天",
+                    "text": "图书馆南门",
+                    "context": "帮我带份饭，我在图书馆南门等你。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F017",
+                    "scenario": "季度总结",
+                    "text": "线上",
+                    "detector": "gliner",
+                    "confidence": 0.69,
+                    "context": "季度总结会\n时间：3月15日 14:30\n地点：线上（腾讯会议）\n参会：全体委员\n本次会议不涉及敏感信息。"
+                  },
+                  {
+                    "case": "H067",
+                    "scenario": "聊天",
+                    "text": "老地方",
+                    "detector": "gliner",
+                    "confidence": 0.501,
+                    "context": "周会改到周四晚7点，地点还是老地方。"
+                  },
+                  {
+                    "case": "K087",
+                    "scenario": "图书馆通知",
+                    "text": "图书馆",
+                    "detector": "gliner",
+                    "confidence": 0.564,
+                    "context": "图书馆开放时间调整为8:00至22:00，周末照常开放，自习座位共1200个。"
+                  }
+                ]
+              },
+              "ORG": {
+                "precision": 0.4737,
+                "recall": 0.9,
+                "f1": 0.6207,
+                "tp": 9,
+                "fp": 10,
+                "fn": 1,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F044",
+                    "scenario": "合作方",
+                    "text": "云图数据服务有限公司",
+                    "context": "合作方云图数据服务有限公司提供技术支持，对接人谢明轩，企业邮箱xie.mingxuan@yuntu-dc.com。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F009",
+                    "scenario": "社团通知",
+                    "text": "社团",
+                    "detector": "gliner",
+                    "confidence": 0.564,
+                    "context": "各位组长好，社团招新物料已经到货：海报80张、易拉宝6个、宣传单2000份。请各组派人到活动中心一楼领取。"
+                  },
+                  {
+                    "case": "F017",
+                    "scenario": "季度总结",
+                    "text": "腾讯会议",
+                    "detector": "gliner",
+                    "confidence": 0.515,
+                    "context": "季度总结会\n时间：3月15日 14:30\n地点：线上（腾讯会议）\n参会：全体委员\n本次会议不涉及敏感信息。"
+                  },
+                  {
+                    "case": "F021",
+                    "scenario": "邮件",
+                    "text": "教务处",
+                    "detector": "gliner",
+                    "confidence": 0.667,
+                    "context": "发件人：陈志强 <chenzq1998@163.com>\n收件人：教务处 <jwc@ncu.edu.cn>\n主题：关于重修选课的咨询\n老师您好，我是计算机学院2023级学生，学号2023110245，因故错过选课，请问能否补选？"
+                  },
+                  {
+                    "case": "F025",
+                    "scenario": "邮件",
+                    "text": "教务处",
+                    "detector": "gliner",
+                    "confidence": 0.807,
+                    "context": "各位老师：教务处定于3月18日召开教学工作会议，请各系主任准时参加。会议材料见附件。"
+                  },
+                  {
+                    "case": "G054",
+                    "scenario": "公告",
+                    "text": "学校",
+                    "detector": "gliner",
+                    "confidence": 0.691,
+                    "context": "2026年3月15日至3月20日，学校将进行消防安全检查，请各宿舍配合。"
+                  },
+                  {
+                    "case": "G056",
+                    "scenario": "统计表",
+                    "text": "计算机2301班",
+                    "detector": "gliner",
+                    "confidence": 0.791,
+                    "context": "班级人数统计：计算机2301班38人，计算机2302班41人。"
+                  }
+                ]
+              },
+              "PERSON_NAME": {
+                "precision": 0.7576,
+                "recall": 0.9804,
+                "f1": 0.8547,
+                "tp": 50,
+                "fp": 16,
+                "fn": 1,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F041",
+                    "scenario": "团队名单",
+                    "text": "上官云",
+                    "context": "团队成员名单：\n杨博文（组长）\n卢佳琪\n阿依古丽·买买提\n上官云"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F005",
+                    "scenario": "班群通知",
+                    "text": "同学",
+                    "detector": "gliner",
+                    "confidence": 0.524,
+                    "context": "今晚19:00在教三201开班会，讨论校运会报名和班服订做。缺席的同学请提前跟班长说一声。"
+                  },
+                  {
+                    "case": "F006",
+                    "scenario": "奖助通知",
+                    "text": "同学",
+                    "detector": "gliner",
+                    "confidence": 0.565,
+                    "context": "关于2026年春季学期国家助学金评定的通知：请符合条件的同学于3月20日前将申请表交至辅导员办公室。咨询电话0574-87650000。"
+                  },
+                  {
+                    "case": "F009",
+                    "scenario": "社团通知",
+                    "text": "各位组长",
+                    "detector": "gliner",
+                    "confidence": 0.633,
+                    "context": "各位组长好，社团招新物料已经到货：海报80张、易拉宝6个、宣传单2000份。请各组派人到活动中心一楼领取。"
+                  },
+                  {
+                    "case": "F017",
+                    "scenario": "季度总结",
+                    "text": "全体委员",
+                    "detector": "gliner",
+                    "confidence": 0.559,
+                    "context": "季度总结会\n时间：3月15日 14:30\n地点：线上（腾讯会议）\n参会：全体委员\n本次会议不涉及敏感信息。"
+                  },
+                  {
+                    "case": "F022",
+                    "scenario": "邮件",
+                    "text": "lisi2020@qq.com",
+                    "detector": "gliner",
+                    "confidence": 0.599,
+                    "context": "请把报名表发到zhaosheng@ncu.edu.cn，并抄送lisi2020@qq.com。"
+                  },
+                  {
+                    "case": "F048",
+                    "scenario": "心理跟进",
+                    "text": "该生",
+                    "detector": "gliner",
+                    "confidence": 0.66,
+                    "context": "心理测评跟进记录：该生持续接受心理疏导，请班主任注意保密。"
+                  }
+                ]
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 6,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F046",
+                    "scenario": "特殊情况登记",
+                    "text": "家庭经济困难",
+                    "context": "特殊情况记录：家庭经济困难，已申请勤工助学岗位。辅导员：彭雪梅。"
+                  },
+                  {
+                    "case": "F047",
+                    "scenario": "健康档案",
+                    "text": "患有哮喘",
+                    "context": "健康档案备注：患有哮喘，剧烈运动需注意。紧急联系人：吴书宁，电话13500008888。"
+                  },
+                  {
+                    "case": "F048",
+                    "scenario": "心理跟进",
+                    "text": "持续接受心理疏导",
+                    "context": "心理测评跟进记录：该生持续接受心理疏导，请班主任注意保密。"
+                  },
+                  {
+                    "case": "F049",
+                    "scenario": "家庭情况",
+                    "text": "低保家庭",
+                    "context": "家庭情况说明：低保家庭，父母均务农。学生本人：赵梦琪。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "信仰基督教",
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  },
+                  {
+                    "case": "F051",
+                    "scenario": "档案摘录",
+                    "text": "曾患肺结核",
+                    "context": "该生档案中记载：曾患肺结核，不影响正常学习。"
+                  }
+                ],
+                "spurious": []
+              }
+            },
+            "by_level": {
+              "L1 低": {
+                "precision": 0.5357,
+                "recall": 0.6818,
+                "f1": 0.6,
+                "tp": 15,
+                "fp": 13,
+                "fn": 7,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 0.7568,
+                "recall": 0.9825,
+                "f1": 0.855,
+                "tp": 56,
+                "fp": 18,
+                "fn": 1,
+                "categories": [
+                  "DORM",
+                  "PERSON_NAME"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 6,
+                "categories": [
+                  "SENSITIVE_ATTR"
+                ]
+              }
+            },
+            "negative_total": 34,
+            "negative_with_fp": 16
+          },
+          "strict": {
+            "overall": {
+              "precision": 0.6373,
+              "recall": 0.7647,
+              "f1": 0.6952,
+              "tp": 65,
+              "fp": 37,
+              "fn": 20
+            },
+            "macro_f1": 0.4744,
+            "per_category": {
+              "DORM": {
+                "precision": 0.375,
+                "recall": 0.5,
+                "f1": 0.4286,
+                "tp": 3,
+                "fp": 5,
+                "fn": 3,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F027",
+                    "scenario": "快递改址",
+                    "text": "紫荆公寓A座812室",
+                    "context": "您好，我的快递地址填错了，麻烦改到紫荆公寓A座812室，联系电话13600007777。"
+                  },
+                  {
+                    "case": "F045",
+                    "scenario": "信息登记表",
+                    "text": "梅园7栋312室",
+                    "context": "学生信息登记表\n姓名：李思远\n学号：2023110245\n身份证号：110108200501152319\n宿舍：梅园7栋312室"
+                  },
+                  {
+                    "case": "H065",
+                    "scenario": "聊天",
+                    "text": "紫荆公寓B座1010室",
+                    "context": "我住在紫荆公寓B座1010室，晚上十点前都在。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F027",
+                    "scenario": "快递改址",
+                    "text": "A座812室",
+                    "detector": "gliner",
+                    "confidence": 0.655,
+                    "context": "您好，我的快递地址填错了，麻烦改到紫荆公寓A座812室，联系电话13600007777。"
+                  },
+                  {
+                    "case": "F045",
+                    "scenario": "信息登记表",
+                    "text": "梅园7栋",
+                    "detector": "gliner",
+                    "confidence": 0.636,
+                    "context": "学生信息登记表\n姓名：李思远\n学号：2023110245\n身份证号：110108200501152319\n宿舍：梅园7栋312室"
+                  },
+                  {
+                    "case": "F045",
+                    "scenario": "信息登记表",
+                    "text": "312室",
+                    "detector": "gliner",
+                    "confidence": 0.563,
+                    "context": "学生信息登记表\n姓名：李思远\n学号：2023110245\n身份证号：110108200501152319\n宿舍：梅园7栋312室"
+                  },
+                  {
+                    "case": "H065",
+                    "scenario": "聊天",
+                    "text": "B座",
+                    "detector": "gliner",
+                    "confidence": 0.78,
+                    "context": "我住在紫荆公寓B座1010室，晚上十点前都在。"
+                  },
+                  {
+                    "case": "H065",
+                    "scenario": "聊天",
+                    "text": "1010室",
+                    "detector": "gliner",
+                    "confidence": 0.7,
+                    "context": "我住在紫荆公寓B座1010室，晚上十点前都在。"
+                  }
+                ]
+              },
+              "LOCATION": {
+                "precision": 0.6667,
+                "recall": 0.5,
+                "f1": 0.5714,
+                "tp": 6,
+                "fp": 3,
+                "fn": 6,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F005",
+                    "scenario": "班群通知",
+                    "text": "教三201",
+                    "context": "今晚19:00在教三201开班会，讨论校运会报名和班服订做。缺席的同学请提前跟班长说一声。"
+                  },
+                  {
+                    "case": "F007",
+                    "scenario": "失物招领",
+                    "text": "图书馆三楼",
+                    "context": "【失物招领】在图书馆三楼捡到一个黑色钱包，内有校园卡一张。请失主联系许文博，微信xuwenbo_0326。"
+                  },
+                  {
+                    "case": "F009",
+                    "scenario": "社团通知",
+                    "text": "活动中心一楼",
+                    "context": "各位组长好，社团招新物料已经到货：海报80张、易拉宝6个、宣传单2000份。请各组派人到活动中心一楼领取。"
+                  },
+                  {
+                    "case": "F016",
+                    "scenario": "会议通知",
+                    "text": "行政楼第一会议室",
+                    "context": "会议地点变更为行政楼第一会议室，请何静怡提前十分钟到场调试设备。"
+                  },
+                  {
+                    "case": "F042",
+                    "scenario": "答辩安排",
+                    "text": "创新创业学院路演厅",
+                    "context": "项目答辩安排：3月22日上午9:00，地点创新创业学院路演厅，请提前提交PPT。"
+                  },
+                  {
+                    "case": "H066",
+                    "scenario": "聊天",
+                    "text": "图书馆南门",
+                    "context": "帮我带份饭，我在图书馆南门等你。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F017",
+                    "scenario": "季度总结",
+                    "text": "线上",
+                    "detector": "gliner",
+                    "confidence": 0.69,
+                    "context": "季度总结会\n时间：3月15日 14:30\n地点：线上（腾讯会议）\n参会：全体委员\n本次会议不涉及敏感信息。"
+                  },
+                  {
+                    "case": "H067",
+                    "scenario": "聊天",
+                    "text": "老地方",
+                    "detector": "gliner",
+                    "confidence": 0.501,
+                    "context": "周会改到周四晚7点，地点还是老地方。"
+                  },
+                  {
+                    "case": "K087",
+                    "scenario": "图书馆通知",
+                    "text": "图书馆",
+                    "detector": "gliner",
+                    "confidence": 0.564,
+                    "context": "图书馆开放时间调整为8:00至22:00，周末照常开放，自习座位共1200个。"
+                  }
+                ]
+              },
+              "ORG": {
+                "precision": 0.4211,
+                "recall": 0.8,
+                "f1": 0.5517,
+                "tp": 8,
+                "fp": 11,
+                "fn": 2,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F037",
+                    "scenario": "项目申报",
+                    "text": "计算机学院学生会科创部",
+                    "context": "项目名称：校园二手书流转平台\n申报单位：计算机学院学生会科创部\n负责人：郑一鸣\n联系方式：17700002222 / zhengyiming@stu.edu.cn\n项目预算：8000元"
+                  },
+                  {
+                    "case": "F044",
+                    "scenario": "合作方",
+                    "text": "云图数据服务有限公司",
+                    "context": "合作方云图数据服务有限公司提供技术支持，对接人谢明轩，企业邮箱xie.mingxuan@yuntu-dc.com。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F009",
+                    "scenario": "社团通知",
+                    "text": "社团",
+                    "detector": "gliner",
+                    "confidence": 0.564,
+                    "context": "各位组长好，社团招新物料已经到货：海报80张、易拉宝6个、宣传单2000份。请各组派人到活动中心一楼领取。"
+                  },
+                  {
+                    "case": "F017",
+                    "scenario": "季度总结",
+                    "text": "腾讯会议",
+                    "detector": "gliner",
+                    "confidence": 0.515,
+                    "context": "季度总结会\n时间：3月15日 14:30\n地点：线上（腾讯会议）\n参会：全体委员\n本次会议不涉及敏感信息。"
+                  },
+                  {
+                    "case": "F021",
+                    "scenario": "邮件",
+                    "text": "教务处",
+                    "detector": "gliner",
+                    "confidence": 0.667,
+                    "context": "发件人：陈志强 <chenzq1998@163.com>\n收件人：教务处 <jwc@ncu.edu.cn>\n主题：关于重修选课的咨询\n老师您好，我是计算机学院2023级学生，学号2023110245，因故错过选课，请问能否补选？"
+                  },
+                  {
+                    "case": "F025",
+                    "scenario": "邮件",
+                    "text": "教务处",
+                    "detector": "gliner",
+                    "confidence": 0.807,
+                    "context": "各位老师：教务处定于3月18日召开教学工作会议，请各系主任准时参加。会议材料见附件。"
+                  },
+                  {
+                    "case": "F037",
+                    "scenario": "项目申报",
+                    "text": "计算机学院学生会",
+                    "detector": "gliner",
+                    "confidence": 0.718,
+                    "context": "项目名称：校园二手书流转平台\n申报单位：计算机学院学生会科创部\n负责人：郑一鸣\n联系方式：17700002222 / zhengyiming@stu.edu.cn\n项目预算：8000元"
+                  },
+                  {
+                    "case": "G054",
+                    "scenario": "公告",
+                    "text": "学校",
+                    "detector": "gliner",
+                    "confidence": 0.691,
+                    "context": "2026年3月15日至3月20日，学校将进行消防安全检查，请各宿舍配合。"
+                  }
+                ]
+              },
+              "PERSON_NAME": {
+                "precision": 0.7273,
+                "recall": 0.9412,
+                "f1": 0.8205,
+                "tp": 48,
+                "fp": 18,
+                "fn": 3,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F008",
+                    "scenario": "实验室通知",
+                    "text": "黄建国",
+                    "context": "实验室安全培训通知：本周四14:00在材料楼B404举行，主讲人黄建国教授。报名邮箱safety@ncu.edu.cn。"
+                  },
+                  {
+                    "case": "F041",
+                    "scenario": "团队名单",
+                    "text": "阿依古丽·买买提",
+                    "context": "团队成员名单：\n杨博文（组长）\n卢佳琪\n阿依古丽·买买提\n上官云"
+                  },
+                  {
+                    "case": "F041",
+                    "scenario": "团队名单",
+                    "text": "上官云",
+                    "context": "团队成员名单：\n杨博文（组长）\n卢佳琪\n阿依古丽·买买提\n上官云"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F005",
+                    "scenario": "班群通知",
+                    "text": "同学",
+                    "detector": "gliner",
+                    "confidence": 0.524,
+                    "context": "今晚19:00在教三201开班会，讨论校运会报名和班服订做。缺席的同学请提前跟班长说一声。"
+                  },
+                  {
+                    "case": "F006",
+                    "scenario": "奖助通知",
+                    "text": "同学",
+                    "detector": "gliner",
+                    "confidence": 0.565,
+                    "context": "关于2026年春季学期国家助学金评定的通知：请符合条件的同学于3月20日前将申请表交至辅导员办公室。咨询电话0574-87650000。"
+                  },
+                  {
+                    "case": "F008",
+                    "scenario": "实验室通知",
+                    "text": "黄建国教授",
+                    "detector": "gliner",
+                    "confidence": 0.784,
+                    "context": "实验室安全培训通知：本周四14:00在材料楼B404举行，主讲人黄建国教授。报名邮箱safety@ncu.edu.cn。"
+                  },
+                  {
+                    "case": "F009",
+                    "scenario": "社团通知",
+                    "text": "各位组长",
+                    "detector": "gliner",
+                    "confidence": 0.633,
+                    "context": "各位组长好，社团招新物料已经到货：海报80张、易拉宝6个、宣传单2000份。请各组派人到活动中心一楼领取。"
+                  },
+                  {
+                    "case": "F017",
+                    "scenario": "季度总结",
+                    "text": "全体委员",
+                    "detector": "gliner",
+                    "confidence": 0.559,
+                    "context": "季度总结会\n时间：3月15日 14:30\n地点：线上（腾讯会议）\n参会：全体委员\n本次会议不涉及敏感信息。"
+                  },
+                  {
+                    "case": "F022",
+                    "scenario": "邮件",
+                    "text": "lisi2020@qq.com",
+                    "detector": "gliner",
+                    "confidence": 0.599,
+                    "context": "请把报名表发到zhaosheng@ncu.edu.cn，并抄送lisi2020@qq.com。"
+                  }
+                ]
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 6,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F046",
+                    "scenario": "特殊情况登记",
+                    "text": "家庭经济困难",
+                    "context": "特殊情况记录：家庭经济困难，已申请勤工助学岗位。辅导员：彭雪梅。"
+                  },
+                  {
+                    "case": "F047",
+                    "scenario": "健康档案",
+                    "text": "患有哮喘",
+                    "context": "健康档案备注：患有哮喘，剧烈运动需注意。紧急联系人：吴书宁，电话13500008888。"
+                  },
+                  {
+                    "case": "F048",
+                    "scenario": "心理跟进",
+                    "text": "持续接受心理疏导",
+                    "context": "心理测评跟进记录：该生持续接受心理疏导，请班主任注意保密。"
+                  },
+                  {
+                    "case": "F049",
+                    "scenario": "家庭情况",
+                    "text": "低保家庭",
+                    "context": "家庭情况说明：低保家庭，父母均务农。学生本人：赵梦琪。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "信仰基督教",
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  },
+                  {
+                    "case": "F051",
+                    "scenario": "档案摘录",
+                    "text": "曾患肺结核",
+                    "context": "该生档案中记载：曾患肺结核，不影响正常学习。"
+                  }
+                ],
+                "spurious": []
+              }
+            },
+            "by_level": {
+              "L1 低": {
+                "precision": 0.5,
+                "recall": 0.6364,
+                "f1": 0.56,
+                "tp": 14,
+                "fp": 14,
+                "fn": 8,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 0.6892,
+                "recall": 0.8947,
+                "f1": 0.7786,
+                "tp": 51,
+                "fp": 23,
+                "fn": 6,
+                "categories": [
+                  "DORM",
+                  "PERSON_NAME"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 0,
+                "fn": 6,
+                "categories": [
+                  "SENSITIVE_ATTR"
+                ]
+              }
+            },
+            "negative_total": 34,
+            "negative_with_fp": 16
+          }
+        },
+        "latency": {
+          "p50_ms": 22.14,
+          "p95_ms": 28.34,
+          "scope": "Sequential single-document inference after warmup; includes merge."
+        },
+        "scope": "five_semantic_categories_only"
+      },
+      "fused": {
+        "label": "fused",
+        "n_cases": 87,
+        "total_ms": 1899.97,
+        "modes": {
+          "cover": {
+            "overall": {
+              "precision": 0.8095,
+              "recall": 0.9128,
+              "f1": 0.858,
+              "tp": 136,
+              "fp": 32,
+              "fn": 13
+            },
+            "macro_f1": 0.8805,
+            "per_category": {
+              "API_KEY": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "BUDGET": {
+                "precision": 0.9091,
+                "recall": 0.9091,
+                "f1": 0.9091,
+                "tp": 10,
+                "fp": 1,
+                "fn": 1,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F036",
+                    "scenario": "采购预算",
+                    "text": "¥3,800",
+                    "context": "本次采购预算¥3,800，由校学生会科创部负责执行。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F035",
+                    "scenario": "制度通知",
+                    "text": "500元",
+                    "detector": "regex",
+                    "confidence": 0.88,
+                    "context": "关于规范财务报销流程的通知：自4月1日起，所有超过500元的支出需提前审批。"
+                  }
+                ]
+              },
+              "DORM": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 6,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 11,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "GRADE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "LOCATION": {
+                "precision": 0.6667,
+                "recall": 0.5,
+                "f1": 0.5714,
+                "tp": 6,
+                "fp": 3,
+                "fn": 6,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F005",
+                    "scenario": "班群通知",
+                    "text": "教三201",
+                    "context": "今晚19:00在教三201开班会，讨论校运会报名和班服订做。缺席的同学请提前跟班长说一声。"
+                  },
+                  {
+                    "case": "F007",
+                    "scenario": "失物招领",
+                    "text": "图书馆三楼",
+                    "context": "【失物招领】在图书馆三楼捡到一个黑色钱包，内有校园卡一张。请失主联系许文博，微信xuwenbo_0326。"
+                  },
+                  {
+                    "case": "F009",
+                    "scenario": "社团通知",
+                    "text": "活动中心一楼",
+                    "context": "各位组长好，社团招新物料已经到货：海报80张、易拉宝6个、宣传单2000份。请各组派人到活动中心一楼领取。"
+                  },
+                  {
+                    "case": "F016",
+                    "scenario": "会议通知",
+                    "text": "行政楼第一会议室",
+                    "context": "会议地点变更为行政楼第一会议室，请何静怡提前十分钟到场调试设备。"
+                  },
+                  {
+                    "case": "F042",
+                    "scenario": "答辩安排",
+                    "text": "创新创业学院路演厅",
+                    "context": "项目答辩安排：3月22日上午9:00，地点创新创业学院路演厅，请提前提交PPT。"
+                  },
+                  {
+                    "case": "H066",
+                    "scenario": "聊天",
+                    "text": "图书馆南门",
+                    "context": "帮我带份饭，我在图书馆南门等你。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F017",
+                    "scenario": "季度总结",
+                    "text": "线上",
+                    "detector": "gliner",
+                    "confidence": 0.69,
+                    "context": "季度总结会\n时间：3月15日 14:30\n地点：线上（腾讯会议）\n参会：全体委员\n本次会议不涉及敏感信息。"
+                  },
+                  {
+                    "case": "H067",
+                    "scenario": "聊天",
+                    "text": "老地方",
+                    "detector": "gliner",
+                    "confidence": 0.501,
+                    "context": "周会改到周四晚7点，地点还是老地方。"
+                  },
+                  {
+                    "case": "K087",
+                    "scenario": "图书馆通知",
+                    "text": "图书馆",
+                    "detector": "gliner",
+                    "confidence": 0.564,
+                    "context": "图书馆开放时间调整为8:00至22:00，周末照常开放，自习座位共1200个。"
+                  }
+                ]
+              },
+              "ORG": {
+                "precision": 0.4737,
+                "recall": 0.9,
+                "f1": 0.6207,
+                "tp": 9,
+                "fp": 10,
+                "fn": 1,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F044",
+                    "scenario": "合作方",
+                    "text": "云图数据服务有限公司",
+                    "context": "合作方云图数据服务有限公司提供技术支持，对接人谢明轩，企业邮箱xie.mingxuan@yuntu-dc.com。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F009",
+                    "scenario": "社团通知",
+                    "text": "社团",
+                    "detector": "gliner",
+                    "confidence": 0.564,
+                    "context": "各位组长好，社团招新物料已经到货：海报80张、易拉宝6个、宣传单2000份。请各组派人到活动中心一楼领取。"
+                  },
+                  {
+                    "case": "F017",
+                    "scenario": "季度总结",
+                    "text": "腾讯会议",
+                    "detector": "gliner",
+                    "confidence": 0.515,
+                    "context": "季度总结会\n时间：3月15日 14:30\n地点：线上（腾讯会议）\n参会：全体委员\n本次会议不涉及敏感信息。"
+                  },
+                  {
+                    "case": "F021",
+                    "scenario": "邮件",
+                    "text": "教务处",
+                    "detector": "gliner",
+                    "confidence": 0.667,
+                    "context": "发件人：陈志强 <chenzq1998@163.com>\n收件人：教务处 <jwc@ncu.edu.cn>\n主题：关于重修选课的咨询\n老师您好，我是计算机学院2023级学生，学号2023110245，因故错过选课，请问能否补选？"
+                  },
+                  {
+                    "case": "F025",
+                    "scenario": "邮件",
+                    "text": "教务处",
+                    "detector": "gliner",
+                    "confidence": 0.807,
+                    "context": "各位老师：教务处定于3月18日召开教学工作会议，请各系主任准时参加。会议材料见附件。"
+                  },
+                  {
+                    "case": "G054",
+                    "scenario": "公告",
+                    "text": "学校",
+                    "detector": "gliner",
+                    "confidence": 0.691,
+                    "context": "2026年3月15日至3月20日，学校将进行消防安全检查，请各宿舍配合。"
+                  },
+                  {
+                    "case": "G056",
+                    "scenario": "统计表",
+                    "text": "计算机2301班",
+                    "detector": "gliner",
+                    "confidence": 0.791,
+                    "context": "班级人数统计：计算机2301班38人，计算机2302班41人。"
+                  }
+                ]
+              },
+              "PERSON_NAME": {
+                "precision": 0.7692,
+                "recall": 0.9804,
+                "f1": 0.8621,
+                "tp": 50,
+                "fp": 15,
+                "fn": 1,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F041",
+                    "scenario": "团队名单",
+                    "text": "上官云",
+                    "context": "团队成员名单：\n杨博文（组长）\n卢佳琪\n阿依古丽·买买提\n上官云"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F005",
+                    "scenario": "班群通知",
+                    "text": "同学",
+                    "detector": "gliner",
+                    "confidence": 0.524,
+                    "context": "今晚19:00在教三201开班会，讨论校运会报名和班服订做。缺席的同学请提前跟班长说一声。"
+                  },
+                  {
+                    "case": "F006",
+                    "scenario": "奖助通知",
+                    "text": "同学",
+                    "detector": "gliner",
+                    "confidence": 0.565,
+                    "context": "关于2026年春季学期国家助学金评定的通知：请符合条件的同学于3月20日前将申请表交至辅导员办公室。咨询电话0574-87650000。"
+                  },
+                  {
+                    "case": "F009",
+                    "scenario": "社团通知",
+                    "text": "各位组长",
+                    "detector": "gliner",
+                    "confidence": 0.633,
+                    "context": "各位组长好，社团招新物料已经到货：海报80张、易拉宝6个、宣传单2000份。请各组派人到活动中心一楼领取。"
+                  },
+                  {
+                    "case": "F014",
+                    "scenario": "会议纪要",
+                    "text": "经手人",
+                    "detector": "entity",
+                    "confidence": 0.82,
+                    "context": "会议纪要摘录\n经手人：诸葛超\n联系方式：158 0123 4567"
+                  },
+                  {
+                    "case": "F017",
+                    "scenario": "季度总结",
+                    "text": "全体委员",
+                    "detector": "gliner",
+                    "confidence": 0.559,
+                    "context": "季度总结会\n时间：3月15日 14:30\n地点：线上（腾讯会议）\n参会：全体委员\n本次会议不涉及敏感信息。"
+                  },
+                  {
+                    "case": "F029",
+                    "scenario": "报销单",
+                    "text": "经办人",
+                    "detector": "entity",
+                    "confidence": 0.82,
+                    "context": "活动经费报销单\n经办人：孙晓明\n联系电话：15800001111\n银行卡号：6217001234567893\n金额：1280元"
+                  }
+                ]
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 14,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 0.4,
+                "recall": 0.3333,
+                "f1": 0.3636,
+                "tp": 2,
+                "fp": 3,
+                "fn": 4,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F046",
+                    "scenario": "特殊情况登记",
+                    "text": "家庭经济困难",
+                    "context": "特殊情况记录：家庭经济困难，已申请勤工助学岗位。辅导员：彭雪梅。"
+                  },
+                  {
+                    "case": "F047",
+                    "scenario": "健康档案",
+                    "text": "患有哮喘",
+                    "context": "健康档案备注：患有哮喘，剧烈运动需注意。紧急联系人：吴书宁，电话13500008888。"
+                  },
+                  {
+                    "case": "F048",
+                    "scenario": "心理跟进",
+                    "text": "持续接受心理疏导",
+                    "context": "心理测评跟进记录：该生持续接受心理疏导，请班主任注意保密。"
+                  },
+                  {
+                    "case": "F051",
+                    "scenario": "档案摘录",
+                    "text": "曾患肺结核",
+                    "context": "该生档案中记载：曾患肺结核，不影响正常学习。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F006",
+                    "scenario": "奖助通知",
+                    "text": "助学金",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "关于2026年春季学期国家助学金评定的通知：请符合条件的同学于3月20日前将申请表交至辅导员办公室。咨询电话0574-87650000。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "宗教",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "信仰",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  }
+                ]
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "WECHAT": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              }
+            },
+            "by_level": {
+              "L1 低": {
+                "precision": 0.5357,
+                "recall": 0.6818,
+                "f1": 0.6,
+                "tp": 15,
+                "fp": 13,
+                "fn": 7,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 0.8256,
+                "recall": 0.9861,
+                "f1": 0.8987,
+                "tp": 71,
+                "fp": 15,
+                "fn": 1,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 0.9259,
+                "recall": 0.9091,
+                "f1": 0.9174,
+                "tp": 50,
+                "fp": 4,
+                "fn": 5,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "negative_total": 17,
+            "negative_with_fp": 10
+          },
+          "overlap": {
+            "overall": {
+              "precision": 0.8047,
+              "recall": 0.9128,
+              "f1": 0.8553,
+              "tp": 136,
+              "fp": 33,
+              "fn": 13
+            },
+            "macro_f1": 0.8783,
+            "per_category": {
+              "API_KEY": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "BUDGET": {
+                "precision": 0.9091,
+                "recall": 0.9091,
+                "f1": 0.9091,
+                "tp": 10,
+                "fp": 1,
+                "fn": 1,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F036",
+                    "scenario": "采购预算",
+                    "text": "¥3,800",
+                    "context": "本次采购预算¥3,800，由校学生会科创部负责执行。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F035",
+                    "scenario": "制度通知",
+                    "text": "500元",
+                    "detector": "regex",
+                    "confidence": 0.88,
+                    "context": "关于规范财务报销流程的通知：自4月1日起，所有超过500元的支出需提前审批。"
+                  }
+                ]
+              },
+              "DORM": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 6,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 11,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "GRADE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "LOCATION": {
+                "precision": 0.6667,
+                "recall": 0.5,
+                "f1": 0.5714,
+                "tp": 6,
+                "fp": 3,
+                "fn": 6,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F005",
+                    "scenario": "班群通知",
+                    "text": "教三201",
+                    "context": "今晚19:00在教三201开班会，讨论校运会报名和班服订做。缺席的同学请提前跟班长说一声。"
+                  },
+                  {
+                    "case": "F007",
+                    "scenario": "失物招领",
+                    "text": "图书馆三楼",
+                    "context": "【失物招领】在图书馆三楼捡到一个黑色钱包，内有校园卡一张。请失主联系许文博，微信xuwenbo_0326。"
+                  },
+                  {
+                    "case": "F009",
+                    "scenario": "社团通知",
+                    "text": "活动中心一楼",
+                    "context": "各位组长好，社团招新物料已经到货：海报80张、易拉宝6个、宣传单2000份。请各组派人到活动中心一楼领取。"
+                  },
+                  {
+                    "case": "F016",
+                    "scenario": "会议通知",
+                    "text": "行政楼第一会议室",
+                    "context": "会议地点变更为行政楼第一会议室，请何静怡提前十分钟到场调试设备。"
+                  },
+                  {
+                    "case": "F042",
+                    "scenario": "答辩安排",
+                    "text": "创新创业学院路演厅",
+                    "context": "项目答辩安排：3月22日上午9:00，地点创新创业学院路演厅，请提前提交PPT。"
+                  },
+                  {
+                    "case": "H066",
+                    "scenario": "聊天",
+                    "text": "图书馆南门",
+                    "context": "帮我带份饭，我在图书馆南门等你。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F017",
+                    "scenario": "季度总结",
+                    "text": "线上",
+                    "detector": "gliner",
+                    "confidence": 0.69,
+                    "context": "季度总结会\n时间：3月15日 14:30\n地点：线上（腾讯会议）\n参会：全体委员\n本次会议不涉及敏感信息。"
+                  },
+                  {
+                    "case": "H067",
+                    "scenario": "聊天",
+                    "text": "老地方",
+                    "detector": "gliner",
+                    "confidence": 0.501,
+                    "context": "周会改到周四晚7点，地点还是老地方。"
+                  },
+                  {
+                    "case": "K087",
+                    "scenario": "图书馆通知",
+                    "text": "图书馆",
+                    "detector": "gliner",
+                    "confidence": 0.564,
+                    "context": "图书馆开放时间调整为8:00至22:00，周末照常开放，自习座位共1200个。"
+                  }
+                ]
+              },
+              "ORG": {
+                "precision": 0.4737,
+                "recall": 0.9,
+                "f1": 0.6207,
+                "tp": 9,
+                "fp": 10,
+                "fn": 1,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F044",
+                    "scenario": "合作方",
+                    "text": "云图数据服务有限公司",
+                    "context": "合作方云图数据服务有限公司提供技术支持，对接人谢明轩，企业邮箱xie.mingxuan@yuntu-dc.com。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F009",
+                    "scenario": "社团通知",
+                    "text": "社团",
+                    "detector": "gliner",
+                    "confidence": 0.564,
+                    "context": "各位组长好，社团招新物料已经到货：海报80张、易拉宝6个、宣传单2000份。请各组派人到活动中心一楼领取。"
+                  },
+                  {
+                    "case": "F017",
+                    "scenario": "季度总结",
+                    "text": "腾讯会议",
+                    "detector": "gliner",
+                    "confidence": 0.515,
+                    "context": "季度总结会\n时间：3月15日 14:30\n地点：线上（腾讯会议）\n参会：全体委员\n本次会议不涉及敏感信息。"
+                  },
+                  {
+                    "case": "F021",
+                    "scenario": "邮件",
+                    "text": "教务处",
+                    "detector": "gliner",
+                    "confidence": 0.667,
+                    "context": "发件人：陈志强 <chenzq1998@163.com>\n收件人：教务处 <jwc@ncu.edu.cn>\n主题：关于重修选课的咨询\n老师您好，我是计算机学院2023级学生，学号2023110245，因故错过选课，请问能否补选？"
+                  },
+                  {
+                    "case": "F025",
+                    "scenario": "邮件",
+                    "text": "教务处",
+                    "detector": "gliner",
+                    "confidence": 0.807,
+                    "context": "各位老师：教务处定于3月18日召开教学工作会议，请各系主任准时参加。会议材料见附件。"
+                  },
+                  {
+                    "case": "G054",
+                    "scenario": "公告",
+                    "text": "学校",
+                    "detector": "gliner",
+                    "confidence": 0.691,
+                    "context": "2026年3月15日至3月20日，学校将进行消防安全检查，请各宿舍配合。"
+                  },
+                  {
+                    "case": "G056",
+                    "scenario": "统计表",
+                    "text": "计算机2301班",
+                    "detector": "gliner",
+                    "confidence": 0.791,
+                    "context": "班级人数统计：计算机2301班38人，计算机2302班41人。"
+                  }
+                ]
+              },
+              "PERSON_NAME": {
+                "precision": 0.7692,
+                "recall": 0.9804,
+                "f1": 0.8621,
+                "tp": 50,
+                "fp": 15,
+                "fn": 1,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F041",
+                    "scenario": "团队名单",
+                    "text": "上官云",
+                    "context": "团队成员名单：\n杨博文（组长）\n卢佳琪\n阿依古丽·买买提\n上官云"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F005",
+                    "scenario": "班群通知",
+                    "text": "同学",
+                    "detector": "gliner",
+                    "confidence": 0.524,
+                    "context": "今晚19:00在教三201开班会，讨论校运会报名和班服订做。缺席的同学请提前跟班长说一声。"
+                  },
+                  {
+                    "case": "F006",
+                    "scenario": "奖助通知",
+                    "text": "同学",
+                    "detector": "gliner",
+                    "confidence": 0.565,
+                    "context": "关于2026年春季学期国家助学金评定的通知：请符合条件的同学于3月20日前将申请表交至辅导员办公室。咨询电话0574-87650000。"
+                  },
+                  {
+                    "case": "F009",
+                    "scenario": "社团通知",
+                    "text": "各位组长",
+                    "detector": "gliner",
+                    "confidence": 0.633,
+                    "context": "各位组长好，社团招新物料已经到货：海报80张、易拉宝6个、宣传单2000份。请各组派人到活动中心一楼领取。"
+                  },
+                  {
+                    "case": "F014",
+                    "scenario": "会议纪要",
+                    "text": "经手人",
+                    "detector": "entity",
+                    "confidence": 0.82,
+                    "context": "会议纪要摘录\n经手人：诸葛超\n联系方式：158 0123 4567"
+                  },
+                  {
+                    "case": "F017",
+                    "scenario": "季度总结",
+                    "text": "全体委员",
+                    "detector": "gliner",
+                    "confidence": 0.559,
+                    "context": "季度总结会\n时间：3月15日 14:30\n地点：线上（腾讯会议）\n参会：全体委员\n本次会议不涉及敏感信息。"
+                  },
+                  {
+                    "case": "F029",
+                    "scenario": "报销单",
+                    "text": "经办人",
+                    "detector": "entity",
+                    "confidence": 0.82,
+                    "context": "活动经费报销单\n经办人：孙晓明\n联系电话：15800001111\n银行卡号：6217001234567893\n金额：1280元"
+                  }
+                ]
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 14,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 0.3333,
+                "recall": 0.3333,
+                "f1": 0.3333,
+                "tp": 2,
+                "fp": 4,
+                "fn": 4,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F046",
+                    "scenario": "特殊情况登记",
+                    "text": "家庭经济困难",
+                    "context": "特殊情况记录：家庭经济困难，已申请勤工助学岗位。辅导员：彭雪梅。"
+                  },
+                  {
+                    "case": "F047",
+                    "scenario": "健康档案",
+                    "text": "患有哮喘",
+                    "context": "健康档案备注：患有哮喘，剧烈运动需注意。紧急联系人：吴书宁，电话13500008888。"
+                  },
+                  {
+                    "case": "F048",
+                    "scenario": "心理跟进",
+                    "text": "持续接受心理疏导",
+                    "context": "心理测评跟进记录：该生持续接受心理疏导，请班主任注意保密。"
+                  },
+                  {
+                    "case": "F051",
+                    "scenario": "档案摘录",
+                    "text": "曾患肺结核",
+                    "context": "该生档案中记载：曾患肺结核，不影响正常学习。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F006",
+                    "scenario": "奖助通知",
+                    "text": "助学金",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "关于2026年春季学期国家助学金评定的通知：请符合条件的同学于3月20日前将申请表交至辅导员办公室。咨询电话0574-87650000。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "宗教",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "信仰",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "基督教",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  }
+                ]
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "WECHAT": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              }
+            },
+            "by_level": {
+              "L1 低": {
+                "precision": 0.5357,
+                "recall": 0.6818,
+                "f1": 0.6,
+                "tp": 15,
+                "fp": 13,
+                "fn": 7,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 0.8256,
+                "recall": 0.9861,
+                "f1": 0.8987,
+                "tp": 71,
+                "fp": 15,
+                "fn": 1,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 0.9091,
+                "recall": 0.9091,
+                "f1": 0.9091,
+                "tp": 50,
+                "fp": 5,
+                "fn": 5,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "negative_total": 17,
+            "negative_with_fp": 10
+          },
+          "strict": {
+            "overall": {
+              "precision": 0.7515,
+              "recall": 0.8523,
+              "f1": 0.7987,
+              "tp": 127,
+              "fp": 42,
+              "fn": 22
+            },
+            "macro_f1": 0.7865,
+            "per_category": {
+              "API_KEY": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "BANK_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "BUDGET": {
+                "precision": 0.9091,
+                "recall": 0.9091,
+                "f1": 0.9091,
+                "tp": 10,
+                "fp": 1,
+                "fn": 1,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F036",
+                    "scenario": "采购预算",
+                    "text": "¥3,800",
+                    "context": "本次采购预算¥3,800，由校学生会科创部负责执行。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F035",
+                    "scenario": "制度通知",
+                    "text": "500元",
+                    "detector": "regex",
+                    "confidence": 0.88,
+                    "context": "关于规范财务报销流程的通知：自4月1日起，所有超过500元的支出需提前审批。"
+                  }
+                ]
+              },
+              "DORM": {
+                "precision": 0.3333,
+                "recall": 0.3333,
+                "f1": 0.3333,
+                "tp": 2,
+                "fp": 4,
+                "fn": 4,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F003",
+                    "scenario": "宿舍通报",
+                    "text": "梅园7栋315室",
+                    "context": "宿舍卫生检查通报：本周优秀宿舍有梅园7栋312室、梅园7栋315室；需整改的是桃李苑2栋408室。检查人陈佳怡。"
+                  },
+                  {
+                    "case": "F027",
+                    "scenario": "快递改址",
+                    "text": "紫荆公寓A座812室",
+                    "context": "您好，我的快递地址填错了，麻烦改到紫荆公寓A座812室，联系电话13600007777。"
+                  },
+                  {
+                    "case": "F045",
+                    "scenario": "信息登记表",
+                    "text": "梅园7栋312室",
+                    "context": "学生信息登记表\n姓名：李思远\n学号：2023110245\n身份证号：110108200501152319\n宿舍：梅园7栋312室"
+                  },
+                  {
+                    "case": "H065",
+                    "scenario": "聊天",
+                    "text": "紫荆公寓B座1010室",
+                    "context": "我住在紫荆公寓B座1010室，晚上十点前都在。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F003",
+                    "scenario": "宿舍通报",
+                    "text": "7栋315室",
+                    "detector": "regex",
+                    "confidence": 0.9,
+                    "context": "宿舍卫生检查通报：本周优秀宿舍有梅园7栋312室、梅园7栋315室；需整改的是桃李苑2栋408室。检查人陈佳怡。"
+                  },
+                  {
+                    "case": "F027",
+                    "scenario": "快递改址",
+                    "text": "A座812",
+                    "detector": "regex",
+                    "confidence": 0.85,
+                    "context": "您好，我的快递地址填错了，麻烦改到紫荆公寓A座812室，联系电话13600007777。"
+                  },
+                  {
+                    "case": "F045",
+                    "scenario": "信息登记表",
+                    "text": "7栋312室",
+                    "detector": "regex",
+                    "confidence": 0.9,
+                    "context": "学生信息登记表\n姓名：李思远\n学号：2023110245\n身份证号：110108200501152319\n宿舍：梅园7栋312室"
+                  },
+                  {
+                    "case": "H065",
+                    "scenario": "聊天",
+                    "text": "B座1010",
+                    "detector": "regex",
+                    "confidence": 0.85,
+                    "context": "我住在紫荆公寓B座1010室，晚上十点前都在。"
+                  }
+                ]
+              },
+              "EMAIL": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 11,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "GRADE": {
+                "precision": 0.8,
+                "recall": 0.8,
+                "f1": 0.8,
+                "tp": 4,
+                "fp": 1,
+                "fn": 1,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "J080",
+                    "scenario": "排名公示",
+                    "text": "95.5分",
+                    "context": "综合测评排名公示：白宇轩 综测得分95.5分，排名第 3。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "J080",
+                    "scenario": "排名公示",
+                    "text": "95.5",
+                    "detector": "regex",
+                    "confidence": 0.88,
+                    "context": "综合测评排名公示：白宇轩 综测得分95.5分，排名第 3。"
+                  }
+                ]
+              },
+              "ID_CARD": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "LOCATION": {
+                "precision": 0.6667,
+                "recall": 0.5,
+                "f1": 0.5714,
+                "tp": 6,
+                "fp": 3,
+                "fn": 6,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F005",
+                    "scenario": "班群通知",
+                    "text": "教三201",
+                    "context": "今晚19:00在教三201开班会，讨论校运会报名和班服订做。缺席的同学请提前跟班长说一声。"
+                  },
+                  {
+                    "case": "F007",
+                    "scenario": "失物招领",
+                    "text": "图书馆三楼",
+                    "context": "【失物招领】在图书馆三楼捡到一个黑色钱包，内有校园卡一张。请失主联系许文博，微信xuwenbo_0326。"
+                  },
+                  {
+                    "case": "F009",
+                    "scenario": "社团通知",
+                    "text": "活动中心一楼",
+                    "context": "各位组长好，社团招新物料已经到货：海报80张、易拉宝6个、宣传单2000份。请各组派人到活动中心一楼领取。"
+                  },
+                  {
+                    "case": "F016",
+                    "scenario": "会议通知",
+                    "text": "行政楼第一会议室",
+                    "context": "会议地点变更为行政楼第一会议室，请何静怡提前十分钟到场调试设备。"
+                  },
+                  {
+                    "case": "F042",
+                    "scenario": "答辩安排",
+                    "text": "创新创业学院路演厅",
+                    "context": "项目答辩安排：3月22日上午9:00，地点创新创业学院路演厅，请提前提交PPT。"
+                  },
+                  {
+                    "case": "H066",
+                    "scenario": "聊天",
+                    "text": "图书馆南门",
+                    "context": "帮我带份饭，我在图书馆南门等你。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F017",
+                    "scenario": "季度总结",
+                    "text": "线上",
+                    "detector": "gliner",
+                    "confidence": 0.69,
+                    "context": "季度总结会\n时间：3月15日 14:30\n地点：线上（腾讯会议）\n参会：全体委员\n本次会议不涉及敏感信息。"
+                  },
+                  {
+                    "case": "H067",
+                    "scenario": "聊天",
+                    "text": "老地方",
+                    "detector": "gliner",
+                    "confidence": 0.501,
+                    "context": "周会改到周四晚7点，地点还是老地方。"
+                  },
+                  {
+                    "case": "K087",
+                    "scenario": "图书馆通知",
+                    "text": "图书馆",
+                    "detector": "gliner",
+                    "confidence": 0.564,
+                    "context": "图书馆开放时间调整为8:00至22:00，周末照常开放，自习座位共1200个。"
+                  }
+                ]
+              },
+              "ORG": {
+                "precision": 0.4211,
+                "recall": 0.8,
+                "f1": 0.5517,
+                "tp": 8,
+                "fp": 11,
+                "fn": 2,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F037",
+                    "scenario": "项目申报",
+                    "text": "计算机学院学生会科创部",
+                    "context": "项目名称：校园二手书流转平台\n申报单位：计算机学院学生会科创部\n负责人：郑一鸣\n联系方式：17700002222 / zhengyiming@stu.edu.cn\n项目预算：8000元"
+                  },
+                  {
+                    "case": "F044",
+                    "scenario": "合作方",
+                    "text": "云图数据服务有限公司",
+                    "context": "合作方云图数据服务有限公司提供技术支持，对接人谢明轩，企业邮箱xie.mingxuan@yuntu-dc.com。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F009",
+                    "scenario": "社团通知",
+                    "text": "社团",
+                    "detector": "gliner",
+                    "confidence": 0.564,
+                    "context": "各位组长好，社团招新物料已经到货：海报80张、易拉宝6个、宣传单2000份。请各组派人到活动中心一楼领取。"
+                  },
+                  {
+                    "case": "F017",
+                    "scenario": "季度总结",
+                    "text": "腾讯会议",
+                    "detector": "gliner",
+                    "confidence": 0.515,
+                    "context": "季度总结会\n时间：3月15日 14:30\n地点：线上（腾讯会议）\n参会：全体委员\n本次会议不涉及敏感信息。"
+                  },
+                  {
+                    "case": "F021",
+                    "scenario": "邮件",
+                    "text": "教务处",
+                    "detector": "gliner",
+                    "confidence": 0.667,
+                    "context": "发件人：陈志强 <chenzq1998@163.com>\n收件人：教务处 <jwc@ncu.edu.cn>\n主题：关于重修选课的咨询\n老师您好，我是计算机学院2023级学生，学号2023110245，因故错过选课，请问能否补选？"
+                  },
+                  {
+                    "case": "F025",
+                    "scenario": "邮件",
+                    "text": "教务处",
+                    "detector": "gliner",
+                    "confidence": 0.807,
+                    "context": "各位老师：教务处定于3月18日召开教学工作会议，请各系主任准时参加。会议材料见附件。"
+                  },
+                  {
+                    "case": "F037",
+                    "scenario": "项目申报",
+                    "text": "计算机学院学生会",
+                    "detector": "gliner",
+                    "confidence": 0.718,
+                    "context": "项目名称：校园二手书流转平台\n申报单位：计算机学院学生会科创部\n负责人：郑一鸣\n联系方式：17700002222 / zhengyiming@stu.edu.cn\n项目预算：8000元"
+                  },
+                  {
+                    "case": "G054",
+                    "scenario": "公告",
+                    "text": "学校",
+                    "detector": "gliner",
+                    "confidence": 0.691,
+                    "context": "2026年3月15日至3月20日，学校将进行消防安全检查，请各宿舍配合。"
+                  }
+                ]
+              },
+              "PERSON_NAME": {
+                "precision": 0.7538,
+                "recall": 0.9608,
+                "f1": 0.8448,
+                "tp": 49,
+                "fp": 16,
+                "fn": 2,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F041",
+                    "scenario": "团队名单",
+                    "text": "阿依古丽·买买提",
+                    "context": "团队成员名单：\n杨博文（组长）\n卢佳琪\n阿依古丽·买买提\n上官云"
+                  },
+                  {
+                    "case": "F041",
+                    "scenario": "团队名单",
+                    "text": "上官云",
+                    "context": "团队成员名单：\n杨博文（组长）\n卢佳琪\n阿依古丽·买买提\n上官云"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F005",
+                    "scenario": "班群通知",
+                    "text": "同学",
+                    "detector": "gliner",
+                    "confidence": 0.524,
+                    "context": "今晚19:00在教三201开班会，讨论校运会报名和班服订做。缺席的同学请提前跟班长说一声。"
+                  },
+                  {
+                    "case": "F006",
+                    "scenario": "奖助通知",
+                    "text": "同学",
+                    "detector": "gliner",
+                    "confidence": 0.565,
+                    "context": "关于2026年春季学期国家助学金评定的通知：请符合条件的同学于3月20日前将申请表交至辅导员办公室。咨询电话0574-87650000。"
+                  },
+                  {
+                    "case": "F009",
+                    "scenario": "社团通知",
+                    "text": "各位组长",
+                    "detector": "gliner",
+                    "confidence": 0.633,
+                    "context": "各位组长好，社团招新物料已经到货：海报80张、易拉宝6个、宣传单2000份。请各组派人到活动中心一楼领取。"
+                  },
+                  {
+                    "case": "F014",
+                    "scenario": "会议纪要",
+                    "text": "经手人",
+                    "detector": "entity",
+                    "confidence": 0.82,
+                    "context": "会议纪要摘录\n经手人：诸葛超\n联系方式：158 0123 4567"
+                  },
+                  {
+                    "case": "F017",
+                    "scenario": "季度总结",
+                    "text": "全体委员",
+                    "detector": "gliner",
+                    "confidence": 0.559,
+                    "context": "季度总结会\n时间：3月15日 14:30\n地点：线上（腾讯会议）\n参会：全体委员\n本次会议不涉及敏感信息。"
+                  },
+                  {
+                    "case": "F029",
+                    "scenario": "报销单",
+                    "text": "经办人",
+                    "detector": "entity",
+                    "confidence": 0.82,
+                    "context": "活动经费报销单\n经办人：孙晓明\n联系电话：15800001111\n银行卡号：6217001234567893\n金额：1280元"
+                  }
+                ]
+              },
+              "PHONE": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 14,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "SENSITIVE_ATTR": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1": 0.0,
+                "tp": 0,
+                "fp": 6,
+                "fn": 6,
+                "in_gold": true,
+                "missed": [
+                  {
+                    "case": "F046",
+                    "scenario": "特殊情况登记",
+                    "text": "家庭经济困难",
+                    "context": "特殊情况记录：家庭经济困难，已申请勤工助学岗位。辅导员：彭雪梅。"
+                  },
+                  {
+                    "case": "F047",
+                    "scenario": "健康档案",
+                    "text": "患有哮喘",
+                    "context": "健康档案备注：患有哮喘，剧烈运动需注意。紧急联系人：吴书宁，电话13500008888。"
+                  },
+                  {
+                    "case": "F048",
+                    "scenario": "心理跟进",
+                    "text": "持续接受心理疏导",
+                    "context": "心理测评跟进记录：该生持续接受心理疏导，请班主任注意保密。"
+                  },
+                  {
+                    "case": "F049",
+                    "scenario": "家庭情况",
+                    "text": "低保家庭",
+                    "context": "家庭情况说明：低保家庭，父母均务农。学生本人：赵梦琪。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "信仰基督教",
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  },
+                  {
+                    "case": "F051",
+                    "scenario": "档案摘录",
+                    "text": "曾患肺结核",
+                    "context": "该生档案中记载：曾患肺结核，不影响正常学习。"
+                  }
+                ],
+                "spurious": [
+                  {
+                    "case": "F006",
+                    "scenario": "奖助通知",
+                    "text": "助学金",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "关于2026年春季学期国家助学金评定的通知：请符合条件的同学于3月20日前将申请表交至辅导员办公室。咨询电话0574-87650000。"
+                  },
+                  {
+                    "case": "F049",
+                    "scenario": "家庭情况",
+                    "text": "低保",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "家庭情况说明：低保家庭，父母均务农。学生本人：赵梦琪。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "宗教",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "信仰",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "信仰",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  },
+                  {
+                    "case": "F050",
+                    "scenario": "宗教登记",
+                    "text": "基督教",
+                    "detector": "entity",
+                    "confidence": 0.92,
+                    "context": "宗教信仰情况：信仰基督教，本人已签署知情同意书。"
+                  }
+                ]
+              },
+              "STUDENT_ID": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 5,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              },
+              "WECHAT": {
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1": 1.0,
+                "tp": 4,
+                "fp": 0,
+                "fn": 0,
+                "in_gold": true,
+                "missed": [],
+                "spurious": []
+              }
+            },
+            "by_level": {
+              "L1 低": {
+                "precision": 0.5,
+                "recall": 0.6364,
+                "f1": 0.56,
+                "tp": 14,
+                "fp": 14,
+                "fn": 8,
+                "categories": [
+                  "LOCATION",
+                  "ORG"
+                ]
+              },
+              "L2 中": {
+                "precision": 0.7674,
+                "recall": 0.9167,
+                "f1": 0.8354,
+                "tp": 66,
+                "fp": 20,
+                "fn": 6,
+                "categories": [
+                  "DORM",
+                  "EMAIL",
+                  "PERSON_NAME",
+                  "WECHAT"
+                ]
+              },
+              "L3-L4 高": {
+                "precision": 0.8545,
+                "recall": 0.8545,
+                "f1": 0.8545,
+                "tp": 47,
+                "fp": 8,
+                "fn": 8,
+                "categories": [
+                  "API_KEY",
+                  "BANK_CARD",
+                  "BUDGET",
+                  "GRADE",
+                  "ID_CARD",
+                  "PHONE",
+                  "SENSITIVE_ATTR",
+                  "STUDENT_ID"
+                ]
+              }
+            },
+            "negative_total": 17,
+            "negative_with_fp": 10
+          }
+        },
+        "latency": {
+          "p50_ms": 21.02,
+          "p95_ms": 26.7,
+          "scope": "Sequential single-document inference after warmup; includes merge."
+        },
+        "scope": "all_categories"
+      }
+    },
+    "segmentation": {
+      "passed": 87,
+      "total": 87,
+      "metric": "Predicted span coordinates and unique segment assignment"
+    }
+  },
+  "necessity": {
+    "dataset": "stage_diagnostics_20261102",
+    "sha256": "fae4c63698bb68a25e06d3ea2cdc3cb49f6818200977023807ca500bfd20d538",
+    "provenance": "AI-authored synthetic mechanism diagnostics; not independent human evaluation",
+    "training_performed": false,
+    "models": [
+      {
+        "id": "active",
+        "feature_version": 3,
+        "sha256": "cbfed4ca422a1a6d416ce1b5f488649816c261b6acc86ffc173887c8dfed1b9f",
+        "load_ms": 115.14,
+        "n": 24,
+        "raw_correct": 9,
+        "constrained_correct": 10,
+        "macro_f1_six_actions": 0.4556,
+        "constraint_rewrites": 7,
+        "detected_chain_correct": 15,
+        "mean_decision_ms": 2.72
+      },
+      {
+        "id": "campus_candidate",
+        "feature_version": 3,
+        "sha256": "74902c5d9239eaffc0208891297d8f19b462910534fcc3a51e37b1997f3ee950",
+        "load_ms": 3.78,
+        "n": 24,
+        "raw_correct": 10,
+        "constrained_correct": 13,
+        "macro_f1_six_actions": 0.5841,
+        "constraint_rewrites": 9,
+        "detected_chain_correct": 13,
+        "mean_decision_ms": 1.22
+      },
+      {
+        "id": "aligned",
+        "feature_version": 3,
+        "sha256": "6fe7e292d618106af9109788181a55965365819667f8f34841e68c674b514356",
+        "load_ms": 3.89,
+        "n": 24,
+        "raw_correct": 7,
+        "constrained_correct": 10,
+        "macro_f1_six_actions": 0.4428,
+        "constraint_rewrites": 12,
+        "detected_chain_correct": 10,
+        "mean_decision_ms": 1.12
+      },
+      {
+        "id": "task",
+        "feature_version": 4,
+        "sha256": "7d4a50a394e1aea94f562fc99419e798dfa70976627a96a0fff1513c31236c1e",
+        "load_ms": 6.75,
+        "n": 24,
+        "raw_correct": 18,
+        "constrained_correct": 18,
+        "macro_f1_six_actions": 0.6684,
+        "constraint_rewrites": 0,
+        "detected_chain_correct": 17,
+        "mean_decision_ms": 1.61
+      },
+      {
+        "id": "context",
+        "feature_version": 5,
+        "sha256": "288fbb6399622a64d953d3044cf57929f3be7f341842bb185820d28148906163",
+        "load_ms": 5.95,
+        "n": 24,
+        "raw_correct": 20,
+        "constrained_correct": 20,
+        "macro_f1_six_actions": 0.8972,
+        "constraint_rewrites": 0,
+        "detected_chain_correct": 19,
+        "mean_decision_ms": 1.98
+      }
+    ],
+    "target_detected": 23,
+    "n": 24
+  },
+  "safeguards": {
+    "constraints": {
+      "passed": 7,
+      "total": 7,
+      "checks": [
+        {
+          "category": "PHONE",
+          "chosen": "RETAIN",
+          "recipient": "external_model",
+          "actual": "PAUSE",
+          "expected": "PAUSE",
+          "passed": true
+        },
+        {
+          "category": "PHONE",
+          "chosen": "PSEUDONYMIZE",
+          "recipient": "external_model",
+          "actual": "PAUSE",
+          "expected": "PAUSE",
+          "passed": true
+        },
+        {
+          "category": "BUDGET",
+          "chosen": "GENERALIZE",
+          "recipient": "external_model",
+          "actual": "PAUSE",
+          "expected": "PAUSE",
+          "passed": true
+        },
+        {
+          "category": "PERSON_NAME",
+          "chosen": "RETAIN",
+          "recipient": "egress_tool_public",
+          "actual": "PAUSE",
+          "expected": "PAUSE",
+          "passed": true
+        },
+        {
+          "category": "SENSITIVE_ATTR",
+          "chosen": "RETAIN",
+          "recipient": "external_model",
+          "actual": "PAUSE",
+          "expected": "PAUSE",
+          "passed": true
+        },
+        {
+          "category": "PERSON_NAME",
+          "chosen": "PSEUDONYMIZE",
+          "recipient": "external_model",
+          "actual": "PSEUDONYMIZE",
+          "expected": "PSEUDONYMIZE",
+          "passed": true
+        },
+        {
+          "category": "PHONE",
+          "chosen": "DELETE",
+          "recipient": "external_model",
+          "actual": "DELETE",
+          "expected": "DELETE",
+          "passed": true
+        }
+      ]
+    },
+    "transformation": {
+      "passed": 6,
+      "total": 6,
+      "checks": [
+        {
+          "action": "DELETE",
+          "passed": true
+        },
+        {
+          "action": "LOCAL_AGGREGATE",
+          "passed": true
+        },
+        {
+          "action": "GENERALIZE",
+          "passed": true
+        },
+        {
+          "action": "PSEUDONYMIZE",
+          "passed": true
+        },
+        {
+          "action": "RETAIN",
+          "passed": true
+        },
+        {
+          "action": "PAUSE",
+          "passed": true
+        }
+      ]
+    },
+    "boundaries": {
+      "passed": 5,
+      "total": 5,
+      "checks": [
+        {
+          "recipient": "external_model",
+          "category": "PHONE",
+          "expected_allowed": false,
+          "actual_allowed": false,
+          "passed": true
+        },
+        {
+          "recipient": "viewer_peer",
+          "category": "PHONE",
+          "expected_allowed": false,
+          "actual_allowed": false,
+          "passed": true
+        },
+        {
+          "recipient": "egress_tool_public",
+          "category": "PHONE",
+          "expected_allowed": false,
+          "actual_allowed": false,
+          "passed": true
+        },
+        {
+          "recipient": "external_model",
+          "category": "BUDGET",
+          "expected_allowed": false,
+          "actual_allowed": false,
+          "passed": true
+        },
+        {
+          "recipient": "external_model",
+          "category": null,
+          "expected_allowed": true,
+          "actual_allowed": true,
+          "passed": true
+        }
+      ]
+    },
+    "scope": "Synthetic canary checks; does not prove zero leakage on arbitrary inputs.",
+    "utility": {
+      "passed": 6,
+      "total": 6,
+      "checks": [
+        {
+          "task": "meeting_minutes",
+          "expected_complete": true,
+          "actual_complete": true,
+          "passed": true
+        },
+        {
+          "task": "meeting_minutes",
+          "expected_complete": false,
+          "actual_complete": false,
+          "passed": true
+        },
+        {
+          "task": "activity_stats",
+          "expected_complete": true,
+          "actual_complete": true,
+          "passed": true
+        },
+        {
+          "task": "project_intro",
+          "expected_complete": true,
+          "actual_complete": true,
+          "passed": true
+        },
+        {
+          "task": "project_intro",
+          "expected_complete": false,
+          "actual_complete": false,
+          "passed": true
+        },
+        {
+          "task": "unknown_task",
+          "expected_complete": null,
+          "actual_complete": null,
+          "passed": true
+        }
+      ]
+    }
+  },
+  "historical_human31": {
+    "rerun": false,
+    "source": "eval/releases/campus_blind31_20261102",
+    "models": [
+      {
+        "id": "active",
+        "n": 31,
+        "correct": 17,
+        "macro_f1": 0.4028
+      },
+      {
+        "id": "task",
+        "n": 31,
+        "correct": 22,
+        "macro_f1": 0.4696
+      },
+      {
+        "id": "context",
+        "n": 31,
+        "correct": 19,
+        "macro_f1": 0.3825
+      }
+    ]
+  },
+  "limitations": [
+    "官方GLiNER不等于缺失的项目微调权重。",
+    "field_v1是已使用的开发基准。",
+    "24条新诊断由AI编写，不能当作独立人工准确率。",
+    "历史31条人工评测未重新执行。",
+    "未测试真实云端生成；未自动晋级必要性候选。"
+  ],
+  "supplemental_checks": {
+    "created_utc": "2026-11-02T08:06:27.532708+00:00",
+    "primary_report_sha256": "20da10de317773b2dd072f733fd232c9cd79a8da1d343688f4a7c1f9c09ed7f3",
+    "model_inference_rerun": false,
+    "tokenizer": {
+      "fast_class": "DebertaV2TokenizerFast",
+      "slow_class": "DebertaV2Tokenizer",
+      "strings_compared": 135,
+      "token_id_mismatches": 0,
+      "mismatch_indices": [],
+      "scope": "Parity on benchmark and diagnostic strings; does not prove parity for all inputs."
+    }
+  },
+  "source_files_at_publication": {
+    "llm_shield/m2_detect/gliner_ner.py": "58ad66ee5dd586a17795ef90b6cc0f0082b47b0eaa1bf7b33b1fa28639d2fee9",
+    "llm_shield/m2_detect/pipeline.py": "652a72ddbc0afb0db13c42c4ffbd32ad084f9ed1705425a3cbcc885c9c97a0e9",
+    "llm_shield/m2_detect/regex_rules.py": "8bc00d2a0f37a20c0cdc49dee19dbb435d8e53fc211dafa298569c59e64f9936",
+    "llm_shield/m2_detect/entity_rules.py": "048fa4a624b1b9ddbc21de168039cacb6837f63baad668466a4b131923dcb98d",
+    "llm_shield/m4_necessity/model.py": "d92744d109f5357f8a761cb678b1891caecb870c056476e71575fa8f9b6a553b",
+    "llm_shield/m3_decide/decision.py": "5469942afff498bb6ff0d261312822f1fe426f26b96ae8ce93ae27a2b4b67ad4",
+    "config/rules.yaml": "29a2a6407784db734054165edb7991d9d97a0fef5c6b6a0ef3bafc2b25b3740e",
+    "config/tasks.yaml": "740bd2e2b5f7265ff844ecd1cef2851030ceb5fc868d2c375e131f1bba9d9023",
+    "config/recipients.yaml": "4531823c1aaf090c8af3f78f11e99b33d9ec924180a469fdf4896a38c69a45df",
+    "config/identities.yaml": "d2b0ef4e52b31f741fef4d5f46efc4e2963e17df020bd853a495cd6d1bb4a303"
+  }
+}

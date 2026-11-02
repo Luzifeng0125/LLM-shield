@@ -214,7 +214,7 @@ class EgressGateway:
         self._record(Boundary.B1_MODEL_INPUT, "external_model", payload, False, "",
                      (time.perf_counter() - started) * 1000)
         if generated["engine"] == "error":
-            return {**generated, "allowed": False}
+            return {**generated, "allowed": False, "input_checked": True}
         # 回答要进入下一轮历史，因此按外部模型边界复检，不能把原值存回历史。
         output = self.precheck("external_model", identity_key, generated["text"], original_spans,
                                allowed_values, placeholders=placeholders, task_key=task_key,
@@ -231,11 +231,11 @@ class EgressGateway:
                                         expected_type=RecipientType.EXTERNAL_MODEL)
                 if checked["allowed"]:
                     self.auditor.log("chat.output_redacted", task=task_key)
-                    return {**generated, "text": sanitized, "allowed": True,
+                    return {**generated, "text": sanitized, "allowed": True, "input_checked": True,
                             "error": "回答中的受限信息已在本机隐藏。"}
-            return {"allowed": False, "text": "", "engine": generated["engine"],
+            return {"allowed": False, "text": "", "engine": generated["engine"], "input_checked": True,
                     "error": "回答未通过敏感信息复检，本轮不写入历史"}
-        return {**generated, "allowed": True}
+        return {**generated, "allowed": True, "input_checked": True}
 
     def send_to_viewer(self, recipient_key: str, content: str, identity_key: str,
                        original_spans: List[Span] = None,

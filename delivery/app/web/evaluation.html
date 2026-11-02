@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>分阶段评测 · 隐盾</title>
+  <link rel="stylesheet" href="/static/evaluation.css">
+</head>
+<body>
+  <header class="page-header"><a href="/">隐盾 / LLM-Shield</a><a href="/">返回对话</a></header>
+  <main>
+    <div class="eyebrow">LOCAL MODEL EVALUATION</div>
+    <h1>每一阶段，分别看效果</h1>
+    <p class="intro">把实体识别、必要性判断和安全约束分开测量。模型概率、测试匹配率和整条链路的可靠性，是不同的指标。</p>
+    <div id="runtime" class="runtime" role="status"></div>
+    <p id="reportSource" class="caption"></p>
+    <p id="error" role="alert" hidden></p>
+    <div id="report" hidden>
+      <nav aria-label="评测内容"><a href="#stages">阶段总览</a><a href="#recognition">识别效果</a><a href="#necessity">必要性模型</a><a href="#limits">适用范围</a><button id="download" type="button">下载汇总 JSON</button></nav>
+      <div id="highlights" class="highlights"></div>
+      <aside class="weaknesses"><strong>本轮仍需优先解决的漏检</strong><ul id="weaknesses"></ul><p class="caption">这些是本次官方模型的实测结果，综合 F1 不能代替高风险类别的召回检查。</p></aside>
+      <section id="stages"><div class="section-heading"><span>01 / PIPELINE</span><h2>从读入到输出</h2></div>
+        <div class="table-scroll"><table><thead><tr><th>阶段</th><th>本次测量</th><th>实测结果</th><th>结果说明</th></tr></thead><tbody id="stageRows"></tbody></table></div>
+      </section>
+      <section id="recognition"><div class="section-heading"><span>02 / RECOGNITION</span><h2>实体识别，按类别核对</h2></div>
+        <p id="nerScope"></p>
+        <div class="controls"><label>识别配置 <select id="nerConfig"></select></label><label>匹配口径 <select id="nerMode"><option value="strict">类别＋边界严格一致</option><option value="cover">完整覆盖目标</option><option value="overlap">同类别区间相交</option></select></label></div>
+        <p id="nerTotals" class="metric-line"></p>
+        <div class="table-scroll"><table><thead><tr><th>类别</th><th>精确率</th><th>召回率</th><th>F1</th><th>正确 TP</th><th>误报 FP</th><th>漏检 FN</th></tr></thead><tbody id="nerRows"></tbody></table></div>
+        <p class="caption">精确率＝正确识别 / 所有识别；召回率＝正确识别 / 所有参考实体。漏检仍可能进入后续处理，硬约束不能代替识别召回。</p>
+      </section>
+      <section id="necessity"><div class="section-heading"><span>03 / NECESSITY</span><h2>必要性模型，区分两种输入条件</h2></div>
+        <p>本轮 24 条由 AI 编写的合成诊断，只用于检查机制。前三列给定参考实体，最后一列使用真实识别结果；均未训练、调参或晋级。</p>
+        <div class="table-scroll"><table><thead><tr><th>模型</th><th>特征版本</th><th>原始动作匹配</th><th>硬约束后匹配</th><th>六类宏 F1</th><th>识别＋动作匹配</th><th>决策均耗时</th></tr></thead><tbody id="policyRows"></tbody></table></div>
+        <p class="caption">“识别＋动作匹配”要求同类别预测片段与参考区间相交，且最终动作匹配；漏检计失败。它尚未包含云端生成和最终任务完成质量。</p>
+        <h3>历史 31 条冻结人工裁定</h3><p class="caption">三人复核加一人审核的合并返还；缺少完整的个人原始标注链。本次读取既有结果，没有重新评分。</p>
+        <div class="table-scroll"><table><thead><tr><th>模型</th><th>硬约束后匹配</th><th>六类宏 F1</th></tr></thead><tbody id="historyRows"></tbody></table></div>
+      </section>
+      <section id="limits"><div class="section-heading"><span>04 / EVIDENCE</span><h2>这些结果能说明什么</h2></div><ul id="limitations"></ul><details><summary>模型来源、环境与校验</summary><dl id="environment"></dl></details></section>
+    </div>
+  </main>
+  <footer>只展示聚合评测与当前服务状态，不读取或展示用户上传的材料。</footer>
+  <script src="/static/evaluation.js"></script>
+</body></html>
