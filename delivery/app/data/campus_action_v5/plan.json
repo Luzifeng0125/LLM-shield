@@ -1,0 +1,276 @@
+{
+  "schema": "campus-action-execution-plan-v1.1",
+  "date": "2026-10-31",
+  "status": "protocol_frozen_implementation_pending",
+  "objective": "Execute minimum necessary disclosure while preserving required task facts and trusted boundary permissions",
+  "scope": "Chinese university student, teacher and campus organization workflows",
+  "enterprise_expansion": false,
+  "protocol": "../../../../01_优化方案/校园最小披露标注与验收协议_v1.1.md",
+  "source_registry": "source_registry.json",
+  "actions": [
+    "DELETE",
+    "GENERALIZE",
+    "LOCAL_AGGREGATE",
+    "PAUSE",
+    "PSEUDONYMIZE",
+    "RETAIN"
+  ],
+  "boundaries": [
+    "external_generation",
+    "authorized_local_delivery",
+    "public_release"
+  ],
+  "inference_input_regions": [
+    "runtime_input"
+  ],
+  "excluded_from_inference": [
+    "annotation",
+    "audit_metadata",
+    "human_resolved_purpose",
+    "human_required_facts",
+    "gold_permission_conclusions"
+  ],
+  "decision_key": [
+    "task_id",
+    "information_unit_id",
+    "boundary_id",
+    "recipient_id",
+    "purpose_id",
+    "policy_version"
+  ],
+  "annotation_required": [
+    "information_scope",
+    "purpose_and_source",
+    "permission_basis_refs",
+    "required_facts",
+    "canonical_action",
+    "acceptable_actions",
+    "expected_output_constraints",
+    "evidence_refs",
+    "annotation_status"
+  ],
+  "ambiguity": {
+    "canonical_action_before_model_prediction": true,
+    "acceptable_actions_separate_metric": true,
+    "unresolved_test_labels_allowed": false,
+    "annotation_disagreement_is_not_pause": true
+  },
+  "pause": {
+    "unit": "one_shared_missing_condition_group_per_task_boundary",
+    "duplicate_field_counting": false,
+    "training_group_normalized": true,
+    "kinds": [
+      "clarification",
+      "policy_block",
+      "human_handoff"
+    ],
+    "question_quality_scored_for": "clarification_only",
+    "unnecessary_abstention_counts_as_error": true
+  },
+  "review_policy": {
+    "ai_first_review_all_materials": true,
+    "training_ui": "suggestions_visible",
+    "test_ui": "human_initial_answer_before_optional_ai_reveal",
+    "user_return_is_human_review_declaration": true,
+    "accept_valid_return_without_additional_human_confirmation": true,
+    "missing_independent_first_answer": "accept_human_provenance_but_do_not_claim_independence",
+    "preserve_original_bytes_initial_and_final_answers": true,
+    "fabricate_missing_review_metadata": false,
+    "second_human_reviewer_mandatory": false,
+    "new_ui_and_importer_status": "to_implement"
+  },
+  "near_term": {
+    "deadline": "2026-11-04",
+    "timezone": "Asia/Shanghai",
+    "deliverable": "human_reviewable_reproducible_campus_decision_prototype",
+    "formal_accuracy_claim_allowed": false,
+    "calibration_documents": 40,
+    "calibration_train_documents": 28,
+    "calibration_validation_documents": 12,
+    "e2e_regression_documents": 20,
+    "e2e_is_subset_of_calibration": true,
+    "independent_pilot_documents": 12,
+    "total_distinct_documents_target": 52,
+    "large_scale_generation_started": false,
+    "models_required": [
+      "R0",
+      "B0",
+      "R0+B0"
+    ],
+    "models_deferred": [
+      "B1",
+      "B2"
+    ],
+    "first_round_e2e_required": true,
+    "human_or_detector_dependency_incomplete": "report_flow_demo_or_draft_label_results_and_explicit_incomplete_acceptance",
+    "schedule": {
+      "2026-10-31": "protocol_and_plan_freeze",
+      "2026-11-01": "AI_reviewed_calibration_pack_UI_import_and_begin_20_e2e_cases",
+      "2026-11-02": "human_calibration_disputes_pilot_labels_and_rule_freeze",
+      "2026-11-03": "baseline_experiments_and_e2e_repairs",
+      "2026-11-04": "frozen_candidate_pilot_evaluation_and_reproducible_delivery"
+    }
+  },
+  "long_term_data": {
+    "primary_documents_target": 400,
+    "split_documents": {
+      "train": 240,
+      "validation": 60,
+      "natural_test": 100
+    },
+    "primary_decisions_estimate": 2400,
+    "natural_test": {
+      "class_quota": null,
+      "decisions_estimate": 600,
+      "sampling": "pre_registered_task_window_channels_and_inclusion_rules_not_action_balancing",
+      "proxy_if_real_traffic_unknown": true
+    },
+    "balanced_diagnostic": {
+      "additional_documents_estimate": 100,
+      "decision_units_min": 300,
+      "per_action_units_min": 50,
+      "pause_groups_deduplicated": true
+    },
+    "context_challenge": {
+      "target_pairs_min": 40,
+      "scored_separately": true,
+      "may_share_with_diagnostic": true,
+      "must_disclose_overlap": true
+    },
+    "stage98_additional_new_documents_min": 400,
+    "stage98_new_decisions_min": 2000,
+    "cumulative_document_budget_floor_estimate": 900,
+    "additional_challenge_and_iteration_materials_not_in_floor": true,
+    "near_term_materials_can_join_later_train_dev_not_fresh_test": true,
+    "split_group_keys": [
+      "source_family",
+      "scenario_family",
+      "event_id",
+      "context_pair_id"
+    ],
+    "length_bands_apply_to_training_not_natural_test": [
+      {
+        "characters": [
+          100,
+          400
+        ],
+        "share": 0.25
+      },
+      {
+        "characters": [
+          401,
+          1600
+        ],
+        "share": 0.5
+      },
+      {
+        "characters": [
+          1601,
+          4000
+        ],
+        "share": 0.25
+      }
+    ],
+    "workflows": [
+      "class_coordination",
+      "coursework_grades",
+      "teacher_counselor_handoff",
+      "club_membership",
+      "student_events",
+      "awards_financial_aid",
+      "campus_services",
+      "minutes_reports_statistics"
+    ]
+  },
+  "evaluation": {
+    "levels": [
+      "L1_given_target_action",
+      "L2_automatic_detection_and_decision",
+      "L3_output_safety_and_utility"
+    ],
+    "primary_metric": "strict_canonical_six_action_accuracy_on_natural_set_with_pause_group_deduplication",
+    "mix_natural_and_balanced_scores": false,
+    "stage80": {
+      "natural_accuracy_min": 0.8,
+      "diagnostic_macro_f1_min": 0.78,
+      "diagnostic_each_class_recall_min": 0.7,
+      "clarification_task_recall_min": 0.8,
+      "challenge_both_correct_min": 0.8
+    },
+    "stage98": {
+      "natural_accuracy_target": 0.98,
+      "claim": "research_target_not_promise",
+      "confidence_interval": "95_percent_document_or_source_clustered"
+    },
+    "task_pause_metrics": [
+      "precision",
+      "recall",
+      "unnecessary_questions",
+      "missed_questions",
+      "repeated_questions_per_task",
+      "question_quality"
+    ],
+    "raw_and_rule_intervened_predictions_separate": true,
+    "unnecessary_abstention_is_wrong": true,
+    "automatic_subset_accuracy_is_not_full_model_accuracy": true,
+    "final_candidate_selection": "development_validation_only",
+    "exposed_test_becomes_development": true,
+    "heldout_from_small_model_not_authoring_ai": true
+  },
+  "release_gate": {
+    "separate_from_action_accuracy": true,
+    "s3_unauthorized_crossed_boundary_max": 0,
+    "s2_crossed_boundary_in_critical_challenges_max": 0,
+    "trusted_hard_permission_bypass_max": 0,
+    "unresolved_serious_findings_max": 0,
+    "missing_critical_tests_allowed": false,
+    "natural_s2_leakage_task_rate_max": 0.01,
+    "statistical_deployment_claim_requires_one_sided_95_percent_upper_bound_at_most": 0.01,
+    "natural_task_completion_min": 0.9,
+    "required_fact_retention_min": 0.95,
+    "unnecessary_pause_on_answerable_tasks_max": 0.1,
+    "candidate_attempt_and_actual_egress_separate": true,
+    "zero_observed_is_not_zero_population_risk": true,
+    "near_term_mode": "human_review_before_delivery"
+  },
+  "models": [
+    {
+      "id": "R0",
+      "scope": "new_offline_deterministic_baseline_from_existing_components",
+      "already_complete": false
+    },
+    {
+      "id": "B0",
+      "scope": "existing_bert_structure_plus_reviewed_campus_inputs"
+    },
+    {
+      "id": "R0+B0",
+      "scope": "predefined_rule_coverage_and_arbitration_plus_bert"
+    },
+    {
+      "id": "B1",
+      "scope": "target_conditioned_chunk_aggregation",
+      "phase": "after_pilot_error_review"
+    },
+    {
+      "id": "B2",
+      "scope": "auxiliary_context_supervision_and_training_contrast",
+      "phase": "after_pilot_error_review"
+    }
+  ],
+  "current_system_control": "P-current_model_actions_with_allow_or_pause_guards_not_R0",
+  "expansion_gate": [
+    "protocol_v1.1_implemented",
+    "40_document_calibration_and_dispute_log",
+    "R0_B0_hybrid_runnable",
+    "20_document_e2e_findings",
+    "test_first_answer_and_user_return_import_compatible"
+  ],
+  "completed": {
+    "campus_documents_generated": 0,
+    "human_reviewed_decisions": 0,
+    "new_models_trained": 0,
+    "new_e2e_runs": 0
+  },
+  "production_promoted": false
+}

@@ -1,0 +1,182 @@
+{
+  "schema_version": 2,
+  "updated": "2026-10-26",
+  "task": "任务感知披露优化首轮：输出边界、资料用途与期限、候选实验及人工复核入口",
+  "workspace": "D:/challenge_AI/LLM-Shield",
+  "source": "delivery/app",
+  "active_models": "delivery/app/models/ACTIVE_MODELS.json",
+  "architecture": {
+    "gliner_enabled": true,
+    "campus_ner_removed": true,
+    "reviewed_ner": "offline_evaluation_only",
+    "action_feature_version": 3,
+    "llm_mode": "real",
+    "default_port": 8787
+  },
+  "validation": {
+    "smoke_passed": 38,
+    "pytest_passed": 307,
+    "subtests_passed": 95,
+    "gliner_device": "cuda",
+    "local_models": "passed",
+    "local_roster": "passed",
+    "local_whole_table_count": "passed",
+    "real_deepseek_public_round_trip": "passed",
+    "sample_round_trip_ms": 1831
+  },
+  "last_revalidation": {
+    "at": "2026-10-26T15:21:17+08:00",
+    "scope": "offline mock; GLiNER disabled; pytest + separate smoke",
+    "pytest_passed": 333,
+    "subtests_passed": 90,
+    "pytest_skipped": 5,
+    "pytest_failed": 0,
+    "skip_reason": "GLiNER weights unavailable for enabled-model prompt checks",
+    "smoke_passed": 38,
+    "smoke_failed": 0,
+    "report": "delivery/app/outputs/action_research_20261026_v2/regression.xml",
+    "javascript_syntax": "passed",
+    "git_diff_check": "passed"
+  },
+  "private_files": "ignored .env, uploads, GLiNER weights and local archive; not uploaded",
+  "backup": "D:/project-backups",
+  "remaining": [
+    "首批28题A/B独立复核、歧义裁决和后续真实人工标注",
+    "补齐本项目GLiNER权重并校验来源哈希，完成真实识别与端到端验收",
+    "新独立材料的隐私效用终测，当前合成留出不算盲测",
+    "浏览器工作流、真实公开文案、大文件性能与异机交付验收",
+    "多人部署前需要真实身份认证与资料归属检查"
+  ],
+  "active_service": {
+    "verified": false,
+    "note": "本轮未启动生产服务；历史PID不代表当前运行状态。"
+  },
+  "old_source": {
+    "archived": true,
+    "active_code_copies": 1,
+    "old_path_empty": true,
+    "empty_directory_removal": "blocked_by_current_Codex_WorkBuddy_directory_handles"
+  },
+  "retired_model_bases": "D:/project-backups/retired-models-20261017",
+  "project_status": "optimization_pending_human_review_and_gliner_weights",
+  "branch": "codex/task-aware-disclosure",
+  "base_commit": "81294fd50a1b4b1b5d392a8f171664450fc80461",
+  "historical_active_service_20261017": {
+    "pid": 88116,
+    "url": "http://127.0.0.1:8787/",
+    "verified": true,
+    "gliner_enabled": true,
+    "mode": "real"
+  },
+  "optimization_20261026": {
+    "report": "04_技术文档/优化记录与人工事项_20261026.md",
+    "review_entry": "03_数据与人工复核/任务必要性复核_20261026_v2/开始这里.md",
+    "review_cases": 336,
+    "source_cases": 96,
+    "template_groups": 12,
+    "human_reviewed": 0,
+    "first_manual_batch": 28,
+    "supervision": "machine_draft_not_gold",
+    "experiment": "delivery/app/outputs/action_research_20261026_v2/report.json",
+    "active_models_changed": false,
+    "candidate_promoted": false,
+    "real_external_calls_this_round": false,
+    "missing_weights": "delivery/app/models/gliner_v3/pytorch_model.bin",
+    "status": "software_checks_passed; human_review_and_real_ner_acceptance_pending"
+  },
+  "directory_organization": {
+    "at": "2026-10-28",
+    "scope": "file relocation, path repair, navigation, disposable-cache cleanup",
+    "plans": "01_优化方案",
+    "submissions": "02_提交材料",
+    "review_data": "03_数据与人工复核",
+    "technical_documents": "04_技术文档",
+    "application": "delivery/app",
+    "runtime": "delivery/runtime",
+    "models_or_labels_retrained": false,
+    "validation": {
+      "date": "2026-10-28",
+      "protected_files": {
+        "total": 332,
+        "unchanged": 278,
+        "documented_text_updates": 13,
+        "documented_disposable_deletions": 41,
+        "unexpected": 0
+      },
+      "active_action_hash_unchanged": true,
+      "env_hash_unchanged": true,
+      "local_links_checked": 79,
+      "entry_documents_checked": 10,
+      "python_path_script_syntax": "passed",
+      "smoke": {
+        "passed": 38,
+        "failed": 0,
+        "mode": "mock; GLiNER disabled"
+      },
+      "review_tool_tests": {
+        "passed": 51,
+        "subtests_passed": 63,
+        "errors": 0,
+        "failures": 0,
+        "report": "delivery/app/outputs/reorganization_20261028/review_tools_verified.xml",
+        "first_sandbox_run": "temp-directory permission failure; elevated rerun passed"
+      },
+      "plan_archive": "all entries match current documents",
+      "git_head": "81294fd50a1b4b1b5d392a8f171664450fc80461",
+      "git_branch": "codex/task-aware-disclosure",
+      "parent_entries": [
+        "LLM-Shield",
+        "个人资料"
+      ],
+      "full_real_model_startup": "not performed; original GLiNER weights missing"
+    },
+    "completion_report": "04_技术文档/整理记录/整理完成说明_20261028.md"
+  },
+  "latest_context_research": {
+    "at": "2026-10-31",
+    "report": "04_技术文档/上下文语义微调_20261031.md",
+    "review_entry": "03_数据与人工复核/上下文长材料_v4_1_20261030/开始这里.md",
+    "documents": 27,
+    "privacy_decisions": 122,
+    "new_label_provenance": "machine_draft",
+    "actually_finetuned_bert_checkpoints": 4,
+    "checkpoints_reloaded_and_predictions_identical": 4,
+    "related_tests_passed": 52,
+    "related_tests_scope": "offline_data_review_chunk_encoding_contrast_boundaries",
+    "review_ui_cases": 122,
+    "review_ui_verified": true,
+    "preferred_offline_by_validation": {
+      "experiment": "bert_chunks",
+      "condition": "mixed",
+      "validation": {
+        "n": 25,
+        "correct": 17,
+        "accuracy": 0.68,
+        "macro_f1": 0.6027777777777777
+      },
+      "development": {
+        "n": 35,
+        "correct": 18,
+        "accuracy": 0.5142857142857142,
+        "macro_f1": 0.4984848484848485
+      },
+      "old_development": {
+        "n": 18,
+        "correct": 12,
+        "macro_f1": 0.6
+      },
+      "context_pair_both_correct": 0,
+      "context_pair_count": 2,
+      "report_path": "delivery\\app\\outputs\\context_bert_experiment_20261030_v1\\report.json"
+    },
+    "active_models_changed": false,
+    "candidate_promoted": false,
+    "remaining": [
+      "隐私追问召回0/2",
+      "医疗用途反转两边都正确0/2",
+      "独立数据及真实业务验收",
+      "给定目标动作评测以外的敏感信息检测与最终改写验收"
+    ],
+    "historical_sections": "Other dated validation and optimization entries retain their original scope; they are not this run."
+  }
+}

@@ -121,6 +121,12 @@
 
         <section class="sec" id="sec-files">
           <h3 class="sec-title">文件库</h3>
+          <label for="uploadStorage">上传文件保存方式</label>
+          <select id="uploadStorage" aria-label="上传文件保存方式">
+            <option value="temporary">临时使用，30 分钟后过期</option>
+            <option value="library">保存到本机，手动删除</option>
+          </select>
+          <p class="sec-footnote">新上传文件仅用于当前任务；用于其他任务时请重新确认并上传。</p>
           <div id="library" class="material-list" aria-live="polite"></div>
         </section>
 

@@ -80,6 +80,8 @@ def process_segment(
     session_id: str,
     agg_items: List[dict],
     mapping=None,
+    *,
+    person_stable_codes: bool = False,
 ) -> str:
     """把单个决策单元转换为可外发文本。"""
     mapping = mapping or get_table()
@@ -117,7 +119,13 @@ def process_segment(
         out = text
         for s in reversed(spans):
             a, b = s.start - seg.start, s.end - seg.start
-            if s.category in GENERALIZABLE:
+            if s.category == "PERSON_NAME" and person_stable_codes:
+                # 多个人都写成「某同学」后，值日分工无法对应。沿用原有姓名代号，不新做映射。
+                # 动作仍记为泛化；代号能否还原只看接收方权限。
+                code = mapping.get_or_create(session_id, s.text, s.category,
+                                             prefix_pool, templates)
+                out = out[:a] + code + out[b:]
+            elif s.category in GENERALIZABLE:
                 out = out[:a] + _generalize_value(s) + out[b:]
             else:
                 out = out[:a] + out[b:]
@@ -159,6 +167,14 @@ def apply_decisions(
     paused_segments: List[str] = []
     pause_reason = ""
 
+    distinct_people = {
+        span.text
+        for seg, dec in zip(segments, decisions)
+        if dec.action == Action.GENERALIZE
+        for span in seg.spans
+        if span.category == "PERSON_NAME"
+    }
+    person_stable_codes = len(distinct_people) >= 2
     parts: List[str] = []
     for seg, dec in zip(segments, decisions):
         if dec.action == Action.PAUSE:
@@ -166,7 +182,10 @@ def apply_decisions(
             if not pause_reason:
                 pause_reason = dec.reason
             continue
-        parts.append(process_segment(seg, dec, session_id, agg_items, mapping))
+        parts.append(process_segment(
+            seg, dec, session_id, agg_items, mapping,
+            person_stable_codes=person_stable_codes,
+        ))
 
     sanitized = "".join(parts)
     # 压掉连续空行

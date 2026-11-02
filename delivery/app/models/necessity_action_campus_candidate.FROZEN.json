@@ -1,0 +1,14 @@
+{
+  "status": "frozen",
+  "frozen_on": "2026-11-01",
+  "path": "delivery/app/models/necessity_action_campus_candidate.joblib",
+  "sha256": "74902c5d9239eaffc0208891297d8f19b462910534fcc3a51e37b1997f3ee950",
+  "active_path": "delivery/app/models/necessity_action.joblib",
+  "active_sha256": "cbfed4ca422a1a6d416ce1b5f488649816c261b6acc86ffc173887c8dfed1b9f",
+  "promoted": false,
+  "do_not_retune_on": [
+    "03_数据与人工复核/校园最小披露_校准首批_20261031",
+    "03_数据与人工复核/校园必要性独立验证_20261101"
+  ],
+  "reason": "独立验证没有给出足够的替换理由。不要再按已有对照样本调整这份候选。"
+}

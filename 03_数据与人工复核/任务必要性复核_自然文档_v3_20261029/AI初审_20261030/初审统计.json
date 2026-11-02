@@ -1,0 +1,16 @@
+{
+  "cases": 138,
+  "documents": 36,
+  "changed_actions": 8,
+  "priority_cases": 30,
+  "actions": {
+    "RETAIN": 36,
+    "PSEUDONYMIZE": 15,
+    "DELETE": 51,
+    "PAUSE": 16,
+    "GENERALIZE": 13,
+    "LOCAL_AGGREGATE": 7
+  },
+  "source_cases_sha256": "a0671e29c6124a9bfaf9a7272bd759a5db20ecefcf5e9906472c1977d003dc18",
+  "human_reviewed": 0
+}

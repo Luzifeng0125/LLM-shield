@@ -1,0 +1,11 @@
+{
+  "status": "not_promoted",
+  "trained_on": "2026-11-01",
+  "path": "delivery/app/models/necessity_action_campus_aligned_20261101.joblib",
+  "sha256": "6fe7e292d618106af9109788181a55965365819667f8f34841e68c674b514356",
+  "active_path": "delivery/app/models/necessity_action.joblib",
+  "active_sha256": "cbfed4ca422a1a6d416ce1b5f488649816c261b6acc86ffc173887c8dfed1b9f",
+  "promoted": false,
+  "test_pool_used_for_training": false,
+  "reason": "校准池最高概率 19/19。独立测试池只核对一次，最高概率 24/40，硬约束之后 18/40。没有替换活动权重。"
+}

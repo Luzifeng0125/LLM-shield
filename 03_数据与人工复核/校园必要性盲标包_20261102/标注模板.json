@@ -1,0 +1,26 @@
+{
+  "unit_id": "",
+  "quote": "",
+  "category": "",
+  "boundary_id": "",
+  "recipient_id": "",
+  "identity_key": "",
+  "user_task": "",
+  "annotation": {
+    "canonical_action": "",
+    "required_facts": "",
+    "adjudication": "",
+    "notes": "",
+    "annotator": "",
+    "annotated_at": ""
+  },
+  "allowed_actions": [
+    "DELETE",
+    "LOCAL_AGGREGATE",
+    "GENERALIZE",
+    "PSEUDONYMIZE",
+    "RETAIN",
+    "PAUSE"
+  ],
+  "if_uncertain": "动作留空，adjudication 填写待裁定"
+}

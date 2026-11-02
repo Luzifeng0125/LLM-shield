@@ -1,0 +1,55 @@
+{
+  "pool": "test",
+  "document_id": "t08",
+  "text": "冯清澜负责纪要归档。资料打印费11220元。",
+  "user_task": "帮我把例会记录整理顺，语气正式一点。",
+  "workflow_id": "minutes_reports_statistics",
+  "task_key": "meeting_minutes",
+  "workflow_name": "会议纪要",
+  "units": [
+    {
+      "unit_id": "t08-u1",
+      "quote": "冯清澜",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "帮我把例会记录整理顺，语气正式一点。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 0,
+      "end": 3
+    },
+    {
+      "unit_id": "t08-u2",
+      "quote": "11220元",
+      "category": "BUDGET",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "帮我把例会记录整理顺，语气正式一点。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 15,
+      "end": 21
+    }
+  ]
+}

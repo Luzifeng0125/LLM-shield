@@ -1,0 +1,569 @@
+{
+  "schema": "action-review-response-v1",
+  "reviewer": "Codex-AI初审-待用户二审",
+  "role": "ai_draft",
+  "reviewer_kind": "ai",
+  "human_reviewed": false,
+  "review_status": "ai_pre_review_pending_human",
+  "date": "2026-10-30",
+  "machine_suggestions_consulted_before_decisions": true,
+  "scope": "user_requested_ai_first_review_not_independent_human_gold",
+  "reviews": [
+    {
+      "case_id": "na01-s01",
+      "case_sha256": "7e60443d038777fe1aa3de209c24259e8843d16a17acc07addaac939d3627754",
+      "annotation": {
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "实际排练地点与开放时间",
+        "reason": "当前场地已变更，准确点位及门禁时间支撑内部执行安排；原文没有说明此内部排练地点可向公众发布，不能用公开地点作为理由。",
+        "evidence": [
+          "会场改到映川楼一层排练厅，门禁从十八点开放。"
+        ],
+        "allowed_actions": [
+          "RETAIN"
+        ]
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "RETAIN",
+      "changed_action": false,
+      "priority": true,
+      "review_note": "原理由把地点称为公开活动地点，但全文说这是内部试走。请二审确认外部整理的地点披露范围，不能把内部工作地点等同公开许可。"
+    },
+    {
+      "case_id": "na01-s02",
+      "case_sha256": "a07c02b0017a6ce49ef043cce7bd0619a021a421574dc5467f14f0aa72abf89c",
+      "annotation": {
+        "action": "PSEUDONYMIZE",
+        "minimum_representation": "pseudonym",
+        "required_facts": "两位执行人、走位图与投影测试的前后依赖及截止时间",
+        "reason": "要追踪两个人的不同职责，外部整理服务用稳定代号足够。",
+        "evidence": [
+          "18:07 主持：先别照上午那张表催人，场地刚变。我把今天的消息接在下面了，明天到场的同学得看到同一个版本。"
+        ],
+        "allowed_actions": [
+          "PSEUDONYMIZE"
+        ]
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "PSEUDONYMIZE",
+      "changed_action": false,
+      "priority": false,
+      "review_note": "已对照本篇任务、全文和目标实体，初审保留此项处置；依据见下方判断理由。"
+    },
+    {
+      "case_id": "na01-s03",
+      "case_sha256": "f6402a4c863a2ce10929d1c04220274bc78834779a903573d5a7f924f19a9988",
+      "annotation": {
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "工作分派及期限",
+        "reason": "这是找雨伞话题中留下的私人邮箱，与待办整理无关，去掉邮箱值不损失工作安排。",
+        "evidence": [
+          "18:23 后勤：雨伞上周落谁那里了？蓝柄那把。我自己的收件邮箱是 demo.rehearsal@example.invalid。"
+        ],
+        "allowed_actions": [
+          "DELETE"
+        ]
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "DELETE",
+      "changed_action": false,
+      "priority": false,
+      "review_note": "已对照本篇任务、全文和目标实体，初审保留此项处置；依据见下方判断理由。"
+    },
+    {
+      "case_id": "na01-s04",
+      "case_sha256": "726ea4e54a909b890cb01a2f89a49d37f738f9a93f20f730d5c0e36cf63c08bb",
+      "annotation": {
+        "action": "PAUSE",
+        "minimum_representation": "uncertain",
+        "required_facts": "防滑条任务的有效负责人",
+        "reason": "两个互斥责任归属尚未确认，无法用删除或代号替换解决执行人冲突，仅此分派需澄清。 仅暂停这项不确定事实的认定或使用，已确认的其他事项可以先整理。 待确认：防滑条最终由谁负责准备，哪份排班有效？",
+        "evidence": [
+          "舞台边沿的防滑条要补。",
+          "我们不能等大家到了才发现没有人带材料。"
+        ],
+        "allowed_actions": [
+          "PAUSE"
+        ],
+        "clarification_question": "防滑条最终由谁负责准备，哪份排班有效？"
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "PAUSE",
+      "changed_action": false,
+      "priority": true,
+      "review_note": "请二审确认该缺口是否确实阻碍本项输出；不应因此停止整篇所有已确认事项。"
+    },
+    {
+      "case_id": "na02-s01",
+      "case_sha256": "0c44c37abb13f3b2b2f6d025a2a7fbae8fd97f03f45d9d3c8bf0df162d77d657",
+      "annotation": {
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "已公开的主办方身份及工具支持",
+        "reason": "已发布简章支持该合作事实，介绍实际项目时需要明确机构归属。",
+        "evidence": [
+          "桥岸公共图书馆在已发布的开放日简章中列为共同主办方，并提供工具借阅服务。"
+        ],
+        "allowed_actions": [
+          "RETAIN"
+        ]
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "RETAIN",
+      "changed_action": false,
+      "priority": false,
+      "review_note": "已对照本篇任务、全文和目标实体，初审保留此项处置；依据见下方判断理由。"
+    },
+    {
+      "case_id": "na02-s02",
+      "case_sha256": "4fbeb004b4a5a60b7972a012311994afd91846c32bceca10a831269d7a1f478a",
+      "annotation": {
+        "action": "GENERALIZE",
+        "minimum_representation": "coarse",
+        "required_facts": "项目从校内临时试修发展为固定体验的过程",
+        "reason": "筹备起源对简介有用，现有场地已有正式介绍，旧临时点位只需校内场所这一粒度。",
+        "evidence": [
+          "旧工坊腾退那天，我们把最后一台台灯搬出来；如今的体验点已有正式简章，这张旧地图是筹备过程的附件。"
+        ],
+        "allowed_actions": [
+          "GENERALIZE"
+        ]
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "GENERALIZE",
+      "changed_action": false,
+      "priority": false,
+      "review_note": "已对照本篇任务、全文和目标实体，初审保留此项处置；依据见下方判断理由。"
+    },
+    {
+      "case_id": "na02-s03",
+      "case_sha256": "2b21318c8712fd6a995ea553a68eb6db28b82aa91322cb4a2e454c0958a94400",
+      "annotation": {
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "项目的服务内容与已公开的支持事实",
+        "reason": "历史采购测算不支撑本次公开简介，该实体值可删除。",
+        "evidence": [
+          "页眉写着上月的焊台比价，下面盖了暂缓采购的蓝章。"
+        ],
+        "allowed_actions": [
+          "DELETE"
+        ]
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "DELETE",
+      "changed_action": false,
+      "priority": false,
+      "review_note": "已对照本篇任务、全文和目标实体，初审保留此项处置；依据见下方判断理由。"
+    },
+    {
+      "case_id": "na02-s04",
+      "case_sha256": "8573e443a70c0a1df810e480206fbed2389424dcc992e0f0d2dd3ca57043c829",
+      "annotation": {
+        "action": "PAUSE",
+        "minimum_representation": "uncertain",
+        "required_facts": "项目页合作方署名的已确认范围",
+        "reason": "署名要求使合作状态成为关键事实，现有来源互相冲突，不能自行当作已确认赞助。 仅暂停这项不确定事实的认定或使用，已确认的其他事项可以先整理。 待确认：北栎器材社的合作是否已获确认，项目页本次是否必须列出全部合作方？",
+        "evidence": [
+          "编辑现在要在项目页上放合作方署名，不知道该采用哪一条。"
+        ],
+        "allowed_actions": [
+          "PAUSE"
+        ],
+        "clarification_question": "北栎器材社的合作是否已获确认，项目页本次是否必须列出全部合作方？"
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "PAUSE",
+      "changed_action": false,
+      "priority": true,
+      "review_note": "请二审确认该缺口是否确实阻碍本项输出；不应因此停止整篇所有已确认事项。"
+    },
+    {
+      "case_id": "na03-s01",
+      "case_sha256": "b5f483866d640ef7ac323d72960ca8f89b474a353b329cd43da673678982ddc2",
+      "annotation": {
+        "action": "LOCAL_AGGREGATE",
+        "minimum_representation": "local_aggregate",
+        "required_facts": "全天四位不同参与者，与报名规模分别表述",
+        "reason": "完整名册和跨场同名身份已核验，可在本机对全日姓名去重生成实际人数，外部无需姓名明细。",
+        "evidence": [
+          "值班记录逐一核验过身份，重名栏为空，跨场同名对应同一个人；全日按实际参与者去重。"
+        ],
+        "allowed_actions": [
+          "LOCAL_AGGREGATE"
+        ]
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "LOCAL_AGGREGATE",
+      "changed_action": false,
+      "priority": false,
+      "review_note": "已对照本篇任务、全文和目标实体，初审保留此项处置；依据见下方判断理由。"
+    },
+    {
+      "case_id": "na03-s02",
+      "case_sha256": "795c5f760aef4e5ee3e7af3963b1ab5360ff4158fa097538428421aa218c2a7f",
+      "annotation": {
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "实际参与人数与活动反馈",
+        "reason": "回拨号码不参与统计，具体号码无必要业务价值。",
+        "evidence": [
+          "背面杂记：迟到留言的回拨号码：19900001023。记录员旧住址记为青沚园四栋二零五室。借板车那天留的；耳机找到了，和旧地址一起划线就好。"
+        ],
+        "allowed_actions": [
+          "DELETE"
+        ]
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "DELETE",
+      "changed_action": false,
+      "priority": false,
+      "review_note": "已对照本篇任务、全文和目标实体，初审保留此项处置；依据见下方判断理由。"
+    },
+    {
+      "case_id": "na03-s03",
+      "case_sha256": "8308ec0b56ecce00b79cc8c24c3b3ca38af51489136f400f331edbe0b8af4b0d",
+      "annotation": {
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "公开活动的发起机构",
+        "reason": "小结需要交代活动归属，公开社团名称不需隐藏。",
+        "evidence": [
+          "本次体验由弦页阅读社发起，活动海报已在校园主页公开。"
+        ],
+        "allowed_actions": [
+          "RETAIN"
+        ]
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "RETAIN",
+      "changed_action": false,
+      "priority": false,
+      "review_note": "已对照本篇任务、全文和目标实体，初审保留此项处置；依据见下方判断理由。"
+    },
+    {
+      "case_id": "na03-s04",
+      "case_sha256": "cd2d2403e4ed8485f5e4d5d70785ec6a9bc908bd4b46609df3d4b4cf69fb60c7",
+      "annotation": {
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "参与情况与教学反馈",
+        "reason": "住宿信息只是便笺背面的附记，与统计无关。",
+        "evidence": [
+          "背面杂记：迟到留言的回拨号码：19900001023。记录员旧住址记为青沚园四栋二零五室。借板车那天留的；耳机找到了，和旧地址一起划线就好。"
+        ],
+        "allowed_actions": [
+          "DELETE"
+        ]
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "DELETE",
+      "changed_action": false,
+      "priority": false,
+      "review_note": "已对照本篇任务、全文和目标实体，初审保留此项处置；依据见下方判断理由。"
+    },
+    {
+      "case_id": "na04-s01",
+      "case_sha256": "6e4cfe5f659385c75dbb1cef58206d96de97af0fdf692d7bd5b84ddafbd435db",
+      "annotation": {
+        "action": "GENERALIZE",
+        "minimum_representation": "coarse",
+        "required_facts": "项目由校内早期访谈扩展到不同年龄讲述者的过程",
+        "reason": "起源场所说明早期访谈条件，旧房间不再承担招募接待，校内场所足够表达。",
+        "evidence": [
+          "旧活动室早已改作库房，最早那次访谈只有一张录音桌和两把椅子，来的人却聊了整整一下午。"
+        ],
+        "allowed_actions": [
+          "GENERALIZE"
+        ]
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "GENERALIZE",
+      "changed_action": false,
+      "priority": false,
+      "review_note": "已对照本篇任务、全文和目标实体，初审保留此项处置；依据见下方判断理由。"
+    },
+    {
+      "case_id": "na04-s02",
+      "case_sha256": "119b9c4a8ad504248651b1f4f0637625f6529ba61f079269a1de3d46a7ea0733",
+      "annotation": {
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "已公开的资料整理协作关系",
+        "reason": "署名已公开，机构身份说明实际的项目支持。",
+        "evidence": [
+          "公开资料的整理由泊石档案研究社协助，双方已在本学期项目公告中署名。"
+        ],
+        "allowed_actions": [
+          "RETAIN"
+        ]
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "RETAIN",
+      "changed_action": false,
+      "priority": false,
+      "review_note": "已对照本篇任务、全文和目标实体，初审保留此项处置；依据见下方判断理由。"
+    },
+    {
+      "case_id": "na04-s03",
+      "case_sha256": "d8f7b1e79656d0a259b65a98b87e012c6fbd422341c3da092dba866044e86f62",
+      "annotation": {
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "招新介绍所需的项目方法与参与渠道",
+        "reason": "临时收件邮箱无对外联系职责，删除邮箱值不影响简介。",
+        "evidence": [
+          "它原本是收扫描件用的临时备注，招新手册没有收件需求。"
+        ],
+        "allowed_actions": [
+          "DELETE"
+        ]
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "DELETE",
+      "changed_action": false,
+      "priority": false,
+      "review_note": "已对照本篇任务、全文和目标实体，初审保留此项处置；依据见下方判断理由。"
+    },
+    {
+      "case_id": "na04-s04",
+      "case_sha256": "ea66d2de2984a6a9d0754e3fa8eb9222f03581486d47486c6a799df0d15ffb63",
+      "annotation": {
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "可参与的目录检查和授权页整理工作类型，无需具体成员身份",
+        "reason": "介绍中不需要区分现有成员，姓名可删除；工作类型仍可从文字中归纳，不能声称该动作会把整条待办删除。",
+        "evidence": [
+          "给新同学的介绍只讲能参与怎样的工作，不发布现有成员的待办。"
+        ],
+        "allowed_actions": [
+          "DELETE"
+        ]
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "DELETE",
+      "changed_action": false,
+      "priority": false,
+      "review_note": "已对照本篇任务、全文和目标实体，初审保留此项处置；依据见下方判断理由。"
+    },
+    {
+      "case_id": "na05-s01",
+      "case_sha256": "a9ac54082b3b458eab9b2358f9329b8e8bf7e9d2a67523ddc745f2bb1c6a6e34",
+      "annotation": {
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "真实借用人、已归还器材与缺少签字的对应关系",
+        "reason": "授权老师在本机执行实名补签核对，稳定代号无法完成现有纸质单据对照。",
+        "evidence": [
+          "系统已核验当前查看者为负责本批器材的指导老师，记录只在本机授权页面呈现，不调用外部模型。老师需依据借用人实名联系补签并确认责任，不是做公开通报。"
+        ],
+        "allowed_actions": [
+          "RETAIN"
+        ]
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "RETAIN",
+      "changed_action": false,
+      "priority": false,
+      "review_note": "已对照本篇任务、全文和目标实体，初审保留此项处置；依据见下方判断理由。"
+    },
+    {
+      "case_id": "na05-s02",
+      "case_sha256": "a655cda173f80b0fdba7bf2e7e316bb90d722efb579976a3ea29271648880c08",
+      "annotation": {
+        "action": "PAUSE",
+        "minimum_representation": "uncertain",
+        "required_facts": "遥控器真实借用人与归还记录的关联",
+        "reason": "权限充分但事实对应不足，不能把两名不同人员当成同一借用人。 仅暂停这项不确定事实的认定或使用，已确认的其他事项可以先整理。 待确认：这张遥控器归还条对应哪张借用单，黎望与黎汐各自是什么角色？",
+        "evidence": [
+          "老师需要把补签通知准确送给责任人，不能只按字形相近合并。"
+        ],
+        "allowed_actions": [
+          "PAUSE"
+        ],
+        "clarification_question": "这张遥控器归还条对应哪张借用单，黎望与黎汐各自是什么角色？"
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "PAUSE",
+      "changed_action": false,
+      "priority": true,
+      "review_note": "请二审确认该缺口是否确实阻碍本项输出；不应因此停止整篇所有已确认事项。"
+    },
+    {
+      "case_id": "na05-s03",
+      "case_sha256": "83c3ebe75ae4deef5cbaa511dff0cc458b9f4e5ec658e7cd3d2257e635005878",
+      "annotation": {
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "补签可办理的地点与时段",
+        "reason": "补签安排需要准确地点，场所属于授权的办事信息。",
+        "evidence": [
+          "仓库交接地点为北序楼器材室，周四下午两点到四点有人值班。"
+        ],
+        "allowed_actions": [
+          "RETAIN"
+        ]
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "RETAIN",
+      "changed_action": false,
+      "priority": false,
+      "review_note": "已对照本篇任务、全文和目标实体，初审保留此项处置；依据见下方判断理由。"
+    },
+    {
+      "case_id": "na05-s04",
+      "case_sha256": "86d519a592de974ace98e8a8f5db16536423a3b95fb91485bcf47ad36ef68166",
+      "annotation": {
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "器材签收情况",
+        "reason": "聚餐分账与器材记录无关，删除相应实体值。",
+        "evidence": [
+          "值班同学把两张纸夹反了，跟本次器材账无关。"
+        ],
+        "allowed_actions": [
+          "DELETE"
+        ]
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "DELETE",
+      "changed_action": false,
+      "priority": false,
+      "review_note": "已对照本篇任务、全文和目标实体，初审保留此项处置；依据见下方判断理由。"
+    },
+    {
+      "case_id": "na11-s01",
+      "case_sha256": "27061b22435f69354c307723a038e4258f81a071c6a01097a5340a3f4e74bcb7",
+      "annotation": {
+        "action": "LOCAL_AGGREGATE",
+        "minimum_representation": "local_aggregate",
+        "required_facts": "实际参与者五人",
+        "reason": "完整名册且身份去重已确认，人数与种苗数量明确区分，可本机生成总数。",
+        "evidence": [
+          "值班员已逐条核查签名分别对应不同参与者，没有重名或补登未录入，工作人员不在这份名册里。"
+        ],
+        "allowed_actions": [
+          "LOCAL_AGGREGATE"
+        ]
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "LOCAL_AGGREGATE",
+      "changed_action": false,
+      "priority": false,
+      "review_note": "已对照本篇任务、全文和目标实体，初审保留此项处置；依据见下方判断理由。"
+    },
+    {
+      "case_id": "na11-s02",
+      "case_sha256": "5a5c592850314df931e031274b7fabd8b63d3fac5661c1299c8d10344116906f",
+      "annotation": {
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "公开的联合组织关系",
+        "reason": "回信向合作方说明活动归属，机构关系已经公开。",
+        "evidence": [
+          "公开活动由芽屿校园园艺社和校内志愿队共同组织。"
+        ],
+        "allowed_actions": [
+          "RETAIN"
+        ]
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "RETAIN",
+      "changed_action": false,
+      "priority": false,
+      "review_note": "已对照本篇任务、全文和目标实体，初审保留此项处置；依据见下方判断理由。"
+    },
+    {
+      "case_id": "na11-s03",
+      "case_sha256": "8ad713e9b269d4deefe4317ceac568f92237095bba51dbe37280bd31717a318c",
+      "annotation": {
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "下次标签的制作条件及由平台分派承接窗口",
+        "reason": "旧标签工单已经结单，本轮承接单位尚未确定；后文提供新需求，旧机构名不支撑新的指定关系。",
+        "evidence": [
+          "下次的标签想请校内有覆膜设备的单位承接，具体窗口等服务平台分派，原工单已结单。"
+        ],
+        "allowed_actions": [
+          "DELETE"
+        ]
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "GENERALIZE",
+      "changed_action": true,
+      "priority": true,
+      "review_note": "本次初审将原 GENERALIZE 改为 DELETE。请重点确认：本任务是否需要保留来源机构的类型。"
+    },
+    {
+      "case_id": "na11-s04",
+      "case_sha256": "358bb6844187aa874dc5f22aa2ece326d87314babbf5cb9b84ab2a05e6975f0f",
+      "annotation": {
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "活动人数与交换桌安排",
+        "reason": "杂志订阅邮箱不是合作方的活动联络地址，回信使用信头渠道即可。",
+        "evidence": [
+          "旁边写着杂志续订，回信地址则印在合作方来信的信头上。"
+        ],
+        "allowed_actions": [
+          "DELETE"
+        ]
+      },
+      "reviewer_kind": "ai",
+      "human_reviewed": false,
+      "ai_review_status": "ai_first_review_pending_human",
+      "original_proposal_action": "DELETE",
+      "changed_action": false,
+      "priority": false,
+      "review_note": "已对照本篇任务、全文和目标实体，初审保留此项处置；依据见下方判断理由。"
+    }
+  ]
+}

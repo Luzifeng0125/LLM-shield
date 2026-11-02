@@ -1,0 +1,121 @@
+{
+  "pool": "test",
+  "document_id": "t03",
+  "text": "院学术部这学期录取了邹清越和魏晚舟。联系电话15200005002。微信wx_zou_demo。",
+  "user_task": "整理学术部录取情况，公告里保留人数和部门名称。",
+  "workflow_id": "club_membership",
+  "task_key": "activity_stats",
+  "workflow_name": "社团统计",
+  "units": [
+    {
+      "unit_id": "t03-u1",
+      "quote": "邹清越",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理学术部录取情况，公告里保留人数和部门名称。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 10,
+      "end": 13
+    },
+    {
+      "unit_id": "t03-u2",
+      "quote": "魏晚舟",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理学术部录取情况，公告里保留人数和部门名称。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 14,
+      "end": 17
+    },
+    {
+      "unit_id": "t03-u3",
+      "quote": "院学术部",
+      "category": "ORG",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理学术部录取情况，公告里保留人数和部门名称。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 0,
+      "end": 4
+    },
+    {
+      "unit_id": "t03-u4",
+      "quote": "15200005002",
+      "category": "PHONE",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理学术部录取情况，公告里保留人数和部门名称。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 22,
+      "end": 33
+    },
+    {
+      "unit_id": "t03-u5",
+      "quote": "wx_zou_demo",
+      "category": "WECHAT",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理学术部录取情况，公告里保留人数和部门名称。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 36,
+      "end": 47
+    }
+  ]
+}

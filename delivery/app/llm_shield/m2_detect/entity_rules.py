@@ -155,6 +155,15 @@ class EntityDetector(Detector):
     _SUFFIX_RE = re.compile(r"(?:^|[^\u4e00-\u9fa5]|[" + _NAME_PRE_CHARS + r"])(?P<name>" + _NAME
                             + r")(?=[（(]?(?:" + _TITLES + r"))")
     _LIST_SEPARATOR = re.compile(r"[ \t]*[、,，和与及][ \t]*")
+    # 聊天发言：「林知夏：」这种行首姓名加冒号，不依赖职务词。
+    _SPEAKER_RE = re.compile(r"(?:^|\n)[ \t]*(?P<name>" + _NAME + r")[ \t]*[：:]")
+    # 三字姓名紧挨标点，且前面是标点或「通知/抄送」这类引入词。
+    # 两字姓名仍必须有称谓，避免把「明天」「周一」「完成海报」标成人名。
+    _NAME_INTRO = "通知|发给|抄送|告诉|联系|交给|邀请|请|找|叫|让|和|与|及|的|由|是"
+    _PUNCT_NAME_RE = re.compile(
+        r"(?:^|[^\u4e00-\u9fa5]|" + _NAME_INTRO + r")(?P<name>"
+        + _SURNAME_CHARSET + r"[\u4e00-\u9fa5]{2})(?=[，,、。；;：:\n])"
+    )
     # 专名主体的「断点字」：动词、介词、助词、连词。
     #
     # 用无约束的 [\u4e00-\u9fa5]{2,12} 做前缀时，贪婪回溯会把整段引导语框进来：
@@ -217,6 +226,9 @@ class EntityDetector(Detector):
         "部门", "组织", "社团", "活动", "会议", "学历",
         # 职务/身份词同样会被姓氏规则命中（宿/组/部…），一并排除
         "宿舍长", "舍长", "组长", "团长", "队长", "班长",
+        # 姓氏开头的常见动作，不是姓名。「负责关门」不能因为「关」在姓氏表里就标成人名。
+        "关门", "开门", "关窗", "开窗", "关灯", "开灯", "关闭", "关注",
+        "关系", "关于", "关键", "开通", "开会", "开始", "开发",
     }
 
     def detect(self, text: str, columns=None, rows=None) -> List[Span]:
@@ -266,6 +278,11 @@ class EntityDetector(Detector):
             name = self._trim_name_tail(match.group("name"))
             if name not in self._PERSON_STOPWORDS:
                 names.add(name)
+        for pattern in (self._SPEAKER_RE, self._PUNCT_NAME_RE):
+            for match in pattern.finditer(text):
+                name = self._trim_name_tail(match.group("name"))
+                if name not in self._PERSON_STOPWORDS and len(name) >= 2:
+                    names.add(name)
         for value in sorted(names):
             cursor = 0
             while (start := text.find(value, cursor)) >= 0:
@@ -330,8 +347,38 @@ class EntityDetector(Detector):
             if value.endswith("处") and m.end() < len(text) \
                     and text[m.end()] in CHU_FOLLOW_BAD:
                 continue
-            out.append(Span(m.start(), m.end(), value, "LOCATION", 0.75, self.name, "loc_suffix"))
+            # 「检查门」「关门」里的「门」是动作，不是场所。校门、南门仍保留。
+            if value.endswith("门") and len(value) >= 2 and value[-2] in "查关开敲进":
+                continue
+            value = self._trim_location(value)
+            if len(value) < 2 or value in LOC_STOPWORDS:
+                continue
+            out.append(Span(m.end() - len(value), m.end(), value, "LOCATION", 0.75,
+                            self.name, "loc_suffix"))
         return out
+
+    # 时间词和人称、动作不是场所的一部分。只从左边裁，避免整句粘在「教室」上。
+    _LOC_TIME_PREFIX = re.compile(r"^(?:本周|上周|下周|这周|每周|周[一二三四五六日天])")
+    _LOC_CLAUSE_VERBS = frozenset("按排去来做搞写发找看")
+
+    @classmethod
+    def _trim_location(cls, value: str) -> str:
+        """把句子成分从地点片段左边去掉。裁完只剩后缀时，说明没有具体场所。"""
+        while True:
+            trimmed = cls._LOC_TIME_PREFIX.sub("", value)
+            if trimmed == value:
+                break
+            value = trimmed
+        pronoun = max((value.rfind(char) for char in "我你他她它"), default=-1)
+        if pronoun >= 0:
+            value = value[pronoun + 1:]
+        while value and value[0] in cls._LOC_CLAUSE_VERBS:
+            value = value[1:]
+        suffix = next((item for item in sorted(LOC_SUFFIXES, key=len, reverse=True)
+                       if value.endswith(item)), "")
+        if not suffix or len(value) <= len(suffix):
+            return ""
+        return value
 
     def _detect_sensitive_attrs(self, text: str) -> List[Span]:
         out: List[Span] = []

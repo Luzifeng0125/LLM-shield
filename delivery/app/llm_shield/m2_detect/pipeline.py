@@ -45,7 +45,7 @@ def build_detectors(use_gliner: Optional[bool] = None) -> List[Detector]:
     global _gliner_singleton
 
     if use_gliner is None:
-        use_gliner = cfg.use_gliner()
+        use_gliner = cfg.use_gliner() and cfg.detector_mode() != "dictionary_test"
 
     detectors: List[Detector] = [RegexDetector(), EntityDetector(detect_org_location=not use_gliner)]
     if use_gliner:

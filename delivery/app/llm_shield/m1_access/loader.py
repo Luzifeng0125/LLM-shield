@@ -6,18 +6,19 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
-from ..config import DATA_DIR
+from ..config import DATA_DIR, uploads_dir
 from ..schema import Material
+from ..material_policy import is_expired, SOURCES
 
 FIXTURE_DIR = DATA_DIR / "fixtures"
-UPLOAD_DIR = DATA_DIR / "uploads"      # 用户上传材料的解析结果
+UPLOAD_DIR = uploads_dir()             # 用户上传材料的解析结果
 
 
 def _safe_path(directory: Path, doc_id: str) -> Optional[Path]:
     """拼接路径并阻挡目录穿越（doc_id 可能来自外部输入）。"""
-    if not doc_id or "/" in doc_id or "\\" in doc_id or ".." in doc_id:
+    if not doc_id or any(value in doc_id for value in ("/", "\\", "..", ":")):
         return None
     return directory / f"{doc_id}.json"
 
@@ -32,7 +33,11 @@ def load_material(doc_id: str) -> Material:
             break
     if path is None:
         raise FileNotFoundError(f"材料不存在: {doc_id}")
-    data = json.loads(path.read_text(encoding="utf-8"))
+    source_key = str(path.resolve())
+    with SOURCES.use({source_key: None}) as versions:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    if is_expired(data.get("expires_at")):
+        raise FileNotFoundError("材料已过期")
     return Material(
         doc_id=data.get("doc_id", doc_id),
         doc_type=data.get("doc_type", ""),
@@ -40,6 +45,10 @@ def load_material(doc_id: str) -> Material:
         text=data.get("text", ""),
         rows=data.get("rows"),
         columns=data.get("columns"),
+        allowed_purposes=data.get("allowed_purposes"),
+        created_at=data.get("created_at"), expires_at=data.get("expires_at"),
+        storage_mode=data.get("storage_mode", "legacy"),
+        source_key=source_key, source_version=versions[source_key],
     )
 
 
@@ -61,6 +70,8 @@ def list_materials(include_builtin: bool = True) -> List[dict]:
         for p in sorted(directory.glob("*.json")):
             try:
                 data = json.loads(p.read_text(encoding="utf-8"))
+                if is_expired(data.get("expires_at")):
+                    continue
                 preview = (data.get("text", "") or "")
                 if not preview and data.get("rows"):
                     preview = "；".join(str(c) for c in (data.get("columns") or []))
@@ -71,6 +82,9 @@ def list_materials(include_builtin: bool = True) -> List[dict]:
                     "preview": preview[:60],
                     "source": source,
                     "n_rows": len(data.get("rows") or []),
+                    "allowed_purposes": data.get("allowed_purposes"),
+                    "expires_at": data.get("expires_at"),
+                    "storage_mode": data.get("storage_mode", "legacy"),
                 })
             except Exception:
                 continue

@@ -1,6 +1,9 @@
 """模型确实控制动作、异常暂停及新版权重兼容性的回归测试。"""
 from __future__ import annotations
-from llm_shield.m4_necessity.model import FEATURE_SPLIT, FEATURE_VERSION, MODEL_PATH, ModelUnavailableError, NecessityModel, build_feature_text
+from llm_shield.m4_necessity.model import (
+    FEATURE_SPLIT, FEATURE_VERSION, MODEL_PATH, ModelUnavailableError, NecessityModel,
+    build_feature_text, build_feature_text_v4, build_feature_text_v5, split_feature_v4, split_feature_v5,
+)
 import sys
 import tempfile
 import unittest
@@ -128,5 +131,44 @@ class ModelArtifactTests(unittest.TestCase):
             result = NecessityModel(Path(directory) / 'unused.joblib').train(samples)
             self.assertFalse(result['ok'])
             self.assertIn('旧版特征', result['reason'])
+
+
+class TaskDemandFeatureTests(unittest.TestCase):
+
+    def test_same_amount_three_demands_change_only_the_demand_channel(self):
+        text = '费用是8600元。'
+        segment = Segment('b', text, 0, len(text), [Span(0, len(text), text, 'BUDGET')])
+        asks = ('这笔开支按核准数额保留。', '这笔开支只说明量级。', '这笔开支不要写。')
+        built = [build_feature_text_v4(segment, 'meeting_minutes', 'external_model', task_description=ask, identity_key='student_leader') for ask in asks]
+        parts = [split_feature_v4(feature) for feature in built]
+        self.assertEqual(len({item[0] for item in parts}), 1)
+        self.assertEqual(len({item[1] for item in parts}), 3)
+        self.assertEqual(len({item[2] for item in parts}), 1)
+        structured = parts[0][0]
+        for token in ('[SCHEMA]4', '[BOUNDARY]external_generation', '[RECIPIENT]external_model', '[SEND]1', '[RESTORE]0', '[BANNED]1'):
+            self.assertIn(token, structured)
+        old = [build_feature_text(segment, 'meeting_minutes', 'external_model', task_description=ask, identity_key='student_leader') for ask in asks]
+        self.assertEqual(len({item.partition(FEATURE_SPLIT)[0] for item in old}), 1)
+        self.assertNotIn('[BOUNDARY]', old[0])
+        self.assertTrue(old[0].startswith(f'[SCHEMA]{FEATURE_VERSION} '))
+
+    def test_v5_keeps_raw_task_text_distinct_from_span(self):
+        text = '费用是8600元。'
+        segment = Segment('b', text, 0, len(text), [Span(0, len(text), text, 'BUDGET')])
+        asks = ('花费按精确原样留下。', '费用给一个大概范围。', '不要把金额写进去。')
+        parts = [split_feature_v5(build_feature_text_v5(
+            segment, 'meeting_minutes', 'viewer_teacher', task_description=ask, identity_key='student_leader')) for ask in asks]
+        self.assertEqual(len({item[0] for item in parts}), 1)
+        self.assertEqual(len({item[1] for item in parts}), 3)
+        self.assertEqual(len({item[2] for item in parts}), 3)
+        self.assertTrue(all(text in item[3] for item in parts))
+        self.assertIn('[SCHEMA]5', parts[0][0])
+        self.assertIn('精确', parts[0][1])
+        name = Segment('n', '赵启明负责签到。', 0, 8, [Span(0, 3, '赵启明', 'PERSON_NAME')])
+        budget_cross = parts[0][2]
+        name_cross = split_feature_v5(build_feature_text_v5(
+            name, 'meeting_minutes', 'viewer_teacher', task_description=asks[0], identity_key='student_leader'))[2]
+        self.assertNotEqual(budget_cross, name_cross)
+
 if __name__ == '__main__':
     unittest.main()

@@ -1,0 +1,33 @@
+{
+  "pool": "calibration",
+  "document_id": "c06",
+  "text": "器材清点可以找姜书迟。",
+  "user_task": "帮我整理成一条器材通知。",
+  "workflow_id": "class_coordination",
+  "task_key": "class_coordination",
+  "workflow_name": "班级协作",
+  "units": [
+    {
+      "unit_id": "c06-u1",
+      "quote": "姜书迟",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "",
+      "recipient_name": "未指定",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "帮我整理成一条器材通知。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 7,
+      "end": 10
+    }
+  ]
+}

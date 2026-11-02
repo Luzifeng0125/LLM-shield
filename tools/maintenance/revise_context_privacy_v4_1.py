@@ -1,0 +1,97 @@
+"""Versioned pre-BERT semantic corrections; retain the already evaluated v4 pack."""
+import copy,json,shutil
+from pathlib import Path
+root=Path(__file__).resolve().parents[2]/'delivery/app/data'
+source=root/'action_context_v4';dest=root/'action_context_v4_1'
+if dest.exists():raise SystemExit('Revision exists; do not overwrite')
+dest.mkdir()
+shutil.copy2(source/'sources.json',dest/'sources.json')
+changes=[]
+replacements={
+'，灯具工作不会去那个地址':'，邮寄日期写在那张旧单的右下角',
+'晚班只需按当前排班接手，不涉及医疗报销':'当前排班已从考勤系统重新导出，贴在值班柜上',
+'，不另做个人采访专栏':'，本期栏目安排在街区生活版',
+'不打算把文章写成某个师傅的家庭故事，而想记住一次小小的改动怎么由几个人试出来':'他把这次栏目的照片选成取餐架和试用过程，下一次还想约其他小店聊聊各自的动线',
+'这个健康记录只是放在餐桌上，案情记录没有说对方据此行骗':'这个健康记录放在餐桌上，旁边叠着当月的水电缴费单',
+'，也没有打算让读者判断一个人的家庭状况':'，讨论结束后还会发一张空白核验步骤卡',
+}
+for f in sorted(source.glob('part_*.json')):
+    docs=json.loads(f.read_text(encoding='utf8'))
+    for doc in docs:
+        for before,after in replacements.items():
+            for field in ['context','text']:
+                if before in doc[field]:
+                    doc[field]=doc[field].replace(before,after)
+                    for x in doc['decisions']:x['evidence']=[e.replace(before,after) for e in x['evidence']]
+                    changes.append({'document_id':doc['document_id'],'field':field,'before':before,'after':after})
+        remaining=[];facts=[]
+        for x in doc['decisions']:
+            if doc['document_id']=='biz05' and x['action']=='DELETE':
+                x['evidence']=['是早先寄还门禁卡时留下的','归还栏已在下午盖章']
+            if doc['document_id']=='ctx02' and x['action']=='PAUSE':
+                x['target']='晚八点前可完成末端平衡'
+                changes.append({'document_id':'ctx02','correction':'target word boundary: remove 明 from 说明'})
+            if doc['document_id']=='ctx01' and x['action']=='LOCAL_AGGREGATE':
+                x['expected_rendering']='最近一场线上说明会有6个不同账号完成签到'
+                x['required_facts']='最近说明会的签到账号数量，不等同于不同自然人数'
+                changes.append({'document_id':'ctx01','correction':'accounts are not proven distinct people'})
+            if doc['document_id']=='ctx08' and x['target']=='海岑城市档案馆':
+                x.update(action='RETAIN',expected_rendering='海岑城市档案馆',required_facts='三方工作会需要核对的图片提供单位',
+                         reason='工作材料可明确当前讨论的机构；主办角色和公开展示许可另作事实核实，不等同于隐藏机构名称。')
+                x.pop('clarification_question',None)
+                changes.append({'document_id':'ctx08','correction':'name disclosure distinct from unconfirmed organizer role'})
+            if doc['document_id']=='ctx07' and x['target']=='胰岛素剂量调整':
+                x['evidence']=['这个健康记录放在餐桌上，旁边叠着当月的水电缴费单','不用于寻人或征集线索']
+            if x['action']=='PAUSE':
+                x['decision_kind']='fact_verification';facts.append(x)
+                changes.append({'document_id':doc['document_id'],'target':x['target'],'correction':'move factual-claim verification outside privacy-action targets'})
+            else:remaining.append(x)
+        doc['decisions']=remaining
+        if facts:doc['fact_validation_notes']=facts
+    (dest/f.name).write_text(json.dumps(docs,ensure_ascii=False,indent=2),encoding='utf8')
+
+def item(t,typ,action,facts,reason,evidence,rendering,q=None):
+    a=dict(target=t,entity_type=typ,action=action,required_facts=facts,reason=reason,evidence=evidence,expected_rendering=rendering)
+    if q:a['clarification_question']=q
+    return a
+extra=[]
+def doc(i,split,domain,request,prior,text,decisions):
+    extra.append(dict(document_id=f'privacy{i:02d}',scenario_group=f'privacy-boundary-{i}',split=split,
+        domain=domain,document_type=['外包交接邮件与服务记录','报名变更及家长回函','多团队回访交接材料'][i-1],
+        task_description=request,context=prior,text=text,synthetic=True,source_ids=['law_pipl','service_museum_booking'],decisions=decisions))
+doc(1,'train','居家照护协作','照上回那样，给接手的人准备好。',
+'照护站下午换班，协调员把交接材料放进待发文件夹。聊天上方只剩一句“今晚改用外面那组”，此前同时讨论过签约上门护理组和临时运输组，当前接收名单尚未同步。',
+'''二号线路这周开始调整预约顺序。过去先按楼栋排列，护理人员到达后却经常发现有住户正在吃饭或者刚出门；上周改成先在电话里确认时间，再把相近时段排在一起，来回上楼的次数少了一些。协调员把实际到达时间记在每页右上角，表格左边仍是最初预约的时间，两列不能混在一起当作迟到情况。
+黎宁的照护记录放在第二页，门牌为石榆街十六号六栋602室。最近一次上门服务中需要继续核对的健康事项记作“青霉素过敏史，拟用药前由负责护士复核”。护理组的工作台可以看到既往核验记录，运输人员使用的是设备调配表，两类表单分别由不同负责人管理。黎宁在前一周签过本照护站连续服务的确认书，协调员没有找到本次外部接手安排对应的接收名单与告知记录。
+两种人员今晚都可能到站：护理组要领取服务包，运输组要取回待消毒的折叠设备。门卫只收到车辆预计进出的时段，没有来访人员与住户的对应安排。接手文件夹里还有一张上个月的值班条，那个班次已经结束，值班条使用的群名后来又被重命名了。协调员说自己下班前会再找负责人核对，目前手头这几页仍是合订状态。
+服务站的公开咨询入口是400-600-0184，大厅公示板、官网和纸质服务手册均使用这个号码，夜间由值班台转接。这次改线路的通知已经发在站点大厅，居民还可以在工作日到窗口重新约时间。有人建议把所有住户都安排在最早一班，护理组回复要根据实际预约及交通情况分配，不能从路线编号推断先后待遇。
+末页有一次旧测试复制进来的登录口令DEMO-KEY-NOT-ACTIVE-73，运维已在工单里标记测试结束并移除该账号。协调员原本只想截取系统页面的线路图，截图却连着右侧测试便笺一起保存了。路线草图由大门口画到公共电梯厅，地下车库那一笔后来擦掉了，因为晚间通道正在维护。至于居民家里的具体情况，服务记录仍按日期顺序存放，后一次记录没有覆盖前一次，负责人需要能回查发生了什么变更。''',[
+item('黎宁','PERSON_NAME','PAUSE','服务对象与接手人员的必要对应','可能接手的是护理组或运输组，所需身份范围不同而当前尚无名单',['此前同时讨论过签约上门护理组和临时运输组'],'先核对接手对象','这份材料最终发给哪一组人员，他们承担什么任务？'),
+item('青霉素过敏史，拟用药前由负责护士复核','HEALTH','PAUSE','护理服务中确有必要的健康提醒','护理接续可能需要，运输接手不需要，不能从含糊代词推定接收范围',['两类表单分别由不同负责人管理'],'待确认护理接续范围','此次接手是否包括承担后续护理的获授权护士？'),
+item('400-600-0184','PHONE','RETAIN','公共服务入口','为已公示的值班台入口',['大厅公示板、官网和纸质服务手册均使用这个号码'],'400-600-0184'),
+item('DEMO-KEY-NOT-ACTIVE-73','CREDENTIAL','DELETE','线路与服务交接','旧测试口令不服务本次工作',['测试结束并移除该账号'],'')])
+doc(2,'validation','青少年课程','那份报名介绍，按刚才说的改一下。',
+'社区课程编辑要更新对外报名页，正在等老师发最后一张图。老师把一个学生的作品及家长回复混在同一封邮件里，消息停在“上一回已经问过了，这次应该也一样”。',
+'''课程已经到第六周，孩子们从照着照片描画转向观察身边的小物件。上一节课带来一只旧水壶，有人先画壶嘴，有人从提手的阴影开始，老师把不同观察顺序放在一起讨论。后面两次课准备继续使用厨房器物，报名页也会接一张作品图，让新来的家庭知道课程的大致内容。纸张和画具由教室统一准备，学员只要按预约到场即可。
+拟用的作品角落签有学生林小禾的姓名。原先的家长回函说，同意作品在本期班级结课会上展示，结课会现场由老师邀请本班家长参加。编辑的栏目现在面向全街区开放，转发链接后无需登录就能查看。老师记得家长曾在电话里说“给别的家长看看也挺好”，但当时讨论的是结课会还是公开报名页面，邮件记录没有写下。
+老师又附了一张讲解卡，介绍学生拍照时的观察路线，写到来自海星学校二年级三班。卡片背面有值日安排，课程助教曾用它分配画具。学生作品本身没有学校名称，只在角落有签名。编辑希望附上这张卡说明孩子如何比较两种构图，家长的新回复还没到；此前那封回函中的展示渠道与这次页面不是同一个。
+本期课程在星湖社区文化教室一楼上课，时间为周六上午九点到十点半，信息已经在服务中心课程日历中发布。报名额满后进入候补，候补家庭接到确认再来，不在现场临时加桌。门口一侧是公共阅读区，家长可以在那里等候，消防通道需要保持畅通。新报名页原来链接的是去年教室，运营已经把路标照片换成现在的一楼入口。
+邮件后面是老师和助教的采购小票，显示他们补买了胶带和挂绳。小票抬头是一家附近文具店，店员顺手写了自己的私人号码13500000682，方便老师回来取漏装的铅笔。助教下午已经取完，铅笔放进了公共画具柜。编辑把所有照片按发送时间放进同一文件夹，作品图、讲解卡、采购小票的文件名都还是手机默认数字。''',[
+item('林小禾','PERSON_NAME','PAUSE','作品展示时的身份范围','现有确认只覆盖班级展示，不能推断公开页面实名展示许可',['此前那封回函中的展示渠道与这次页面不是同一个'],'待核对公开展示范围','家长是否确认作品及署名可以用于公开报名页？'),
+item('海星学校二年级三班','SCHOOL_CLASS','PAUSE','对作品说明有必要的背景粒度','涉及儿童可定位信息，渠道变更未确认，不能直接照搬讲解卡',['家长的新回复还没到'],'待确认可用背景信息','公开介绍是否获准包含学校和具体班级，还是仅介绍作品过程？'),
+item('星湖社区文化教室一楼','LOCATION','RETAIN','可执行的上课地点','已经在公共课程日历发布且新报名者需要',['信息已经在服务中心课程日历中发布'],'星湖社区文化教室一楼'),
+item('13500000682','PHONE','DELETE','公众报名流程','采购取货已完成，私人商店联系不属于课程报名入口',['助教下午已经取完'],'')])
+doc(3,'test','员工培训回访','你给我接成一份，回头我转他们。',
+'项目协调员把两份回访附件拖进聊天，说两个组都催过一次。上方一份邮件来自本单位人事核验组，另一份来自准备跨单位案例课的培训承办组；协调员没有说这次“他们”具体指哪组。',
+'''回访记录按收件顺序编号，第一份是现场培训反馈，第二份是值班安排变更。培训本来计划在一间大教室进行，后来投影出了问题，临时分成两组在不同房间讨论。两位带班人各自使用一份纸质记录，结束后又把讨论结果汇总到同一个表里，因此不能仅凭文档页数推断有几批学员。
+人员栏写着程澜，负责这轮班次协调和后续补训通知。人事核验组要把实际人员与本月出勤表对上；承办组则准备讲一个“设备故障后如何调整组织方式”的案例，课程会给多家单位的协调员使用。前一封邮件里，负责人让程澜补过实际岗位，后一封邮件却在讨论案例中角色如何衔接，两个目的都出现在附件里。
+程澜的补训登记电话为13700003219，前次通知有两位同事没收到，她曾让他们直接用这个号码联系。登记表已在本单位工作台里保留了一份，外部承办组还没有说明要不要接触学员个人记录，也没有约定通过什么渠道收集后续问题。协调员同时把“本月核验”与“案例交流”两个文件夹拖到了桌面，当前这份合稿没有写发送对象。
+公开的培训服务入口为蓝岸学习中心官方预约页，网页由承办单位运维小组维护，主要接收单位报名和场次咨询。项目原来的临时会场已退订，最终实际使用了园区会议区的两个房间，材料里各自记着桌椅摆放和设备借用情况。案例课的标题尚未排版，人事核验的截止时间却在今天下午，协调员担心拿错版本又被退回。
+末页有一张已经结清的住宿报销单，银行账号6210000000000024876。财务在系统里确认款项到达后把扫描件归档，纸质单只是碰巧夹进回访资料袋。这个月底没有新的报销处理要求。记录中另有一行公共设备借还清单，投影线、插排、转接头均已交回器材室，只有一把椅子等待修好后再入库。下一轮活动会换到能远程测试投影的房间，服务中心已把这一点写进场地预约提醒。''',[
+item('程澜','PERSON_NAME','PAUSE','核验的真实身份或案例的角色关联','两种现有接收目的需要不同表达，当前代词不能消除差异',['协调员没有说这次“他们”具体指哪组'],'待明确接收对象','这份合稿发给人事核验组，还是外部培训承办组？'),
+item('13700003219','PHONE','PAUSE','必要的后续联系方式及范围','人事内部联络与跨单位课程的需要不同，当前传送路径不明确',['当前这份合稿没有写发送对象'],'待确认联系信息是否属于接收任务','收件方是否承担需要直接联络个人的后续工作？'),
+item('蓝岸学习中心官方预约页','SERVICE_ENTRY','RETAIN','公开单位报名入口','已明确团队维护和公开用途',['主要接收单位报名和场次咨询'],'蓝岸学习中心官方预约页'),
+item('6210000000000024876','BANK_ACCOUNT','DELETE','培训回访与人员核验','已结清报销账号对两种当前任务均无必要',['这个月底没有新的报销处理要求'],'')])
+(dest/'part_privacy_boundaries.json').write_text(json.dumps(extra,ensure_ascii=False,indent=2),encoding='utf8')
+(dest/'revision_log.json').write_text(json.dumps({'basis':'frozen-postreview issues, before BERT fitting; not model-error relabeling','changes':changes,'new_documents':[d['document_id'] for d in extra]},ensure_ascii=False,indent=2),encoding='utf8')
+print('new revision',len(extra),[(d['document_id'],len(d['text'])) for d in extra])

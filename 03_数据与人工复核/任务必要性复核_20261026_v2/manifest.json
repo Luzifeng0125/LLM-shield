@@ -1,0 +1,14 @@
+{
+  "cases": 336,
+  "sources": 96,
+  "template_groups": 12,
+  "splits": {
+    "train": 224,
+    "validation": 56,
+    "test": 56
+  },
+  "cross_split_source_overlap": 0,
+  "cross_split_template_overlap": 0,
+  "supervision": "machine_draft_not_gold",
+  "test_scope": "synthetic_template_holdout_not_blind_test"
+}

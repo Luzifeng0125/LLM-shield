@@ -1,0 +1,31 @@
+{
+  "schema": "campus-calibration-batch-v1.1",
+  "policy_version": "campus-min-disclosure-v1.1",
+  "status": "human_assisted_review_received",
+  "documents": [
+    "cal-01",
+    "cal-02",
+    "cal-03",
+    "cal-04",
+    "cal-05",
+    "cal-06",
+    "cal-07",
+    "cal-08"
+  ],
+  "target_calibration_documents": 40,
+  "this_batch_is_not_the_full_40": true,
+  "train_validation": "unassigned_until_40_document_manifest",
+  "excluded_from": [
+    "pilot",
+    "N",
+    "D",
+    "C"
+  ],
+  "human_reviewed_decisions": 38,
+  "e2e_runs": 0,
+  "b0_trained": false,
+  "activity_model_unchanged": true,
+  "r0_limit": "八类校园工作共用规则核心，按三条边界分别决策；tasks.yaml 的四个模板未改，没有工作流编号时仍走旧模板",
+  "return_provenance": "human_assisted_not_independent",
+  "return_sha256": "e892522a1bd60c15b9754bf0d317b89ef36571d2a5ef06038a4aa8364dc1ba86"
+}

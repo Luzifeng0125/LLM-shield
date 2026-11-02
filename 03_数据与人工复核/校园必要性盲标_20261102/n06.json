@@ -1,0 +1,79 @@
+{
+  "pool": "blind",
+  "document_id": "n06",
+  "text": "采购例会上沈疏叶认领会场，罗清和认领物资。采购费是6400元。",
+  "user_task": "交给外部模型起草纪要，采购费按结算单上的金额保留。",
+  "workflow_id": "minutes_reports_statistics",
+  "task_key": "meeting_minutes",
+  "workflow_name": "会议纪要",
+  "units": [
+    {
+      "unit_id": "n06-u1",
+      "quote": "沈疏叶",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "交给外部模型起草纪要，采购费按结算单上的金额保留。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 5,
+      "end": 8
+    },
+    {
+      "unit_id": "n06-u2",
+      "quote": "罗清和",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "交给外部模型起草纪要，采购费按结算单上的金额保留。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 13,
+      "end": 16
+    },
+    {
+      "unit_id": "n06-u3",
+      "quote": "6400元",
+      "category": "BUDGET",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "交给外部模型起草纪要，采购费按结算单上的金额保留。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 25,
+      "end": 30
+    }
+  ],
+  "label_status": "unlabeled",
+  "model_screened": false
+}

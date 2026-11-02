@@ -50,6 +50,7 @@ def decide_segment(
     *,
     task_description: str = "",
     context: str = "",
+    confidence_policy: Optional[dict] = None,
 ) -> Decision:
     """唯一最高模型概率决定动作；缺失、无效或被安全检查拒绝则暂停。"""
     cats = sorted({s.category for s in seg.spans})
@@ -84,6 +85,23 @@ def decide_segment(
         return Decision(seg.seg_id, chosen, cats,
                         reason="模型选择暂停外发", necessity_scores=scores)
 
+    if confidence_policy is not None:
+        try:
+            probability = confidence_policy["min_probability"]
+            margin = confidence_policy["min_margin"]
+            if any(isinstance(v, bool) or not isinstance(v, Real)
+                   or not math.isfinite(v) or not 0 <= v <= 1 for v in (probability, margin)):
+                raise ValueError("invalid calibration")
+            second = sorted(scores.values(), reverse=True)[1] if len(scores) > 1 else 0.0
+            uncertain = best_score < probability or best_score - second < margin
+        except (KeyError, TypeError, ValueError):
+            return Decision(seg.seg_id, Action.PAUSE, cats,
+                            reason="动作置信度策略无效，暂停外发", necessity_scores=scores)
+        if uncertain:
+            return Decision(seg.seg_id, Action.PAUSE, cats,
+                            reason="动作模型置信度或概率差距不足，暂停外发",
+                            necessity_scores=scores)
+
     try:
         checks = [HardCheck("ACTION_APPLICABLE",
                             action_applicable(chosen, seg, task_key),
@@ -112,7 +130,8 @@ def decide_all(
     *,
     task_description: str = "",
     context: str = "",
+    confidence_policy: Optional[dict] = None,
 ) -> List[Decision]:
     return [decide_segment(seg, task_key, recipient_key, identity_key,
                            necessity_scorer, task_description=task_description,
-                           context=context) for seg in segments]
+                           context=context, confidence_policy=confidence_policy) for seg in segments]

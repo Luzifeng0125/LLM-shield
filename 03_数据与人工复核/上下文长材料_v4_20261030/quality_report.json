@@ -1,0 +1,190 @@
+{
+  "passed": true,
+  "errors": [],
+  "documents": 24,
+  "scenario_groups": 21,
+  "domains": {
+    "公司活动": 2,
+    "供应商试制": 1,
+    "产品售后": 1,
+    "生产协作": 1,
+    "社区服务": 1,
+    "招聘与职业服务": 1,
+    "物业维修": 1,
+    "酒店服务": 1,
+    "小店经营": 1,
+    "社区体育": 1,
+    "消费纠纷": 1,
+    "公共安全案例教育": 1,
+    "联合展览": 1,
+    "公安与社区信息": 2,
+    "医疗服务": 2,
+    "应急服务": 1,
+    "公共交通": 1,
+    "公益服务": 1,
+    "社区调解": 1,
+    "物流服务": 1,
+    "公共文化服务": 1
+  },
+  "document_types": {
+    "资料合稿与批注": 2,
+    "邮件往返": 1,
+    "工单与说明底稿": 1,
+    "班次交接便笺": 1,
+    "活动记录与居民纸条": 1,
+    "群聊转写和版本便笺": 1,
+    "值班电话摘录与维修回单": 1,
+    "住客来信与夜班交接": 1,
+    "访谈及经营台账节选": 1,
+    "语音转写与活动回单": 1,
+    "客服屏幕便笺和双版本草案": 1,
+    "案例讲述与旧采访摘录": 1,
+    "多方邮件合稿": 1,
+    "合订接报回访记录": 2,
+    "试运行札记与周会素材": 2,
+    "值班簿与公告修订": 1,
+    "调度与客服合并附件": 1,
+    "访谈录音整理": 1,
+    "两次谈话记录": 1,
+    "说明草稿与工单附件": 1,
+    "开放筹备邮件串": 1
+  },
+  "decisions": 117,
+  "actions": {
+    "RETAIN": 37,
+    "DELETE": 34,
+    "GENERALIZE": 13,
+    "PSEUDONYMIZE": 16,
+    "LOCAL_AGGREGATE": 9,
+    "PAUSE": 8
+  },
+  "splits": {
+    "train": 14,
+    "validation": 4,
+    "test": 6
+  },
+  "length": {
+    "min": 711,
+    "median": 915,
+    "max": 978
+  },
+  "context_pairs": 3,
+  "instruction_leaks": [],
+  "near_duplicates": [],
+  "historical_overlap": [],
+  "split_classes": {
+    "train": {
+      "RETAIN": 19,
+      "DELETE": 15,
+      "GENERALIZE": 7,
+      "PSEUDONYMIZE": 10,
+      "LOCAL_AGGREGATE": 7,
+      "PAUSE": 5
+    },
+    "validation": {
+      "GENERALIZE": 2,
+      "PSEUDONYMIZE": 3,
+      "DELETE": 8,
+      "RETAIN": 7,
+      "PAUSE": 1,
+      "LOCAL_AGGREGATE": 1
+    },
+    "test": {
+      "RETAIN": 11,
+      "GENERALIZE": 4,
+      "DELETE": 11,
+      "LOCAL_AGGREGATE": 1,
+      "PSEUDONYMIZE": 3,
+      "PAUSE": 2
+    }
+  },
+  "editorial_cues_for_review": [],
+  "repeated_target_mentions_for_review": [
+    {
+      "document_id": "biz03",
+      "target": "傅舟",
+      "occurrences": 2
+    },
+    {
+      "document_id": "biz04",
+      "target": "徐芮",
+      "occurrences": 3
+    },
+    {
+      "document_id": "biz05",
+      "target": "孟初",
+      "occurrences": 4
+    },
+    {
+      "document_id": "biz05",
+      "target": "沈澄",
+      "occurrences": 2
+    },
+    {
+      "document_id": "biz06",
+      "target": "郁青",
+      "occurrences": 2
+    },
+    {
+      "document_id": "ctx04",
+      "target": "程意",
+      "occurrences": 4
+    },
+    {
+      "document_id": "ctx04",
+      "target": "卞河",
+      "occurrences": 2
+    },
+    {
+      "document_id": "ctx06",
+      "target": "周颐",
+      "occurrences": 3
+    },
+    {
+      "document_id": "ctx07",
+      "target": "楚秋",
+      "occurrences": 2
+    },
+    {
+      "document_id": "ctx08",
+      "target": "林斐",
+      "occurrences": 2
+    },
+    {
+      "document_id": "ctx08",
+      "target": "苏汀",
+      "occurrences": 3
+    },
+    {
+      "document_id": "pub01",
+      "target": "罗砚清",
+      "occurrences": 2
+    },
+    {
+      "document_id": "pub01",
+      "target": "方见川",
+      "occurrences": 2
+    },
+    {
+      "document_id": "pub02",
+      "target": "罗砚清",
+      "occurrences": 2
+    },
+    {
+      "document_id": "pub02",
+      "target": "方见川",
+      "occurrences": 2
+    },
+    {
+      "document_id": "pub07",
+      "target": "苏庭禾",
+      "occurrences": 2
+    },
+    {
+      "document_id": "pub08",
+      "target": "任听岚",
+      "occurrences": 2
+    }
+  ],
+  "limits": "heuristic_screening_not_human_quality_approval; sources_are_inspiration_not_original_private_documents"
+}

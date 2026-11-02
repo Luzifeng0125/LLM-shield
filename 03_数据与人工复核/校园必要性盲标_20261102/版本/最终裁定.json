@@ -1,0 +1,197 @@
+{
+  "role": "final_adjudication",
+  "source": "03_数据与人工复核/校园必要性盲标包_20261102/返还/人工盲标_已填写.csv",
+  "source_sha256": "ed668bc8dc3b4a6c2267409c6a5b666f22aee270d50c9d4a0036b3c9eec0d64d",
+  "snapshot": "03_数据与人工复核/校园必要性盲标_20261102/版本/返还原件_3人复核1人审核.csv",
+  "composition": "3人复核加1人审核后的合并结果",
+  "individual_reviewer_files_present": false,
+  "frozen": false,
+  "items": [
+    {
+      "unit_id": "n01-u1",
+      "canonical_action": "PSEUDONYMIZE",
+      "required_facts": "此条隐私信息属于通知内容，应匿名化处理交给外部模型，返还时进行逆向脱敏",
+      "notes": ""
+    },
+    {
+      "unit_id": "n01-u2",
+      "canonical_action": "PSEUDONYMIZE",
+      "required_facts": "此条隐私信息属于通知内容，应匿名化处理交给外部模型，返还时进行逆向脱敏",
+      "notes": ""
+    },
+    {
+      "unit_id": "n01-u3",
+      "canonical_action": "RETAIN",
+      "required_facts": "此信息在班群中不属于隐私信息，可保留",
+      "notes": ""
+    },
+    {
+      "unit_id": "n01-u4",
+      "canonical_action": "DELETE",
+      "required_facts": "",
+      "notes": "复核一致"
+    },
+    {
+      "unit_id": "n02-u1",
+      "canonical_action": "RETAIN",
+      "required_facts": "",
+      "notes": "复核一致"
+    },
+    {
+      "unit_id": "n03-u1",
+      "canonical_action": "DELETE",
+      "required_facts": "本隐私信息不属于公告内容",
+      "notes": ""
+    },
+    {
+      "unit_id": "n03-u2",
+      "canonical_action": "RETAIN",
+      "required_facts": "本消息在公告中不属于隐私信息",
+      "notes": ""
+    },
+    {
+      "unit_id": "n03-u3",
+      "canonical_action": "DELETE",
+      "required_facts": "",
+      "notes": "复核一致"
+    },
+    {
+      "unit_id": "n04-u1",
+      "canonical_action": "PSEUDONYMIZE",
+      "required_facts": "此条隐私信息属于通知内容，应匿名化处理交给外部模型，返还时进行逆向脱敏",
+      "notes": ""
+    },
+    {
+      "unit_id": "n04-u2",
+      "canonical_action": "PSEUDONYMIZE",
+      "required_facts": "此条隐私信息属于通知内容，应匿名化处理交给外部模型，返还时进行逆向脱敏",
+      "notes": ""
+    },
+    {
+      "unit_id": "n04-u3",
+      "canonical_action": "GENERALIZE",
+      "required_facts": "用户只需千元量级，应将6400概括为为六千余元发送",
+      "notes": ""
+    },
+    {
+      "unit_id": "n04-u4",
+      "canonical_action": "DELETE",
+      "required_facts": "",
+      "notes": "复核一致"
+    },
+    {
+      "unit_id": "n05-u1",
+      "canonical_action": "RETAIN",
+      "required_facts": "",
+      "notes": "复核一致"
+    },
+    {
+      "unit_id": "n05-u2",
+      "canonical_action": "RETAIN",
+      "required_facts": "",
+      "notes": "复核一致"
+    },
+    {
+      "unit_id": "n05-u3",
+      "canonical_action": "RETAIN",
+      "required_facts": "用户需要金额全保留",
+      "notes": "复核一致"
+    },
+    {
+      "unit_id": "n06-u1",
+      "canonical_action": "PSEUDONYMIZE",
+      "required_facts": "",
+      "notes": "复核一致"
+    },
+    {
+      "unit_id": "n06-u2",
+      "canonical_action": "PSEUDONYMIZE",
+      "required_facts": "",
+      "notes": "复核一致"
+    },
+    {
+      "unit_id": "n06-u3",
+      "canonical_action": "RETAIN",
+      "required_facts": "用户需要金额全保留",
+      "notes": "复核一致"
+    },
+    {
+      "unit_id": "n07-u1",
+      "canonical_action": "PSEUDONYMIZE",
+      "required_facts": "此条隐私信息属于通知内容，应匿名化处理交给外部模型，返还时进行逆向脱敏",
+      "notes": ""
+    },
+    {
+      "unit_id": "n07-u2",
+      "canonical_action": "RETAIN",
+      "required_facts": "用户需求金额保留",
+      "notes": ""
+    },
+    {
+      "unit_id": "n08-u1",
+      "canonical_action": "PSEUDONYMIZE",
+      "required_facts": "此条隐私信息属于通知内容，应匿名化处理交给外部模型，返还时进行逆向脱敏",
+      "notes": ""
+    },
+    {
+      "unit_id": "n08-u2",
+      "canonical_action": "RETAIN",
+      "required_facts": "金额属于会议记录内容",
+      "notes": ""
+    },
+    {
+      "unit_id": "n09-u1",
+      "canonical_action": "DELETE",
+      "required_facts": "",
+      "notes": "复核一致"
+    },
+    {
+      "unit_id": "n09-u2",
+      "canonical_action": "DELETE",
+      "required_facts": "",
+      "notes": "复核一致"
+    },
+    {
+      "unit_id": "n09-u3",
+      "canonical_action": "DELETE",
+      "required_facts": "",
+      "notes": "复核一致"
+    },
+    {
+      "unit_id": "n10-u1",
+      "canonical_action": "RETAIN",
+      "required_facts": "",
+      "notes": "复核一致"
+    },
+    {
+      "unit_id": "n10-u2",
+      "canonical_action": "DELETE",
+      "required_facts": "",
+      "notes": "复核一致"
+    },
+    {
+      "unit_id": "n10-u3",
+      "canonical_action": "DELETE",
+      "required_facts": "",
+      "notes": "复核一致"
+    },
+    {
+      "unit_id": "n11-u1",
+      "canonical_action": "DELETE",
+      "required_facts": "维修进度不需要报修的具体地点",
+      "notes": ""
+    },
+    {
+      "unit_id": "n11-u2",
+      "canonical_action": "DELETE",
+      "required_facts": "",
+      "notes": "复核一致"
+    },
+    {
+      "unit_id": "n12-u1",
+      "canonical_action": "PAUSE",
+      "required_facts": "",
+      "notes": "复核一致"
+    }
+  ]
+}

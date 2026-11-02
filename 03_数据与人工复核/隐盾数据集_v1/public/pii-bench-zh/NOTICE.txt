@@ -1,0 +1,13 @@
+PII Bench ZH
+Original dataset author: wan9yu
+Source: https://huggingface.co/datasets/wan9yu/pii-bench-zh
+Pinned revision: c350b94897af668517ff5de237d89f2ce2eaa6f0
+The upstream dataset card declares Apache License 2.0 and research/evaluation use.
+Original README and unmodified JSONL files are included with their author attribution.
+
+LLM-Shield adaptation, 2026-10-14:
+external_test.jsonl standardizes label names and adds source and review-status fields.
+The source texts and character offsets are retained. Upstream examples are synthetic.
+No claim of human verification or endorsement by the original author is made.
+
+Apache License text: https://www.apache.org/licenses/LICENSE-2.0.txt

@@ -15,14 +15,16 @@ import io
 import json
 import re
 import time
+import tempfile
 import zipfile
 from pathlib import Path
 from typing import Optional, Tuple
 
-from ..config import DATA_DIR
+from ..config import DATA_DIR, uploads_dir
 from ..schema import Material
+from ..material_policy import TEMPORARY_TTL_SECONDS, is_expired, SOURCES, SourcePolicyError
 
-UPLOAD_DIR = DATA_DIR / "uploads"
+UPLOAD_DIR = uploads_dir()
 MAX_BYTES = 5 * 1024 * 1024          # 5MB
 
 TEXT_EXT = {".txt", ".md", ".markdown", ".log", ".text"}
@@ -252,7 +254,7 @@ _PARSERS = {
 # ---------------------------------------------------------------- 入口
 
 
-def parse_upload(data: bytes, filename: str) -> Material:
+def parse_upload(data: bytes, filename: str, *, persist: bool = True) -> Material:
     """解析上传文件并落盘，返回 Material。
 
     :raises ParseError: 格式不支持、体积超限或解析失败
@@ -286,20 +288,28 @@ def parse_upload(data: bytes, filename: str) -> Material:
         rows=rows,
         columns=columns,
     )
-    save_upload(mat)
+    if persist:
+        _store_materials([mat], "temporary", None)
     return mat
 
 
-def parse_uploads(data: bytes, filename: str) -> list[Material]:
+def parse_uploads(data: bytes, filename: str, *, storage_mode: str = "temporary",
+                  allowed_purposes: list[str] | None = None) -> list[Material]:
     """Store each nonempty Excel worksheet as an independently selectable material.
 
     The chat policy expects one coherent set of columns per material. Keeping
     sheets separate avoids silently dropping tabs or mixing unrelated schemas.
     Other file types retain the single-material upload behavior.
     """
+    if storage_mode not in {"temporary", "library"}:
+        raise ParseError("未知保存方式")
     ext = Path(filename).suffix.lower()
     if ext not in EXCEL_EXT:
-        return [parse_upload(data, filename)]
+        # Parse without an intermediate unrestricted copy on disk.
+        material = parse_upload(data, filename, persist=False)
+        materials = [material]
+        _store_materials(materials, storage_mode, allowed_purposes)
+        return materials
     if len(data) > MAX_BYTES:
         raise ParseError(f"文件过大（{len(data)/1024/1024:.1f}MB），上限 5MB")
     if not data:
@@ -322,9 +332,18 @@ def parse_uploads(data: bytes, filename: str) -> list[Material]:
         materials.append(material)
     if not materials:
         raise ParseError("未能从 Excel 工作表中提取到任何内容")
-    for material in materials:
-        save_upload(material)
+    _store_materials(materials, storage_mode, allowed_purposes)
     return materials
+
+
+def _store_materials(materials, storage_mode, allowed_purposes):
+    created = time.time()
+    for material in materials:
+        material.created_at = created
+        material.expires_at = created + TEMPORARY_TTL_SECONDS if storage_mode == "temporary" else None
+        material.storage_mode = storage_mode
+        material.allowed_purposes = list(allowed_purposes) if allowed_purposes is not None else None
+        save_upload(material)
 
 
 def maybe_parse_table(text: str) -> Tuple[str, Optional[list], Optional[list]]:
@@ -374,21 +393,58 @@ def maybe_parse_table(text: str) -> Tuple[str, Optional[list], Optional[list]]:
 def save_upload(mat: Material) -> Path:
     """把解析结果写入 data/uploads/（仅文本，不存原始二进制）。"""
     UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+    if not mat.doc_id or any(part in mat.doc_id for part in ("/", "\\", "..", ":")):
+        raise ParseError("无效材料编号")
     path = UPLOAD_DIR / f"{mat.doc_id}.json"
-    path.write_text(json.dumps({
+    payload = json.dumps({
         "doc_id": mat.doc_id, "doc_type": mat.doc_type, "title": mat.title,
         "text": mat.text, "columns": mat.columns, "rows": mat.rows,
-    }, ensure_ascii=False, indent=2), encoding="utf-8")
+        "allowed_purposes": mat.allowed_purposes, "created_at": mat.created_at,
+        "expires_at": mat.expires_at, "storage_mode": mat.storage_mode,
+    }, ensure_ascii=False, indent=2)
+    source_key = str(path.resolve())
+    with SOURCES.mutate(source_key) as committed_version:
+        temporary = None
+        try:
+            with tempfile.NamedTemporaryFile(mode='w', encoding='utf8', dir=UPLOAD_DIR,
+                                             suffix='.tmp', delete=False) as stream:
+                temporary = Path(stream.name)
+                stream.write(payload)
+            temporary.replace(path)
+        finally:
+            if temporary is not None and temporary.exists():
+                temporary.unlink()
+    mat.source_key, mat.source_version = source_key, committed_version
     return path
 
 
-def delete_upload(doc_id: str) -> bool:
+def cleanup_expired_uploads() -> int:
+    """Remove only expired temporary JSON records; legacy/library files stay intact."""
+    removed = 0
+    for path in UPLOAD_DIR.glob("*.json"):
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+            if data.get("storage_mode") == "temporary" and is_expired(data.get("expires_at")):
+                if delete_upload(path.stem):
+                    removed += 1
+        except SourcePolicyError:
+            # In-flight users stop at the next boundary; remove on a later pass.
+            continue
+        except (OSError, ValueError, TypeError, AttributeError):
+            continue
+    return removed
+
+
+def delete_upload(doc_id: str, *, before_delete=None) -> bool:
     """删除已上传材料（不做目录递归，仅删本文件）。"""
     # doc_id 由 _safe_doc_id 生成，已过滤路径分隔符，这里再兜一层底
-    if "/" in doc_id or "\\" in doc_id or ".." in doc_id:
+    if not doc_id or any(value in doc_id for value in ("/", "\\", "..", ":")):
         return False
     path = UPLOAD_DIR / f"{doc_id}.json"
-    if path.exists():
-        path.unlink()
-        return True
-    return False
+    with SOURCES.mutate(str(path.resolve())):
+        if before_delete is not None:
+            before_delete(doc_id)
+        if path.exists():
+            path.unlink()
+            return True
+        return False

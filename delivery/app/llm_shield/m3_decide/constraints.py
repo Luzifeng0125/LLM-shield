@@ -9,6 +9,7 @@ from __future__ import annotations
 from typing import List, Optional
 
 from ..config import (
+    campus_workflows,
     category_level,
     identities,
     recipients,
@@ -43,7 +44,11 @@ DIRECT_IDENTIFIERS = {"PERSON_NAME", "PHONE", "EMAIL", "STUDENT_ID", "WECHAT",
 
 def _task_cfg(task_key: str) -> dict:
     value = tasks().get(task_key)
-    return value if isinstance(value, dict) else {}
+    if isinstance(value, dict):
+        return value
+    extra = campus_workflows().get("workflows", {}).get(task_key)
+    hard_task = extra.get("hard_task") if isinstance(extra, dict) else None
+    return hard_task if isinstance(hard_task, dict) else {}
 
 
 def _recipient_cfg(recipient_key: str) -> dict:

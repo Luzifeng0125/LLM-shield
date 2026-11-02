@@ -5,7 +5,7 @@ import copy
 import secrets
 import threading
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 from . import config as C
 from .chat_retrieval import exact_count_for_chat, select_for_chat
@@ -17,6 +17,7 @@ from .m6_transform.anonymizer import apply_decisions
 from .m6_transform.mapping import MappingTable
 from .m7_egress.gateway import EgressGateway
 from .metrics import observe
+from .material_policy import is_expired, material_denial, material_scope, SourcePolicyError
 from .processing import ProcessingFailure, analyze
 from .schema import Action, Material, Span
 
@@ -46,6 +47,8 @@ class ChatSession:
     touched_at: float = field(default_factory=time.monotonic)
     lock: threading.Lock = field(default_factory=threading.Lock)
     active: bool = True
+    local_only_indexes: set[int] = field(default_factory=set)
+    material_policies: dict[str, Material] = field(default_factory=dict)
 
 
 class ChatStore:
@@ -56,7 +59,8 @@ class ChatStore:
     def _expire(self):
         now = time.monotonic()
         for sid, session in list(self.sessions.items()):
-            if now - session.touched_at <= SESSION_TTL_SECONDS:
+            source_expired = bool(material_denial(list(session.material_policies.values()), session.task))
+            if session.active and now - session.touched_at <= SESSION_TTL_SECONDS and not source_expired:
                 continue
             if not session.lock.acquire(blocking=False):
                 continue
@@ -72,6 +76,8 @@ class ChatStore:
         session.messages.clear()
         session.private_spans.clear()
         session.allowed_values.clear()
+        session.local_only_indexes.clear()
+        session.material_policies.clear()
         session.mapping.clear_session(session.session_id)
 
     def stats(self) -> dict:
@@ -127,18 +133,51 @@ class ChatStore:
             finally:
                 session.lock.release()
 
+    def invalidate_material(self, doc_id: str) -> None:
+        """Deleting a source also invalidates histories derived from that source."""
+        with self.lock:
+            affected = [s for s in self.sessions.values() if doc_id in s.material_policies]
+            locked = []
+            try:
+                for session in affected:
+                    if not session.lock.acquire(blocking=False):
+                        raise ChatError("材料正用于本轮处理，请完成后再删除", 409)
+                    locked.append(session)
+                for session in affected:
+                    self._clear(session)
+                    del self.sessions[session.session_id]
+            finally:
+                for session in locked:
+                    session.lock.release()
+
 
 STORE = ChatStore()
 
 
 def snapshot(session: ChatSession) -> dict:
     with session.lock:
-        return {"session_id": session.session_id, "identity": session.identity,
-                "task": session.task, "messages": copy.deepcopy(session.messages),
-                "turns": len(session.messages) // 2, "max_turns": MAX_TURNS}
+        if not session.active or material_denial(list(session.material_policies.values()), session.task):
+            ChatStore._clear(session)
+            raise ChatError("会话来源已失效，请新建会话", 410)
+        with material_scope(list(session.material_policies.values()), session.task):
+            return {"session_id": session.session_id, "identity": session.identity,
+                    "task": session.task, "messages": copy.deepcopy(session.messages),
+                    "turns": len(session.messages) // 2, "max_turns": MAX_TURNS}
 
 
 def send_turn(session: ChatSession, materials: list[Material]) -> dict:
+    try:
+        with material_scope([*session.material_policies.values(), *materials], session.task):
+            return _send_turn(session, materials)
+    except SourcePolicyError as exc:
+        with session.lock:
+            if material_denial(list(session.material_policies.values()), session.task):
+                ChatStore._clear(session)
+        return {"ok": False, "paused": True, "pause_reason": str(exc), "messages": [],
+                "decisions": [], "session_id": session.session_id, "turns": 0}
+
+
+def _send_turn(session: ChatSession, materials: list[Material]) -> dict:
     if not session.lock.acquire(blocking=False):
         raise ChatError("上一轮仍在处理，请勿重复提交", 409)
     started = time.perf_counter()
@@ -152,6 +191,12 @@ def send_turn(session: ChatSession, materials: list[Material]) -> dict:
 
         if len(session.messages) // 2 >= MAX_TURNS:
             return paused("已达单会话轮数上限，请新建会话；历史不会被静默截断")
+        denial = material_denial([*session.material_policies.values(), *materials], session.task)
+        if denial:
+            return paused(denial)
+        policies = {m.doc_id: replace(m, title="", text="", rows=None, columns=None)
+                    for m in materials if m.expires_at is not None or m.allowed_purposes is not None
+                    or (m.doc_type == "uploaded" and m.doc_id != "chat-input")}
         context = "\n".join(m["content"] for m in session.messages[-4:])[-2000:]
         question = "\n".join(m.text for m in materials if m.doc_id == "chat-input")
         exact = exact_count_for_chat(materials, question)
@@ -171,12 +216,15 @@ def send_turn(session: ChatSession, materials: list[Material]) -> dict:
             if sum(len(m["content"]) for m in messages) > MAX_HISTORY_CHARS:
                 return paused("上下文超过容量上限，请新建会话")
             session.messages = messages
+            session.local_only_indexes.update((len(messages) - 2, len(messages) - 1))
+            session.material_policies.update(policies)
             session.touched_at = time.monotonic()
             return {"ok": True, "paused": False, "session_id": session.session_id,
                     "messages": copy.deepcopy(messages), "turns": len(messages) // 2,
                     "sanitized_user": safe_question, "reply": answer,
-                    "engine": "local", "warning": "", "decisions": []}
-        materials = select_for_chat(materials, question, max_chars=MAX_TURN_CHARS)
+                    "engine": "local", "warning": "本机统计结果仅在本机显示，不随后续历史外发。", "decisions": []}
+        materials = select_for_chat(materials, question, max_chars=MAX_TURN_CHARS,
+                                    task_key=session.task, task_description=session.task_description)
         try:
             analysis = analyze(session.identity, session.task, "external_model", materials,
                                task_description=session.task_description, context=context,
@@ -214,9 +262,11 @@ def send_turn(session: ChatSession, materials: list[Material]) -> dict:
             s.text for segment, decision in zip(segments, decisions)
             if decision.action == Action.RETAIN for s in segment.spans}
         model_started = time.perf_counter()
+        outgoing_messages = [m for index, m in enumerate(messages)
+                             if index not in session.local_only_indexes]
         response = EgressGateway(generated_pseudonyms=set(
             staged_mapping.export(session.session_id).values())).send_conversation(
-                session.task, messages, session.identity, private_spans, retained)
+                session.task, outgoing_messages, session.identity, private_spans, retained)
         observe("chat_model_ms", (time.perf_counter() - model_started) * 1000)
         if not response["allowed"]:
             return paused(response.get("error") or "外发检查拒绝，本轮未加入历史", descriptions)
@@ -226,6 +276,7 @@ def send_turn(session: ChatSession, materials: list[Material]) -> dict:
         session.mapping = staged_mapping
         session.private_spans = private_spans
         session.allowed_values = retained
+        session.material_policies.update(policies)
         session.touched_at = time.monotonic()
         return {"ok": True, "paused": False, "session_id": session.session_id,
                 "messages": copy.deepcopy(session.messages), "turns": len(session.messages) // 2,

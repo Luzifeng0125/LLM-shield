@@ -1,0 +1,168 @@
+{
+  "task_required_facts": [
+    "项目名称",
+    "资助人数"
+  ],
+  "units": [
+    {
+      "quote": "江采薇",
+      "start": 112,
+      "end": 115,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "DELETE"
+      ],
+      "expected_output_constraints": [],
+      "evidence_refs": [
+        "江采薇"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u1",
+      "category": "PERSON_NAME",
+      "boundary_id": "public_release",
+      "recipient_id": "egress_tool_public",
+      "purpose_id": "aid-public-count",
+      "canonical_action": "DELETE",
+      "required_facts": "网站说明不公布申请人姓名"
+    },
+    {
+      "quote": "叶知年",
+      "start": 130,
+      "end": 133,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "DELETE"
+      ],
+      "expected_output_constraints": [],
+      "evidence_refs": [
+        "叶知年"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u2",
+      "category": "PERSON_NAME",
+      "boundary_id": "public_release",
+      "recipient_id": "egress_tool_public",
+      "purpose_id": "aid-public-count",
+      "canonical_action": "DELETE",
+      "required_facts": "网站说明不公布申请人姓名"
+    },
+    {
+      "quote": "家庭突发医疗支出",
+      "start": 121,
+      "end": 129,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "DELETE"
+      ],
+      "expected_output_constraints": [],
+      "evidence_refs": [
+        "家庭突发医疗支出"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u3",
+      "category": "SENSITIVE_ATTR",
+      "boundary_id": "public_release",
+      "recipient_id": "egress_tool_public",
+      "purpose_id": "aid-public-count",
+      "canonical_action": "DELETE",
+      "required_facts": "网站说明不公布申请原因"
+    },
+    {
+      "quote": "父母失业",
+      "start": 139,
+      "end": 143,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "DELETE"
+      ],
+      "expected_output_constraints": [],
+      "evidence_refs": [
+        "父母失业"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u4",
+      "category": "SENSITIVE_ATTR",
+      "boundary_id": "public_release",
+      "recipient_id": "egress_tool_public",
+      "purpose_id": "aid-public-count",
+      "canonical_action": "DELETE",
+      "required_facts": "网站说明不公布申请原因"
+    },
+    {
+      "quote": "62220200000000000123",
+      "start": 195,
+      "end": 215,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "DELETE"
+      ],
+      "expected_output_constraints": [],
+      "evidence_refs": [
+        "62220200000000000123"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u5",
+      "category": "BANK_CARD",
+      "boundary_id": "public_release",
+      "recipient_id": "egress_tool_public",
+      "purpose_id": "aid-public-count",
+      "canonical_action": "DELETE",
+      "required_facts": "网站说明不需要银行卡号"
+    }
+  ]
+}

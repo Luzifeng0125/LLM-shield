@@ -1,0 +1,200 @@
+[
+  {
+    "unit_id": "cal-01:u1",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "external_generation",
+    "recipient_id": "external_model",
+    "identity_key": "student_leader",
+    "task_key": null,
+    "purpose_id": "class-duty-reminder",
+    "purpose_source": "user_explicit",
+    "category": "PERSON_NAME",
+    "confidence": 1.0,
+    "workflow_id": "class_coordination",
+    "user_task": "帮我把这份值日安排整理成发到班群的通知，把分组和时间讲清楚，语言简洁一点，让大家清楚自己的任务。",
+    "target_text": "林知夏",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  },
+  {
+    "unit_id": "cal-01:u2",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "external_generation",
+    "recipient_id": "external_model",
+    "identity_key": "student_leader",
+    "task_key": null,
+    "purpose_id": "class-duty-reminder",
+    "purpose_source": "user_explicit",
+    "category": "PERSON_NAME",
+    "confidence": 1.0,
+    "workflow_id": "class_coordination",
+    "user_task": "帮我把这份值日安排整理成发到班群的通知，把分组和时间讲清楚，语言简洁一点，让大家清楚自己的任务。",
+    "target_text": "周晚宁",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  },
+  {
+    "unit_id": "cal-01:u3",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "external_generation",
+    "recipient_id": "external_model",
+    "identity_key": "student_leader",
+    "task_key": null,
+    "purpose_id": "class-duty-reminder",
+    "purpose_source": "user_explicit",
+    "category": "PERSON_NAME",
+    "confidence": 1.0,
+    "workflow_id": "class_coordination",
+    "user_task": "帮我把这份值日安排整理成发到班群的通知，把分组和时间讲清楚，语言简洁一点，让大家清楚自己的任务。",
+    "target_text": "陈予安",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  },
+  {
+    "unit_id": "cal-01:u4",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "external_generation",
+    "recipient_id": "external_model",
+    "identity_key": "student_leader",
+    "task_key": null,
+    "purpose_id": "class-duty-reminder",
+    "purpose_source": "user_explicit",
+    "category": "LOCATION",
+    "confidence": 1.0,
+    "workflow_id": "class_coordination",
+    "user_task": "帮我把这份值日安排整理成发到班群的通知，把分组和时间讲清楚，语言简洁一点，让大家清楚自己的任务。",
+    "target_text": "周一教学楼A201",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  },
+  {
+    "unit_id": "cal-01:u5",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "external_generation",
+    "recipient_id": "external_model",
+    "identity_key": "student_leader",
+    "task_key": null,
+    "purpose_id": "class-duty-reminder",
+    "purpose_source": "user_explicit",
+    "category": "PHONE",
+    "confidence": 1.0,
+    "workflow_id": "class_coordination",
+    "user_task": "帮我把这份值日安排整理成发到班群的通知，把分组和时间讲清楚，语言简洁一点，让大家清楚自己的任务。",
+    "target_text": "13800001001",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  },
+  {
+    "unit_id": "cal-01:u6",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "external_generation",
+    "recipient_id": "external_model",
+    "identity_key": "student_leader",
+    "task_key": null,
+    "purpose_id": "class-duty-reminder",
+    "purpose_source": "user_explicit",
+    "category": "EMAIL",
+    "confidence": 1.0,
+    "workflow_id": "class_coordination",
+    "user_task": "帮我把这份值日安排整理成发到班群的通知，把分组和时间讲清楚，语言简洁一点，让大家清楚自己的任务。",
+    "target_text": "chenyuan@example.edu",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  }
+]

@@ -1,0 +1,101 @@
+[
+  {
+    "unit_id": "cal-03:u1",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "authorized_local_delivery",
+    "recipient_id": "viewer_teacher",
+    "identity_key": "student_leader",
+    "task_key": null,
+    "purpose_id": "counselor-handoff",
+    "purpose_source": "user_explicit",
+    "category": "PERSON_NAME",
+    "confidence": 1.0,
+    "workflow_id": "teacher_counselor_handoff",
+    "user_task": "帮我把这份学习部便笺整理成交给辅导员的交接说明。主要是谁还没来开会、接下来怎么约时间，写得清楚正式一点，方便老师直接约人。",
+    "target_text": "丁夏禾",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  },
+  {
+    "unit_id": "cal-03:u2",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "authorized_local_delivery",
+    "recipient_id": "viewer_teacher",
+    "identity_key": "student_leader",
+    "task_key": null,
+    "purpose_id": "counselor-handoff",
+    "purpose_source": "user_explicit",
+    "category": "PERSON_NAME",
+    "confidence": 1.0,
+    "workflow_id": "teacher_counselor_handoff",
+    "user_task": "帮我把这份学习部便笺整理成交给辅导员的交接说明。主要是谁还没来开会、接下来怎么约时间，写得清楚正式一点，方便老师直接约人。",
+    "target_text": "高明远",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  },
+  {
+    "unit_id": "cal-03:u3",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "authorized_local_delivery",
+    "recipient_id": "viewer_teacher",
+    "identity_key": "student_leader",
+    "task_key": null,
+    "purpose_id": "counselor-handoff",
+    "purpose_source": "user_explicit",
+    "category": "SENSITIVE_ATTR",
+    "confidence": 1.0,
+    "workflow_id": "teacher_counselor_handoff",
+    "user_task": "帮我把这份学习部便笺整理成交给辅导员的交接说明。主要是谁还没来开会、接下来怎么约时间，写得清楚正式一点，方便老师直接约人。",
+    "target_text": "申请困难补助",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  }
+]

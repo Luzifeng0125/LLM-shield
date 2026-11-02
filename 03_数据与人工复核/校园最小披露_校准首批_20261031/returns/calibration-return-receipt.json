@@ -1,0 +1,660 @@
+{
+  "schema": "campus-review-import-v1.1",
+  "policy_version": "campus-min-disclosure-v1.1",
+  "pack_role": "calibration",
+  "provenance_basis": "caller_asserted_user_return",
+  "original_sha256": "e892522a1bd60c15b9754bf0d317b89ef36571d2a5ef06038a4aa8364dc1ba86",
+  "accepted": [
+    {
+      "decision_key": "cal-01:u1",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "DELETE",
+        "required_facts": "转述安排的人不是值日任务本身"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-01:u2",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "PSEUDONYMIZE",
+        "required_facts": "值日需要分清执行人，外部模型使用稳定代号"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-01:u3",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "PSEUDONYMIZE",
+        "required_facts": "值日需要分清执行人，外部模型使用稳定代号"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-01:u4",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "RETAIN",
+        "required_facts": "周一的值日教室是通知必须写明的地点"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-01:u5",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "DELETE",
+        "required_facts": "值日通知不外发手机号"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-01:u6",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "DELETE",
+        "required_facts": "值日通知不外发邮箱"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-02:u1",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "DELETE",
+        "required_facts": "补交通知不需要已经交作业的人"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-02:u2",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "DELETE",
+        "required_facts": "群通知不点名"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-02:u3",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "DELETE",
+        "required_facts": "补交通知不需要分数"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-02:u4",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "DELETE",
+        "required_facts": "健康情况不属于补交通知"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-03:u1",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "DELETE",
+        "required_facts": "约谈名单不需要记录人本人"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-03:u2",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "PSEUDONYMIZE",
+        "required_facts": "辅导员需要知道约谈对象"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-03:u3",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "RETAIN",
+        "required_facts": "交接说明需要每个学生的背景"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-04:u1",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "LOCAL_AGGREGATE",
+        "required_facts": "公告只需要录取人数，不需要逐人姓名"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-04:u2",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "DELETE",
+        "required_facts": "公告不需要电话"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-04:u3",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "RETAIN",
+        "required_facts": "公告需要社团名称"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-05:u1",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "DELETE",
+        "required_facts": "公告不需要签到负责人"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-05:u2",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "DELETE",
+        "required_facts": "公告不需要场地恢复负责人"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-05:u3",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "DELETE",
+        "required_facts": "公告不需要对讲联系人"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-05:u4",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "DELETE",
+        "required_facts": "公告不需要电话"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-05:u5",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "DELETE",
+        "required_facts": "公告不需要宿舍"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-05:u6",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "RETAIN",
+        "required_facts": "公告需要集合地点"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-05:u7",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "RETAIN",
+        "required_facts": "公告需要主办方名称"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-06:u1",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "DELETE",
+        "required_facts": "网站说明不公布申请人姓名"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-06:u2",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "DELETE",
+        "required_facts": "网站说明不公布申请人姓名"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-06:u3",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "RETAIN",
+        "required_facts": "网站说明需要点明项目"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-06:u4",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "DELETE",
+        "required_facts": "网站说明不公布申请原因"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-06:u5",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "DELETE",
+        "required_facts": "网站说明不需要银行卡号"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-07:u1",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "LOCAL_AGGREGATE",
+        "required_facts": "代号发到模型"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-07:u2",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "RETAIN",
+        "required_facts": "需要明确地点"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-07:u3",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "RETAIN",
+        "required_facts": "需要明确联系方式"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-08:u1",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "PSEUDONYMIZE",
+        "required_facts": "外部排版需要区分两位负责人，但不接收原姓名"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-08:u2",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "PSEUDONYMIZE",
+        "required_facts": "外部排版需要区分两位负责人，但不接收原姓名"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-08:u3",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "DELETE",
+        "required_facts": "纪要不需要私人电话"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-08:u4",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "DELETE",
+        "required_facts": "健康情况不属于纪要"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-08:u5",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "GENERALIZE",
+        "required_facts": "读者需要印刷费的大致量级，精确金额不进入外部工具"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-08:u6",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "PSEUDONYMIZE",
+        "required_facts": "需要代号化"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    },
+    {
+      "decision_key": "cal-08:u7",
+      "initial_answer": null,
+      "final_answer": {
+        "canonical_action": "PSEUDONYMIZE",
+        "required_facts": "需要代号化"
+      },
+      "ai_suggestion_seen": true,
+      "reviewer": "not_recorded",
+      "timestamps": "not_recorded",
+      "status": "accepted",
+      "provenance": "human_assisted_not_independent",
+      "independent_first_answer": false,
+      "train_eligible": true,
+      "fresh_test_isolated": false
+    }
+  ],
+  "incomplete": [],
+  "train_keys": [
+    "cal-01:u1",
+    "cal-01:u2",
+    "cal-01:u3",
+    "cal-01:u4",
+    "cal-01:u5",
+    "cal-01:u6",
+    "cal-02:u1",
+    "cal-02:u2",
+    "cal-02:u3",
+    "cal-02:u4",
+    "cal-03:u1",
+    "cal-03:u2",
+    "cal-03:u3",
+    "cal-04:u1",
+    "cal-04:u2",
+    "cal-04:u3",
+    "cal-05:u1",
+    "cal-05:u2",
+    "cal-05:u3",
+    "cal-05:u4",
+    "cal-05:u5",
+    "cal-05:u6",
+    "cal-05:u7",
+    "cal-06:u1",
+    "cal-06:u2",
+    "cal-06:u3",
+    "cal-06:u4",
+    "cal-06:u5",
+    "cal-07:u1",
+    "cal-07:u2",
+    "cal-07:u3",
+    "cal-08:u1",
+    "cal-08:u2",
+    "cal-08:u3",
+    "cal-08:u4",
+    "cal-08:u5",
+    "cal-08:u6",
+    "cal-08:u7"
+  ],
+  "fresh_keys_blocked_from_training": [],
+  "fabricated_review_metadata": false
+}

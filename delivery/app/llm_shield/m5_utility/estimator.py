@@ -7,6 +7,8 @@
 from __future__ import annotations
 
 import re
+import math
+from numbers import Real
 from typing import Dict, List
 
 from ..config import tasks
@@ -64,24 +66,44 @@ _CHECKS = {
 
 def estimate(sanitized_text: str, task_key: str, aggregates: dict = None,
              decisions: List[Decision] = None) -> Dict[str, object]:
-    """返回 {"completeness": 0~1, "warnings": [...], "checks": {...}}"""
+    """Local presence checks only, never an action or permission override."""
     aggregates = aggregates or {}
-    warnings: List[str] = []
-    fn = _CHECKS.get(task_key)
-    if fn:
-        warnings = fn(sanitized_text, aggregates)
-
-    # 决策层面的风险提示
     decisions = decisions or []
-    pseudo_count = sum(1 for d in decisions if d.action.value == "PSEUDONYMIZE")
-    if pseudo_count and task_key == "meeting_minutes":
-        # 检查是否存在「同一代号对应多个真实姓名」的歧义风险（由映射表保证不会，这里仅提示）
-        warnings.append("已使用会话内稳定代号替换姓名，负责人/事项/期限的对应关系由本地映射表保持")
+    checks, warnings, notes = {}, [], []
 
-    total_checks = 3
-    completeness = max(0.0, 1.0 - len(warnings) / total_checks)
-    return {
-        "completeness": round(completeness, 3),
-        "warnings": warnings,
-        "task": task_key,
-    }
+    def check(key, passed, failure):
+        checks[key] = {"status": "pass" if passed else "fail", "detail": "已找到对应信息" if passed else failure}
+        if not passed:
+            warnings.append(failure)
+
+    if task_key == 'activity_stats':
+        number = aggregates.get('person_count')
+        valid_number = (isinstance(number, Real) and not isinstance(number, bool)
+                        and math.isfinite(number) and number >= 0)
+        check('COUNT', bool(_COUNT_RE.search(sanitized_text)) or valid_number,
+              '未找到明确人数，请核对统计范围与口径；不能把缺失人数当成0。')
+        check('EVENT_NAME', bool(re.search(r'(活动|比赛|讲座|沙龙|培训|志愿|招新|晚会|论坛)', sanitized_text)),
+              '未识别到活动名称或类别，请补充已确认的活动主体。')
+        notes.append('找到数字不代表口径正确；仍需区分记录数、人次和去重人数。')
+    elif task_key == 'meeting_minutes':
+        retained_name = any(d.action.value == 'RETAIN' and 'PERSON_NAME' in d.categories for d in decisions)
+        codes = set(_CODE_RE.findall(sanitized_text))
+        check('PERSON_ROLE', bool(codes) or retained_name,
+              '未找到可区分的负责人标识，需核对任务责任关系。')
+        check('TASK_ITEM', bool(_TASK_VERB_RE.search(sanitized_text)), '未识别到任务事项动作。')
+        check('DEADLINE', bool(_DEADLINE_RE.search(sanitized_text)), '未找到明确期限，请补充已确认的时间约束。')
+        if any(d.action.value == 'PSEUDONYMIZE' for d in decisions):
+            notes.append('已采用会话内稳定代号；单一负责人可使用一个代号，仍需核对事项与期限是否对应。')
+    elif task_key == 'project_intro':
+        check('PUBLIC_FACT', len(sanitized_text.strip()) >= 30, '可用于介绍的内容过少，请核对是否缺少必要事实。')
+        check('PROJECT_NAME', bool(re.search(r'(项目|平台|系统|课程|赛事|计划|活动)', sanitized_text)),
+              '未识别到项目主体，请补充已确认的名称或类别。')
+    elif task_key == 'activity_notice':
+        check('PUBLIC_FACT', bool(sanitized_text.strip()), '请补充已确认的活动名称与通知事项，再整理通知。')
+    else:
+        checks['TASK'] = {'status':'not_applicable','detail':'该任务尚无本地完整性检查规则'}
+        return {'completeness':None,'evaluated':False,'warnings':[], 'notes':['当前任务未评估完整性。'],
+                'checks':checks,'task':task_key,'scope':'local_completeness_hint_not_human_utility'}
+    completeness = sum(c['status'] == 'pass' for c in checks.values()) / len(checks)
+    return {'completeness':round(completeness, 3),'evaluated':True,'warnings':warnings,
+            'notes':notes,'checks':checks,'task':task_key,'scope':'local_completeness_hint_not_human_utility'}

@@ -12,6 +12,7 @@ from .m2_detect.pipeline import DetectionError, build_detectors, detect_and_segm
 from .m3_decide.decision import decide_all
 from .m4_necessity.model import get_model, necessity_scorer
 from .material_processing import MaterialSizeError, prepare_materials
+from .material_policy import material_denial
 from .metrics import observe_timings
 from .schema import Action, Decision, Material, Segment, Span
 
@@ -54,8 +55,13 @@ def analyze(
 ) -> Analysis:
     """Authorize, detect and decide; no transformation or external side effects."""
     timings: dict[str, float] = {}
-    if not isinstance(C.tasks().get(task), dict):
+    campus = (C.campus_workflows().get("workflows") or {})
+    online_campus = task == "class_coordination" and isinstance(campus.get(task), dict)
+    if not isinstance(C.tasks().get(task), dict) and not online_campus and task != "contact_notice":
         raise ProcessingFailure("task", "未知任务，不能确定外发策略")
+    denial = material_denial(materials, task)
+    if denial:
+        raise ProcessingFailure("material_policy", denial)
 
     started = time.perf_counter()
     access = check_read(identity, list(materials))
@@ -98,7 +104,8 @@ def _analyze_authorized(materials, identity, task, recipient, task_description, 
     started = time.perf_counter()
     decisions = decide_all(prepared.segments, task, recipient, identity,
                            necessity_scorer=scorer,
-                           task_description=task_description, context=context)
+                           task_description=task_description, context=context,
+                           confidence_policy=getattr(model, "metadata", {}).get("decision_thresholds"))
     timings["decide_ms"] = (time.perf_counter() - started) * 1000
     observe_timings(timings)
     return Analysis(prepared.text, prepared.spans, prepared.segments, decisions, timings)

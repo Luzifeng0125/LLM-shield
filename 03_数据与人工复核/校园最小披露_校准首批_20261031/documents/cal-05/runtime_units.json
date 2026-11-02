@@ -1,0 +1,233 @@
+[
+  {
+    "unit_id": "cal-05:u1",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "external_generation",
+    "recipient_id": "external_model",
+    "identity_key": "student_leader",
+    "task_key": "activity_notice",
+    "purpose_id": "volunteer-notice",
+    "purpose_source": "user_explicit",
+    "category": "PERSON_NAME",
+    "confidence": 1.0,
+    "workflow_id": "student_events",
+    "user_task": "帮我把这份志愿服务日筹备记录整理成发给同学的活动通知。活动叫什么、几点在哪里集合、三组分别做什么，写清楚，让没参加筹备会的人也能照着做。内部筹备过程不用铺开，通知保持好读。",
+    "target_text": "沈知衡",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  },
+  {
+    "unit_id": "cal-05:u2",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "external_generation",
+    "recipient_id": "external_model",
+    "identity_key": "student_leader",
+    "task_key": "activity_notice",
+    "purpose_id": "volunteer-notice",
+    "purpose_source": "user_explicit",
+    "category": "PERSON_NAME",
+    "confidence": 1.0,
+    "workflow_id": "student_events",
+    "user_task": "帮我把这份志愿服务日筹备记录整理成发给同学的活动通知。活动叫什么、几点在哪里集合、三组分别做什么，写清楚，让没参加筹备会的人也能照着做。内部筹备过程不用铺开，通知保持好读。",
+    "target_text": "罗予白",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  },
+  {
+    "unit_id": "cal-05:u3",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "external_generation",
+    "recipient_id": "external_model",
+    "identity_key": "student_leader",
+    "task_key": "activity_notice",
+    "purpose_id": "volunteer-notice",
+    "purpose_source": "user_explicit",
+    "category": "PERSON_NAME",
+    "confidence": 1.0,
+    "workflow_id": "student_events",
+    "user_task": "帮我把这份志愿服务日筹备记录整理成发给同学的活动通知。活动叫什么、几点在哪里集合、三组分别做什么，写清楚，让没参加筹备会的人也能照着做。内部筹备过程不用铺开，通知保持好读。",
+    "target_text": "谭小禾",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  },
+  {
+    "unit_id": "cal-05:u4",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "external_generation",
+    "recipient_id": "external_model",
+    "identity_key": "student_leader",
+    "task_key": "activity_notice",
+    "purpose_id": "volunteer-notice",
+    "purpose_source": "user_explicit",
+    "category": "PHONE",
+    "confidence": 1.0,
+    "workflow_id": "student_events",
+    "user_task": "帮我把这份志愿服务日筹备记录整理成发给同学的活动通知。活动叫什么、几点在哪里集合、三组分别做什么，写清楚，让没参加筹备会的人也能照着做。内部筹备过程不用铺开，通知保持好读。",
+    "target_text": "13800001005",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  },
+  {
+    "unit_id": "cal-05:u5",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "external_generation",
+    "recipient_id": "external_model",
+    "identity_key": "student_leader",
+    "task_key": "activity_notice",
+    "purpose_id": "volunteer-notice",
+    "purpose_source": "user_explicit",
+    "category": "DORM",
+    "confidence": 1.0,
+    "workflow_id": "student_events",
+    "user_task": "帮我把这份志愿服务日筹备记录整理成发给同学的活动通知。活动叫什么、几点在哪里集合、三组分别做什么，写清楚，让没参加筹备会的人也能照着做。内部筹备过程不用铺开，通知保持好读。",
+    "target_text": "松园3号楼",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  },
+  {
+    "unit_id": "cal-05:u6",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "external_generation",
+    "recipient_id": "external_model",
+    "identity_key": "student_leader",
+    "task_key": "activity_notice",
+    "purpose_id": "volunteer-notice",
+    "purpose_source": "user_explicit",
+    "category": "LOCATION",
+    "confidence": 1.0,
+    "workflow_id": "student_events",
+    "user_task": "帮我把这份志愿服务日筹备记录整理成发给同学的活动通知。活动叫什么、几点在哪里集合、三组分别做什么，写清楚，让没参加筹备会的人也能照着做。内部筹备过程不用铺开，通知保持好读。",
+    "target_text": "大学生活动中心报告厅",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  },
+  {
+    "unit_id": "cal-05:u7",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "external_generation",
+    "recipient_id": "external_model",
+    "identity_key": "student_leader",
+    "task_key": "activity_notice",
+    "purpose_id": "volunteer-notice",
+    "purpose_source": "user_explicit",
+    "category": "ORG",
+    "confidence": 1.0,
+    "workflow_id": "student_events",
+    "user_task": "帮我把这份志愿服务日筹备记录整理成发给同学的活动通知。活动叫什么、几点在哪里集合、三组分别做什么，写清楚，让没参加筹备会的人也能照着做。内部筹备过程不用铺开，通知保持好读。",
+    "target_text": "校青年志愿者协会",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  }
+]

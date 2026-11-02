@@ -715,6 +715,8 @@ el('file').onchange = async () => {
   try {
     for (const file of selected) {
       const form = new FormData(); form.append('file', file);
+      form.append('task', currentIntent().task);
+      form.append('storage_mode', el('uploadStorage').value);
       const result = await api('/api/upload', { method: 'POST', body: form });
         files.push({ id: result.doc_id, title: result.title }); await refreshLibrary();
         if (result.worksheets > 1) notice(`已读取 ${result.worksheets} 个工作表。当前选中首表，其余可在资料库中选择。`);

@@ -1,0 +1,20 @@
+{
+  "authoring": "ai_draft",
+  "length_band": "long",
+  "workflow": "minutes_reports_statistics",
+  "source_family": "sf-seminar-minutes",
+  "scenario_family": "minutes_reports_statistics",
+  "event_id": "evt-seminar-08",
+  "split_pool": "calibration",
+  "train_validation": "unassigned_until_40_document_manifest",
+  "excluded_from": [
+    "pilot",
+    "N",
+    "D",
+    "C"
+  ],
+  "human_initial_answer": null,
+  "human_final_answer": null,
+  "human_reviewed_decisions": 0,
+  "e2e_run": false
+}

@@ -51,7 +51,7 @@ def test_exact_table_count_stays_local(setup_chat):
     rows = [{'专业': '网络空间安全' if i % 25 == 0 else '其他专业'} for i in range(310)]
     result = chat.send_turn(session, [Material('table', 'uploaded', '专业表', '', rows, ['专业']), Material('chat-input', 'uploaded', '', '帮我统计网络空间安全专业有多少人')])
     assert result['ok'] and result['engine'] == 'local'
-    assert '共有 13 人' in result['reply']
+    assert '匹配 13 条记录' in result['reply']
     assert not calls
     assert len(store.get(session.session_id).messages) == 2
 
@@ -161,7 +161,7 @@ def test_exact_table_count_stays_local_and_is_saved_as_safe_history(setup_chat):
     rows = [{'专业': '网络空间安全' if i % 25 == 0 else '其他专业'} for i in range(310)]
     result = chat.send_turn(session, [Material('table', 'uploaded', '专业表', '', rows, ['专业']), Material('chat-input', 'uploaded', '', '帮我统计网络空间安全专业有多少人')])
     assert result['ok'] and result['engine'] == 'local'
-    assert '共有 13 人' in result['reply']
+    assert '匹配 13 条记录' in result['reply']
     assert not calls
     assert len(store.get(session.session_id).messages) == 2
     followup = chat.send_turn(session, [Material('chat-input', 'uploaded', '', '这个结果是怎么计算的？')])

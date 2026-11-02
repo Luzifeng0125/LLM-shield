@@ -1,0 +1,79 @@
+{
+  "pool": "blind",
+  "document_id": "n03",
+  "text": "周六观星在西门广场见面。召集人是许晚白。住在桐园3号楼210。",
+  "user_task": "写一条观星活动公告，见面的地方写清楚。",
+  "workflow_id": "student_events",
+  "task_key": "activity_notice",
+  "workflow_name": "活动公告",
+  "units": [
+    {
+      "unit_id": "n03-u1",
+      "quote": "许晚白",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "写一条观星活动公告，见面的地方写清楚。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 16,
+      "end": 19
+    },
+    {
+      "unit_id": "n03-u2",
+      "quote": "西门广场",
+      "category": "LOCATION",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "写一条观星活动公告，见面的地方写清楚。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 5,
+      "end": 9
+    },
+    {
+      "unit_id": "n03-u3",
+      "quote": "桐园3号楼210",
+      "category": "DORM",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "写一条观星活动公告，见面的地方写清楚。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 22,
+      "end": 30
+    }
+  ],
+  "label_status": "unlabeled",
+  "model_screened": false
+}

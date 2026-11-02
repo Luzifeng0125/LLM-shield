@@ -1,0 +1,160 @@
+{
+  "schema": "campus-revision-checks-v1.1",
+  "checked_at_utc": "2026-10-31T12:36:51.423312+00:00",
+  "passed": true,
+  "passed_checks": 21,
+  "total_checks": 21,
+  "scope": "planning_consistency_links_and_hashes_not_model_accuracy_or_runtime_tests",
+  "eight_revision_items": [
+    {
+      "id": 1,
+      "issue": "boundary_recipient_purpose_permission",
+      "evidence": "01_优化方案/校园最小披露标注与验收协议_v1.1.md#A"
+    },
+    {
+      "id": 2,
+      "issue": "canonical_alternatives_and_disputes",
+      "evidence": "01_优化方案/校园最小披露标注与验收协议_v1.1.md#B/C"
+    },
+    {
+      "id": 3,
+      "issue": "natural_balanced_challenge_separate",
+      "evidence": "01_优化方案/校园最小披露标注与验收协议_v1.1.md#E"
+    },
+    {
+      "id": 4,
+      "issue": "e2e_from_first_round",
+      "evidence": "01_优化方案/校园场景80到98执行方案_20261031.md#4/6/7"
+    },
+    {
+      "id": 5,
+      "issue": "independent_severe_disclosure_veto",
+      "evidence": "01_优化方案/校园最小披露标注与验收协议_v1.1.md#F"
+    },
+    {
+      "id": 6,
+      "issue": "human_initial_answer_before_ai_reveal",
+      "evidence": "03_数据与人工复核/校园场景复核约定_20261031.md"
+    },
+    {
+      "id": 7,
+      "issue": "R0_B0_hybrid_B1_B2",
+      "evidence": "01_优化方案/校园场景80到98执行方案_20261031.md#6"
+    },
+    {
+      "id": 8,
+      "issue": "nov4_prototype_vs_long_term_research",
+      "evidence": "01_优化方案/校园场景80到98执行方案_20261031.md#7"
+    }
+  ],
+  "checks": [
+    {
+      "check": "schema_and_document_version",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "near_term_document_accounting",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "e2e_subset_not_extra_test",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "nov4_is_prototype_not_accuracy_claim",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "long_term_document_accounting",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "natural_and_balanced_not_mixed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "pause_groups_not_fields",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "model_and_phase_coverage",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "three_boundaries_and_three_layers",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "gold_not_runtime_input",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "human_return_and_independent_first_answer_coexist",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "serious_disclosure_independent_veto",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "refusal_alone_cannot_pass",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "ci_work_reference_not_enterprise_ingestion",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "plan_does_not_claim_new_results",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "protocol_pointer_resolves",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "active_document_local_links",
+      "passed": true,
+      "detail": {
+        "checked": 8,
+        "broken": []
+      }
+    },
+    {
+      "check": "protected:delivery/app/models/necessity_action.joblib",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "protected:delivery/app/models/ACTIVE_MODELS.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "frozen_files_unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "existing_freeze_cannot_be_overwritten",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}

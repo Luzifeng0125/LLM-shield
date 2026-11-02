@@ -1,0 +1,29 @@
+{
+  "policy_version": "campus-min-disclosure-v1.1",
+  "text": "班级事务群，周日晚上。\n\n林知夏：本周值日我按教室排了。周一教学楼A201，周晚宁擦黑板并检查门窗；周三同一间教室，陈予安负责关门、断电和归还钥匙。\n\n周晚宁：周三我有实验，可能提前走。到时候打电话13800001001。\n\n陈予安：钥匙在我书包侧袋。邮箱是chenyuan@example.edu，人没到就发邮件。\n",
+  "user_task": "帮我把这份值日安排整理成发到班群的通知，把分组和时间讲清楚，语言简洁一点，让大家清楚自己的任务。",
+  "task_key": null,
+  "boundary_id": "external_generation",
+  "recipient_id": "external_model",
+  "identity_key": "student_leader",
+  "purpose_id": "class-duty-reminder",
+  "purpose_source": "user_explicit",
+  "trusted_permissions": [
+    {
+      "source_id": "config/identities.yaml",
+      "version": "identities-v0.1"
+    },
+    {
+      "source_id": "config/recipients.yaml",
+      "version": "recipients-v0.1"
+    },
+    {
+      "source_id": "config/tasks.yaml",
+      "version": "tasks-v0.1"
+    },
+    {
+      "source_id": "config/rules.yaml",
+      "version": "rules-v0.1"
+    }
+  ]
+}

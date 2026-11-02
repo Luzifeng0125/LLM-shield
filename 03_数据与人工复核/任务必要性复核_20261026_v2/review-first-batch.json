@@ -1,0 +1,593 @@
+{
+  "schema": "action-human-review-v1",
+  "cases": [
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-person-0-0",
+      "source_case_id": "f00-person-0",
+      "task": "meeting_minutes",
+      "task_description": "只提炼本次讨论的议题，不列任何人员",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1场海报设计例会：赵知远负责第1项准备工作，周五前交付。",
+      "entities": [
+        {
+          "start": 10,
+          "end": 13,
+          "text": "赵知远",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "b727403e2db04676d8b8f3580b4dca11e43ca44ddd9f56a59668e00b64176b5f"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-person-0-1",
+      "source_case_id": "f00-person-0",
+      "task": "meeting_minutes",
+      "task_description": "整理负责人、工作事项与完成期限的对应清单",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1场海报设计例会：赵知远负责第1项准备工作，周五前交付。",
+      "entities": [
+        {
+          "start": 10,
+          "end": 13,
+          "text": "赵知远",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "46221e824d7ae3ef5f7ab4cfc421116d8a9cca040809e8ecfa621ff00d31891e"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-person-0-2",
+      "source_case_id": "f00-person-0",
+      "task": "activity_stats",
+      "task_description": "统计本场海报设计活动参与人数，只需要总数",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1场海报设计例会：赵知远负责第1项准备工作，周五前交付。",
+      "entities": [
+        {
+          "start": 10,
+          "end": 13,
+          "text": "赵知远",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "820037aa991490b81a8a5bf386425fee58641573445e8da535fbd2e86acff761"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-person-0-3",
+      "source_case_id": "f00-person-0",
+      "task": "activity_stats",
+      "task_description": "为海报设计写一段主题介绍，不统计人数也不展示个人明细",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1场海报设计例会：赵知远负责第1项准备工作，周五前交付。",
+      "entities": [
+        {
+          "start": 10,
+          "end": 13,
+          "text": "赵知远",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "235f898c3677070502478b69db93eb7d83c3fd01702326c54a7dd89038d1bb80"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "viewer_teacher",
+      "case_id": "f00-person-0-teacher",
+      "source_case_id": "f00-person-0",
+      "task": "meeting_minutes",
+      "task_description": "仅供权限已经核验的指导老师本机核实真实负责人与任务的对应，不调用外部模型",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1场海报设计例会：赵知远负责第1项准备工作，周五前交付。",
+      "entities": [
+        {
+          "start": 10,
+          "end": 13,
+          "text": "赵知远",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "f1c43111491338711ccd135b4b4a5d09bbe9bcbfa0fd31bd91e0c0c6c1003725"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-person-1-0",
+      "source_case_id": "f00-person-1",
+      "task": "meeting_minutes",
+      "task_description": "只提炼本次讨论的议题，不列任何人员",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1场海报设计例会：赵思齐负责第2项准备工作，周五前交付。",
+      "entities": [
+        {
+          "start": 10,
+          "end": 13,
+          "text": "赵思齐",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "7cc3c429d7abfd390d7f3c5b14f337c80def5506afb8575535b8c6b49cae2730"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-person-1-1",
+      "source_case_id": "f00-person-1",
+      "task": "meeting_minutes",
+      "task_description": "整理负责人、工作事项与完成期限的对应清单",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1场海报设计例会：赵思齐负责第2项准备工作，周五前交付。",
+      "entities": [
+        {
+          "start": 10,
+          "end": 13,
+          "text": "赵思齐",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "a53c765f1cb30840f2c8bd3c8a3d31d72cfc99ea38c2ee2ccdb612766bbecd3f"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-person-1-2",
+      "source_case_id": "f00-person-1",
+      "task": "activity_stats",
+      "task_description": "统计本场海报设计活动参与人数，只需要总数",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1场海报设计例会：赵思齐负责第2项准备工作，周五前交付。",
+      "entities": [
+        {
+          "start": 10,
+          "end": 13,
+          "text": "赵思齐",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "10188c5eb9054564b4e93e41a7f608618d75ab16a4d6bcea0c31c81a552a2fc6"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-person-1-3",
+      "source_case_id": "f00-person-1",
+      "task": "activity_stats",
+      "task_description": "为海报设计写一段主题介绍，不统计人数也不展示个人明细",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1场海报设计例会：赵思齐负责第2项准备工作，周五前交付。",
+      "entities": [
+        {
+          "start": 10,
+          "end": 13,
+          "text": "赵思齐",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "22103cd4731a5c52c609d21a2d85885b548f793cc61b3c34d688bcd657ae9c13"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "viewer_teacher",
+      "case_id": "f00-person-1-teacher",
+      "source_case_id": "f00-person-1",
+      "task": "meeting_minutes",
+      "task_description": "仅供权限已经核验的指导老师本机核实真实负责人与任务的对应，不调用外部模型",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1场海报设计例会：赵思齐负责第2项准备工作，周五前交付。",
+      "entities": [
+        {
+          "start": 10,
+          "end": 13,
+          "text": "赵思齐",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "82118f0a1725b7e2ba3165acdbc9056200540f95dbb038414362aa336ee5075e"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-person-2-0",
+      "source_case_id": "f00-person-2",
+      "task": "meeting_minutes",
+      "task_description": "整理负责人、工作事项与完成期限的对应清单",
+      "context": "已核实的补充记录：此人只旁听，不承担本次任何工作，责任人另有其人。",
+      "text": "第1场海报设计例会记录：赵若宁参与了本次筹备交流。",
+      "entities": [
+        {
+          "start": 12,
+          "end": 15,
+          "text": "赵若宁",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "80e924274386f2b2d531256890cc9e2c801929843dcec6015adead46e0d84670"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-person-2-1",
+      "source_case_id": "f00-person-2",
+      "task": "meeting_minutes",
+      "task_description": "整理负责人、工作事项与完成期限的对应清单",
+      "context": "已核实的补充记录：此人就是该项工作的负责人，负责场地准备，周五前交付。",
+      "text": "第1场海报设计例会记录：赵若宁参与了本次筹备交流。",
+      "entities": [
+        {
+          "start": 12,
+          "end": 15,
+          "text": "赵若宁",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "78e7a576d99513b70d75368272b6a56d0098b597adadb9d790b1096f87b54e9f"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-person-2-2",
+      "source_case_id": "f00-person-2",
+      "task": "activity_stats",
+      "task_description": "统计本场海报设计活动参与人数，只需要总数",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1场海报设计例会记录：赵若宁参与了本次筹备交流。",
+      "entities": [
+        {
+          "start": 12,
+          "end": 15,
+          "text": "赵若宁",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "5202b859555867a8b96883e51ff281294ae1751e1a218b7c7b6eb8c24c07ea24"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-person-2-3",
+      "source_case_id": "f00-person-2",
+      "task": "activity_stats",
+      "task_description": "为海报设计写一段主题介绍，不统计人数也不展示个人明细",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1场海报设计例会记录：赵若宁参与了本次筹备交流。",
+      "entities": [
+        {
+          "start": 12,
+          "end": 15,
+          "text": "赵若宁",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "1b17262d46267e6950596497ddfef354dcf5bd7362cd0be3a0353b73f18964f3"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "viewer_teacher",
+      "case_id": "f00-person-2-teacher",
+      "source_case_id": "f00-person-2",
+      "task": "meeting_minutes",
+      "task_description": "仅供权限已经核验的指导老师本机核实真实负责人与任务的对应，不调用外部模型",
+      "context": "已核实：该参与者是该项工作的真实负责人；查看者的权限已经由服务端确认。",
+      "text": "第1场海报设计例会记录：赵若宁参与了本次筹备交流。",
+      "entities": [
+        {
+          "start": 12,
+          "end": 15,
+          "text": "赵若宁",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "c03d12e453247de9c9106a61849045fac5f343ed9b0c6e4eba4ba321e551f8e8"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-person-3-0",
+      "source_case_id": "f00-person-3",
+      "task": "meeting_minutes",
+      "task_description": "整理负责人、工作事项与完成期限的对应清单",
+      "context": "已核实的补充记录：此人只旁听，不承担本次任何工作，责任人另有其人。",
+      "text": "第1场海报设计例会记录：赵安和参与了本次筹备交流。",
+      "entities": [
+        {
+          "start": 12,
+          "end": 15,
+          "text": "赵安和",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "65d06fff92e73d2bc0090e02ac31e6969f73d894e2a329e2b140388048e29b98"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-person-3-1",
+      "source_case_id": "f00-person-3",
+      "task": "meeting_minutes",
+      "task_description": "整理负责人、工作事项与完成期限的对应清单",
+      "context": "已核实的补充记录：此人就是该项工作的负责人，负责场地准备，周五前交付。",
+      "text": "第1场海报设计例会记录：赵安和参与了本次筹备交流。",
+      "entities": [
+        {
+          "start": 12,
+          "end": 15,
+          "text": "赵安和",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "65294d2abcc8a1f12d0f9557becb4ec3c014797c026566690e10f85ec23c567f"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-person-3-2",
+      "source_case_id": "f00-person-3",
+      "task": "activity_stats",
+      "task_description": "统计本场海报设计活动参与人数，只需要总数",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1场海报设计例会记录：赵安和参与了本次筹备交流。",
+      "entities": [
+        {
+          "start": 12,
+          "end": 15,
+          "text": "赵安和",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "202bcaa75f1e60fd4d10af4f2f0560e899f1b8e3647d146f030ee29d3e5ecd79"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-person-3-3",
+      "source_case_id": "f00-person-3",
+      "task": "activity_stats",
+      "task_description": "为海报设计写一段主题介绍，不统计人数也不展示个人明细",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1场海报设计例会记录：赵安和参与了本次筹备交流。",
+      "entities": [
+        {
+          "start": 12,
+          "end": 15,
+          "text": "赵安和",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "6f7314ea5711556661241cea567525ab52c791e3bc4cd0423f03dd32d77e60f7"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "viewer_teacher",
+      "case_id": "f00-person-3-teacher",
+      "source_case_id": "f00-person-3",
+      "task": "meeting_minutes",
+      "task_description": "仅供权限已经核验的指导老师本机核实真实负责人与任务的对应，不调用外部模型",
+      "context": "已核实：该参与者是该项工作的真实负责人；查看者的权限已经由服务端确认。",
+      "text": "第1场海报设计例会记录：赵安和参与了本次筹备交流。",
+      "entities": [
+        {
+          "start": 12,
+          "end": 15,
+          "text": "赵安和",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "a2dae6b33ca127ea3f51e652aff69dff2e3a65e56f2fe3333a37a7780211d321"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-org-0",
+      "source_case_id": "f00-org",
+      "task": "project_intro",
+      "task_description": "介绍已确认可公开的合作机构，需要保留机构名称",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1份项目材料：虚构海报设计协作社提供场地协助，项目目标是公开知识交流。",
+      "entities": [
+        {
+          "start": 8,
+          "end": 17,
+          "text": "虚构海报设计协作社",
+          "category": "ORG"
+        }
+      ],
+      "case_sha256": "87441f983cc3dc62b341c95a583ce9034fb96b67c8ab8fa1dbb97414c47a382f"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-org-1",
+      "source_case_id": "f00-org",
+      "task": "project_intro",
+      "task_description": "只概括合作机构的类型，不披露具体机构名称",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1份项目材料：虚构海报设计协作社提供场地协助，项目目标是公开知识交流。",
+      "entities": [
+        {
+          "start": 8,
+          "end": 17,
+          "text": "虚构海报设计协作社",
+          "category": "ORG"
+        }
+      ],
+      "case_sha256": "1e9d298f3a259946b099984bedb32cb694d439eb8ae08563791bf2f731e0fdd4"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-phone-0",
+      "source_case_id": "f00-phone",
+      "task": "meeting_minutes",
+      "task_description": "整理公开事项，不需要联系方式",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1份虚构登记材料中的联系电话：13800000000。",
+      "entities": [
+        {
+          "start": 16,
+          "end": 27,
+          "text": "13800000000",
+          "category": "PHONE"
+        }
+      ],
+      "case_sha256": "ab727a5ca26f0a6cfcb801221c595356f1a8e707812ae9e28307be06f76a505e"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-phone-1",
+      "source_case_id": "f00-phone",
+      "task": "activity_stats",
+      "task_description": "整理公开事项，不需要联系方式",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1份虚构登记材料中的联系电话：13800000000。",
+      "entities": [
+        {
+          "start": 16,
+          "end": 27,
+          "text": "13800000000",
+          "category": "PHONE"
+        }
+      ],
+      "case_sha256": "95b191308319be4d678d6a2aab4c7de1febacc4c1f880ecee8621bad2a73646a"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-dorm-0",
+      "source_case_id": "f00-dorm",
+      "task": "meeting_minutes",
+      "task_description": "只整理可公开的活动内容",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1份内部资料记录住宿位置：虚构园区1栋101室。",
+      "entities": [
+        {
+          "start": 14,
+          "end": 24,
+          "text": "虚构园区1栋101室",
+          "category": "DORM"
+        }
+      ],
+      "case_sha256": "41676c5a4f369890307190d9999f5fcc46821ce0158d02dcf3767da81c635e0c"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-dorm-1",
+      "source_case_id": "f00-dorm",
+      "task": "project_intro",
+      "task_description": "只整理可公开的活动内容",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1份内部资料记录住宿位置：虚构园区1栋101室。",
+      "entities": [
+        {
+          "start": 14,
+          "end": 24,
+          "text": "虚构园区1栋101室",
+          "category": "DORM"
+        }
+      ],
+      "case_sha256": "56f00f3b6f80628da4b1d540cfe90fdb6ac1061541e4bf79002aed62baec3672"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-uncertain-0",
+      "source_case_id": "f00-uncertain",
+      "task": "meeting_minutes",
+      "task_description": "来源与职责冲突尚未解决，请先确认后再整理责任清单",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1份未确认资料写有虚构人员1号的责任安排，记录的来源和职责真实性尚未核实。",
+      "entities": [
+        {
+          "start": 10,
+          "end": 16,
+          "text": "虚构人员1号",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "0df5456406a4d44708a13877eb02573581cc7eb85b6b7caf09f0be94f7a42433"
+    },
+    {
+      "template_group": "wording-family-00",
+      "source_kind": "synthetic",
+      "identity": "student_leader",
+      "recipient": "external_model",
+      "case_id": "f00-uncertain-1",
+      "source_case_id": "f00-uncertain",
+      "task": "meeting_minutes",
+      "task_description": "请使用目前无法确认归属的材料生成可执行分工",
+      "context": "这是完全虚构的海报设计材料。",
+      "text": "第1份未确认资料写有虚构人员1号的责任安排，记录的来源和职责真实性尚未核实。",
+      "entities": [
+        {
+          "start": 10,
+          "end": 16,
+          "text": "虚构人员1号",
+          "category": "PERSON_NAME"
+        }
+      ],
+      "case_sha256": "3c78bebce8b2985926e55479eb6e75dc713dcee966a4e228274927a429b4916d"
+    }
+  ]
+}

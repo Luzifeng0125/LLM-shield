@@ -23,6 +23,8 @@ class MappingTable:
         self._backward: Dict[str, Dict[str, str]] = {}
         # session_id -> 已用代号序号
         self._counters: Dict[str, int] = {}
+        # session_id -> category -> 联系通知占位符序号。不占用「人员甲」的天干池。
+        self._token_counts: Dict[str, Dict[str, int]] = {}
 
     # ------------------------------------------------------------ 代号分配
 
@@ -62,6 +64,25 @@ class MappingTable:
             template = "代号{code}"
 
         code = self._next_code(session_id, prefix_pool, template)
+        fwd[key] = code
+        self._backward.setdefault(session_id, {})[code] = real_value
+        return code
+
+    def stable_token(self, session_id: str, real_value: str, category: str) -> Optional[str]:
+        """联系通知里的稳定占位符。同一会话、同一原文得到同一个编号。"""
+        form = {"PERSON_NAME": "[PERSON_{n}]", "PHONE": "[CONTACT_{n}]"}.get(category)
+        if form is None or not isinstance(real_value, str) or not real_value:
+            return None
+        fwd = self._forward.setdefault(session_id, {})
+        key = f"{category}::{real_value}"
+        if key in fwd:
+            return fwd[key]
+        counts = self._token_counts.setdefault(session_id, {})
+        number = counts.get(category, 0) + 1
+        counts[category] = number
+        code = form.format(n=number)
+        if real_value in code:
+            return None
         fwd[key] = code
         self._backward.setdefault(session_id, {})[code] = real_value
         return code
@@ -123,6 +144,7 @@ class MappingTable:
         self._forward.pop(session_id, None)
         self._backward.pop(session_id, None)
         self._counters.pop(session_id, None)
+        self._token_counts.pop(session_id, None)
 
 
 # 全局单例（内存态）

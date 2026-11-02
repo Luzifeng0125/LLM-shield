@@ -1,0 +1,215 @@
+{
+  "task_required_facts": [
+    "哪一天",
+    "哪个教室",
+    "谁负责什么"
+  ],
+  "units": [
+    {
+      "quote": "林知夏",
+      "start": 13,
+      "end": 16,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "DELETE"
+      ],
+      "expected_output_constraints": [
+        "提醒中不出现该姓名"
+      ],
+      "evidence_refs": [
+        "林知夏"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u1",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "recipient_id": "external_model",
+      "purpose_id": "class-duty-reminder",
+      "canonical_action": "DELETE",
+      "required_facts": "转述安排的人不是值日任务本身"
+    },
+    {
+      "quote": "周晚宁",
+      "start": 38,
+      "end": 41,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "PSEUDONYMIZE"
+      ],
+      "expected_output_constraints": [
+        "同一人使用同一个代号",
+        "外部草稿不出现原姓名"
+      ],
+      "evidence_refs": [
+        "周晚宁"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u2",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "recipient_id": "external_model",
+      "purpose_id": "class-duty-reminder",
+      "canonical_action": "PSEUDONYMIZE",
+      "required_facts": "值日需要分清执行人，外部模型使用稳定代号"
+    },
+    {
+      "quote": "陈予安",
+      "start": 58,
+      "end": 61,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "PSEUDONYMIZE"
+      ],
+      "expected_output_constraints": [
+        "同一人使用同一个代号",
+        "外部草稿不出现原姓名"
+      ],
+      "evidence_refs": [
+        "陈予安"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u3",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "recipient_id": "external_model",
+      "purpose_id": "class-duty-reminder",
+      "canonical_action": "PSEUDONYMIZE",
+      "required_facts": "值日需要分清执行人，外部模型使用稳定代号"
+    },
+    {
+      "quote": "周一教学楼A201",
+      "start": 28,
+      "end": 37,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "RETAIN"
+      ],
+      "expected_output_constraints": [
+        "教室位置可被同学理解"
+      ],
+      "evidence_refs": [
+        "周一教学楼A201"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u4",
+      "category": "LOCATION",
+      "boundary_id": "external_generation",
+      "recipient_id": "external_model",
+      "purpose_id": "class-duty-reminder",
+      "canonical_action": "RETAIN",
+      "required_facts": "周一的值日教室是通知必须写明的地点"
+    },
+    {
+      "quote": "13800001001",
+      "start": 99,
+      "end": 110,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "DELETE"
+      ],
+      "expected_output_constraints": [
+        "外部草稿不出现该号码"
+      ],
+      "evidence_refs": [
+        "13800001001"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u5",
+      "category": "PHONE",
+      "boundary_id": "external_generation",
+      "recipient_id": "external_model",
+      "purpose_id": "class-duty-reminder",
+      "canonical_action": "DELETE",
+      "required_facts": "值日通知不外发手机号"
+    },
+    {
+      "quote": "chenyuan@example.edu",
+      "start": 129,
+      "end": 149,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "DELETE"
+      ],
+      "expected_output_constraints": [
+        "外部草稿不出现该邮箱"
+      ],
+      "evidence_refs": [
+        "chenyuan@example.edu"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u6",
+      "category": "EMAIL",
+      "boundary_id": "external_generation",
+      "recipient_id": "external_model",
+      "purpose_id": "class-duty-reminder",
+      "canonical_action": "DELETE",
+      "required_facts": "值日通知不外发邮箱"
+    }
+  ]
+}

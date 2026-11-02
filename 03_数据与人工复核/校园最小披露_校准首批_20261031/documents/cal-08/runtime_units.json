@@ -1,0 +1,233 @@
+[
+  {
+    "unit_id": "cal-08:u1",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "external_generation",
+    "recipient_id": "external_model",
+    "identity_key": "student_leader",
+    "task_key": "meeting_minutes",
+    "purpose_id": "seminar-minutes",
+    "purpose_source": "user_explicit",
+    "category": "PERSON_NAME",
+    "confidence": 1.0,
+    "workflow_id": "minutes_reports_statistics",
+    "user_task": "帮我把这份周五例会记录整理成学习部纪要，交给指导老师核对分工。负责人、待办和截止时间要对应清楚，印刷费写出大致水平就行，语气正式、重点突出。",
+    "target_text": "顾承安",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  },
+  {
+    "unit_id": "cal-08:u2",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "external_generation",
+    "recipient_id": "external_model",
+    "identity_key": "student_leader",
+    "task_key": "meeting_minutes",
+    "purpose_id": "seminar-minutes",
+    "purpose_source": "user_explicit",
+    "category": "PERSON_NAME",
+    "confidence": 1.0,
+    "workflow_id": "minutes_reports_statistics",
+    "user_task": "帮我把这份周五例会记录整理成学习部纪要，交给指导老师核对分工。负责人、待办和截止时间要对应清楚，印刷费写出大致水平就行，语气正式、重点突出。",
+    "target_text": "裴星澜",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  },
+  {
+    "unit_id": "cal-08:u3",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "external_generation",
+    "recipient_id": "external_model",
+    "identity_key": "student_leader",
+    "task_key": "meeting_minutes",
+    "purpose_id": "seminar-minutes",
+    "purpose_source": "user_explicit",
+    "category": "PHONE",
+    "confidence": 1.0,
+    "workflow_id": "minutes_reports_statistics",
+    "user_task": "帮我把这份周五例会记录整理成学习部纪要，交给指导老师核对分工。负责人、待办和截止时间要对应清楚，印刷费写出大致水平就行，语气正式、重点突出。",
+    "target_text": "13800001008",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  },
+  {
+    "unit_id": "cal-08:u4",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "external_generation",
+    "recipient_id": "external_model",
+    "identity_key": "student_leader",
+    "task_key": "meeting_minutes",
+    "purpose_id": "seminar-minutes",
+    "purpose_source": "user_explicit",
+    "category": "SENSITIVE_ATTR",
+    "confidence": 1.0,
+    "workflow_id": "minutes_reports_statistics",
+    "user_task": "帮我把这份周五例会记录整理成学习部纪要，交给指导老师核对分工。负责人、待办和截止时间要对应清楚，印刷费写出大致水平就行，语气正式、重点突出。",
+    "target_text": "最近在服药",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  },
+  {
+    "unit_id": "cal-08:u5",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "external_generation",
+    "recipient_id": "external_model",
+    "identity_key": "student_leader",
+    "task_key": "meeting_minutes",
+    "purpose_id": "seminar-minutes",
+    "purpose_source": "user_explicit",
+    "category": "BUDGET",
+    "confidence": 1.0,
+    "workflow_id": "minutes_reports_statistics",
+    "user_task": "帮我把这份周五例会记录整理成学习部纪要，交给指导老师核对分工。负责人、待办和截止时间要对应清楚，印刷费写出大致水平就行，语气正式、重点突出。",
+    "target_text": "12800元",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  },
+  {
+    "unit_id": "cal-08:u6",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "authorized_local_delivery",
+    "recipient_id": "viewer_teacher",
+    "identity_key": "student_leader",
+    "task_key": "meeting_minutes",
+    "purpose_id": "seminar-minutes-teacher-view",
+    "purpose_source": "user_explicit",
+    "category": "PERSON_NAME",
+    "confidence": 1.0,
+    "workflow_id": "minutes_reports_statistics",
+    "user_task": "帮我把这份周五例会记录整理成学习部纪要，交给指导老师核对分工。负责人、待办和截止时间要对应清楚，印刷费写出大致水平就行，语气正式、重点突出。",
+    "target_text": "顾承安",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  },
+  {
+    "unit_id": "cal-08:u7",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "authorized_local_delivery",
+    "recipient_id": "viewer_teacher",
+    "identity_key": "student_leader",
+    "task_key": "meeting_minutes",
+    "purpose_id": "seminar-minutes-teacher-view",
+    "purpose_source": "user_explicit",
+    "category": "PERSON_NAME",
+    "confidence": 1.0,
+    "workflow_id": "minutes_reports_statistics",
+    "user_task": "帮我把这份周五例会记录整理成学习部纪要，交给指导老师核对分工。负责人、待办和截止时间要对应清楚，印刷费写出大致水平就行，语气正式、重点突出。",
+    "target_text": "裴星澜",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  }
+]

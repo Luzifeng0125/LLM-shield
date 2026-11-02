@@ -1,0 +1,101 @@
+[
+  {
+    "unit_id": "cal-07:u1",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "authorized_local_delivery",
+    "recipient_id": null,
+    "identity_key": "student_leader",
+    "task_key": null,
+    "purpose_id": "dorm-repair",
+    "purpose_source": "user_explicit",
+    "category": "PERSON_NAME",
+    "confidence": 1.0,
+    "workflow_id": "campus_services",
+    "user_task": "帮我把这份宿舍报修草稿整理成可以交给维修入口的说明。故障现象、房间位置和怎么联系本人要写清楚，方便上门。我这边还没确定发给哪一个后勤接收人。",
+    "target_text": "宋清让",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  },
+  {
+    "unit_id": "cal-07:u2",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "authorized_local_delivery",
+    "recipient_id": null,
+    "identity_key": "student_leader",
+    "task_key": null,
+    "purpose_id": "dorm-repair",
+    "purpose_source": "user_explicit",
+    "category": "DORM",
+    "confidence": 1.0,
+    "workflow_id": "campus_services",
+    "user_task": "帮我把这份宿舍报修草稿整理成可以交给维修入口的说明。故障现象、房间位置和怎么联系本人要写清楚，方便上门。我这边还没确定发给哪一个后勤接收人。",
+    "target_text": "竹园2号楼417",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  },
+  {
+    "unit_id": "cal-07:u3",
+    "policy_version": "campus-min-disclosure-v1.1",
+    "boundary_id": "authorized_local_delivery",
+    "recipient_id": null,
+    "identity_key": "student_leader",
+    "task_key": null,
+    "purpose_id": "dorm-repair",
+    "purpose_source": "user_explicit",
+    "category": "PHONE",
+    "confidence": 1.0,
+    "workflow_id": "campus_services",
+    "user_task": "帮我把这份宿舍报修草稿整理成可以交给维修入口的说明。故障现象、房间位置和怎么联系本人要写清楚，方便上门。我这边还没确定发给哪一个后勤接收人。",
+    "target_text": "13800001007",
+    "trusted_permissions": [
+      {
+        "source_id": "config/identities.yaml",
+        "version": "identities-v0.1"
+      },
+      {
+        "source_id": "config/recipients.yaml",
+        "version": "recipients-v0.1"
+      },
+      {
+        "source_id": "config/tasks.yaml",
+        "version": "tasks-v0.1"
+      },
+      {
+        "source_id": "config/rules.yaml",
+        "version": "rules-v0.1"
+      }
+    ]
+  }
+]

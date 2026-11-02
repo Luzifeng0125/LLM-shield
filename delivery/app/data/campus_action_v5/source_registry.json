@@ -1,0 +1,165 @@
+{
+  "schema": "campus-source-screening-v1",
+  "checked_date": "2026-10-31",
+  "inspection_scope": "official repository READMEs, linked dataset cards, public previews and public campus pages; no bulk dataset download or third-party code execution",
+  "sources": [
+    {
+      "source_id": "camber",
+      "url": "https://github.com/google-parfait/contextual-privacy-and-security",
+      "data_url": "https://github.com/google-parfait/contextual-privacy-and-security/tree/staging/camber",
+      "license_observed": "CC-BY-4.0",
+      "priority": "high_context_design",
+      "task": "contextual sharing appropriateness, binary labels",
+      "source_family": "PrivacyLens_and_ConfAIde_derivatives",
+      "use": "campus context counterfactual design; relabel six actions after adaptation",
+      "limitations": [
+        "not campus-specific Chinese six-action labels",
+        "group original seeds with all derivatives across splits"
+      ],
+      "admission": "reference_selected; dataset_version_and_hash_pending"
+    },
+    {
+      "source_id": "privacylens",
+      "url": "https://github.com/SALT-NLP/PrivacyLens",
+      "data_url": "https://huggingface.co/datasets/SALT-NLP/PrivacyLens",
+      "code_license_observed": "MIT",
+      "data_license_observed": "CC-BY-4.0",
+      "published_rows": 493,
+      "language": "English",
+      "priority": "high_context_schema",
+      "source_family": "PrivacyLens",
+      "use": "sender, subject, recipient, information and transmission context; behavior-level evaluation",
+      "limitations": [
+        "US-derived norms are not campus policy",
+        "not six-action labels",
+        "shared source family with CAMBER"
+      ],
+      "admission": "reference_selected; dataset_version_and_hash_pending"
+    },
+    {
+      "source_id": "ci_rl_synthetic",
+      "url": "https://github.com/EricGLan/CI-RL",
+      "data_url": "https://huggingface.co/datasets/huseyinatahaninan/ContextualIntegritySyntheticDataset",
+      "license_observed": "Apache-2.0 on repository and dataset card",
+      "published_rows": 729,
+      "language": "English",
+      "priority": "auxiliary_context_annotation",
+      "use": "education/cooperation mechanisms; allowed/disallowed information as auxiliary supervision concept",
+      "limitations": [
+        "requests often explicit and information structured",
+        "do not copy seeds or annotation into inference input",
+        "no large-model RL replication in phase one"
+      ],
+      "admission": "reference_only; educational_subset_not_yet_counted"
+    },
+    {
+      "source_id": "cluener2020",
+      "url": "https://github.com/CLUEbenchmark/CLUENER2020",
+      "license_observed": "explicit dataset reuse license not verified on inspected pages",
+      "published_train_rows": 10748,
+      "published_validation_rows": 1343,
+      "language": "Chinese",
+      "priority": "conditional_entity_detection",
+      "use": "person, address, organization boundaries",
+      "limitations": [
+        "news-domain entities are not contextual privacy actions",
+        "resolve dataset license before ingestion"
+      ],
+      "admission": "pending_license"
+    },
+    {
+      "source_id": "openpii_1_5m",
+      "url": "https://huggingface.co/datasets/ai4privacy/pii-masking-openpii-1.5m",
+      "license_observed": "CC-BY-4.0",
+      "published_total_rows": 1636375,
+      "chinese_subset_available": true,
+      "priority": "conditional_chinese_span_support",
+      "use": "small Chinese sample after quality audit, entity detection only",
+      "observed_quality_issue": "Public preview tags a percentage as AGE and a material thickness as BUILDINGNUM; not a measured full-dataset error rate.",
+      "audit_sample_target": 200,
+      "pause_direct_ingestion_if_obvious_error_fraction_above": 0.05,
+      "admission": "pending_quality_audit"
+    },
+    {
+      "source_id": "sift_opf_zh",
+      "url": "https://github.com/branbot6/sift-opf-zh",
+      "license_observed": "repository Apache-2.0; upstream licenses separately checked",
+      "priority": "reference_only",
+      "use": "trace upstream Chinese detection data and inspect failure modes",
+      "limitations": [
+        "addresses require digits in this project's annotation convention",
+        "published training command uses gold_test for eval; do not assume untouched acceptance data",
+        "no model installation planned"
+      ],
+      "admission": "not_selected_as_action_model_or_acceptance_benchmark"
+    },
+    {
+      "source_id": "pii_bench_zh",
+      "url": "https://huggingface.co/datasets/wan9yu/pii-bench-zh",
+      "license_observed": "Apache-2.0 metadata; card describes synthetic research/evaluation use",
+      "published_rows": 8000,
+      "formal_templates": 11,
+      "chat_templates": 13,
+      "priority": "format_noise_stress_test_only",
+      "use": "limited detector noise probes with template-family grouping",
+      "limitations": [
+        "programmatic template synthesis repeats structures",
+        "no context-dependent six-action labels",
+        "not 8000 independent real scenarios"
+      ],
+      "admission": "exclude_from_primary_action_corpus"
+    },
+    {
+      "source_id": "pii_masking_200k",
+      "url": "https://huggingface.co/datasets/ai4privacy/pii-masking-200k",
+      "priority": "not_selected",
+      "languages_observed": [
+        "English",
+        "French",
+        "German",
+        "Italian"
+      ],
+      "limitations": [
+        "no Chinese in this edition",
+        "not a context-dependent action dataset"
+      ],
+      "admission": "not_selected"
+    },
+    {
+      "source_id": "campus_qlnu_activity_form",
+      "url": "https://tw.qlnu.edu.cn/info/1018/32501.htm",
+      "priority": "campus_genre_reference",
+      "use": "blank activity request form, teacher/department workflow and mixed public/private fields",
+      "admission": "writing_structure_reference_only_no_real_personal_data_copy"
+    },
+    {
+      "source_id": "campus_scnu_project_notice",
+      "url": "https://youth.scnu.edu.cn/announce/2026/1016/19350.html",
+      "priority": "campus_genre_reference",
+      "use": "club project application, budget, reporting and approval document structure",
+      "admission": "writing_structure_reference_only_no_real_personal_data_copy"
+    },
+    {
+      "source_id": "campus_hunnu_volunteer_notice",
+      "url": "https://news.hunnu.edu.cn/info/1007/102914.htm",
+      "priority": "campus_genre_reference",
+      "use": "public recruitment notice and distinction between public work contact and private registration materials",
+      "admission": "writing_structure_reference_only_no_real_personal_data_copy"
+    },
+    {
+      "source_id": "ci_work",
+      "url": "https://aclanthology.org/2026.acl-industry.103/",
+      "repository_entry": "https://github.com/microsoft/ACV",
+      "publication": "ACL 2026 Industry",
+      "priority": "evaluation_design_reference_only",
+      "use": "essential_content_utility_sensitive_context_and_multiple_information_flow_directions",
+      "campus_training_admission": false,
+      "enterprise_expansion": false,
+      "inspection_scope": "official_abstract_and_paper_search_excerpt_plus_repository_landing",
+      "data_download_verified": false,
+      "code_license_observed_at_repository_root": "MIT",
+      "dataset_license_and_pinned_data_version": "not_verified",
+      "admission": "reference_only_data_availability_pending"
+    }
+  ]
+}

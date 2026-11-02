@@ -9,8 +9,8 @@ from typing import List, Optional
 
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, File, HTTPException, UploadFile
-from fastapi.responses import FileResponse, RedirectResponse
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi.responses import FileResponse, RedirectResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from typing import Literal
@@ -18,8 +18,9 @@ from typing import Literal
 from . import config as C
 from .m1_access.file_loader import (MAX_BYTES, SUPPORTED, ParseError,
                                     delete_upload, maybe_parse_table,
-                                    parse_uploads)
+                                    parse_uploads, cleanup_expired_uploads)
 from .m1_access.loader import list_materials, load_material
+from .material_policy import SourcePolicyError
 from .m1_access.identity import check_provide, check_read
 from .m2_detect.pipeline import DetectionError, build_detectors
 from .m4_necessity.model import get_model
@@ -57,6 +58,7 @@ def _warmup() -> None:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    cleanup_expired_uploads()
     _warmup()
     try:
         yield
@@ -67,6 +69,11 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="隐盾 LLM-Shield", version="0.1.0",
               description="面向高校场景的最小披露防护服务（本地受控）",
               lifespan=lifespan)
+
+
+@app.exception_handler(SourcePolicyError)
+async def source_policy_error(request, exc):
+    return JSONResponse(status_code=exc.status, content={"detail": str(exc)})
 
 WEB_DIR = C.ROOT / "web"
 
@@ -240,6 +247,7 @@ def api_config(include_builtin: bool = False):
 
 @app.get("/api/materials")
 def api_materials(include_builtin: bool = False):
+    cleanup_expired_uploads()
     return {"items": list_materials(include_builtin=include_builtin)}
 
 
@@ -253,14 +261,20 @@ def api_upload_formats():
 
 
 @app.post("/api/upload")
-async def api_upload(file: UploadFile = File(...)):
+async def api_upload(file: UploadFile = File(...),
+                     task: str = Form("meeting_minutes"),
+                     storage_mode: Literal["temporary", "library"] = Form("temporary")):
     """上传并解析文件，返回可直接参与处理的 doc_id。
 
     解析在本地完成，只保留提取出的文本/表格，不保存原始二进制文件。
     """
+    if not isinstance(C.tasks().get(task), dict) or C.tasks()[task].get("workflow") == "notice":
+        raise HTTPException(400, "请选择有效的材料处理用途")
+    cleanup_expired_uploads()
     data = await file.read(MAX_BYTES + 1)
     try:
-        materials = parse_uploads(data, file.filename or "upload.txt")
+        materials = parse_uploads(data, file.filename or "upload.txt",
+                                 storage_mode=storage_mode, allowed_purposes=[task])
     except ParseError as e:
         raise HTTPException(400, str(e))
     except Exception:
@@ -278,6 +292,8 @@ async def api_upload(file: UploadFile = File(...)):
         "n_chars": len(mat.text or ""),
         "n_rows": len(mat.rows or []),
         "columns": mat.columns,
+        "storage_mode": mat.storage_mode, "expires_at": mat.expires_at,
+        "allowed_purposes": mat.allowed_purposes,
         "worksheets": len(materials),
         "documents": [{"doc_id": item.doc_id, "title": item.title,
                        "n_rows": len(item.rows or [])} for item in materials],
@@ -287,7 +303,11 @@ async def api_upload(file: UploadFile = File(...)):
 @app.delete("/api/upload/{doc_id}")
 def api_delete_upload(doc_id: str):
     """删除已上传材料（只删该 JSON，不做任何目录递归操作）。"""
-    return {"ok": delete_upload(doc_id)}
+    try:
+        deleted = delete_upload(doc_id, before_delete=STORE.invalidate_material)
+    except (ChatError, SourcePolicyError) as exc:
+        raise HTTPException(exc.status, str(exc))
+    return {"ok": deleted}
 
 
 @app.get("/api/audit")

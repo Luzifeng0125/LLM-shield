@@ -125,6 +125,13 @@ class Material:
     text: str
     rows: Optional[List[Dict[str, str]]] = None   # 结构化表格行
     columns: Optional[List[str]] = None
+    allowed_purposes: Optional[List[str]] = None
+    created_at: Optional[float] = None
+    expires_at: Optional[float] = None
+    storage_mode: str = "legacy"
+    # Process-local source identity/version; never serialized into public output.
+    source_key: Optional[str] = None
+    source_version: Optional[int] = None
 
 
 @dataclass
@@ -187,17 +194,39 @@ class PipelineResult:
     timings: Dict[str, float] = field(default_factory=dict)
     paused: bool = False
     pause_reason: str = ""
+    decision_lane: str = ""
+    recognition_assurance: str = ""
+    # 本地金额补全只留在服务端对象上，公开结果不带金额短语。
+    local_completion: Optional[Dict[str, Any]] = None
 
     def to_dict(self) -> Dict[str, Any]:
+        """Publish approved content only; raw diagnostics stay on the server."""
+        viewer_allowed = not self.paused and any(
+            b.get("boundary") == Boundary.B2_VIEW_DISPLAY.value
+            and b.get("allowed") is True and not b.get("blocked")
+            for b in self.boundaries)
+        tool_allowed = not self.paused and any(
+            b.get("boundary") == Boundary.B3_TOOL_EGRESS.value
+            and b.get("allowed") is True and not b.get("blocked")
+            for b in self.boundaries)
+        display = self.display_text if viewer_allowed else ""
+        boundaries = [{**b, "leak_hits": [
+            {k: hit[k] for k in ("category", "start", "end", "detector") if k in hit}
+            for hit in b.get("leak_hits", [])]} for b in self.boundaries]
         return {
             "ok": self.ok, "session_id": self.session_id, "task": self.task,
             "identity": self.identity, "recipient": self.recipient,
             "access_ok": self.access_ok, "access_reason": self.access_reason,
-            "original_text": self.original_text, "sanitized_text": self.sanitized_text,
-            "model_output": self.model_output, "display_text": self.display_text,
-            "egress_text": self.egress_text, "spans": self.spans,
-            "decisions": self.decisions, "aggregates": self.aggregates,
-            "mapping_table": self.mapping_table, "boundaries": self.boundaries,
+            "original_text": "", "sanitized_text": "",
+            "model_output": display, "display_text": display,
+            "egress_text": self.egress_text if tool_allowed else "",
+            "spans": [{k: span[k] for k in ("start", "end", "category", "confidence", "detector", "rule_id", "row_index")
+                       if k in span} for span in self.spans],
+            "decisions": [{k: v for k, v in decision.items() if k != "text"}
+                          for decision in self.decisions],
+            "aggregates": {}, "mapping_table": {}, "boundaries": boundaries,
             "warnings": self.warnings, "timings": {k: round(v, 2) for k, v in self.timings.items()},
             "paused": self.paused, "pause_reason": self.pause_reason,
+            "decision_lane": self.decision_lane,
+            "recognition_assurance": self.recognition_assurance,
         }

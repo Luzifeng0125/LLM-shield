@@ -4,10 +4,17 @@
 !/.gitattributes
 !/README.md
 !/AI_EXECUTION_PLAN.md
+!/进度.md
 !/启动隐盾.cmd
 !/delivery/
 !/tools/
-!/docs/
+!/04_技术文档/
+!/01_优化方案/
+!/02_提交材料/
+!/03_数据与人工复核/
+!/00_文件导航.html
+!/打开文件导航.cmd
+!/打开人工复核.cmd
 
 # Local migrated reports and diagnostics are never repository sources.
 /local/
@@ -40,5 +47,23 @@
 **/*.p12
 **/*.pfx
 
-# Human review output remains local; source review tools live under delivery/数据集.
+# Human return archives remain local; accepted frozen labels are versioned separately.
 /delivery/交付文件清单.json
+/03_数据与人工复核/任务必要性复核_20261026*/reviews/
+/03_数据与人工复核/任务必要性复核_20261026*/reviewed/
+/03_数据与人工复核/任务必要性复核_自然文档*/reviews/
+/03_数据与人工复核/任务必要性复核_自然文档*/reviewed/
+/03_数据与人工复核/复核接收_*/
+/03_数据与人工复核/**/reviews/
+/03_数据与人工复核/**/reviewed/
+/03_数据与人工复核/**/返还/
+/03_数据与人工复核/**/裁决结果*/
+/03_数据与人工复核/**/复核结果*/
+/03_数据与人工复核/**/返还原件*
+
+# Local reorganization audit and generated download copies.
+/04_技术文档/整理记录/*.json
+/01_优化方案/*.zip
+/03_数据与人工复核/*便携版*.zip
+/03_数据与人工复核/**/*.zip
+/02_提交材料/99_历史版本/**/build/

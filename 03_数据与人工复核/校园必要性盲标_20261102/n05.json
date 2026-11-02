@@ -1,0 +1,79 @@
+{
+  "pool": "blind",
+  "document_id": "n05",
+  "text": "例会上郑清越认领海报，曹明川认领签到。订餐费是6400元。",
+  "user_task": "整理给指导老师核对的纪要，订餐费按结算单上的金额保留。",
+  "workflow_id": "minutes_reports_statistics",
+  "task_key": "meeting_minutes",
+  "workflow_name": "会议纪要",
+  "units": [
+    {
+      "unit_id": "n05-u1",
+      "quote": "郑清越",
+      "category": "PERSON_NAME",
+      "boundary_id": "authorized_local_delivery",
+      "boundary_name": "授权本机查看",
+      "recipient_id": "viewer_teacher",
+      "recipient_name": "指导老师",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理给指导老师核对的纪要，订餐费按结算单上的金额保留。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 3,
+      "end": 6
+    },
+    {
+      "unit_id": "n05-u2",
+      "quote": "曹明川",
+      "category": "PERSON_NAME",
+      "boundary_id": "authorized_local_delivery",
+      "boundary_name": "授权本机查看",
+      "recipient_id": "viewer_teacher",
+      "recipient_name": "指导老师",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理给指导老师核对的纪要，订餐费按结算单上的金额保留。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 11,
+      "end": 14
+    },
+    {
+      "unit_id": "n05-u3",
+      "quote": "6400元",
+      "category": "BUDGET",
+      "boundary_id": "authorized_local_delivery",
+      "boundary_name": "授权本机查看",
+      "recipient_id": "viewer_teacher",
+      "recipient_name": "指导老师",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理给指导老师核对的纪要，订餐费按结算单上的金额保留。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 23,
+      "end": 28
+    }
+  ],
+  "label_status": "unlabeled",
+  "model_screened": false
+}

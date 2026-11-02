@@ -1,0 +1,13 @@
+{
+  "received_at": "2026-11-02",
+  "composition": "3人复核加1人审核后的合并结果",
+  "units": 31,
+  "actions_valid": true,
+  "original_documents_unchanged": true,
+  "blank_sheet_unchanged": true,
+  "individual_sheets_archived": false,
+  "freeze_written": false,
+  "predictions_run": false,
+  "final_sha256": "f33474888da6cf8a9ad149b0cfc1a18f236a2d93069a04d37849bea9f5af0027",
+  "source_sha256": "ed668bc8dc3b4a6c2267409c6a5b666f22aee270d50c9d4a0036b3c9eec0d64d"
+}

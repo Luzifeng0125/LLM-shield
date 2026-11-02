@@ -1,0 +1,77 @@
+{
+  "pool": "test",
+  "document_id": "t06",
+  "text": "程石川负责采购，万小禾负责报销。采购费9900元。",
+  "user_task": "先交给外部模型起草纪要，采购费按发票上的原数字写上。",
+  "workflow_id": "minutes_reports_statistics",
+  "task_key": "meeting_minutes",
+  "workflow_name": "会议纪要",
+  "units": [
+    {
+      "unit_id": "t06-u1",
+      "quote": "程石川",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "先交给外部模型起草纪要，采购费按发票上的原数字写上。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 0,
+      "end": 3
+    },
+    {
+      "unit_id": "t06-u2",
+      "quote": "万小禾",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "先交给外部模型起草纪要，采购费按发票上的原数字写上。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 8,
+      "end": 11
+    },
+    {
+      "unit_id": "t06-u3",
+      "quote": "9900元",
+      "category": "BUDGET",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "先交给外部模型起草纪要，采购费按发票上的原数字写上。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 19,
+      "end": 24
+    }
+  ]
+}

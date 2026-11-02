@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>31 条校园必要性盲标</title>
+<style>
+body { margin: 0; font-family: "Segoe UI", "PingFang SC", sans-serif; background: #f6f4ef; color: #1d1c19; }
+main { max-width: 880px; margin: 0 auto; padding: 32px 20px 80px; }
+h1 { font-size: 28px; margin-bottom: 8px; }
+h2 { margin: 36px 0 8px; font-size: 20px; }
+.note, .source { line-height: 1.7; }
+.unit { background: white; border: 1px solid #e2ddd4; border-radius: 12px; padding: 16px 18px; margin: 14px 0; }
+.sentence { font-size: 18px; line-height: 1.8; }
+mark { background: #ffe08a; padding: 0 2px; }
+dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 18px; margin: 0 0 12px; }
+dt { color: #6d675e; font-size: 12px; }
+dd { margin: 0; }
+label { display: block; margin-top: 10px; font-size: 14px; }
+select, textarea { width: 100%; box-sizing: border-box; margin-top: 4px; font: inherit; padding: 8px; }
+.bar { position: sticky; top: 0; background: #1d1c19; color: white; padding: 12px 20px; display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+button { font: inherit; padding: 8px 14px; border: 0; border-radius: 8px; background: #ffe08a; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="bar"><strong>空白盲标，页面里没有参考动作</strong><button type="button" id="save">导出已填表格</button></div>
+<main>
+<h1>31 条校园必要性盲标</h1>
+<p class="note">先读同目录的说明书。每条只判断划线片段。动作可以留空。导出的表格是填写副本，不会改写题目原件。</p>
+
+        <section>
+          <h2>n01 班级协作</h2>
+          <p class="source">周五值日梁疏影负责开门，宋知微负责锁窗。教室在公教楼B201。联系电话13700008008。</p>
+          
+            <article class="unit" data-id="n01-u1">
+              <h3>n01-u1</h3>
+              <p class="sentence">周五值日<mark>梁疏影</mark>负责开门，宋知微负责锁窗。教室在公教楼B201。联系电话13700008008。</p>
+              <dl>
+                <div><dt>片段</dt><dd>梁疏影</dd></div>
+                <div><dt>位置</dt><dd>4–7</dd></div>
+                <div><dt>类别</dt><dd>人名 PERSON_NAME</dd></div>
+                <div><dt>边界</dt><dd>发给外部生成</dd></div>
+                <div><dt>接收方</dt><dd>外部生成服务</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>整理成班群通知，写明谁开门、谁锁窗。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+            <article class="unit" data-id="n01-u2">
+              <h3>n01-u2</h3>
+              <p class="sentence">周五值日梁疏影负责开门，<mark>宋知微</mark>负责锁窗。教室在公教楼B201。联系电话13700008008。</p>
+              <dl>
+                <div><dt>片段</dt><dd>宋知微</dd></div>
+                <div><dt>位置</dt><dd>12–15</dd></div>
+                <div><dt>类别</dt><dd>人名 PERSON_NAME</dd></div>
+                <div><dt>边界</dt><dd>发给外部生成</dd></div>
+                <div><dt>接收方</dt><dd>外部生成服务</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>整理成班群通知，写明谁开门、谁锁窗。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+            <article class="unit" data-id="n01-u3">
+              <h3>n01-u3</h3>
+              <p class="sentence">周五值日梁疏影负责开门，宋知微负责锁窗。教室在<mark>公教楼B201</mark>。联系电话13700008008。</p>
+              <dl>
+                <div><dt>片段</dt><dd>公教楼B201</dd></div>
+                <div><dt>位置</dt><dd>23–30</dd></div>
+                <div><dt>类别</dt><dd>地点 LOCATION</dd></div>
+                <div><dt>边界</dt><dd>发给外部生成</dd></div>
+                <div><dt>接收方</dt><dd>外部生成服务</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>整理成班群通知，写明谁开门、谁锁窗。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+            <article class="unit" data-id="n01-u4">
+              <h3>n01-u4</h3>
+              <p class="sentence">周五值日梁疏影负责开门，宋知微负责锁窗。教室在公教楼B201。联系电话<mark>13700008008</mark>。</p>
+              <dl>
+                <div><dt>片段</dt><dd>13700008008</dd></div>
+                <div><dt>位置</dt><dd>35–46</dd></div>
+                <div><dt>类别</dt><dd>电话 PHONE</dd></div>
+                <div><dt>边界</dt><dd>发给外部生成</dd></div>
+                <div><dt>接收方</dt><dd>外部生成服务</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>整理成班群通知，写明谁开门、谁锁窗。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+        </section>
+        <section>
+          <h2>n02 班级协作</h2>
+          <p class="source">开门由梁疏影负责。</p>
+          
+            <article class="unit" data-id="n02-u1">
+              <h3>n02-u1</h3>
+              <p class="sentence">开门由<mark>梁疏影</mark>负责。</p>
+              <dl>
+                <div><dt>片段</dt><dd>梁疏影</dd></div>
+                <div><dt>位置</dt><dd>3–6</dd></div>
+                <div><dt>类别</dt><dd>人名 PERSON_NAME</dd></div>
+                <div><dt>边界</dt><dd>授权本机查看</dd></div>
+                <div><dt>接收方</dt><dd>指导老师</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>整理成给辅导员本机查看的值日表，开门的人写明白。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+        </section>
+        <section>
+          <h2>n03 活动公告</h2>
+          <p class="source">周六观星在西门广场见面。召集人是许晚白。住在桐园3号楼210。</p>
+          
+            <article class="unit" data-id="n03-u1">
+              <h3>n03-u1</h3>
+              <p class="sentence">周六观星在西门广场见面。召集人是<mark>许晚白</mark>。住在桐园3号楼210。</p>
+              <dl>
+                <div><dt>片段</dt><dd>许晚白</dd></div>
+                <div><dt>位置</dt><dd>16–19</dd></div>
+                <div><dt>类别</dt><dd>人名 PERSON_NAME</dd></div>
+                <div><dt>边界</dt><dd>发给外部生成</dd></div>
+                <div><dt>接收方</dt><dd>外部生成服务</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>写一条观星活动公告，见面的地方写清楚。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+            <article class="unit" data-id="n03-u2">
+              <h3>n03-u2</h3>
+              <p class="sentence">周六观星在<mark>西门广场</mark>见面。召集人是许晚白。住在桐园3号楼210。</p>
+              <dl>
+                <div><dt>片段</dt><dd>西门广场</dd></div>
+                <div><dt>位置</dt><dd>5–9</dd></div>
+                <div><dt>类别</dt><dd>地点 LOCATION</dd></div>
+                <div><dt>边界</dt><dd>发给外部生成</dd></div>
+                <div><dt>接收方</dt><dd>外部生成服务</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>写一条观星活动公告，见面的地方写清楚。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+            <article class="unit" data-id="n03-u3">
+              <h3>n03-u3</h3>
+              <p class="sentence">周六观星在西门广场见面。召集人是许晚白。住在<mark>桐园3号楼210</mark>。</p>
+              <dl>
+                <div><dt>片段</dt><dd>桐园3号楼210</dd></div>
+                <div><dt>位置</dt><dd>22–30</dd></div>
+                <div><dt>类别</dt><dd>宿舍 DORM</dd></div>
+                <div><dt>边界</dt><dd>发给外部生成</dd></div>
+                <div><dt>接收方</dt><dd>外部生成服务</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>写一条观星活动公告，见面的地方写清楚。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+        </section>
+        <section>
+          <h2>n04 会议纪要</h2>
+          <p class="source">例会上郑清越认领海报，曹明川认领签到。印刷费是6400元。有人正在服用降压药。</p>
+          
+            <article class="unit" data-id="n04-u1">
+              <h3>n04-u1</h3>
+              <p class="sentence">例会上<mark>郑清越</mark>认领海报，曹明川认领签到。印刷费是6400元。有人正在服用降压药。</p>
+              <dl>
+                <div><dt>片段</dt><dd>郑清越</dd></div>
+                <div><dt>位置</dt><dd>3–6</dd></div>
+                <div><dt>类别</dt><dd>人名 PERSON_NAME</dd></div>
+                <div><dt>边界</dt><dd>发给外部生成</dd></div>
+                <div><dt>接收方</dt><dd>外部生成服务</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>整理纪要，人员和事项要能对上，印刷费交代到千元这一档即可。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+            <article class="unit" data-id="n04-u2">
+              <h3>n04-u2</h3>
+              <p class="sentence">例会上郑清越认领海报，<mark>曹明川</mark>认领签到。印刷费是6400元。有人正在服用降压药。</p>
+              <dl>
+                <div><dt>片段</dt><dd>曹明川</dd></div>
+                <div><dt>位置</dt><dd>11–14</dd></div>
+                <div><dt>类别</dt><dd>人名 PERSON_NAME</dd></div>
+                <div><dt>边界</dt><dd>发给外部生成</dd></div>
+                <div><dt>接收方</dt><dd>外部生成服务</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>整理纪要，人员和事项要能对上，印刷费交代到千元这一档即可。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+            <article class="unit" data-id="n04-u3">
+              <h3>n04-u3</h3>
+              <p class="sentence">例会上郑清越认领海报，曹明川认领签到。印刷费是<mark>6400元</mark>。有人正在服用降压药。</p>
+              <dl>
+                <div><dt>片段</dt><dd>6400元</dd></div>
+                <div><dt>位置</dt><dd>23–28</dd></div>
+                <div><dt>类别</dt><dd>金额 BUDGET</dd></div>
+                <div><dt>边界</dt><dd>发给外部生成</dd></div>
+                <div><dt>接收方</dt><dd>外部生成服务</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>整理纪要，人员和事项要能对上，印刷费交代到千元这一档即可。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+            <article class="unit" data-id="n04-u4">
+              <h3>n04-u4</h3>
+              <p class="sentence">例会上郑清越认领海报，曹明川认领签到。印刷费是6400元。有人<mark>正在服用降压药</mark>。</p>
+              <dl>
+                <div><dt>片段</dt><dd>正在服用降压药</dd></div>
+                <div><dt>位置</dt><dd>31–38</dd></div>
+                <div><dt>类别</dt><dd>敏感个人情况 SENSITIVE_ATTR</dd></div>
+                <div><dt>边界</dt><dd>发给外部生成</dd></div>
+                <div><dt>接收方</dt><dd>外部生成服务</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>整理纪要，人员和事项要能对上，印刷费交代到千元这一档即可。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+        </section>
+        <section>
+          <h2>n05 会议纪要</h2>
+          <p class="source">例会上郑清越认领海报，曹明川认领签到。订餐费是6400元。</p>
+          
+            <article class="unit" data-id="n05-u1">
+              <h3>n05-u1</h3>
+              <p class="sentence">例会上<mark>郑清越</mark>认领海报，曹明川认领签到。订餐费是6400元。</p>
+              <dl>
+                <div><dt>片段</dt><dd>郑清越</dd></div>
+                <div><dt>位置</dt><dd>3–6</dd></div>
+                <div><dt>类别</dt><dd>人名 PERSON_NAME</dd></div>
+                <div><dt>边界</dt><dd>授权本机查看</dd></div>
+                <div><dt>接收方</dt><dd>指导老师</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>整理给指导老师核对的纪要，订餐费按结算单上的金额保留。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+            <article class="unit" data-id="n05-u2">
+              <h3>n05-u2</h3>
+              <p class="sentence">例会上郑清越认领海报，<mark>曹明川</mark>认领签到。订餐费是6400元。</p>
+              <dl>
+                <div><dt>片段</dt><dd>曹明川</dd></div>
+                <div><dt>位置</dt><dd>11–14</dd></div>
+                <div><dt>类别</dt><dd>人名 PERSON_NAME</dd></div>
+                <div><dt>边界</dt><dd>授权本机查看</dd></div>
+                <div><dt>接收方</dt><dd>指导老师</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>整理给指导老师核对的纪要，订餐费按结算单上的金额保留。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+            <article class="unit" data-id="n05-u3">
+              <h3>n05-u3</h3>
+              <p class="sentence">例会上郑清越认领海报，曹明川认领签到。订餐费是<mark>6400元</mark>。</p>
+              <dl>
+                <div><dt>片段</dt><dd>6400元</dd></div>
+                <div><dt>位置</dt><dd>23–28</dd></div>
+                <div><dt>类别</dt><dd>金额 BUDGET</dd></div>
+                <div><dt>边界</dt><dd>授权本机查看</dd></div>
+                <div><dt>接收方</dt><dd>指导老师</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>整理给指导老师核对的纪要，订餐费按结算单上的金额保留。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+        </section>
+        <section>
+          <h2>n06 会议纪要</h2>
+          <p class="source">采购例会上沈疏叶认领会场，罗清和认领物资。采购费是6400元。</p>
+          
+            <article class="unit" data-id="n06-u1">
+              <h3>n06-u1</h3>
+              <p class="sentence">采购例会上<mark>沈疏叶</mark>认领会场，罗清和认领物资。采购费是6400元。</p>
+              <dl>
+                <div><dt>片段</dt><dd>沈疏叶</dd></div>
+                <div><dt>位置</dt><dd>5–8</dd></div>
+                <div><dt>类别</dt><dd>人名 PERSON_NAME</dd></div>
+                <div><dt>边界</dt><dd>发给外部生成</dd></div>
+                <div><dt>接收方</dt><dd>外部生成服务</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>交给外部模型起草纪要，采购费按结算单上的金额保留。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+            <article class="unit" data-id="n06-u2">
+              <h3>n06-u2</h3>
+              <p class="sentence">采购例会上沈疏叶认领会场，<mark>罗清和</mark>认领物资。采购费是6400元。</p>
+              <dl>
+                <div><dt>片段</dt><dd>罗清和</dd></div>
+                <div><dt>位置</dt><dd>13–16</dd></div>
+                <div><dt>类别</dt><dd>人名 PERSON_NAME</dd></div>
+                <div><dt>边界</dt><dd>发给外部生成</dd></div>
+                <div><dt>接收方</dt><dd>外部生成服务</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>交给外部模型起草纪要，采购费按结算单上的金额保留。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+            <article class="unit" data-id="n06-u3">
+              <h3>n06-u3</h3>
+              <p class="sentence">采购例会上沈疏叶认领会场，罗清和认领物资。采购费是<mark>6400元</mark>。</p>
+              <dl>
+                <div><dt>片段</dt><dd>6400元</dd></div>
+                <div><dt>位置</dt><dd>25–30</dd></div>
+                <div><dt>类别</dt><dd>金额 BUDGET</dd></div>
+                <div><dt>边界</dt><dd>发给外部生成</dd></div>
+                <div><dt>接收方</dt><dd>外部生成服务</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>交给外部模型起草纪要，采购费按结算单上的金额保留。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+        </section>
+        <section>
+          <h2>n07 会议纪要</h2>
+          <p class="source">纪要里韩听白负责茶歇。茶歇费是6400元。</p>
+          
+            <article class="unit" data-id="n07-u1">
+              <h3>n07-u1</h3>
+              <p class="sentence">纪要里<mark>韩听白</mark>负责茶歇。茶歇费是6400元。</p>
+              <dl>
+                <div><dt>片段</dt><dd>韩听白</dd></div>
+                <div><dt>位置</dt><dd>3–6</dd></div>
+                <div><dt>类别</dt><dd>人名 PERSON_NAME</dd></div>
+                <div><dt>边界</dt><dd>授权本机查看</dd></div>
+                <div><dt>接收方</dt><dd>同班同学</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>写成同班同学本机可看的纪要，茶歇费按结算单上的金额保留。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+            <article class="unit" data-id="n07-u2">
+              <h3>n07-u2</h3>
+              <p class="sentence">纪要里韩听白负责茶歇。茶歇费是<mark>6400元</mark>。</p>
+              <dl>
+                <div><dt>片段</dt><dd>6400元</dd></div>
+                <div><dt>位置</dt><dd>15–20</dd></div>
+                <div><dt>类别</dt><dd>金额 BUDGET</dd></div>
+                <div><dt>边界</dt><dd>授权本机查看</dd></div>
+                <div><dt>接收方</dt><dd>同班同学</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>写成同班同学本机可看的纪要，茶歇费按结算单上的金额保留。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+        </section>
+        <section>
+          <h2>n08 会议纪要</h2>
+          <p class="source">例会上郑清越做了记录。资料费是6400元。</p>
+          
+            <article class="unit" data-id="n08-u1">
+              <h3>n08-u1</h3>
+              <p class="sentence">例会上<mark>郑清越</mark>做了记录。资料费是6400元。</p>
+              <dl>
+                <div><dt>片段</dt><dd>郑清越</dd></div>
+                <div><dt>位置</dt><dd>3–6</dd></div>
+                <div><dt>类别</dt><dd>人名 PERSON_NAME</dd></div>
+                <div><dt>边界</dt><dd>发给外部生成</dd></div>
+                <div><dt>接收方</dt><dd>外部生成服务</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>把例会记录整理得顺一些。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+            <article class="unit" data-id="n08-u2">
+              <h3>n08-u2</h3>
+              <p class="sentence">例会上郑清越做了记录。资料费是<mark>6400元</mark>。</p>
+              <dl>
+                <div><dt>片段</dt><dd>6400元</dd></div>
+                <div><dt>位置</dt><dd>15–20</dd></div>
+                <div><dt>类别</dt><dd>金额 BUDGET</dd></div>
+                <div><dt>边界</dt><dd>发给外部生成</dd></div>
+                <div><dt>接收方</dt><dd>外部生成服务</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>把例会记录整理得顺一些。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+        </section>
+        <section>
+          <h2>n09 奖助说明</h2>
+          <p class="source">本学期助学项目受助人是韩听澜。家庭正在治疗慢性病。卡号6222020000000000888。</p>
+          
+            <article class="unit" data-id="n09-u1">
+              <h3>n09-u1</h3>
+              <p class="sentence">本学期助学项目受助人是<mark>韩听澜</mark>。家庭正在治疗慢性病。卡号6222020000000000888。</p>
+              <dl>
+                <div><dt>片段</dt><dd>韩听澜</dd></div>
+                <div><dt>位置</dt><dd>11–14</dd></div>
+                <div><dt>类别</dt><dd>人名 PERSON_NAME</dd></div>
+                <div><dt>边界</dt><dd>公开发布</dd></div>
+                <div><dt>接收方</dt><dd>公开发布</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>写一段可以放在学院主页的项目介绍。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+            <article class="unit" data-id="n09-u2">
+              <h3>n09-u2</h3>
+              <p class="sentence">本学期助学项目受助人是韩听澜。家庭<mark>正在治疗慢性病</mark>。卡号6222020000000000888。</p>
+              <dl>
+                <div><dt>片段</dt><dd>正在治疗慢性病</dd></div>
+                <div><dt>位置</dt><dd>17–24</dd></div>
+                <div><dt>类别</dt><dd>敏感个人情况 SENSITIVE_ATTR</dd></div>
+                <div><dt>边界</dt><dd>公开发布</dd></div>
+                <div><dt>接收方</dt><dd>公开发布</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>写一段可以放在学院主页的项目介绍。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+            <article class="unit" data-id="n09-u3">
+              <h3>n09-u3</h3>
+              <p class="sentence">本学期助学项目受助人是韩听澜。家庭正在治疗慢性病。卡号<mark>6222020000000000888</mark>。</p>
+              <dl>
+                <div><dt>片段</dt><dd>6222020000000000888</dd></div>
+                <div><dt>位置</dt><dd>27–46</dd></div>
+                <div><dt>类别</dt><dd>银行卡 BANK_CARD</dd></div>
+                <div><dt>边界</dt><dd>公开发布</dd></div>
+                <div><dt>接收方</dt><dd>公开发布</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>写一段可以放在学院主页的项目介绍。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+        </section>
+        <section>
+          <h2>n10 课程沟通</h2>
+          <p class="source">陆行舟需要补交实验报告，上次测验83分，学号2024008891。</p>
+          
+            <article class="unit" data-id="n10-u1">
+              <h3>n10-u1</h3>
+              <p class="sentence"><mark>陆行舟</mark>需要补交实验报告，上次测验83分，学号2024008891。</p>
+              <dl>
+                <div><dt>片段</dt><dd>陆行舟</dd></div>
+                <div><dt>位置</dt><dd>0–3</dd></div>
+                <div><dt>类别</dt><dd>人名 PERSON_NAME</dd></div>
+                <div><dt>边界</dt><dd>授权本机查看</dd></div>
+                <div><dt>接收方</dt><dd>指导老师</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>写成给任课老师看的补交通知。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+            <article class="unit" data-id="n10-u2">
+              <h3>n10-u2</h3>
+              <p class="sentence">陆行舟需要补交实验报告，上次测验<mark>83分</mark>，学号2024008891。</p>
+              <dl>
+                <div><dt>片段</dt><dd>83分</dd></div>
+                <div><dt>位置</dt><dd>16–19</dd></div>
+                <div><dt>类别</dt><dd>成绩 GRADE</dd></div>
+                <div><dt>边界</dt><dd>授权本机查看</dd></div>
+                <div><dt>接收方</dt><dd>指导老师</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>写成给任课老师看的补交通知。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+            <article class="unit" data-id="n10-u3">
+              <h3>n10-u3</h3>
+              <p class="sentence">陆行舟需要补交实验报告，上次测验83分，学号<mark>2024008891</mark>。</p>
+              <dl>
+                <div><dt>片段</dt><dd>2024008891</dd></div>
+                <div><dt>位置</dt><dd>22–32</dd></div>
+                <div><dt>类别</dt><dd>学号 STUDENT_ID</dd></div>
+                <div><dt>边界</dt><dd>授权本机查看</dd></div>
+                <div><dt>接收方</dt><dd>指导老师</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>写成给任课老师看的补交通知。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+        </section>
+        <section>
+          <h2>n11 校园报修</h2>
+          <p class="source">报修地点在榕园6号楼118。联系电话13700008009。</p>
+          
+            <article class="unit" data-id="n11-u1">
+              <h3>n11-u1</h3>
+              <p class="sentence">报修地点在<mark>榕园6号楼118</mark>。联系电话13700008009。</p>
+              <dl>
+                <div><dt>片段</dt><dd>榕园6号楼118</dd></div>
+                <div><dt>位置</dt><dd>5–13</dd></div>
+                <div><dt>类别</dt><dd>宿舍 DORM</dd></div>
+                <div><dt>边界</dt><dd>公开发布</dd></div>
+                <div><dt>接收方</dt><dd>公开发布</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>写成可以发在校园论坛的维修进度。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+            <article class="unit" data-id="n11-u2">
+              <h3>n11-u2</h3>
+              <p class="sentence">报修地点在榕园6号楼118。联系电话<mark>13700008009</mark>。</p>
+              <dl>
+                <div><dt>片段</dt><dd>13700008009</dd></div>
+                <div><dt>位置</dt><dd>18–29</dd></div>
+                <div><dt>类别</dt><dd>电话 PHONE</dd></div>
+                <div><dt>边界</dt><dd>公开发布</dd></div>
+                <div><dt>接收方</dt><dd>公开发布</dd></div>
+                <div><dt>身份</dt><dd>学生组织负责人</dd></div>
+                <div><dt>要求</dt><dd>写成可以发在校园论坛的维修进度。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+        </section>
+        <section>
+          <h2>n12 班级协作</h2>
+          <p class="source">名单上有周疏明。</p>
+          
+            <article class="unit" data-id="n12-u1">
+              <h3>n12-u1</h3>
+              <p class="sentence">名单上有<mark>周疏明</mark>。</p>
+              <dl>
+                <div><dt>片段</dt><dd>周疏明</dd></div>
+                <div><dt>位置</dt><dd>4–7</dd></div>
+                <div><dt>类别</dt><dd>人名 PERSON_NAME</dd></div>
+                <div><dt>边界</dt><dd>发给外部生成</dd></div>
+                <div><dt>接收方</dt><dd>外部生成服务</dd></div>
+                <div><dt>身份</dt><dd>校外合作方</dd></div>
+                <div><dt>要求</dt><dd>请外部模型把名单改得通顺一些。</dd></div>
+              </dl>
+              <label>动作
+                <select name="action">
+                  <option value="" selected>请选择</option>
+                  <option>DELETE</option>
+                  <option>LOCAL_AGGREGATE</option>
+                  <option>GENERALIZE</option>
+                  <option>PSEUDONYMIZE</option>
+                  <option>RETAIN</option>
+                  <option>PAUSE</option>
+                </select>
+              </label>
+              <label>必要事实<textarea name="facts" rows="2"></textarea></label>
+              <label>备注<textarea name="notes" rows="2"></textarea></label>
+            </article>
+        </section>
+</main>
+<script>
+document.getElementById("save").onclick = () => {
+  const rows = [["编号","动作","必要事实","备注"]];
+  for (const unit of document.querySelectorAll(".unit")) {
+    rows.push([unit.dataset.id, unit.querySelector("[name=action]").value, unit.querySelector("[name=facts]").value, unit.querySelector("[name=notes]").value]);
+  }
+  const csv = rows.map(row => row.map(value => `"${String(value).replaceAll('"', '""')}"`).join(",")).join("\n");
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(new Blob(["\ufeff" + csv], {type: "text/csv;charset=utf-8"}));
+  link.download = "人工盲标_已填写.csv";
+  link.click();
+};
+</script>
+</body>
+</html>

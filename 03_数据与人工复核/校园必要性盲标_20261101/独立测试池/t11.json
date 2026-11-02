@@ -1,0 +1,55 @@
+{
+  "pool": "test",
+  "document_id": "t11",
+  "text": "报修单写的是枫园9号楼406，联系电话15200005004。",
+  "user_task": "写成可以发到校园论坛的报修进度。",
+  "workflow_id": "campus_services",
+  "task_key": "campus_services",
+  "workflow_name": "校园报修",
+  "units": [
+    {
+      "unit_id": "t11-u1",
+      "quote": "枫园9号楼406",
+      "category": "DORM",
+      "boundary_id": "public_release",
+      "boundary_name": "公开发布",
+      "recipient_id": "egress_tool_public",
+      "recipient_name": "公开发布",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "写成可以发到校园论坛的报修进度。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 6,
+      "end": 14
+    },
+    {
+      "unit_id": "t11-u2",
+      "quote": "15200005004",
+      "category": "PHONE",
+      "boundary_id": "public_release",
+      "boundary_name": "公开发布",
+      "recipient_id": "egress_tool_public",
+      "recipient_name": "公开发布",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "写成可以发到校园论坛的报修进度。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 19,
+      "end": 30
+    }
+  ]
+}

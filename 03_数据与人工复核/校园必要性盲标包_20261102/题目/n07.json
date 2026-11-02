@@ -1,0 +1,57 @@
+{
+  "pool": "blind",
+  "document_id": "n07",
+  "text": "纪要里韩听白负责茶歇。茶歇费是6400元。",
+  "user_task": "写成同班同学本机可看的纪要，茶歇费按结算单上的金额保留。",
+  "workflow_id": "minutes_reports_statistics",
+  "task_key": "meeting_minutes",
+  "workflow_name": "会议纪要",
+  "units": [
+    {
+      "unit_id": "n07-u1",
+      "quote": "韩听白",
+      "category": "PERSON_NAME",
+      "boundary_id": "authorized_local_delivery",
+      "boundary_name": "授权本机查看",
+      "recipient_id": "viewer_peer",
+      "recipient_name": "同班同学",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "写成同班同学本机可看的纪要，茶歇费按结算单上的金额保留。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 3,
+      "end": 6
+    },
+    {
+      "unit_id": "n07-u2",
+      "quote": "6400元",
+      "category": "BUDGET",
+      "boundary_id": "authorized_local_delivery",
+      "boundary_name": "授权本机查看",
+      "recipient_id": "viewer_peer",
+      "recipient_name": "同班同学",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "写成同班同学本机可看的纪要，茶歇费按结算单上的金额保留。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 15,
+      "end": 20
+    }
+  ],
+  "label_status": "unlabeled",
+  "model_screened": false
+}

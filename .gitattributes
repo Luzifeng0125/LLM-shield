@@ -22,3 +22,8 @@
 # 模型产物按原始字节存储：不做换行归一化，避免校验哈希漂移。
 delivery/app/models/gliner_v3/tokenizer.json binary
 delivery/app/models/gliner_v3/spm.model binary
+
+# Frozen evidence must retain the bytes used to compute its recorded hashes.
+delivery/app/models/*.json -text
+delivery/app/eval/releases/** -text
+03_数据与人工复核/** -text

@@ -1,0 +1,101 @@
+{
+  "passed": true,
+  "errors": [],
+  "documents": 36,
+  "decisions": 138,
+  "scenario_groups": 32,
+  "document_splits": {
+    "train": 26,
+    "validation": 5,
+    "test": 5
+  },
+  "document_types": {
+    "群聊记录": 1,
+    "邮件往来摘录": 1,
+    "值班统计便笺": 1,
+    "口述采访整理稿": 1,
+    "器材归还核对记录": 1,
+    "语音备忘转写": 1,
+    "放映复盘草稿": 1,
+    "无障碍路线踏勘记录": 1,
+    "网页文案批注": 1,
+    "例会速记与便条": 1,
+    "活动结束后的回信草稿": 1,
+    "音频剪辑交接单": 1,
+    "科普摊位检查清单": 1,
+    "教师本机核对备忘": 1,
+    "夜间观察活动周报": 1,
+    "舞台值守证核对函": 1,
+    "播客发布工作邮件": 1,
+    "地图工作坊结项便笺": 1,
+    "客服转述": 1,
+    "走访手记": 1,
+    "设备录音转写": 2,
+    "服务收尾记录": 2,
+    "撤回重发的群通知": 1,
+    "问答草稿": 1,
+    "采访录音摘记": 1,
+    "借用登记核对笺": 1,
+    "技术支持工单串": 1,
+    "往返邮件摘录": 1,
+    "社区课堂筹备问答": 1,
+    "旧书交换收尾单": 1,
+    "声音采集整理日志": 1,
+    "演示故障交接日志": 1,
+    "维修体验回访问卷摘要": 1,
+    "展览目录校样批注": 1
+  },
+  "actions": {
+    "RETAIN": 36,
+    "PSEUDONYMIZE": 15,
+    "DELETE": 43,
+    "PAUSE": 16,
+    "GENERALIZE": 21,
+    "LOCAL_AGGREGATE": 7
+  },
+  "phenomena": {
+    "correction": 16,
+    "coreference": 17,
+    "mixed_relevance": 34,
+    "missing_context": 16,
+    "implicit_intent": 29,
+    "audience_shift": 11,
+    "aggregation_scope": 9,
+    "handoff": 1,
+    "resolved_item": 1,
+    "route_reasoning": 1,
+    "evidence_source": 1,
+    "identity_matching": 1,
+    "issue_separation": 1
+  },
+  "mixed_action_documents": 36,
+  "text_characters": {
+    "min": 228,
+    "median": 386,
+    "max": 831
+  },
+  "request_characters": {
+    "min": 9,
+    "max": 32
+  },
+  "median_request_document_ratio": 0.0445,
+  "explicit_field_action_requests": [],
+  "answer_cues_in_model_input": [],
+  "near_duplicate_threshold": 0.65,
+  "similarity_method": "entity_and_number_masked_character_3gram_jaccard",
+  "unapproved_near_duplicates": [],
+  "controlled_context_pairs": [
+    {
+      "a": "nb04",
+      "b": "nb03",
+      "similarity": 1.0
+    },
+    {
+      "a": "nb06",
+      "b": "nb05",
+      "similarity": 1.0
+    }
+  ],
+  "historical_overlap": [],
+  "scope": "heuristic_data_quality_checks_not_model_accuracy_or_human_validation"
+}

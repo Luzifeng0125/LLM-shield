@@ -1,0 +1,67 @@
+{
+  "date": "2026-11-02",
+  "command": "delivery/app/scripts/eval_blind31_once_20261102.py",
+  "single_pass": true,
+  "labels_modified": false,
+  "weights_modified": false,
+  "rules_modified": false,
+  "retrained": false,
+  "r0_used_as_gold": false,
+  "freeze": {
+    "frozen": true,
+    "statement": "人工裁定已完成并冻结"
+  },
+  "data": {
+    "gold_file": "03_数据与人工复核/校园必要性盲标_20261102/版本/最终裁定.json",
+    "gold_sha256": "f33474888da6cf8a9ad149b0cfc1a18f236a2d93069a04d37849bea9f5af0027",
+    "source": "03_数据与人工复核/校园必要性盲标包_20261102/返还/人工盲标_已填写.csv",
+    "source_sha256": "ed668bc8dc3b4a6c2267409c6a5b666f22aee270d50c9d4a0036b3c9eec0d64d",
+    "composition": "3人复核加1人审核后的合并裁定",
+    "individual_reviewer_files_present": false,
+    "traceable_independent_annotation_process": false,
+    "units": 31,
+    "original_documents": "03_数据与人工复核/校园必要性盲标_20261102/n01.json–n12.json",
+    "original_sha256": {
+      "n01.json": "e6e49bb09be91f82d40d4d55b9b820de522c9867b2bae58a417964622dd543dd",
+      "n02.json": "055d0f8c2c57eb189deda5a0c2706465059de505e7021c20e7e6c41ffc4900ff",
+      "n03.json": "5cc8bf5d54cbd79c87ae07aba71c254c7ccce725961a58393d86201694b8f8c5",
+      "n04.json": "7cfa6efe852c9e17d83b4a5d9c423723014e03fa8237c96dfaabf83283999478",
+      "n05.json": "d831b1450436043c5c7ba11a11d78545e2ae736f3732b67b101750c15a7627be",
+      "n06.json": "7aaf022960b63d7c6bfbabcf6d00840fc4aa0de9d284d2c9dfbe9d9c862f1e50",
+      "n07.json": "3e4233f10563eab10dee09692f68e399ec57150de368591a7917e6393744f0c4",
+      "n08.json": "953355952c799a3c5d223c8430b1f55395d4747e8b9b1dd36771327238c369d3",
+      "n09.json": "10239d8198984b0db49920e72bbce0ae28321044064c98f4f22d869ad20d3aed",
+      "n10.json": "14b8baf061a4c3fab6ad8ddc2f23ff5d8027df08f622465ffa4f8c08ad4582b4",
+      "n11.json": "4134e6163157789f4fdce0172e39f396647480c79f7ac3bf235636262abb3abb",
+      "n12.json": "b53c4d9f58b7bb231cbb9194161bdd351eb4b4475de4c072f0d0bd3eb6cc51de"
+    }
+  },
+  "models": {
+    "active": {
+      "file": "necessity_action.joblib",
+      "sha256": "cbfed4ca422a1a6d416ce1b5f488649816c261b6acc86ffc173887c8dfed1b9f",
+      "feature_version": 3,
+      "feature_builder": "build_feature_text",
+      "inference": "NecessityModel.score",
+      "pipeline": "decide_segment"
+    },
+    "task": {
+      "file": "necessity_action_campus_task_20261102.joblib",
+      "sha256": "7d4a50a394e1aea94f562fc99419e798dfa70976627a96a0fff1513c31236c1e",
+      "feature_version": 4,
+      "feature_builder": "build_feature_text_v4",
+      "inference": "NecessityModel.score",
+      "pipeline": "decide_segment"
+    },
+    "context": {
+      "file": "necessity_action_campus_context_20261102.joblib",
+      "sha256": "288fbb6399622a64d953d3044cf57929f3be7f341842bb185820d28148906163",
+      "feature_version": 5,
+      "feature_builder": "build_feature_text_v5",
+      "inference": "NecessityModel.score",
+      "pipeline": "decide_segment"
+    }
+  },
+  "active_models_json_sha256": "f7e27ea6060bc51e70429d967c5afb27a86726c9586f0b8dd03c7138da1af6c8",
+  "inputs": "同一原文、片段、类别、任务键、用户原话、接收方和身份；各模型按自身特征版本构造。"
+}

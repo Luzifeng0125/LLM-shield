@@ -1,0 +1,67 @@
+{
+  "schema": "campus-action-execution-plan-v1",
+  "date": "2026-10-31",
+  "status": "planned_not_trained",
+  "scope": "Chinese university students, teachers, class committees, student unions, clubs and campus offices",
+  "enterprise_expansion": false,
+  "actions": ["DELETE", "GENERALIZE", "LOCAL_AGGREGATE", "PAUSE", "PSEUDONYMIZE", "RETAIN"],
+  "source_registry": "source_registry.json",
+  "review_policy": {
+    "workflow": ["ai_first_review", "human_assisted_review", "user_returns_result", "validate_and_import"],
+    "user_return_is_human_review_declaration": true,
+    "policy_basis": "User instruction on 2026-10-31; see 03_数据与人工复核/校园场景复核约定_20261031.md",
+    "applies_only_to": "valid submitted entries in the actual user-returned review result",
+    "exclude": ["automated fixtures", "AI-only artifacts", "missing entries", "explicitly pending entries"],
+    "preserve_original_bytes": true,
+    "check_input_hash_and_final_annotation": true,
+    "fabricate_missing_reviewer_or_timestamps": false,
+    "independent_blind_human_review": false,
+    "new_importer_status": "to_implement"
+  },
+  "data": {
+    "calibration_documents": 40,
+    "calibration_included_in_training": true,
+    "primary_documents_target": 400,
+    "primary_decisions_estimate": 2400,
+    "generated_documents_this_round": 0,
+    "human_reviewed_decisions_this_round": 0,
+    "split_documents": {"train": 240, "validation": 60, "test": 100},
+    "split_decisions_estimate": {"train": 1440, "validation": 360, "test": 600},
+    "min_train_decisions_per_action": 150,
+    "min_validation_decisions_per_action": 50,
+    "min_test_decisions_per_action": 50,
+    "pause_training_min_documents": 30,
+    "pause_training_min_workflows": 4,
+    "length_bands": [
+      {"min_characters": 100, "max_characters": 400, "target_share": 0.25},
+      {"min_characters": 401, "max_characters": 1600, "target_share": 0.50},
+      {"min_characters": 1601, "max_characters": 4000, "target_share": 0.25}
+    ],
+    "decisions_per_document": "content_driven_not_fixed",
+    "split_group_keys": ["source_family", "scenario_family", "event_id", "context_pair_id"],
+    "challenge_target_pairs_min": 40,
+    "challenge_scored_separately": true,
+    "additional_challenge_documents_allowed": true,
+    "workflows": ["class_coordination", "coursework_and_grade_communication", "teacher_counselor_handoff", "club_recruitment_and_membership", "student_organization_events", "awards_and_financial_aid", "dormitory_and_campus_services", "minutes_reports_and_statistics"]
+  },
+  "evaluation": {
+    "primary_metric": "raw_six_action_exact_match_against_final_human_labels_on_all_annotated_decisions",
+    "unnecessary_abstention_counts_as_error": true,
+    "stage_80": {"accuracy_min": 0.80, "macro_f1_min": 0.78, "each_class_recall_min": 0.70, "pause_recall_min": 0.80, "context_pair_both_correct_min": 0.80},
+    "stage_98": {"accuracy_target": 0.98, "new_test_documents_min": 400, "new_test_decisions_min": 2000, "confidence_interval": "report_95_percent_document_clustered_interval_separately_from_point_estimate"},
+    "report_separately": ["unsafe_raw_retention", "over_redaction", "whole_document_correctness", "entity_detection", "end_to_end_transformation", "automatic_coverage", "accuracy_on_automatic_subset"],
+    "selection_data": "validation_only",
+    "test_feedback_used_for_next_version": "retire_exposed_test_to_development_and_collect_new_acceptance_data",
+    "independent_of_authoring_ai": false,
+    "scope_note": "Held out from small-model training and tuning, not a blind test against the AI author; synthetic/source-derived results do not establish real-traffic performance."
+  },
+  "models": [
+    {"id": "B0", "change": "existing_chunked_bert_with_reviewed_campus_data"},
+    {"id": "B1", "change": "B0_plus_target_conditioned_chunk_aggregation"},
+    {"id": "B2", "change": "B1_plus_context_auxiliary_supervision_and_train_only_contrast"}
+  ],
+  "human_gold_context_fields_at_inference": false,
+  "new_hardware_required_before_first_experiment": false,
+  "production_promoted": false,
+  "next_deliverable": "40 complete campus documents after AI first review, with review UI and user-return importer"
+}

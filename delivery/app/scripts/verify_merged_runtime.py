@@ -36,7 +36,7 @@ def main() -> int:
         result = send_turn(session, [Material('synthetic-table', 'uploaded', '合成测试表', '',
             [{'专业': '网络空间安全'}, {'专业': '其他'}, {'专业': '网络空间安全'}], ['专业']),
             Material('chat-input', 'uploaded', '', '帮我统计网络空间安全专业有多少人')])
-        assert result['ok'] and result['engine'] == 'local' and '共有 2 人' in result['reply']
+        assert result['ok'] and result['engine'] == 'local' and '匹配 2 条记录' in result['reply']
         report = {'local_models': 'passed', 'gliner_enabled': True, 'local_roster': 'passed',
                   'local_whole_table_count': 'passed', 'real_generation': 'not_requested'}
         if args.connect:

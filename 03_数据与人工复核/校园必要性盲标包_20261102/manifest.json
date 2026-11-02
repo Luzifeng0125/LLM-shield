@@ -1,0 +1,69 @@
+{
+  "created": "2026-11-02",
+  "purpose": "可单独拿走的 31 条空白盲标",
+  "labels_filled": false,
+  "model_predictions_included": false,
+  "unit_count": 31,
+  "files": [
+    {
+      "file": "题目/n01.json",
+      "sha256": "e6e49bb09be91f82d40d4d55b9b820de522c9867b2bae58a417964622dd543dd",
+      "units": 4
+    },
+    {
+      "file": "题目/n02.json",
+      "sha256": "055d0f8c2c57eb189deda5a0c2706465059de505e7021c20e7e6c41ffc4900ff",
+      "units": 1
+    },
+    {
+      "file": "题目/n03.json",
+      "sha256": "5cc8bf5d54cbd79c87ae07aba71c254c7ccce725961a58393d86201694b8f8c5",
+      "units": 3
+    },
+    {
+      "file": "题目/n04.json",
+      "sha256": "7cfa6efe852c9e17d83b4a5d9c423723014e03fa8237c96dfaabf83283999478",
+      "units": 4
+    },
+    {
+      "file": "题目/n05.json",
+      "sha256": "d831b1450436043c5c7ba11a11d78545e2ae736f3732b67b101750c15a7627be",
+      "units": 3
+    },
+    {
+      "file": "题目/n06.json",
+      "sha256": "7aaf022960b63d7c6bfbabcf6d00840fc4aa0de9d284d2c9dfbe9d9c862f1e50",
+      "units": 3
+    },
+    {
+      "file": "题目/n07.json",
+      "sha256": "3e4233f10563eab10dee09692f68e399ec57150de368591a7917e6393744f0c4",
+      "units": 2
+    },
+    {
+      "file": "题目/n08.json",
+      "sha256": "953355952c799a3c5d223c8430b1f55395d4747e8b9b1dd36771327238c369d3",
+      "units": 2
+    },
+    {
+      "file": "题目/n09.json",
+      "sha256": "10239d8198984b0db49920e72bbce0ae28321044064c98f4f22d869ad20d3aed",
+      "units": 3
+    },
+    {
+      "file": "题目/n10.json",
+      "sha256": "14b8baf061a4c3fab6ad8ddc2f23ff5d8027df08f622465ffa4f8c08ad4582b4",
+      "units": 3
+    },
+    {
+      "file": "题目/n11.json",
+      "sha256": "4134e6163157789f4fdce0172e39f396647480c79f7ac3bf235636262abb3abb",
+      "units": 2
+    },
+    {
+      "file": "题目/n12.json",
+      "sha256": "b53c4d9f58b7bb231cbb9194161bdd351eb4b4475de4c072f0d0bd3eb6cc51de",
+      "units": 1
+    }
+  ]
+}

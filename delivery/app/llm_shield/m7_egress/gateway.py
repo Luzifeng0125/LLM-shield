@@ -17,6 +17,7 @@ from ..config import (
 )
 from ..m1_access.identity import check_provide
 from ..m2_detect.pipeline import DetectionError
+from ..material_policy import require_source_access
 from ..m8_audit.audit import get_auditor
 from ..m8_audit.observer import inspect_payload
 from ..schema import Boundary, BoundaryRecord, RecipientType, Span
@@ -168,7 +169,9 @@ class EgressGateway:
                                insp.get("leaked_categories", []), insp.get("leak_hits", []))
             return {"allowed": False, "text": "", "record": rec, "engine": "blocked"}
 
+        require_source_access()
         result = chat_with_fallback(system, user)
+        require_source_access()
         latency = (time.perf_counter() - t0) * 1000
 
         if result.get("engine") == "error":
@@ -205,7 +208,9 @@ class EgressGateway:
             self._record(Boundary.B1_MODEL_INPUT, "external_model", "", True,
                          str(pre["reason"]), (time.perf_counter() - started) * 1000)
             return {"allowed": False, "text": "", "engine": "blocked", "error": pre["reason"]}
+        require_source_access()
         generated = chat_messages_with_fallback(outgoing)
+        require_source_access()
         self._record(Boundary.B1_MODEL_INPUT, "external_model", payload, False, "",
                      (time.perf_counter() - started) * 1000)
         if generated["engine"] == "error":
@@ -250,6 +255,7 @@ class EgressGateway:
                                insp.get("leaked_categories", []), insp.get("leak_hits", []))
             return {"allowed": False, "text": "", "record": rec}
 
+        require_source_access()
         insp = pre.get("inspect", {})
         rec = self._record(Boundary.B2_VIEW_DISPLAY, recipient_key, content, False,
                            "", latency, insp.get("leaked_categories", []),
@@ -277,9 +283,11 @@ class EgressGateway:
             return {"allowed": False, "text": "", "record": rec, "path": ""}
 
         path = ""
+        require_source_access()
         if write_file:
             EGRESS_DIR.mkdir(parents=True, exist_ok=True)
             path = str(EGRESS_DIR / f"{recipient_key}.txt")
+            require_source_access()
             Path(path).write_text(content, encoding="utf-8")
 
         insp = pre.get("inspect", {})

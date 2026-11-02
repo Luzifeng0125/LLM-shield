@@ -1,0 +1,77 @@
+{
+  "pool": "test",
+  "document_id": "t05",
+  "text": "康书白对接订餐，尹晚杉对接摄影。订餐费6180元。",
+  "user_task": "整理成纪要交给指导老师核对，订餐花费按收据上的数字留下。",
+  "workflow_id": "minutes_reports_statistics",
+  "task_key": "meeting_minutes",
+  "workflow_name": "会议纪要",
+  "units": [
+    {
+      "unit_id": "t05-u1",
+      "quote": "康书白",
+      "category": "PERSON_NAME",
+      "boundary_id": "authorized_local_delivery",
+      "boundary_name": "授权本机查看",
+      "recipient_id": "viewer_teacher",
+      "recipient_name": "指导老师",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理成纪要交给指导老师核对，订餐花费按收据上的数字留下。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 0,
+      "end": 3
+    },
+    {
+      "unit_id": "t05-u2",
+      "quote": "尹晚杉",
+      "category": "PERSON_NAME",
+      "boundary_id": "authorized_local_delivery",
+      "boundary_name": "授权本机查看",
+      "recipient_id": "viewer_teacher",
+      "recipient_name": "指导老师",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理成纪要交给指导老师核对，订餐花费按收据上的数字留下。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 8,
+      "end": 11
+    },
+    {
+      "unit_id": "t05-u3",
+      "quote": "6180元",
+      "category": "BUDGET",
+      "boundary_id": "authorized_local_delivery",
+      "boundary_name": "授权本机查看",
+      "recipient_id": "viewer_teacher",
+      "recipient_name": "指导老师",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理成纪要交给指导老师核对，订餐花费按收据上的数字留下。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 19,
+      "end": 24
+    }
+  ]
+}

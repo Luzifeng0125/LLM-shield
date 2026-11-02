@@ -1,0 +1,123 @@
+# 校园八类协作的最小差异。版本 campus-workflows-v1.1。
+# 这不是三套判断模型，也不是可以继续追加的固定匹配库。
+# 必要性只判断一次。三条边界只决定同一判断怎么用。
+# 新工作只能复用已有 kind，并写明任务目标、必要字段、接收对象、授权和禁止项。
+# 与 tasks.yaml 里的成熟模板分开存放。原模板一条不改。
+# 三类复用旧模板：活动宣传→activity_notice，社团统计→activity_stats，纪要→meeting_minutes。
+# tasks.yaml 里还有 project_intro，不计入这八类，也保持原样。
+version: campus-workflows-v1.1
+design_constraint:
+  judgment: single_task_necessity
+  boundary_policy: shared_core_three_strategies
+  rule_growth: minimum_task_difference_only
+boundaries:
+  external_generation: minimum_disclosure
+  authorized_local_delivery: permission_based_raw_value
+  public_release: recheck_recipient_purpose_permission
+workflows:
+  class_coordination:
+    goal: 同学能知道哪一天、在哪个教室、谁负责什么
+    recipients: [external_model, viewer_peer, viewer_teacher]
+    hard_task:
+      name: 班级协作
+      must_retain: [PERSON_ROLE, PUBLIC_FACT]
+      never_send: [PHONE, EMAIL, WECHAT, ID_CARD, BANK_CARD, API_KEY, SENSITIVE_ATTR]
+    needs:
+      PERSON_NAME: {kind: link_person, raw_on: [authorized_local_delivery]}
+      LOCATION: {kind: public_fact}
+      ORG: {kind: public_fact}
+      PHONE: {kind: drop}
+      EMAIL: {kind: drop}
+      WECHAT: {kind: drop}
+  coursework_grades:
+    goal: 课程通知只保留补交内容和期限
+    recipients: [external_model, viewer_teacher, viewer_peer]
+    hard_task:
+      name: 课程沟通
+      must_retain: [PUBLIC_FACT]
+      never_send: [PHONE, EMAIL, WECHAT, ID_CARD, BANK_CARD, API_KEY, SENSITIVE_ATTR]
+    needs:
+      PERSON_NAME: {kind: drop}
+      GRADE: {kind: drop}
+      SENSITIVE_ATTR: {kind: drop}
+      PHONE: {kind: drop}
+      EMAIL: {kind: drop}
+    purposes:
+      teacher-grade-view:
+        GRADE: {kind: drop_unless_raw, raw_on: [authorized_local_delivery]}
+  teacher_counselor_handoff:
+    goal: 把需要约谈的人交给已授权的辅导员
+    recipients: [viewer_teacher, external_model]
+    hard_task:
+      name: 师生交接
+      must_retain: [PERSON_ROLE]
+      never_send: [ID_CARD, BANK_CARD, API_KEY, SENSITIVE_ATTR]
+    needs:
+      PERSON_NAME: {kind: link_person, raw_on: [authorized_local_delivery]}
+      SENSITIVE_ATTR: {kind: drop}
+      PHONE: {kind: drop}
+      EMAIL: {kind: drop}
+  awards_financial_aid:
+    goal: 公开说明只保留项目名称和资助人数
+    recipients: [egress_tool_public, external_model, viewer_teacher]
+    hard_task:
+      name: 奖助公开说明
+      must_retain: [COUNT, PUBLIC_FACT]
+      never_send: [ID_CARD, BANK_CARD, API_KEY, SENSITIVE_ATTR, GRADE]
+    needs:
+      PERSON_NAME: {kind: drop}
+      SENSITIVE_ATTR: {kind: drop}
+      BANK_CARD: {kind: drop}
+      PHONE: {kind: drop}
+      ORG: {kind: public_fact}
+  campus_services:
+    goal: 把报修所需的房间和联系方式交给已登记的接收人
+    recipients: [viewer_teacher, external_model, egress_tool_public]
+    hard_task:
+      name: 校园报修
+      must_retain: [PERSON_ROLE, PUBLIC_FACT]
+      never_send: [ID_CARD, BANK_CARD, API_KEY, SENSITIVE_ATTR]
+    needs:
+      PERSON_NAME: {kind: link_person, raw_on: [authorized_local_delivery], required_on: [authorized_local_delivery]}
+      DORM: {kind: public_fact, raw_on: [authorized_local_delivery], required_on: [authorized_local_delivery]}
+      PHONE: {kind: contact, raw_on: [authorized_local_delivery], required_on: [authorized_local_delivery]}
+  student_events:
+    reuses: activity_notice
+    goal: 公告只使用已分开的公开活动事实
+    hard_task:
+      name: 活动宣传
+      must_retain: [EVENT_NAME, PUBLIC_FACT]
+      never_send: [PERSON_NAME, PHONE, EMAIL, WECHAT, STUDENT_ID, ID_CARD, BANK_CARD, API_KEY, DORM, GRADE, SENSITIVE_ATTR, BUDGET]
+    needs:
+      PERSON_NAME: {kind: drop}
+      PHONE: {kind: drop}
+      EMAIL: {kind: drop}
+      DORM: {kind: drop}
+      LOCATION: {kind: public_fact}
+      ORG: {kind: public_fact}
+  club_membership:
+    reuses: activity_stats
+    goal: 公告只说明录取人数和社团名称
+    hard_task:
+      name: 社团统计
+      must_retain: [COUNT, PUBLIC_FACT]
+      never_send: [PHONE, EMAIL, WECHAT, STUDENT_ID, ID_CARD]
+    needs:
+      PERSON_NAME: {kind: aggregate_count}
+      PHONE: {kind: drop}
+      ORG: {kind: public_fact}
+  minutes_reports_statistics:
+    reuses: meeting_minutes
+    goal: 保留负责人与事项、期限的对应；金额只在任务要求时保留量级
+    hard_task:
+      name: 会议纪要
+      must_retain: [PERSON_ROLE, TASK_ITEM, DEADLINE]
+      never_send: [PHONE, EMAIL, ID_CARD, SENSITIVE_ATTR]
+    needs:
+      PERSON_NAME: {kind: link_person, raw_on: [authorized_local_delivery]}
+      PHONE: {kind: drop}
+      EMAIL: {kind: drop}
+      SENSITIVE_ATTR: {kind: drop}
+      BUDGET: {kind: amount}
+      ORG: {kind: public_fact}
+      LOCATION: {kind: public_fact}

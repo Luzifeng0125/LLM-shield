@@ -1,0 +1,12 @@
+{
+  "status": "not_promoted",
+  "trained_on": "2026-11-02",
+  "path": "delivery/app/models/necessity_action_campus_task_20261102.joblib",
+  "sha256": "7d4a50a394e1aea94f562fc99419e798dfa70976627a96a0fff1513c31236c1e",
+  "active_path": "delivery/app/models/necessity_action.joblib",
+  "active_sha256": "cbfed4ca422a1a6d416ce1b5f488649816c261b6acc86ffc173887c8dfed1b9f",
+  "promoted": false,
+  "feature_version": 4,
+  "test_pool_used_for_training": false,
+  "reason": "任务需求进入独立特征通道。活动权重未替换。40 条诊断材料未用于训练。"
+}

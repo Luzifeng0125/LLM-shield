@@ -1,0 +1,12 @@
+{
+  "status": "not_promoted",
+  "trained_on": "2026-11-02",
+  "path": "delivery/app/models/necessity_action_campus_context_20261102.joblib",
+  "sha256": "288fbb6399622a64d953d3044cf57929f3be7f341842bb185820d28148906163",
+  "active_sha256": "cbfed4ca422a1a6d416ce1b5f488649816c261b6acc86ffc173887c8dfed1b9f",
+  "promoted": false,
+  "feature_version": 5,
+  "content_weight": 0.0,
+  "diagnostic_40_used_for_training": false,
+  "reason": "一次任务上下文实验。配对案例不是人工测试成绩。活动权重未替换。"
+}

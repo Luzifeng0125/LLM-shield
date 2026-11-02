@@ -19,6 +19,13 @@ DATA_DIR = ROOT / "data"
 OUTPUT_DIR = ROOT / "outputs"
 
 
+def uploads_dir() -> Path:
+    """A single storage root shared by parsing and loading; QA can isolate its files."""
+    load_env()
+    value = Path(os.getenv("SHIELD_UPLOAD_DIR", str(DATA_DIR / "uploads"))).expanduser()
+    return (value if value.is_absolute() else ROOT / value).resolve()
+
+
 def load_env() -> None:
     """加载 .env（若存在）。优先级：已存在的环境变量 > .env 文件。"""
     env_file = ROOT / ".env"
@@ -40,6 +47,11 @@ def rules() -> Dict[str, Any]:
 
 def tasks() -> Dict[str, Any]:
     return _load_yaml("tasks.yaml")
+
+
+def campus_workflows() -> Dict[str, Any]:
+    """校园八类工作的最小任务差异。不并入 tasks()，也不按边界拆成另一套模板。"""
+    return _load_yaml("campus_workflows_v1.1.yaml")
 
 
 def recipients() -> Dict[str, Any]:
@@ -100,6 +112,18 @@ def necessity_model_path() -> Path:
 def action_model_path() -> Path:
     """One canonical action model path for runtime and offline candidate tools."""
     return necessity_model_path()
+
+
+def detector_mode() -> str:
+    """识别模式。默认要求 GLiNER；权重缺失时暂停，不自动改用词典。
+
+    ``dictionary_test`` 是明确标记的测试模式：只用正则和词典，结果不能当作已验证的安全识别。
+    """
+    load_env()
+    mode = os.getenv("SHIELD_DETECTOR_MODE", "gliner").strip().lower()
+    if mode == "dictionary_test":
+        return mode
+    return "gliner"
 
 
 def use_gliner() -> bool:

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>隐盾任务必要性复核</title>
+<style>
+body{max-width:960px;margin:24px auto;padding:0 20px;font:15px/1.7 system-ui,"Microsoft YaHei",sans-serif;color:#20242b;background:#f7f8fa}
+h1{font-size:23px}section{background:white;padding:18px;margin:16px 0;border:1px solid #ddd;border-radius:8px}
+label{display:block;margin-top:12px}input,select,textarea,button{font:inherit;padding:8px;border:1px solid #aaa;border-radius:4px;max-width:100%;box-sizing:border-box}
+textarea{width:100%;min-height:66px}button{cursor:pointer;background:white}pre{white-space:pre-wrap;word-break:break-word;font:inherit}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}.muted{color:#596573}#status{white-space:pre-wrap}#work[hidden]{display:none}
+</style></head><body>
+<h1>任务必要性人工复核</h1>
+<p>本页离线工作，不发送网络请求。题目不显示机器建议。两位标注者独立填写并分别导出；导出前请保存当前题。</p>
+<section>
+<div class="row"><label>载入题目 <input id="taskFile" type="file" accept=".json"></label>
+<label>续标文件 <input id="resumeFile" type="file" accept=".json"></label></div>
+<div class="row"><label>真实标注者姓名或编号 <input id="reviewer" maxlength="80"></label>
+<label>角色 <select id="role"><option value="A">独立标注 A</option><option value="B">独立标注 B</option><option value="adjudication">歧义裁决</option></select></label>
+<button id="export">导出已保存标注</button></div>
+<p id="status" class="muted">先载入 review-first-batch.json，完成首批口径核对后再载入完整题目。</p>
+</section>
+<section id="work" hidden>
+<div class="row"><button id="previous">上一题</button><span id="progress"></span><button id="next">下一题</button></div>
+<p id="metadata" class="muted"></p><strong>原始材料及被判断实体</strong><pre id="source"></pre>
+<strong>本次具体任务</strong><pre id="instruction"></pre>
+<label>最小必要表达 <select id="representation"><option value="">请选择</option><option value="none">不需要该信息</option><option value="local_aggregate">本机处理后只提供汇总</option><option value="pseudonym">保持关联，使用稳定代号</option><option value="coarse">只需粗粒度信息</option><option value="original">确需原值且有权接收</option><option value="uncertain">事实或授权不确定</option></select></label>
+<label>首选动作 <select id="action"><option value="">请选择</option><option>DELETE</option><option>LOCAL_AGGREGATE</option><option>GENERALIZE</option><option>PSEUDONYMIZE</option><option>RETAIN</option><option>PAUSE</option></select></label>
+<label>其他同样充分且最少披露的动作（可选，英文逗号分隔） <input id="alternatives" style="width:100%"></label>
+<label>完成本次任务必须保留的事实或关系 <textarea id="facts"></textarea></label>
+<label>判断依据／需要裁决的歧义 <textarea id="reason"></textarea></label>
+<p class="muted">信息有用不代表需要发给外部接收方；有权限也不代表必须披露原值。无法确定时选择 PAUSE 并说明缺少的事实。</p>
+<button id="save">保存当前题并下一题</button>
+</section>
+<script>
+"use strict";
+const element=id=>document.getElementById(id);
+let task=null,index=0,answers={};
+const actions=new Set(['DELETE','LOCAL_AGGREGATE','GENERALIZE','PSEUDONYMIZE','RETAIN','PAUSE']);
+function show(){
+  if(!task)return;
+  const item=task.cases[index], saved=answers[item.case_id];
+  element('work').hidden=false;
+  element('progress').textContent=`${index+1} / ${task.cases.length}；已保存 ${Object.keys(answers).length} 题`;
+  element('metadata').textContent=`${item.case_id} · 任务 ${item.task} · 接收方 ${item.recipient} · 身份 ${item.identity}`;
+  element('source').textContent=item.text+'\n\n实体：'+item.entities.map(e=>`${e.text} [${e.category}]`).join('；');
+  element('instruction').textContent=item.task_description+'\n'+item.context;
+  element('representation').value=saved?.annotation.minimum_representation||'';
+  element('action').value=saved?.annotation.action||'';
+  element('alternatives').value=saved?.annotation.allowed_actions.filter(a=>a!==saved.annotation.action).join(',')||'';
+  element('facts').value=saved?.annotation.required_facts||'';
+  element('reason').value=saved?.annotation.reason||'';
+}
+function save(){
+  if(!task)throw Error('请先载入题目');
+  const item=task.cases[index], action=element('action').value;
+  const allowed=[...new Set([action,...element('alternatives').value.split(',').map(s=>s.trim()).filter(Boolean)])];
+  if(!action||allowed.some(a=>!actions.has(a))||!element('representation').value||!element('facts').value.trim()||!element('reason').value.trim())throw Error('请完成表达形式、动作、必要事实和依据');
+  answers[item.case_id]={case_id:item.case_id,case_sha256:item.case_sha256,annotation:{action,allowed_actions:allowed,
+    minimum_representation:element('representation').value,required_facts:element('facts').value.trim(),reason:element('reason').value.trim()}};
+}
+element('taskFile').onchange=async event=>{try{
+  const loaded=JSON.parse(await event.target.files[0].text());
+  if(loaded.schema!=='action-human-review-v1'||!Array.isArray(loaded.cases)||!loaded.cases.length)throw Error('题目格式无效');
+  if(Object.keys(answers).length&&!confirm('载入新题目会清空当前标注，请先导出。是否继续？'))return;
+  task=loaded;answers={};index=0;show();element('status').textContent='已载入。请独立判断，不参考另一位标注者或模型输出。';
+}catch(error){element('status').textContent=error.message;}};
+element('resumeFile').onchange=async event=>{try{
+  if(!task)throw Error('请先载入题目');
+  const data=JSON.parse(await event.target.files[0].text()), cases=new Map(task.cases.map(c=>[c.case_id,c]));
+  if(data.schema!=='action-review-response-v1'||!Array.isArray(data.reviews))throw Error('续标格式无效');
+  for(const row of data.reviews){if(cases.get(row.case_id)?.case_sha256!==row.case_sha256)throw Error('题目版本不匹配');}
+  for(const row of data.reviews)answers[row.case_id]=row;
+  element('reviewer').value=data.reviewer; element('role').value=data.role;show();
+}catch(error){element('status').textContent=error.message;}};
+element('save').onclick=()=>{try{save();index=Math.min(index+1,task.cases.length-1);show();element('status').textContent='已保存在本页内存，请导出文件后再关闭页面。';}catch(error){element('status').textContent=error.message;}};
+element('previous').onclick=()=>{index=Math.max(0,index-1);show();};
+element('next').onclick=()=>{index=Math.min(task.cases.length-1,index+1);show();};
+element('export').onclick=()=>{try{
+  const reviewer=element('reviewer').value.trim();
+  if(!reviewer||!Object.keys(answers).length)throw Error('请填写标注者并至少保存一题');
+  const response={schema:'action-review-response-v1',reviewer,role:element('role').value,exported_at:new Date().toISOString(),reviews:Object.values(answers)};
+  const url=URL.createObjectURL(new Blob([JSON.stringify(response,null,2)],{type:'application/json'}));
+  const link=document.createElement('a');link.href=url;link.download=`action-review-${response.role}-${Date.now()}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  element('status').textContent=`已导出 ${response.reviews.length} 题。请将文件放入复核包的 reviews 目录。`;
+}catch(error){element('status').textContent=error.message;}};
+</script></body></html>

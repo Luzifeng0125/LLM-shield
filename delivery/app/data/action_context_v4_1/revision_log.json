@@ -1,0 +1,93 @@
+{
+  "basis": "frozen-postreview issues, before BERT fitting; not model-error relabeling",
+  "changes": [
+    {
+      "document_id": "biz04",
+      "target": "已查明是用户插座问题",
+      "correction": "move factual-claim verification outside privacy-action targets"
+    },
+    {
+      "document_id": "biz05",
+      "field": "text",
+      "before": "，灯具工作不会去那个地址",
+      "after": "，邮寄日期写在那张旧单的右下角"
+    },
+    {
+      "document_id": "biz05",
+      "field": "text",
+      "before": "晚班只需按当前排班接手，不涉及医疗报销",
+      "after": "当前排班已从考勤系统重新导出，贴在值班柜上"
+    },
+    {
+      "document_id": "biz06",
+      "field": "context",
+      "before": "，不另做个人采访专栏",
+      "after": "，本期栏目安排在街区生活版"
+    },
+    {
+      "document_id": "ctx01",
+      "target": "薪资区间是税前，另一个附件却写税后",
+      "correction": "move factual-claim verification outside privacy-action targets"
+    },
+    {
+      "document_id": "ctx01",
+      "correction": "accounts are not proven distinct people"
+    },
+    {
+      "document_id": "ctx02",
+      "correction": "target word boundary: remove 明 from 说明"
+    },
+    {
+      "document_id": "ctx02",
+      "target": "晚八点前可完成末端平衡",
+      "correction": "move factual-claim verification outside privacy-action targets"
+    },
+    {
+      "document_id": "ctx03",
+      "target": "全天免费接送",
+      "correction": "move factual-claim verification outside privacy-action targets"
+    },
+    {
+      "document_id": "ctx04",
+      "field": "text",
+      "before": "不打算把文章写成某个师傅的家庭故事，而想记住一次小小的改动怎么由几个人试出来",
+      "after": "他把这次栏目的照片选成取餐架和试用过程，下一次还想约其他小店聊聊各自的动线"
+    },
+    {
+      "document_id": "ctx06",
+      "target": "延误订单均已退款",
+      "correction": "move factual-claim verification outside privacy-action targets"
+    },
+    {
+      "document_id": "ctx07",
+      "field": "text",
+      "before": "这个健康记录只是放在餐桌上，案情记录没有说对方据此行骗",
+      "after": "这个健康记录放在餐桌上，旁边叠着当月的水电缴费单"
+    },
+    {
+      "document_id": "ctx07",
+      "field": "text",
+      "before": "，也没有打算让读者判断一个人的家庭状况",
+      "after": "，讨论结束后还会发一张空白核验步骤卡"
+    },
+    {
+      "document_id": "ctx08",
+      "correction": "name disclosure distinct from unconfirmed organizer role"
+    },
+    {
+      "document_id": "pub05",
+      "target": "江汀巷沿河片区临时封闭",
+      "correction": "move factual-claim verification outside privacy-action targets"
+    },
+    {
+      "document_id": "pub09",
+      "target": "自取免收保管费",
+      "correction": "move factual-claim verification outside privacy-action targets"
+    }
+  ],
+  "new_documents": [
+    "privacy01",
+    "privacy02",
+    "privacy03"
+  ]
+}

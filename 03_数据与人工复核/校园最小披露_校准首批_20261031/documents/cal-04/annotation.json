@@ -1,0 +1,107 @@
+{
+  "task_required_facts": [
+    "录取人数",
+    "社团名称"
+  ],
+  "units": [
+    {
+      "quote": "许清和、赵小满、何安石、梁秋白",
+      "start": 8,
+      "end": 23,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "LOCAL_AGGREGATE"
+      ],
+      "expected_output_constraints": [
+        "输出人数",
+        "不把姓名数写成已经去重的身份数以外的口径"
+      ],
+      "evidence_refs": [
+        "许清和、赵小满、何安石、梁秋白"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u1",
+      "category": "PERSON_NAME",
+      "boundary_id": "public_release",
+      "recipient_id": "egress_tool_public",
+      "purpose_id": "club-count",
+      "canonical_action": "LOCAL_AGGREGATE",
+      "required_facts": "公告只需要录取人数，不需要逐人姓名"
+    },
+    {
+      "quote": "13800001004",
+      "start": 39,
+      "end": 50,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "DELETE"
+      ],
+      "expected_output_constraints": [],
+      "evidence_refs": [
+        "13800001004"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u2",
+      "category": "PHONE",
+      "boundary_id": "public_release",
+      "recipient_id": "egress_tool_public",
+      "purpose_id": "club-count",
+      "canonical_action": "DELETE",
+      "required_facts": "公告不需要电话"
+    },
+    {
+      "quote": "校学生会摄影社",
+      "start": 87,
+      "end": 94,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "RETAIN"
+      ],
+      "expected_output_constraints": [],
+      "evidence_refs": [
+        "校学生会摄影社"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u3",
+      "category": "ORG",
+      "boundary_id": "public_release",
+      "recipient_id": "egress_tool_public",
+      "purpose_id": "club-count",
+      "canonical_action": "RETAIN",
+      "required_facts": "公告需要社团名称"
+    }
+  ]
+}

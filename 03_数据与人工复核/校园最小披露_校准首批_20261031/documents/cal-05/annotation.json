@@ -1,0 +1,234 @@
+{
+  "task_required_facts": [
+    "活动名称",
+    "4月18日上午九点",
+    "集合地点",
+    "三组内容"
+  ],
+  "units": [
+    {
+      "quote": "沈知衡",
+      "start": 29,
+      "end": 32,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "DELETE"
+      ],
+      "expected_output_constraints": [],
+      "evidence_refs": [
+        "沈知衡"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u1",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "recipient_id": "external_model",
+      "purpose_id": "volunteer-notice",
+      "canonical_action": "DELETE",
+      "required_facts": "公告不需要签到负责人"
+    },
+    {
+      "quote": "罗予白",
+      "start": 39,
+      "end": 42,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "DELETE"
+      ],
+      "expected_output_constraints": [],
+      "evidence_refs": [
+        "罗予白"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u2",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "recipient_id": "external_model",
+      "purpose_id": "volunteer-notice",
+      "canonical_action": "DELETE",
+      "required_facts": "公告不需要场地恢复负责人"
+    },
+    {
+      "quote": "谭小禾",
+      "start": 52,
+      "end": 55,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "DELETE"
+      ],
+      "expected_output_constraints": [],
+      "evidence_refs": [
+        "谭小禾"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u3",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "recipient_id": "external_model",
+      "purpose_id": "volunteer-notice",
+      "canonical_action": "DELETE",
+      "required_facts": "公告不需要对讲联系人"
+    },
+    {
+      "quote": "13800001005",
+      "start": 78,
+      "end": 89,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "DELETE"
+      ],
+      "expected_output_constraints": [],
+      "evidence_refs": [
+        "13800001005"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u4",
+      "category": "PHONE",
+      "boundary_id": "external_generation",
+      "recipient_id": "external_model",
+      "purpose_id": "volunteer-notice",
+      "canonical_action": "DELETE",
+      "required_facts": "公告不需要电话"
+    },
+    {
+      "quote": "松园3号楼",
+      "start": 104,
+      "end": 109,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "DELETE"
+      ],
+      "expected_output_constraints": [],
+      "evidence_refs": [
+        "松园3号楼"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u5",
+      "category": "DORM",
+      "boundary_id": "external_generation",
+      "recipient_id": "external_model",
+      "purpose_id": "volunteer-notice",
+      "canonical_action": "DELETE",
+      "required_facts": "公告不需要宿舍"
+    },
+    {
+      "quote": "大学生活动中心报告厅",
+      "start": 299,
+      "end": 309,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "RETAIN"
+      ],
+      "expected_output_constraints": [],
+      "evidence_refs": [
+        "大学生活动中心报告厅"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u6",
+      "category": "LOCATION",
+      "boundary_id": "external_generation",
+      "recipient_id": "external_model",
+      "purpose_id": "volunteer-notice",
+      "canonical_action": "RETAIN",
+      "required_facts": "公告需要集合地点"
+    },
+    {
+      "quote": "校青年志愿者协会",
+      "start": 379,
+      "end": 387,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "RETAIN"
+      ],
+      "expected_output_constraints": [],
+      "evidence_refs": [
+        "校青年志愿者协会"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u7",
+      "category": "ORG",
+      "boundary_id": "external_generation",
+      "recipient_id": "external_model",
+      "purpose_id": "volunteer-notice",
+      "canonical_action": "RETAIN",
+      "required_facts": "公告需要主办方名称"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "pool": "blind",
+  "document_id": "n12",
+  "text": "名单上有周疏明。",
+  "user_task": "请外部模型把名单改得通顺一些。",
+  "workflow_id": "class_coordination",
+  "task_key": "class_coordination",
+  "workflow_name": "班级协作",
+  "units": [
+    {
+      "unit_id": "n12-u1",
+      "quote": "周疏明",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "external_partner",
+      "identity_name": "校外合作方",
+      "user_task": "请外部模型把名单改得通顺一些。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 4,
+      "end": 7
+    }
+  ],
+  "label_status": "unlabeled",
+  "model_screened": false
+}

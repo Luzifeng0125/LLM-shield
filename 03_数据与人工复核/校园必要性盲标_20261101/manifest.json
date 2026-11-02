@@ -1,0 +1,31 @@
+{
+  "protocol": "campus-necessity-blind-label-v1",
+  "created": "2026-11-01",
+  "split_assigned_before_annotation": true,
+  "calibration_units": 20,
+  "test_units": 40,
+  "labels_filled_by_ai": false,
+  "model_predictions_included": false,
+  "r0_reference_included": false,
+  "test_pool_usable_for_tuning": false,
+  "file_sha256": {
+    "03_数据与人工复核/校园必要性盲标_20261101/校准池/c01.json": "81936ecc3b48839bfe6c6638efd7070721dd8e714e195b42facd5051ac8d226c",
+    "03_数据与人工复核/校园必要性盲标_20261101/校准池/c02.json": "171dae0aff0b49878e5d2e8f8b7923e45f444049b44b060b80215ce7fea2550a",
+    "03_数据与人工复核/校园必要性盲标_20261101/校准池/c03.json": "9bab23cde034d72548559b69dd96e04c0f0189d1e3d877408c28179a54631cb8",
+    "03_数据与人工复核/校园必要性盲标_20261101/校准池/c04.json": "bea9aa39792267f06582dfeea93d669f516f96f4981b778487a596698a3853ea",
+    "03_数据与人工复核/校园必要性盲标_20261101/校准池/c05.json": "3055c9e3791e96fb89cc3d9819d4f9bde3203d52dea13e3d581fb3f3c588427e",
+    "03_数据与人工复核/校园必要性盲标_20261101/校准池/c06.json": "e5ee25aedd0eef7cf5f94b95c09fc45795f568d58dcb95060f87bc9ed4979943",
+    "03_数据与人工复核/校园必要性盲标_20261101/独立测试池/t01.json": "7d8f0ca9a1129229a4c598f021b9e97808930a048bedb9a1fce55ed027b4e267",
+    "03_数据与人工复核/校园必要性盲标_20261101/独立测试池/t02.json": "160b646335fcca8577b924ca94bbf1a973653855968f7b201eaaed2064230162",
+    "03_数据与人工复核/校园必要性盲标_20261101/独立测试池/t03.json": "33f084a60c71d7adac6fc6bd5a7e2b0b5bccef0d8e86832cb587f87398fff5e0",
+    "03_数据与人工复核/校园必要性盲标_20261101/独立测试池/t04.json": "dcf463acc50f622c86ddbce85e0de3de9ecb8366e301f8dd30a2f160b3b5d297",
+    "03_数据与人工复核/校园必要性盲标_20261101/独立测试池/t05.json": "6156969574eadc098feffa7e497e87a22a44ed717a3e9b60d06955d913e5ad9d",
+    "03_数据与人工复核/校园必要性盲标_20261101/独立测试池/t06.json": "d70f5da191726c4d25deed63b4f850cc21842cb919e44631d25ae8022ddc8d7e",
+    "03_数据与人工复核/校园必要性盲标_20261101/独立测试池/t07.json": "a3ce6dae8d617d467f24812518fc18dd95c45a759c0bb73b992466a0515604a0",
+    "03_数据与人工复核/校园必要性盲标_20261101/独立测试池/t08.json": "2ec8ac36873a2a5e1c99d704cd421d1a31333efd02abd51188ce0f7266202fce",
+    "03_数据与人工复核/校园必要性盲标_20261101/独立测试池/t09.json": "60ab88067ef38ff77a06e8a05d27ee809ccd908897bba088920af77d768c6918",
+    "03_数据与人工复核/校园必要性盲标_20261101/独立测试池/t10.json": "1cf127fcb9a134c07fa12fa364bd2e8f5762f59834a74d7a6aeee86c92015cdc",
+    "03_数据与人工复核/校园必要性盲标_20261101/独立测试池/t11.json": "85fffe5c43ec66503f484c00294b3098fe2957e66f0713474326e8a3a36715e2",
+    "03_数据与人工复核/校园必要性盲标_20261101/独立测试池/t12.json": "5353d4e25e3d45c69b66bda3836ec4c47137f184b3640d6662862e745bae0bd1"
+  }
+}

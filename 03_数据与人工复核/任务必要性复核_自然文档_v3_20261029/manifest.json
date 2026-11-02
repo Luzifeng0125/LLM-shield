@@ -1,0 +1,26 @@
+{
+  "cases": 138,
+  "sources": 36,
+  "template_groups": 32,
+  "splits": {
+    "train": 101,
+    "validation": 19,
+    "test": 18
+  },
+  "cross_split_source_overlap": 0,
+  "cross_split_template_overlap": 0,
+  "schema": "natural-action-documents-v1",
+  "documents": 36,
+  "first_batch_documents": 6,
+  "first_batch_decisions": 24,
+  "supervision": "machine_draft_not_gold",
+  "generation": "independently_authored_documents_no_template_expansion",
+  "build_mode": "new_batch_with_history_check",
+  "decision_unit": "annotated_segment_with_full_document_context",
+  "test_scope": "synthetic_scenario_holdout_not_independent_blind_test",
+  "source_files": {
+    "part_a.json": "6ce20f6ce1acac645afee04c19cc881e048b6b1b51f08a806de24e7e642c6f03",
+    "part_b.json": "bd590e1d0bfd687aa0ca8f979c19640a9b1c3f6a74fa64f678e93cf1e7dd8f1f"
+  },
+  "history_checked": []
+}

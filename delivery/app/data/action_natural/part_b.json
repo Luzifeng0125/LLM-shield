@@ -1,0 +1,1437 @@
+[
+  {
+    "document_id": "nb01",
+    "scenario_group": "service_desk_handoff",
+    "split": "train",
+    "document_type": "客服转述",
+    "task": "meeting_minutes",
+    "recipient": "external_model",
+    "identity": "student_leader",
+    "task_description": "把这几件事捋顺，下午交班时用。",
+    "context": "这是一组校园便民服务的内部交班材料，外部生成服务协助整理，生成后的待办会在本机分给处理人。下一班只跟进尚未结束的问题。",
+    "text": "交班速记｜雨棚漏水还没结，蓝伞已领走。录音杂音多，补听后的内容如下：\n漏水处位于南门便民服务亭，值班台公布的服务地图也使用这个名称，下午接班的人要按图找到现场。\n许栩说会在四点以前把漏水位置拍全，另找一名同学从走廊外侧拍，照片统一放进报修单；晚班接到回复后还得找许栩确认是否拍到了接缝。\n晚班先看工单，再决定是否移桌子。\n对方提到校园生活服务中心以前借过雨棚，这次只希望学校了解校内服务部门也会来使用；借用手续另有一套台账，不归这个班次处理。\n来电者顺口留下了自己的备用号码 13800007123，说原来的手机正在维修。",
+    "phenomena": [
+      "implicit_intent",
+      "mixed_relevance",
+      "handoff",
+      "resolved_item"
+    ],
+    "decisions": [
+      {
+        "segment": "许栩说会在四点以前把漏水位置拍全，另找一名同学从走廊外侧拍，照片统一放进报修单；晚班接到回复后还得找许栩确认是否拍到了接缝。",
+        "entities": [
+          {
+            "text": "许栩",
+            "category": "PERSON_NAME"
+          }
+        ],
+        "action": "PSEUDONYMIZE",
+        "minimum_representation": "pseudonym",
+        "required_facts": "同一处理人补拍照片、四点期限及晚班回访关系",
+        "reason": "待办需要辨认同一负责人，外部整理阶段不需要真实姓名。",
+        "evidence": [
+          "许栩说会在四点以前把漏水位置拍全，另找一名同学从走廊外侧拍，照片统一放进报修单；晚班接到回复后还得找许栩确认是否拍到了接缝。"
+        ]
+      },
+      {
+        "segment": "来电者顺口留下了自己的备用号码 13800007123，说原来的手机正在维修。",
+        "entities": [
+          {
+            "text": "13800007123",
+            "category": "PHONE"
+          }
+        ],
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "漏水问题的处理进展",
+        "reason": "备用号码只是来电附带信息，交接事项无需使用，姓名或联系方式可以移除，剩余业务叙述按原文保留。",
+        "evidence": [
+          "来电者顺口留下了自己的备用号码 13800007123，说原来的手机正在维修。"
+        ]
+      },
+      {
+        "segment": "漏水处位于南门便民服务亭，值班台公布的服务地图也使用这个名称，下午接班的人要按图找到现场。",
+        "entities": [
+          {
+            "text": "南门便民服务亭",
+            "category": "LOCATION"
+          }
+        ],
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "接班人员需要到达的已公开现场",
+        "reason": "明确地点是现场交接所需，材料指出其为公开地图中的服务点。",
+        "evidence": [
+          "漏水处位于南门便民服务亭，值班台公布的服务地图也使用这个名称，下午接班的人要按图找到现场。"
+        ]
+      },
+      {
+        "segment": "对方提到校园生活服务中心以前借过雨棚，这次只希望学校了解校内服务部门也会来使用；借用手续另有一套台账，不归这个班次处理。",
+        "entities": [
+          {
+            "text": "校园生活服务中心",
+            "category": "ORG"
+          }
+        ],
+        "action": "GENERALIZE",
+        "minimum_representation": "coarse",
+        "required_facts": "曾有校内服务单位使用雨棚的背景",
+        "reason": "该段说明使用群体即可，具体团体名称不参与本班工作关联。",
+        "evidence": [
+          "对方提到校园生活服务中心以前借过雨棚，这次只希望学校了解校内服务部门也会来使用；借用手续另有一套台账，不归这个班次处理。"
+        ]
+      }
+    ]
+  },
+  {
+    "document_id": "nb02",
+    "scenario_group": "accessible_route_notes",
+    "split": "train",
+    "document_type": "走访手记",
+    "task": "project_intro",
+    "recipient": "external_model",
+    "identity": "student_leader",
+    "task_description": "给没来过的人写段路线介绍。",
+    "context": "前序沟通：这篇放在开放日的导览页。路线已经走通，读者从校门步行过去，不需要了解筹备队成员的日常行程。",
+    "text": "开放日前探路，手记补录\n09:10｜我照着旧推文走到侧门，门口贴的施工纸被雨打卷了，远看像还开着。值守同学说那条通道周末不开，已经在地图上划去，现场会再加一道提示。\n09:25｜换到正式入口，开始重新计时。这一遍按慢走速度，不算中途拍照和讨论的时间。以下路线上两个转弯不能颠倒，推车的人要先走缓坡。\n从梧桐门进入后沿右侧缓坡直行，到听雨展厅门口左转；这两个名称都与已经发布的开放日地图一致。\n路边花坛的矮墙很容易被误认成终点，到了那儿还要继续往前。同行的人问能不能直接跨过去，我让他回头看：一边是平路，一边有二级落差，图上看不出来。\n我中途绕回了栖云公寓四栋312室取充电线，那十分钟没有计入路线用时。\n回来后重新从岔路口计时，结果与第一遍衔接的总用时约十二分钟。旧推文写八分钟，当时从另一扇门出发，不能把这两个数字凑在一起取平均。\n陪走的同学说，校无障碍服务站提过轮椅转弯半径的问题，建议把介绍里的重点放在通行体验。这次文章没有合作单位名单，采访只谈路线本身。\n10:05｜到了展厅旁边，下过雨的碎石段有积水。旁边铺装通道虽然绕一点，仍然连到同一个入口；这次带推车的人实际走过，没遇到需要抬车的台阶。\n“终点这扇门要自己开吗？”我拍了门把手的位置。门向外拉，活动期间现场同学会固定住，平日参观不能据此以为一直敞着。这个区别放在路线末尾说就够了。\n回程核了一次指示牌：入口名称一致，临时牌只补箭头。导览页可以用第一张全景照，第二张拍到了工作人员私人物品，不适合做示意图。到这里才算走通，前面失败的绕路不算正式路线。",
+    "phenomena": [
+      "implicit_intent",
+      "mixed_relevance",
+      "correction",
+      "route_reasoning"
+    ],
+    "decisions": [
+      {
+        "segment": "从梧桐门进入后沿右侧缓坡直行，到听雨展厅门口左转；这两个名称都与已经发布的开放日地图一致。",
+        "entities": [
+          {
+            "text": "梧桐门",
+            "category": "LOCATION"
+          },
+          {
+            "text": "听雨展厅",
+            "category": "LOCATION"
+          }
+        ],
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "公开入口、转向位置与目的地之间的路径",
+        "reason": "导览必须让读者找到正确位置，两个地点已在公开地图发布。",
+        "evidence": [
+          "从梧桐门进入后沿右侧缓坡直行，到听雨展厅门口左转；这两个名称都与已经发布的开放日地图一致。"
+        ]
+      },
+      {
+        "segment": "陪走的同学说，校无障碍服务站提过轮椅转弯半径的问题，建议把介绍里的重点放在通行体验。这次文章没有合作单位名单，采访只谈路线本身。",
+        "entities": [
+          {
+            "text": "校无障碍服务站",
+            "category": "ORG"
+          }
+        ],
+        "action": "GENERALIZE",
+        "minimum_representation": "coarse",
+        "required_facts": "校内服务单位关于轮椅通行体验的建议",
+        "reason": "介绍通行体验不要求识别具体建议机构。",
+        "evidence": [
+          "陪走的同学说，校无障碍服务站提过轮椅转弯半径的问题，建议把介绍里的重点放在通行体验。这次文章没有合作单位名单，采访只谈路线本身。"
+        ]
+      },
+      {
+        "segment": "我中途绕回了栖云公寓四栋312室取充电线，那十分钟没有计入路线用时。",
+        "entities": [
+          {
+            "text": "栖云公寓四栋312室",
+            "category": "DORM"
+          }
+        ],
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "实际开放日步行路线及用时",
+        "reason": "取充电线的私人绕行明确未计入路线，删除不会损失导览事实。",
+        "evidence": [
+          "我中途绕回了栖云公寓四栋312室取充电线，那十分钟没有计入路线用时。"
+        ]
+      }
+    ]
+  },
+  {
+    "document_id": "nb03",
+    "scenario_group": "equipment_voice_commitment",
+    "split": "train",
+    "document_type": "设备录音转写",
+    "task": "meeting_minutes",
+    "recipient": "external_model",
+    "identity": "student_leader",
+    "task_description": "把这段整理成下周的跟进单。",
+    "context": "聊天前文：主持人说刚收到当事人的确认，他接下了录音里说的连续运行测试，日志也由他上传。我们用外部服务排一下跟进顺序，再在本机分派。",
+    "text": "【设备试运行录音转写】测试时风扇一直响，开头一段没有录清。以下保留了能够听清的句子，括号里的描述来自当时的记录纸，不是另一次讨论。\n\n梁以安：周三把连续运行补到两小时，遇到断线就记下时间点，结束后把原始日志附到问题单。后面如果还复现，我再约一次。\n\n现场的三台机器目前都放在求真楼公共实验间，场地预约系统对参加维护的同学开放查询，下周测试仍在那里进行。\n\n录音文件最后读出了一串号码 13800008456，前后话题是在说外卖到了，和设备试运行没有关系。\n\n第一遍只跑了二十分钟，温度没有明显变化，不能用来说明长时间工作的情况。第二遍换过线材，日志里要区分两次配置，不能把它们当成同一批测量。\n\n纸上还写着“周二带备用插线板”，旁边没有署名。这是临时提醒，负责借还器材的同学已经另开了工单；本次跟进单只追连续运行和断线记录。",
+    "phenomena": [
+      "coreference",
+      "implicit_intent",
+      "mixed_relevance"
+    ],
+    "decisions": [
+      {
+        "segment": "梁以安：周三把连续运行补到两小时，遇到断线就记下时间点，结束后把原始日志附到问题单。后面如果还复现，我再约一次。",
+        "entities": [
+          {
+            "text": "梁以安",
+            "category": "PERSON_NAME"
+          }
+        ],
+        "action": "PSEUDONYMIZE",
+        "minimum_representation": "pseudonym",
+        "required_facts": "连续运行测试的承接人、周三时间与后续复现安排",
+        "reason": "前序消息确认说话人承接这项测试，需要稳定关联其后续跟进，不需要外发姓名。",
+        "evidence": [
+          "聊天前文：主持人说刚收到当事人的确认，他接下了录音里说的连续运行测试，日志也由他上传。我们用外部服务排一下跟进顺序，再在本机分派。",
+          "梁以安：周三把连续运行补到两小时，遇到断线就记下时间点，结束后把原始日志附到问题单。后面如果还复现，我再约一次。"
+        ]
+      },
+      {
+        "segment": "现场的三台机器目前都放在求真楼公共实验间，场地预约系统对参加维护的同学开放查询，下周测试仍在那里进行。",
+        "entities": [
+          {
+            "text": "求真楼公共实验间",
+            "category": "LOCATION"
+          }
+        ],
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "下周设备测试的公开预约场所",
+        "reason": "设备定位和预约需要准确房间名称，该场地已对相关参与者开放。",
+        "evidence": [
+          "现场的三台机器目前都放在求真楼公共实验间，场地预约系统对参加维护的同学开放查询，下周测试仍在那里进行。"
+        ]
+      },
+      {
+        "segment": "录音文件最后读出了一串号码 13800008456，前后话题是在说外卖到了，和设备试运行没有关系。",
+        "entities": [
+          {
+            "text": "13800008456",
+            "category": "PHONE"
+          }
+        ],
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "设备测试任务及日志要求",
+        "reason": "这是录音中的生活杂音，删除不影响设备工作。",
+        "evidence": [
+          "录音文件最后读出了一串号码 13800008456，前后话题是在说外卖到了，和设备试运行没有关系。"
+        ]
+      }
+    ],
+    "context_pair_id": "equipment_owner"
+  },
+  {
+    "document_id": "nb04",
+    "scenario_group": "equipment_voice_commitment",
+    "split": "train",
+    "document_type": "设备录音转写",
+    "task": "meeting_minutes",
+    "recipient": "external_model",
+    "identity": "student_leader",
+    "task_description": "把这段整理成下周的跟进单。",
+    "context": "聊天前文：主持人说这段录音可能是当事人在照读请假的同学发来的消息，原消息还没找到；两个人都没有回复谁实际做测试。我们要发的跟进单会直接作为下周排班依据。",
+    "text": "【设备试运行录音转写】测试时风扇一直响，开头一段没有录清。以下保留了能够听清的句子，括号里的描述来自当时的记录纸，不是另一次讨论。\n\n梁以安：周三把连续运行补到两小时，遇到断线就记下时间点，结束后把原始日志附到问题单。后面如果还复现，我再约一次。\n\n现场的三台机器目前都放在求真楼公共实验间，场地预约系统对参加维护的同学开放查询，下周测试仍在那里进行。\n\n录音文件最后读出了一串号码 13800008456，前后话题是在说外卖到了，和设备试运行没有关系。\n\n第一遍只跑了二十分钟，温度没有明显变化，不能用来说明长时间工作的情况。第二遍换过线材，日志里要区分两次配置，不能把它们当成同一批测量。\n\n纸上还写着“周二带备用插线板”，旁边没有署名。这是临时提醒，负责借还器材的同学已经另开了工单；本次跟进单只追连续运行和断线记录。",
+    "phenomena": [
+      "coreference",
+      "missing_context",
+      "mixed_relevance"
+    ],
+    "decisions": [
+      {
+        "segment": "梁以安：周三把连续运行补到两小时，遇到断线就记下时间点，结束后把原始日志附到问题单。后面如果还复现，我再约一次。",
+        "entities": [
+          {
+            "text": "梁以安",
+            "category": "PERSON_NAME"
+          }
+        ],
+        "action": "PAUSE",
+        "minimum_representation": "uncertain",
+        "required_facts": "连续运行测试的承接人、周三时间与后续复现安排",
+        "reason": "语音中的第一人称可能是照读他人的转述，责任归属尚不能据此建立。",
+        "evidence": [
+          "聊天前文：主持人说这段录音可能是当事人在照读请假的同学发来的消息，原消息还没找到；两个人都没有回复谁实际做测试。我们要发的跟进单会直接作为下周排班依据。",
+          "梁以安：周三把连续运行补到两小时，遇到断线就记下时间点，结束后把原始日志附到问题单。后面如果还复现，我再约一次。"
+        ],
+        "clarification_question": "这段发言是他自己的承诺，还是转述别人的安排？"
+      },
+      {
+        "segment": "现场的三台机器目前都放在求真楼公共实验间，场地预约系统对参加维护的同学开放查询，下周测试仍在那里进行。",
+        "entities": [
+          {
+            "text": "求真楼公共实验间",
+            "category": "LOCATION"
+          }
+        ],
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "下周设备测试的公开预约场所",
+        "reason": "设备定位和预约需要准确房间名称，该场地已对相关参与者开放。",
+        "evidence": [
+          "现场的三台机器目前都放在求真楼公共实验间，场地预约系统对参加维护的同学开放查询，下周测试仍在那里进行。"
+        ]
+      },
+      {
+        "segment": "录音文件最后读出了一串号码 13800008456，前后话题是在说外卖到了，和设备试运行没有关系。",
+        "entities": [
+          {
+            "text": "13800008456",
+            "category": "PHONE"
+          }
+        ],
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "设备测试任务及日志要求",
+        "reason": "这是录音中的生活杂音，删除不影响设备工作。",
+        "evidence": [
+          "录音文件最后读出了一串号码 13800008456，前后话题是在说外卖到了，和设备试运行没有关系。"
+        ]
+      }
+    ],
+    "context_pair_id": "equipment_owner"
+  },
+  {
+    "document_id": "nb05",
+    "scenario_group": "service_attendance_scope",
+    "split": "train",
+    "document_type": "服务收尾记录",
+    "task": "activity_stats",
+    "recipient": "external_model",
+    "identity": "student_leader",
+    "task_description": "给我一版这次服务的情况小结。",
+    "context": "上条消息：这次只有一个接待时段，台账管理员确认这一页就是本次全部预约和到场记录；总结里的到场人数按不同预约号核对。",
+    "text": "服务过程补记：接待前先搭了遮阳棚，随后按预约顺序接待；中途暂停了一会儿检查电源，确认没有问题后继续。旧表把“登记”和“到场”混在一起，这一页已经分开写了。\n\n到场登记：何知微、余嘉禾、蒋舟均已签到，各自的预约号互不相同，登记员核过没有同名不同人，每人本次只有这一条到场记录。\n取消栏：祝念提前取消了预约，没有到场。\n\n活动由校青年志愿服务中心组织，这是现场立牌和已发布报名页使用的主办单位名称。\n\n原表页脚的转寄地址是 signup-old@example.invalid，去年用它找过一次误投的邮件。\n\n服务在西校区综合服务廊进行。总结配图展示校内服务点的常见形态，并不区分楼栋、片区或摊位坐标。\n\n桌上的工具分为清洁和检测两组，来访者在听过说明以后自行选择。我们发现纸质指引比口头提醒更管用，后半段等待明显有序，明年可以继续沿用。照片里有隔壁摊位的人，不能拿照片人数替换登记页的人数。",
+    "phenomena": [
+      "aggregation_scope",
+      "implicit_intent",
+      "mixed_relevance"
+    ],
+    "decisions": [
+      {
+        "segment": "到场登记：何知微、余嘉禾、蒋舟均已签到，各自的预约号互不相同，登记员核过没有同名不同人，每人本次只有这一条到场记录。",
+        "entities": [
+          {
+            "text": "何知微",
+            "category": "PERSON_NAME"
+          },
+          {
+            "text": "余嘉禾",
+            "category": "PERSON_NAME"
+          },
+          {
+            "text": "蒋舟",
+            "category": "PERSON_NAME"
+          }
+        ],
+        "action": "LOCAL_AGGREGATE",
+        "minimum_representation": "local_aggregate",
+        "required_facts": "本次活动实际到场人数及统计范围",
+        "reason": "记录完整且每个预约号唯一，应在本机按已到场状态统计三人，外部只接收汇总。",
+        "evidence": [
+          "上条消息：这次只有一个接待时段，台账管理员确认这一页就是本次全部预约和到场记录；总结里的到场人数按不同预约号核对。",
+          "到场登记：何知微、余嘉禾、蒋舟均已签到，各自的预约号互不相同，登记员核过没有同名不同人，每人本次只有这一条到场记录。"
+        ]
+      },
+      {
+        "segment": "活动由校青年志愿服务中心组织，这是现场立牌和已发布报名页使用的主办单位名称。",
+        "entities": [
+          {
+            "text": "校青年志愿服务中心",
+            "category": "ORG"
+          }
+        ],
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "已公开活动的主办单位",
+        "reason": "总结介绍公开活动，已发布的主办单位名称可准确保留。",
+        "evidence": [
+          "活动由校青年志愿服务中心组织，这是现场立牌和已发布报名页使用的主办单位名称。"
+        ]
+      },
+      {
+        "segment": "原表页脚的转寄地址是 signup-old@example.invalid，去年用它找过一次误投的邮件。",
+        "entities": [
+          {
+            "text": "signup-old@example.invalid",
+            "category": "EMAIL"
+          }
+        ],
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "本次服务情况",
+        "reason": "去年的邮件转寄地址与当前总结无关，邮箱地址不必进入生成材料。",
+        "evidence": [
+          "原表页脚的转寄地址是 signup-old@example.invalid，去年用它找过一次误投的邮件。"
+        ]
+      },
+      {
+        "segment": "服务在西校区综合服务廊进行。总结配图展示校内服务点的常见形态，并不区分楼栋、片区或摊位坐标。",
+        "entities": [
+          {
+            "text": "西校区综合服务廊",
+            "category": "LOCATION"
+          }
+        ],
+        "action": "GENERALIZE",
+        "minimum_representation": "coarse",
+        "required_facts": "服务发生在校内场所",
+        "reason": "总结只介绍校内服务场景，具体服务廊的名称超出本次总结所需粒度。",
+        "evidence": [
+          "服务在西校区综合服务廊进行。总结配图展示校内服务点的常见形态，并不区分楼栋、片区或摊位坐标。"
+        ]
+      },
+      {
+        "segment": "取消栏：祝念提前取消了预约，没有到场。",
+        "entities": [
+          {
+            "text": "祝念",
+            "category": "PERSON_NAME"
+          }
+        ],
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "取消预约不计入到场人数",
+        "reason": "取消状态可以保留，但取消者的姓名不是到场统计所需，也不应进入到场姓名聚合。",
+        "evidence": [
+          "取消栏：祝念提前取消了预约，没有到场。"
+        ]
+      }
+    ],
+    "context_pair_id": "attendance_scope"
+  },
+  {
+    "document_id": "nb06",
+    "scenario_group": "service_attendance_scope",
+    "split": "train",
+    "document_type": "服务收尾记录",
+    "task": "activity_stats",
+    "recipient": "external_model",
+    "identity": "student_leader",
+    "task_description": "给我一版这次服务的情况小结。",
+    "context": "上条消息：这页是上午接待的登记，下午另有一轮，台账管理员还没找到那一页。本次小结要覆盖全天，负责人正在问全年报表里该填多少到场人数。",
+    "text": "服务过程补记：接待前先搭了遮阳棚，随后按预约顺序接待；中途暂停了一会儿检查电源，确认没有问题后继续。旧表把“登记”和“到场”混在一起，这一页已经分开写了。\n\n到场登记：何知微、余嘉禾、蒋舟均已签到，各自的预约号互不相同，登记员核过没有同名不同人，每人本次只有这一条到场记录。\n取消栏：祝念提前取消了预约，没有到场。\n\n活动由校青年志愿服务中心组织，这是现场立牌和已发布报名页使用的主办单位名称。\n\n原表页脚的转寄地址是 signup-old@example.invalid，去年用它找过一次误投的邮件。\n\n服务在西校区综合服务廊进行。总结配图展示校内服务点的常见形态，并不区分楼栋、片区或摊位坐标。\n\n桌上的工具分为清洁和检测两组，来访者在听过说明以后自行选择。我们发现纸质指引比口头提醒更管用，后半段等待明显有序，明年可以继续沿用。照片里有隔壁摊位的人，不能拿照片人数替换登记页的人数。",
+    "phenomena": [
+      "aggregation_scope",
+      "missing_context",
+      "mixed_relevance"
+    ],
+    "decisions": [
+      {
+        "segment": "到场登记：何知微、余嘉禾、蒋舟均已签到，各自的预约号互不相同，登记员核过没有同名不同人，每人本次只有这一条到场记录。",
+        "entities": [
+          {
+            "text": "何知微",
+            "category": "PERSON_NAME"
+          },
+          {
+            "text": "余嘉禾",
+            "category": "PERSON_NAME"
+          },
+          {
+            "text": "蒋舟",
+            "category": "PERSON_NAME"
+          }
+        ],
+        "action": "PAUSE",
+        "minimum_representation": "uncertain",
+        "required_facts": "本次活动实际到场人数及统计范围",
+        "reason": "当前页仅覆盖上午，不能将三人当作全天人数或推测下午数据。",
+        "evidence": [
+          "上条消息：这页是上午接待的登记，下午另有一轮，台账管理员还没找到那一页。本次小结要覆盖全天，负责人正在问全年报表里该填多少到场人数。",
+          "到场登记：何知微、余嘉禾、蒋舟均已签到，各自的预约号互不相同，登记员核过没有同名不同人，每人本次只有这一条到场记录。"
+        ],
+        "clarification_question": "请补充下午的到场记录，或者确认小结只统计上午。"
+      },
+      {
+        "segment": "活动由校青年志愿服务中心组织，这是现场立牌和已发布报名页使用的主办单位名称。",
+        "entities": [
+          {
+            "text": "校青年志愿服务中心",
+            "category": "ORG"
+          }
+        ],
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "已公开活动的主办单位",
+        "reason": "总结介绍公开活动，已发布的主办单位名称可准确保留。",
+        "evidence": [
+          "活动由校青年志愿服务中心组织，这是现场立牌和已发布报名页使用的主办单位名称。"
+        ]
+      },
+      {
+        "segment": "原表页脚的转寄地址是 signup-old@example.invalid，去年用它找过一次误投的邮件。",
+        "entities": [
+          {
+            "text": "signup-old@example.invalid",
+            "category": "EMAIL"
+          }
+        ],
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "本次服务情况",
+        "reason": "去年的邮件转寄地址与当前总结无关，邮箱地址不必进入生成材料。",
+        "evidence": [
+          "原表页脚的转寄地址是 signup-old@example.invalid，去年用它找过一次误投的邮件。"
+        ]
+      },
+      {
+        "segment": "服务在西校区综合服务廊进行。总结配图展示校内服务点的常见形态，并不区分楼栋、片区或摊位坐标。",
+        "entities": [
+          {
+            "text": "西校区综合服务廊",
+            "category": "LOCATION"
+          }
+        ],
+        "action": "GENERALIZE",
+        "minimum_representation": "coarse",
+        "required_facts": "服务发生在校内场所",
+        "reason": "总结只介绍校内服务场景，具体服务廊的名称超出本次总结所需粒度。",
+        "evidence": [
+          "服务在西校区综合服务廊进行。总结配图展示校内服务点的常见形态，并不区分楼栋、片区或摊位坐标。"
+        ]
+      },
+      {
+        "segment": "取消栏：祝念提前取消了预约，没有到场。",
+        "entities": [
+          {
+            "text": "祝念",
+            "category": "PERSON_NAME"
+          }
+        ],
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "取消预约不计入到场人数",
+        "reason": "取消状态可以保留，但取消者的姓名不是到场统计所需，也不应进入到场姓名聚合。",
+        "evidence": [
+          "取消栏：祝念提前取消了预约，没有到场。"
+        ]
+      }
+    ],
+    "context_pair_id": "attendance_scope"
+  },
+  {
+    "document_id": "nb07",
+    "scenario_group": "withdrawn_reissued_notice",
+    "split": "train",
+    "document_type": "撤回重发的群通知",
+    "task": "meeting_minutes",
+    "recipient": "external_model",
+    "identity": "student_leader",
+    "task_description": "按最后说定的安排给我列个清单。",
+    "context": "这份清单给活动执行组使用。群里前后改了两次地点，只有已经确认的最终安排需要安排人员落实，外部服务协助整理。",
+    "text": "群里撤回了一次通知，下面按发出时间补齐。别用旧截图。\n18:07 旧截图写的是去临溪楼东侧小报告厅。那间房的预约已取消，钥匙也交回去了。\n18:11 终版：明天改在知行广场服务台集合，这个点位已经同步到公开活动地图，导航链接不用另外制作。\n18:11 管理员补充：签到桌缩成一张，雨棚数量照旧。\n18:12 叶清和：我今晚把投影比例改好，最晚十点上传；明早由我先试播，另一位同学只帮忙搬设备，不接管播放。\n18:13 有人把自己问路时记的电话 13800009017 贴了出来，紧接着说“发错群，是私人修车师傅的”。",
+    "phenomena": [
+      "correction",
+      "mixed_relevance",
+      "coreference",
+      "implicit_intent"
+    ],
+    "decisions": [
+      {
+        "segment": "18:07 旧截图写的是去临溪楼东侧小报告厅。那间房的预约已取消，钥匙也交回去了。",
+        "entities": [
+          {
+            "text": "临溪楼东侧小报告厅",
+            "category": "LOCATION"
+          }
+        ],
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "终版集合及设备安排",
+        "reason": "旧地点已撤销，执行清单不需要继续列出它。",
+        "evidence": [
+          "18:07 旧截图写的是去临溪楼东侧小报告厅。那间房的预约已取消，钥匙也交回去了。"
+        ]
+      },
+      {
+        "segment": "18:11 终版：明天改在知行广场服务台集合，这个点位已经同步到公开活动地图，导航链接不用另外制作。",
+        "entities": [
+          {
+            "text": "知行广场服务台",
+            "category": "LOCATION"
+          }
+        ],
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "最终集合点",
+        "reason": "地图已同步，准确地点直接决定执行人员去哪集合。",
+        "evidence": [
+          "18:11 终版：明天改在知行广场服务台集合，这个点位已经同步到公开活动地图，导航链接不用另外制作。"
+        ]
+      },
+      {
+        "segment": "18:12 叶清和：我今晚把投影比例改好，最晚十点上传；明早由我先试播，另一位同学只帮忙搬设备，不接管播放。",
+        "entities": [
+          {
+            "text": "叶清和",
+            "category": "PERSON_NAME"
+          }
+        ],
+        "action": "PSEUDONYMIZE",
+        "minimum_representation": "pseudonym",
+        "required_facts": "同一负责人的投影修改、上传时限及试播职责",
+        "reason": "需要连续跟进责任，但外部整理不需要人员姓名。",
+        "evidence": [
+          "18:12 叶清和：我今晚把投影比例改好，最晚十点上传；明早由我先试播，另一位同学只帮忙搬设备，不接管播放。"
+        ]
+      },
+      {
+        "segment": "18:13 有人把自己问路时记的电话 13800009017 贴了出来，紧接着说“发错群，是私人修车师傅的”。",
+        "entities": [
+          {
+            "text": "13800009017",
+            "category": "PHONE"
+          }
+        ],
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "活动的有效执行安排",
+        "reason": "号码来自发错群的私人事项，对任务没有帮助。",
+        "evidence": [
+          "18:13 有人把自己问路时记的电话 13800009017 贴了出来，紧接着说“发错群，是私人修车师傅的”。"
+        ]
+      }
+    ]
+  },
+  {
+    "document_id": "nb08",
+    "scenario_group": "repair_workshop_faq",
+    "split": "train",
+    "document_type": "问答草稿",
+    "task": "project_intro",
+    "recipient": "external_model",
+    "identity": "student_leader",
+    "task_description": "这些问答能不能改得像正式的活动介绍？",
+    "context": "网页面向首次参加的同学，重点是介绍体验内容、适合人群和到达方式。内部报价和合作洽谈还在另一份材料里处理。",
+    "text": "问：不会修东西也能来吗？答：可以，现场先认识常用工具，练习拆开报废的小电器，真正带电的维修不安排给初次参加的人。孩子来旁听时需要监护人陪同。\n\n问：是谁提供经验？答：原稿提到校劳动教育中心的几位老师傅，但网页的这个栏目只是介绍校内实践教学背景，不做合作方展示，团体名称尚未进入联合发布名单。\n\n问：在哪里集合？答：到北苑公共创客空间的接待桌签到。这个入口和开放时间已经在面向所有学生的预约页面发布。\n\n原稿旁批：内部耗材预算为 2860 元，其中备用焊头暂时没有下单，财务核算时再分摊。\n\n问：能不能直接带家里的坏电器？答：本次先用现场准备的训练件。大家可带照片来咨询，但不承诺当场修好；有电池鼓包或外壳破损的设备不要带入教室。\n\n有人建议沿用旧海报的“包教包会”，主持人已经划掉了。我们想让参加者知道自己能体验什么，也知道现场的边界，语气可以轻松，别把练习活动写成售后保证。",
+    "phenomena": [
+      "implicit_intent",
+      "audience_shift",
+      "mixed_relevance",
+      "correction"
+    ],
+    "decisions": [
+      {
+        "segment": "问：是谁提供经验？答：原稿提到校劳动教育中心的几位老师傅，但网页的这个栏目只是介绍校内实践教学背景，不做合作方展示，团体名称尚未进入联合发布名单。",
+        "entities": [
+          {
+            "text": "校劳动教育中心",
+            "category": "ORG"
+          }
+        ],
+        "action": "GENERALIZE",
+        "minimum_representation": "coarse",
+        "required_facts": "经验来自校内实践教学单位",
+        "reason": "栏目用途是说明校内实践教学背景，具体团体尚未纳入联合发布，类型足够。",
+        "evidence": [
+          "问：是谁提供经验？答：原稿提到校劳动教育中心的几位老师傅，但网页的这个栏目只是介绍校内实践教学背景，不做合作方展示，团体名称尚未进入联合发布名单。"
+        ]
+      },
+      {
+        "segment": "问：在哪里集合？答：到北苑公共创客空间的接待桌签到。这个入口和开放时间已经在面向所有学生的预约页面发布。",
+        "entities": [
+          {
+            "text": "北苑公共创客空间",
+            "category": "LOCATION"
+          }
+        ],
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "参加者签到位置",
+        "reason": "面向参加者的介绍需要可到达的公开地点。",
+        "evidence": [
+          "问：在哪里集合？答：到北苑公共创客空间的接待桌签到。这个入口和开放时间已经在面向所有学生的预约页面发布。"
+        ]
+      },
+      {
+        "segment": "原稿旁批：内部耗材预算为 2860 元，其中备用焊头暂时没有下单，财务核算时再分摊。",
+        "entities": [
+          {
+            "text": "2860 元",
+            "category": "BUDGET"
+          }
+        ],
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "体验内容、报名人群与活动方式",
+        "reason": "内部预算仅服务财务核算，不属于本次公开活动介绍。",
+        "evidence": [
+          "原稿旁批：内部耗材预算为 2860 元，其中备用焊头暂时没有下单，财务核算时再分摊。"
+        ]
+      }
+    ]
+  },
+  {
+    "document_id": "nb09",
+    "scenario_group": "interview_followup_notes",
+    "split": "train",
+    "document_type": "采访录音摘记",
+    "task": "meeting_minutes",
+    "recipient": "external_model",
+    "identity": "student_leader",
+    "task_description": "采访结束了，帮我理一理后续还欠哪些东西。",
+    "context": "作者准备拿着清单逐项追采访素材，编辑周日集中收稿。上一轮照片与授权说明分开到达，核稿时对不上，因此这次希望把同一参与者承诺的几样东西放在一起，再分别跟进。",
+    "text": "录音开头聊了很多旧照片，真正涉及这篇稿子的内容在后面。受访者说老展板上的日期不太准，我们暂时不引用，先等扫描件送来。\n\n苏映棠答应周日晚把未裁切的照片发来，还要补一段拍摄地点说明；记者追问旧照片能否用于网页时，苏映棠说会一起问原摄影者。\n\n旧照片里的展览由公共艺术教育中心主办，中心已经在公开年报中确认展览名称和举办年份，核稿时要以这份年报为出处。\n\n采访中说到校内青汀湖东岸步道。作者只想补一句这是校内取景，不准备提供逐段路书，也没有逐点核对照片坐标。\n\n转录员在页边记了自己晚饭时和室友范若溪争论买锅的事，后来标注“串进来的一句，和采访没关系”。\n\n剩下两张照片的说明很短：一张能看到完整门牌，一张被树挡住。先请作者补清楚拍摄顺序，别因为文件名排在前面就断定时间更早。采访对象已解释过，换手机时照片重新导出过一遍。",
+    "phenomena": [
+      "coreference",
+      "mixed_relevance",
+      "implicit_intent",
+      "evidence_source"
+    ],
+    "decisions": [
+      {
+        "segment": "苏映棠答应周日晚把未裁切的照片发来，还要补一段拍摄地点说明；记者追问旧照片能否用于网页时，苏映棠说会一起问原摄影者。",
+        "entities": [
+          {
+            "text": "苏映棠",
+            "category": "PERSON_NAME"
+          }
+        ],
+        "action": "PSEUDONYMIZE",
+        "minimum_representation": "pseudonym",
+        "required_facts": "同一素材提供人的照片、地点说明、授权咨询与期限",
+        "reason": "后续跟进需要人物与承诺对应，真实姓名可留在本机映射。",
+        "evidence": [
+          "苏映棠答应周日晚把未裁切的照片发来，还要补一段拍摄地点说明；记者追问旧照片能否用于网页时，苏映棠说会一起问原摄影者。"
+        ]
+      },
+      {
+        "segment": "旧照片里的展览由公共艺术教育中心主办，中心已经在公开年报中确认展览名称和举办年份，核稿时要以这份年报为出处。",
+        "entities": [
+          {
+            "text": "公共艺术教育中心",
+            "category": "ORG"
+          }
+        ],
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "核稿时可引用的公开年报出处",
+        "reason": "机构名称用于寻找并核对公开出处，对任务必要。",
+        "evidence": [
+          "旧照片里的展览由公共艺术教育中心主办，中心已经在公开年报中确认展览名称和举办年份，核稿时要以这份年报为出处。"
+        ]
+      },
+      {
+        "segment": "采访中说到校内青汀湖东岸步道。作者只想补一句这是校内取景，不准备提供逐段路书，也没有逐点核对照片坐标。",
+        "entities": [
+          {
+            "text": "校内青汀湖东岸步道",
+            "category": "LOCATION"
+          }
+        ],
+        "action": "GENERALIZE",
+        "minimum_representation": "coarse",
+        "required_facts": "照片背景属于校内场景",
+        "reason": "文章仅需要交代校内场景，不提供路书或精确坐标。",
+        "evidence": [
+          "采访中说到校内青汀湖东岸步道。作者只想补一句这是校内取景，不准备提供逐段路书，也没有逐点核对照片坐标。"
+        ]
+      },
+      {
+        "segment": "转录员在页边记了自己晚饭时和室友范若溪争论买锅的事，后来标注“串进来的一句，和采访没关系”。",
+        "entities": [
+          {
+            "text": "范若溪",
+            "category": "PERSON_NAME"
+          }
+        ],
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "采访后续需要补齐的素材",
+        "reason": "转录员已指出这段生活闲谈与采访无关。",
+        "evidence": [
+          "转录员在页边记了自己晚饭时和室友范若溪争论买锅的事，后来标注“串进来的一句，和采访没关系”。"
+        ]
+      }
+    ]
+  },
+  {
+    "document_id": "nb10",
+    "scenario_group": "local_loan_signature_check",
+    "split": "train",
+    "document_type": "借用登记核对笺",
+    "task": "meeting_minutes",
+    "recipient": "viewer_teacher",
+    "identity": "student_leader",
+    "task_description": "把这份借还情况整理给带队老师核对。",
+    "context": "本轮只在本机向已通过权限核验的带队老师展示。老师需要将实名借用人和原始签收单逐一匹配，不调用外部生成服务，归还状态影响老师当天签字。",
+    "text": "工具箱清点时发现纸单上有涂改，电子台账尚未覆盖这一轮借还。先把确认过的部分理出来，老师签字前还会翻原件，不要顺手把空栏补成已归还。\n\n许元修在原签收单上借了两套剪钳，归还栏也有许元修的签名；现场清点两套都已回到箱内，签名笔迹已经由经办人当面核过。\n\n另一张单写的是“顾庭：一套扳手”。登记人回忆同组有两位同名同学，学号格空着，领用时也没有留下可区分的凭据。\n\n群聊附件夹了一句任思宁昨晚因偏头痛没有吃晚饭，之后这段谈话转到了食堂营业时间。\n\n清点说明：剪钳有蓝色标记，扳手没有；箱底还有一只自购的卷尺，不在本轮借用清单里。数量是现场点的，不按电子表里上周的库存倒推。\n\n老师让大家把有争议的纸单原件放在一起，确认归属后再处理签收。已经还齐的项目可以先核实，不必等所有借用问题一起解决，避免下一组迟迟领不到工具。",
+    "phenomena": [
+      "missing_context",
+      "identity_matching",
+      "mixed_relevance",
+      "implicit_intent"
+    ],
+    "decisions": [
+      {
+        "segment": "许元修在原签收单上借了两套剪钳，归还栏也有许元修的签名；现场清点两套都已回到箱内，签名笔迹已经由经办人当面核过。",
+        "entities": [
+          {
+            "text": "许元修",
+            "category": "PERSON_NAME"
+          }
+        ],
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "实名借用人、两套剪钳与已经核实的归还状态",
+        "reason": "当前接收者已获授权且正在与原始签收单实名核对，姓名是本机核对必要键。",
+        "evidence": [
+          "许元修在原签收单上借了两套剪钳，归还栏也有许元修的签名；现场清点两套都已回到箱内，签名笔迹已经由经办人当面核过。"
+        ]
+      },
+      {
+        "segment": "另一张单写的是“顾庭：一套扳手”。登记人回忆同组有两位同名同学，学号格空着，领用时也没有留下可区分的凭据。",
+        "entities": [
+          {
+            "text": "顾庭",
+            "category": "PERSON_NAME"
+          }
+        ],
+        "action": "PAUSE",
+        "minimum_representation": "uncertain",
+        "required_facts": "一套扳手实际借用人的身份和归还责任",
+        "reason": "同名且无其他凭据，无法可靠对应真实签收责任。",
+        "evidence": [
+          "另一张单写的是“顾庭：一套扳手”。登记人回忆同组有两位同名同学，学号格空着，领用时也没有留下可区分的凭据。"
+        ],
+        "clarification_question": "这张扳手借用单对应哪一位同名同学，有没有经办人能核实？"
+      },
+      {
+        "segment": "群聊附件夹了一句任思宁昨晚因偏头痛没有吃晚饭，之后这段谈话转到了食堂营业时间。",
+        "entities": [
+          {
+            "text": "任思宁",
+            "category": "PERSON_NAME"
+          },
+          {
+            "text": "偏头痛",
+            "category": "SENSITIVE_ATTR"
+          }
+        ],
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "工具借还及签收情况",
+        "reason": "生活和健康闲谈不属于借还核对内容。",
+        "evidence": [
+          "群聊附件夹了一句任思宁昨晚因偏头痛没有吃晚饭，之后这段谈话转到了食堂营业时间。"
+        ]
+      }
+    ]
+  },
+  {
+    "document_id": "nb11",
+    "scenario_group": "broken_signup_qr_support",
+    "split": "train",
+    "document_type": "技术支持工单串",
+    "task": "meeting_minutes",
+    "recipient": "external_model",
+    "identity": "student_leader",
+    "task_description": "给接手的人留一份能照着办的说明。",
+    "context": "前端维护组要交接今晚的报名入口修复。这里只整理已确认问题和分工，凭据由本机密钥管理器提供，外部服务只协助组织文字。",
+    "text": "【工单流转】扫码报名页面一直转圈，今天要把问题交给晚班。\n14:06 来访者：电脑点链接能打开，手机扫海报不行。我先以为是网络差，换了流量还是一样。截图里的标题还是上个月那一场。\n14:12 白班：刚才只在电脑上试过，新页面是好的；我撤回“无法复现”的结论，重新看海报上的旧入口。\n工单里引用了校网络服务中心客服对缓存机制的解释。这段只用来说明托管服务存在缓存，不涉及平台专属操作，技术交接也不会登录该中心的后台。\n14:40 排查补充：截图里的二维码来自旧海报，跳转地址已经到期；网页正文不是这次问题。测试时同时记录扫码入口和最终地址，否则看见一个正常页面也不能说明旧码修好了。\n15:05 值班者：我把环境信息写在下面，正式入口的凭据别从聊天截图里找。\n上个值班者把测试口令 DEMO_ONLY_TOKEN_X7Q9 写进了正文，旁边注明这是合成环境临时值，正式凭据另从本机管理器取。\n16:00 现场：海报要到明早才有空重印。临时覆盖二维码可行，但打印出来得扫一次；聊天窗口里点链接成功不代表纸面二维码能识别，胶带反光也会影响。\n沈嘉序今晚先修跳转，再用两种手机各试一遍；如果第二轮仍失败，沈嘉序负责把浏览器日志贴回原工单，明早九点前给结论。\n16:18 设计同学：还有人说字体太小，我另开版式工单。请勿把这条和入口故障合并关闭，二维码恢复了也不代表版式已经完成。\n16:23 白班回复：明白，交接单按“修跳转—扫实物—回传日志”写；版式单只作为关联事项。\n交接时还需留意：同一台手机连续尝试可能仍看到缓存页，验证记录要写是否重新打开扫码程序。遇到新旧页面交替，先别宣布修好。",
+    "phenomena": [
+      "mixed_relevance",
+      "coreference",
+      "implicit_intent",
+      "issue_separation"
+    ],
+    "decisions": [
+      {
+        "segment": "沈嘉序今晚先修跳转，再用两种手机各试一遍；如果第二轮仍失败，沈嘉序负责把浏览器日志贴回原工单，明早九点前给结论。",
+        "entities": [
+          {
+            "text": "沈嘉序",
+            "category": "PERSON_NAME"
+          }
+        ],
+        "action": "PSEUDONYMIZE",
+        "minimum_representation": "pseudonym",
+        "required_facts": "修复、复测、回传日志的同一责任人和时限",
+        "reason": "交接需要保持责任链，外部整理只需要稳定代号。",
+        "evidence": [
+          "沈嘉序今晚先修跳转，再用两种手机各试一遍；如果第二轮仍失败，沈嘉序负责把浏览器日志贴回原工单，明早九点前给结论。"
+        ]
+      },
+      {
+        "segment": "上个值班者把测试口令 DEMO_ONLY_TOKEN_X7Q9 写进了正文，旁边注明这是合成环境临时值，正式凭据另从本机管理器取。",
+        "entities": [
+          {
+            "text": "DEMO_ONLY_TOKEN_X7Q9",
+            "category": "API_KEY"
+          }
+        ],
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "入口修复与验证流程",
+        "reason": "凭据按独立本机流程获取，正文里的临时口令不属于交接所需说明。",
+        "evidence": [
+          "上个值班者把测试口令 DEMO_ONLY_TOKEN_X7Q9 写进了正文，旁边注明这是合成环境临时值，正式凭据另从本机管理器取。"
+        ]
+      },
+      {
+        "segment": "工单里引用了校网络服务中心客服对缓存机制的解释。这段只用来说明托管服务存在缓存，不涉及平台专属操作，技术交接也不会登录该中心的后台。",
+        "entities": [
+          {
+            "text": "校网络服务中心",
+            "category": "ORG"
+          }
+        ],
+        "action": "GENERALIZE",
+        "minimum_representation": "coarse",
+        "required_facts": "托管服务缓存可能影响验证的技术背景",
+        "reason": "这一解释没有平台专属步骤，校内单位这一类型足以保留背景。",
+        "evidence": [
+          "工单里引用了校网络服务中心客服对缓存机制的解释。这段只用来说明托管服务存在缓存，不涉及平台专属操作，技术交接也不会登录该中心的后台。"
+        ]
+      }
+    ]
+  },
+  {
+    "document_id": "nb12",
+    "scenario_group": "archive_email_final_revision",
+    "split": "train",
+    "document_type": "往返邮件摘录",
+    "task": "meeting_minutes",
+    "recipient": "external_model",
+    "identity": "student_leader",
+    "task_description": "把来回邮件里的最终分工拎出来。",
+    "context": "这是展览资料归档小组的往返邮件，待办整理完后由本机分发。被后续邮件明确替代的安排不再进入执行清单。",
+    "text": "邮件一 / 周一上午：初稿打算周末交展板，附件名写着“最终”，但邮件正文说还要等照片授权。这个文件名不能当作已经定稿的依据。\n\n邮件二 / 周二午后：唐泊宁已与摄影者确认两张照片可用于本次展览，由唐泊宁周四午前把授权说明和原图一起交齐，不再让排版同学代转。\n\n旧版交付地址为旧图书楼西侧值班室，这个房间本周停用，相关交付安排已经撤销。\n\n邮件三 / 周三上午：所有可展出的材料统一送到人文楼公共展廊接收台，该位置已在本次公开布展指引中标出。\n\n邮件四 / 刚收到：封面上还署着季闻的名字，但回复者说“我并没有接封面这个任务”。最初分工邮件找不到了，封面文件仍缺最终尺寸。\n\n补充：安装材料仍按原数量准备，不需要重复采购。照片说明页与展板分开装袋，接收台只核对交付清单。未确认的事项请单独列出，别为了让清单整齐而给它们随便找个负责人。",
+    "phenomena": [
+      "correction",
+      "missing_context",
+      "coreference",
+      "implicit_intent"
+    ],
+    "decisions": [
+      {
+        "segment": "邮件二 / 周二午后：唐泊宁已与摄影者确认两张照片可用于本次展览，由唐泊宁周四午前把授权说明和原图一起交齐，不再让排版同学代转。",
+        "entities": [
+          {
+            "text": "唐泊宁",
+            "category": "PERSON_NAME"
+          }
+        ],
+        "action": "PSEUDONYMIZE",
+        "minimum_representation": "pseudonym",
+        "required_facts": "照片授权资料的负责人与周四午前交付期限",
+        "reason": "最终邮件已明确新的直接交付关系，代号足以支撑外部整理。",
+        "evidence": [
+          "邮件二 / 周二午后：唐泊宁已与摄影者确认两张照片可用于本次展览，由唐泊宁周四午前把授权说明和原图一起交齐，不再让排版同学代转。"
+        ]
+      },
+      {
+        "segment": "旧版交付地址为旧图书楼西侧值班室，这个房间本周停用，相关交付安排已经撤销。",
+        "entities": [
+          {
+            "text": "旧图书楼西侧值班室",
+            "category": "LOCATION"
+          }
+        ],
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "有效的交付安排",
+        "reason": "该地点安排已经被明确撤销，执行清单不需要旧地址。",
+        "evidence": [
+          "旧版交付地址为旧图书楼西侧值班室，这个房间本周停用，相关交付安排已经撤销。"
+        ]
+      },
+      {
+        "segment": "邮件三 / 周三上午：所有可展出的材料统一送到人文楼公共展廊接收台，该位置已在本次公开布展指引中标出。",
+        "entities": [
+          {
+            "text": "人文楼公共展廊接收台",
+            "category": "LOCATION"
+          }
+        ],
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "最终统一交付地点",
+        "reason": "接收台是公开布展指引中的具体交付地点。",
+        "evidence": [
+          "邮件三 / 周三上午：所有可展出的材料统一送到人文楼公共展廊接收台，该位置已在本次公开布展指引中标出。"
+        ]
+      },
+      {
+        "segment": "邮件四 / 刚收到：封面上还署着季闻的名字，但回复者说“我并没有接封面这个任务”。最初分工邮件找不到了，封面文件仍缺最终尺寸。",
+        "entities": [
+          {
+            "text": "季闻",
+            "category": "PERSON_NAME"
+          }
+        ],
+        "action": "PAUSE",
+        "minimum_representation": "uncertain",
+        "required_facts": "封面的真实承接人及未完成事项",
+        "reason": "署名与当事人回复冲突，无法直接将封面任务分给署名者。",
+        "evidence": [
+          "邮件四 / 刚收到：封面上还署着季闻的名字，但回复者说“我并没有接封面这个任务”。最初分工邮件找不到了，封面文件仍缺最终尺寸。"
+        ],
+        "clarification_question": "封面最后由谁承接，是否有确认过的分工记录？"
+      }
+    ]
+  },
+  {
+    "document_id": "nb13",
+    "scenario_group": "community_class_public_faq",
+    "split": "validation",
+    "document_type": "社区课堂筹备问答",
+    "task": "project_intro",
+    "recipient": "external_model",
+    "identity": "student_leader",
+    "task_description": "把零散答复合成给来访者看的介绍。",
+    "context": "介绍面向所有准备来旁听的家长和学生，页面要说明课程体验、集合位置以及雨天安排，人员联络另由本机报名系统办理。",
+    "text": "网页零稿：零基础可参加，先看示范，再自己做；不是比赛，没有排名。\n课程设计曾参考校课程实践指导中心的一份练习流程。这里引用的是适合初学者的教学思路，并不是对某个单位的介绍或推荐，稿件不设致谢名单。\n问：下雨还开吗？答：照常，集合看这里。\n签到和雨天集合都在望舒社区公共学习厅，社区发布的本月活动日历已经写明这个地点，门口也会摆指示牌。\n迟到者由志愿者带入，先补看工具说明。家长可旁听，通道要留空。\n筹备便笺最后抄了主讲人备用电话 13800002368，备注是“临时接不到值班机时再试”。",
+    "phenomena": [
+      "implicit_intent",
+      "audience_shift",
+      "mixed_relevance",
+      "correction"
+    ],
+    "decisions": [
+      {
+        "segment": "课程设计曾参考校课程实践指导中心的一份练习流程。这里引用的是适合初学者的教学思路，并不是对某个单位的介绍或推荐，稿件不设致谢名单。",
+        "entities": [
+          {
+            "text": "校课程实践指导中心",
+            "category": "ORG"
+          }
+        ],
+        "action": "GENERALIZE",
+        "minimum_representation": "coarse",
+        "required_facts": "面向初学者的教学思路来源类型",
+        "reason": "活动介绍不做具体校内单位的介绍或推荐，具体机构名并非必要。",
+        "evidence": [
+          "课程设计曾参考校课程实践指导中心的一份练习流程。这里引用的是适合初学者的教学思路，并不是对某个单位的介绍或推荐，稿件不设致谢名单。"
+        ]
+      },
+      {
+        "segment": "签到和雨天集合都在望舒社区公共学习厅，社区发布的本月活动日历已经写明这个地点，门口也会摆指示牌。",
+        "entities": [
+          {
+            "text": "望舒社区公共学习厅",
+            "category": "LOCATION"
+          }
+        ],
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "签到及雨天集合地点",
+        "reason": "准确地点决定来访者能否到场，且已经公开。",
+        "evidence": [
+          "签到和雨天集合都在望舒社区公共学习厅，社区发布的本月活动日历已经写明这个地点，门口也会摆指示牌。"
+        ]
+      },
+      {
+        "segment": "筹备便笺最后抄了主讲人备用电话 13800002368，备注是“临时接不到值班机时再试”。",
+        "entities": [
+          {
+            "text": "13800002368",
+            "category": "PHONE"
+          }
+        ],
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "课堂内容与参加方式",
+        "reason": "备用号码只用于内部临时联络，不影响公开介绍。",
+        "evidence": [
+          "筹备便笺最后抄了主讲人备用电话 13800002368，备注是“临时接不到值班机时再试”。"
+        ]
+      }
+    ]
+  },
+  {
+    "document_id": "nb14",
+    "scenario_group": "book_swap_completed_register",
+    "split": "validation",
+    "document_type": "旧书交换收尾单",
+    "task": "activity_stats",
+    "recipient": "external_model",
+    "identity": "student_leader",
+    "task_description": "帮我写个简短的收尾反馈，给下次筹办参考。",
+    "context": "这是一次只有半天的旧书交换活动，管理员确认当前登记是全部记录。统计参加者时只算已完成入场登记的不同预约人，不把工作人员或重复进出计为新增。",
+    "text": "关场后先把没有交换出去的书按类别收好，纸箱外面写了书的方向，没有写捐赠者。下次开场时先摆图文类，上一场这部分最容易让人停下来问。\n\n入场登记：陆思遥来过一次，章瑞入场后出去又返回，宋亦然来过一次；不同到场者没有重名，各自使用不同预约号，章瑞第二次进门沿用原预约号。\n未到记录：林端因事未到，原预约没有使用。\n\n旧书交换由校园阅读推广中心发起，公开招募帖和活动现场的落款一致，中心还会接收这份反馈用于下一期筹备。\n\n一张塞进登记夹的便利贴写着送物品到映霞宿舍二单元506室，落款说是室友托带的纸巾。\n\n现场实际需要的是大一点的分类标签，大家拿书时看不到桌面前缘的小字。部分参加者带了自己的布袋，这样拿取更方便；没有带袋子的，工作人员临时借了空纸箱，没有另收费用。\n\n关场时核了借用的桌椅，数量齐全。反馈里不用评价某个人换到了多少书，下一次主要调整入口排队和分类摆放。登记是为了确认规模，不用于比较个人表现。",
+    "phenomena": [
+      "aggregation_scope",
+      "coreference",
+      "mixed_relevance",
+      "implicit_intent"
+    ],
+    "decisions": [
+      {
+        "segment": "入场登记：陆思遥来过一次，章瑞入场后出去又返回，宋亦然来过一次；不同到场者没有重名，各自使用不同预约号，章瑞第二次进门沿用原预约号。",
+        "entities": [
+          {
+            "text": "陆思遥",
+            "category": "PERSON_NAME"
+          },
+          {
+            "text": "章瑞",
+            "category": "PERSON_NAME"
+          },
+          {
+            "text": "宋亦然",
+            "category": "PERSON_NAME"
+          }
+        ],
+        "action": "LOCAL_AGGREGATE",
+        "minimum_representation": "local_aggregate",
+        "required_facts": "按唯一预约人计算的三名到场者及完整统计口径",
+        "reason": "完整登记可在本机核对去重：重复进门不增加人数，未到者不计。",
+        "evidence": [
+          "入场登记：陆思遥来过一次，章瑞入场后出去又返回，宋亦然来过一次；不同到场者没有重名，各自使用不同预约号，章瑞第二次进门沿用原预约号。"
+        ]
+      },
+      {
+        "segment": "旧书交换由校园阅读推广中心发起，公开招募帖和活动现场的落款一致，中心还会接收这份反馈用于下一期筹备。",
+        "entities": [
+          {
+            "text": "校园阅读推广中心",
+            "category": "ORG"
+          }
+        ],
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "活动发起单位和反馈承接方",
+        "reason": "名称已公开且用于说明反馈对应的活动组织方。",
+        "evidence": [
+          "旧书交换由校园阅读推广中心发起，公开招募帖和活动现场的落款一致，中心还会接收这份反馈用于下一期筹备。"
+        ]
+      },
+      {
+        "segment": "一张塞进登记夹的便利贴写着送物品到映霞宿舍二单元506室，落款说是室友托带的纸巾。",
+        "entities": [
+          {
+            "text": "映霞宿舍二单元506室",
+            "category": "DORM"
+          }
+        ],
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "活动规模和筹办经验",
+        "reason": "宿舍送物便笺与活动无关，去掉宿舍位置不会损失反馈事实。",
+        "evidence": [
+          "一张塞进登记夹的便利贴写着送物品到映霞宿舍二单元506室，落款说是室友托带的纸巾。"
+        ]
+      },
+      {
+        "segment": "未到记录：林端因事未到，原预约没有使用。",
+        "entities": [
+          {
+            "text": "林端",
+            "category": "PERSON_NAME"
+          }
+        ],
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "未到预约不计为参加者",
+        "reason": "保留未到状态足够说明口径，未参加者的姓名不参与本次规模统计。",
+        "evidence": [
+          "未到记录：林端因事未到，原预约没有使用。"
+        ]
+      }
+    ]
+  },
+  {
+    "document_id": "nb15",
+    "scenario_group": "soundwalk_edit_log",
+    "split": "validation",
+    "document_type": "声音采集整理日志",
+    "task": "meeting_minutes",
+    "recipient": "external_model",
+    "identity": "student_leader",
+    "task_description": "下周要交稿了，照这些记录帮我排一下待办。",
+    "context": "采集团队在整理一篇声音散步报道，所有素材尚在内部编辑阶段。清单用于向队员追缺项，外部服务只做待办整理，精确录制位置暂不作为公开路书。",
+    "text": "剪辑日志 / 最后一遍试听：开头的脚步声可以用，后面有一段突发噪声盖住了说话内容。音量拉高也听不清，不要把自动转录出来的几个字当作采访原话。\n\n简言负责周一晚给环境声重新做降噪，并把处理前后两版都交回来；审核时需要找简言解释哪些地方动过手。\n\n旧目录把“摊主同意使用”写在沈梨的文件夹下面，后来另一条日志却说这只是她帮别人临时建的目录。实际联系摊主的人没有记录，授权附件也不在目录里。\n\n录音标签写着校内鹭湾市集第三排摊棚。报道这里只需交代这是校内场景，编辑没有要求读者按标签去找到具体摊位。\n\n一张录音卡已经备份，另一张卡还在设备箱里，明天取回后先做只读复制。文件里混有系统测试提示音，删剪辑片段前先检查时间线，别误删原始备份。\n\n交稿时同时附上素材索引，标清哪些是环境声、哪些是采访。授权不清楚的采访不会因为音质好就自动可用；可以先完成其他部分，缺的手续要有人去跟。",
+    "phenomena": [
+      "coreference",
+      "missing_context",
+      "implicit_intent",
+      "mixed_relevance"
+    ],
+    "decisions": [
+      {
+        "segment": "简言负责周一晚给环境声重新做降噪，并把处理前后两版都交回来；审核时需要找简言解释哪些地方动过手。",
+        "entities": [
+          {
+            "text": "简言",
+            "category": "PERSON_NAME"
+          }
+        ],
+        "action": "PSEUDONYMIZE",
+        "minimum_representation": "pseudonym",
+        "required_facts": "降噪负责人的周一交付与修改说明责任",
+        "reason": "跟进需要将两版音频与同一队员关联，但外部阶段不需要实名。",
+        "evidence": [
+          "简言负责周一晚给环境声重新做降噪，并把处理前后两版都交回来；审核时需要找简言解释哪些地方动过手。"
+        ]
+      },
+      {
+        "segment": "旧目录把“摊主同意使用”写在沈梨的文件夹下面，后来另一条日志却说这只是她帮别人临时建的目录。实际联系摊主的人没有记录，授权附件也不在目录里。",
+        "entities": [
+          {
+            "text": "沈梨",
+            "category": "PERSON_NAME"
+          }
+        ],
+        "action": "PAUSE",
+        "minimum_representation": "uncertain",
+        "required_facts": "实际沟通授权的人及能证明授权的附件",
+        "reason": "文件夹归属无法证明授权经办人，后续日志还否定了直接推断。",
+        "evidence": [
+          "旧目录把“摊主同意使用”写在沈梨的文件夹下面，后来另一条日志却说这只是她帮别人临时建的目录。实际联系摊主的人没有记录，授权附件也不在目录里。"
+        ],
+        "clarification_question": "当时是谁与摊主确认使用范围，授权附件存在哪里？"
+      },
+      {
+        "segment": "录音标签写着校内鹭湾市集第三排摊棚。报道这里只需交代这是校内场景，编辑没有要求读者按标签去找到具体摊位。",
+        "entities": [
+          {
+            "text": "校内鹭湾市集第三排摊棚",
+            "category": "LOCATION"
+          }
+        ],
+        "action": "GENERALIZE",
+        "minimum_representation": "coarse",
+        "required_facts": "声音采集发生在校内场所",
+        "reason": "稿件只交代校内取景，具体摊位不服务本次编辑任务。",
+        "evidence": [
+          "录音标签写着校内鹭湾市集第三排摊棚。报道这里只需交代这是校内场景，编辑没有要求读者按标签去找到具体摊位。"
+        ]
+      }
+    ]
+  },
+  {
+    "document_id": "nb16",
+    "scenario_group": "demo_failure_shift_log",
+    "split": "test",
+    "document_type": "演示故障交接日志",
+    "task": "meeting_minutes",
+    "recipient": "external_model",
+    "identity": "student_leader",
+    "task_description": "昨晚没演完，今天重来前该做什么？",
+    "context": "这是面向演示组的准备清单，外部服务参与梳理。故障已经停止扩散，当前任务是安排重试前的检查和现场准备，不涉及调查个人责任。",
+    "text": "昨晚观众入场以后字幕突然停住，主持人临时改成口头说明。现场保存了一份录屏，时间戳比设备本地时间晚一分钟，查日志时要把这个差值考虑进去。\n\n温序接下字幕检查：午前先重跑断句测试，把长句拆分后的画面发到工单；温序还要和讲解同学走一遍翻页节奏，避免一边切页一边加载。\n\n重试使用启新楼公共演示室，预约已从昨晚延至今天下午，参加者收到的公开指引里写的也是这一间。\n\n临时群里有人提到邹沐家里最近经济困难，想替他解释为什么昨晚早退；这段后面都是私人安慰，没谈设备和演示。\n\n另一条留言说电源线松了，但录屏显示字幕停止后主机仍有输出，先别把这个猜测写成已证实原因。检查时分别记录字幕程序、翻页器和投影的状态，方便定位问题。\n\n重试前先做十分钟空场演示，确认录屏、音轨和时间都对上，再请参加者入场。如果前一项还没过，不要同时改三项设置，否则下午仍无法判断是哪一步解决了问题。",
+    "phenomena": [
+      "implicit_intent",
+      "mixed_relevance",
+      "correction",
+      "coreference"
+    ],
+    "decisions": [
+      {
+        "segment": "温序接下字幕检查：午前先重跑断句测试，把长句拆分后的画面发到工单；温序还要和讲解同学走一遍翻页节奏，避免一边切页一边加载。",
+        "entities": [
+          {
+            "text": "温序",
+            "category": "PERSON_NAME"
+          }
+        ],
+        "action": "PSEUDONYMIZE",
+        "minimum_representation": "pseudonym",
+        "required_facts": "字幕检查与节奏联调的同一负责人与午前期限",
+        "reason": "执行顺序需要责任对应，外部整理不依赖真实姓名。",
+        "evidence": [
+          "温序接下字幕检查：午前先重跑断句测试，把长句拆分后的画面发到工单；温序还要和讲解同学走一遍翻页节奏，避免一边切页一边加载。"
+        ]
+      },
+      {
+        "segment": "重试使用启新楼公共演示室，预约已从昨晚延至今天下午，参加者收到的公开指引里写的也是这一间。",
+        "entities": [
+          {
+            "text": "启新楼公共演示室",
+            "category": "LOCATION"
+          }
+        ],
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "重试预约场地",
+        "reason": "准确地点用于当天准备，且已在参加者公开指引发布。",
+        "evidence": [
+          "重试使用启新楼公共演示室，预约已从昨晚延至今天下午，参加者收到的公开指引里写的也是这一间。"
+        ]
+      },
+      {
+        "segment": "临时群里有人提到邹沐家里最近经济困难，想替他解释为什么昨晚早退；这段后面都是私人安慰，没谈设备和演示。",
+        "entities": [
+          {
+            "text": "邹沐",
+            "category": "PERSON_NAME"
+          },
+          {
+            "text": "家里最近经济困难",
+            "category": "SENSITIVE_ATTR"
+          }
+        ],
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "演示重试前的技术与现场准备",
+        "reason": "家庭情况和私人安慰与本次准备无关，去掉姓名与家庭属性不损失故障事实。",
+        "evidence": [
+          "临时群里有人提到邹沐家里最近经济困难，想替他解释为什么昨晚早退；这段后面都是私人安慰，没谈设备和演示。"
+        ]
+      }
+    ]
+  },
+  {
+    "document_id": "nb17",
+    "scenario_group": "repair_visit_return_summary",
+    "split": "test",
+    "document_type": "维修体验回访问卷摘要",
+    "task": "activity_stats",
+    "recipient": "external_model",
+    "identity": "student_leader",
+    "task_description": "这次回访说了些什么，帮我做个总结。",
+    "context": "组织者确认这六份是本次发出的全部回访问卷，每个问卷码只对应一人且只允许提交一次。总结要报告六人的意见倾向，不把未参与回访的来访者算进分母。",
+    "text": "回访收齐了，纸上有一处涂改：原来的问题写“满意吗”，后来大家觉得太笼统，改成是否愿意参加下一次。先按这个问题整理，别把答案改写成对维修质量的保证。\n\n有效回访名单为孟澜、周予禾、齐述、罗清、吴一诺、宁可；问卷码核验通过，这六个人每人只有一份答卷。\n问卷系统已核对选择题汇总：愿意再来四人，暂不确定两人，不愿意零人。开放题原话另列在下方。\n\n问卷提到校园生活服务部提供了经验分享。总结只向筹办组说明校内服务单位参与能带来什么帮助，并不评选或展示各团体。\n\n回收信封背面写着代取人电话 13800006241，是当时请同学顺路带信封时留下的。\n\n开放题里最常见的建议是把示范台抬高，后排有时看不见工具动作；也有人希望结束后能拿到一张步骤图。少数人担心自己带的物品太复杂，下次介绍中可以说明适用范围。\n\n这些意见来自已经到场并愿意回访的人，不能据此说所有同学都喜欢这类活动。空白的开放题没有补写，统计时只描述实际回答，后续再讨论要不要改问卷。",
+    "phenomena": [
+      "aggregation_scope",
+      "correction",
+      "implicit_intent",
+      "mixed_relevance"
+    ],
+    "decisions": [
+      {
+        "segment": "有效回访名单为孟澜、周予禾、齐述、罗清、吴一诺、宁可；问卷码核验通过，这六个人每人只有一份答卷。",
+        "entities": [
+          {
+            "text": "孟澜",
+            "category": "PERSON_NAME"
+          },
+          {
+            "text": "周予禾",
+            "category": "PERSON_NAME"
+          },
+          {
+            "text": "齐述",
+            "category": "PERSON_NAME"
+          },
+          {
+            "text": "罗清",
+            "category": "PERSON_NAME"
+          },
+          {
+            "text": "吴一诺",
+            "category": "PERSON_NAME"
+          },
+          {
+            "text": "宁可",
+            "category": "PERSON_NAME"
+          }
+        ],
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "已核对的六份有效问卷及意见汇总、问卷覆盖范围",
+        "reason": "问卷系统已经提供可信的分组汇总和有效问卷总量，足以完成总结；无需再次按姓名聚合，去掉目标姓名并保留其余叙述即可。",
+        "evidence": [
+          "有效回访名单为孟澜、周予禾、齐述、罗清、吴一诺、宁可；问卷码核验通过，这六个人每人只有一份答卷。",
+          "问卷系统已核对选择题汇总：愿意再来四人，暂不确定两人，不愿意零人。开放题原话另列在下方。"
+        ]
+      },
+      {
+        "segment": "问卷提到校园生活服务部提供了经验分享。总结只向筹办组说明校内服务单位参与能带来什么帮助，并不评选或展示各团体。",
+        "entities": [
+          {
+            "text": "校园生活服务部",
+            "category": "ORG"
+          }
+        ],
+        "action": "GENERALIZE",
+        "minimum_representation": "coarse",
+        "required_facts": "校内服务单位参与带来的帮助",
+        "reason": "内部总结讨论参与方式，具体机构名称不是比较或跟进对象。",
+        "evidence": [
+          "问卷提到校园生活服务部提供了经验分享。总结只向筹办组说明校内服务单位参与能带来什么帮助，并不评选或展示各团体。"
+        ]
+      },
+      {
+        "segment": "回收信封背面写着代取人电话 13800006241，是当时请同学顺路带信封时留下的。",
+        "entities": [
+          {
+            "text": "13800006241",
+            "category": "PHONE"
+          }
+        ],
+        "action": "DELETE",
+        "minimum_representation": "none",
+        "required_facts": "回访问卷的实际意见与统计范围",
+        "reason": "代取信封的联络信息不影响意见总结。",
+        "evidence": [
+          "回收信封背面写着代取人电话 13800006241，是当时请同学顺路带信封时留下的。"
+        ]
+      }
+    ]
+  },
+  {
+    "document_id": "nb18",
+    "scenario_group": "exhibit_catalog_proof_dispute",
+    "split": "test",
+    "document_type": "展览目录校样批注",
+    "task": "project_intro",
+    "recipient": "external_model",
+    "identity": "student_leader",
+    "task_description": "这一页快上网了，帮我顺成一段介绍。",
+    "context": "网页编辑准备发布展览介绍。上一条消息确认展览日期和参观入口已经公开，但合作署名要等双方确认；页面上线前不能把洽谈内容写成已经成立的合作。",
+    "text": "展览网页校样，编辑把批注抄在正文旁边。标题已经改成“手工印刷体验”，旧海报上写的“竞赛”不再沿用：现场没有排名，大家比较的是不同纸张留下的纹理。\n正文草案说“本展与白榆版画交流所联合主办”。批注里一方写着等待对方审稿，另一封回复却说目前只同意借出工具；双方还没有一份一致的署名版本。\n编辑问：这句是不是只是礼貌上的客气？回复一：我这边还在等他们审稿。回复二：借出的工具已经入库，但入库单没有写联合主办。两封邮件都不是最终发布确认，不能因为工具已经到了就替双方把关系定下来。\n网页不能等所有图都齐了才排版。上半页先讲体验内容，下面留两个小图位置，一张表现上墨，一张表现揭纸，顺序不要倒过来。缺图时减少一栏，不要临时从网络上抓作品填进去。\n另一处提到校纸艺教学中心曾介绍过纸张的吸水差异。这段用于解释校内材料实验教学背景，网页不列顾问或推荐机构。\n带教同学核过这段体验说明：没有版画基础也能参加，先看工具示范，再分组尝试。颜料可用清水清洁，但最好带围裙；主持人特意划掉了“专业训练课程”，半天体验承诺不了这个效果。\n编辑二次留言：参观者最关心的时间已经放在页首，不要在正文再抄一遍，免得后续改期只改了一处。路线只写到正确入口，进去后由现场志愿者引导，不把内部物资通道当成参观路线。\n参观入口设在文理交流馆南门，学校已经发布的展览公告也使用这个入口，现场引导牌会按公告设置。\n发布前最后一条：公共展览公告里的入口没有变化，因此这一点可以直接核对。组织关系的那句仍需双方给同一个版本；如果最后只是借用工具，介绍的措辞也要相应改，不能沿用草案中“联合”两个字。",
+    "phenomena": [
+      "missing_context",
+      "audience_shift",
+      "implicit_intent",
+      "correction"
+    ],
+    "decisions": [
+      {
+        "segment": "正文草案说“本展与白榆版画交流所联合主办”。批注里一方写着等待对方审稿，另一封回复却说目前只同意借出工具；双方还没有一份一致的署名版本。",
+        "entities": [
+          {
+            "text": "白榆版画交流所",
+            "category": "ORG"
+          }
+        ],
+        "action": "PAUSE",
+        "minimum_representation": "uncertain",
+        "required_facts": "展览的真实主办关系及获确认的署名",
+        "reason": "联合主办与仅借工具两种记录冲突，组织关系是介绍的关键事实，不能猜测发布。",
+        "evidence": [
+          "正文草案说“本展与白榆版画交流所联合主办”。批注里一方写着等待对方审稿，另一封回复却说目前只同意借出工具；双方还没有一份一致的署名版本。"
+        ],
+        "clarification_question": "双方最后确认的关系是联合主办还是工具借用，署名以哪一版为准？"
+      },
+      {
+        "segment": "参观入口设在文理交流馆南门，学校已经发布的展览公告也使用这个入口，现场引导牌会按公告设置。",
+        "entities": [
+          {
+            "text": "文理交流馆南门",
+            "category": "LOCATION"
+          }
+        ],
+        "action": "RETAIN",
+        "minimum_representation": "original",
+        "required_facts": "已公开的参观入口",
+        "reason": "上线介绍需要准确引导观众到达，公告已确认地点。",
+        "evidence": [
+          "参观入口设在文理交流馆南门，学校已经发布的展览公告也使用这个入口，现场引导牌会按公告设置。"
+        ]
+      },
+      {
+        "segment": "另一处提到校纸艺教学中心曾介绍过纸张的吸水差异。这段用于解释校内材料实验教学背景，网页不列顾问或推荐机构。",
+        "entities": [
+          {
+            "text": "校纸艺教学中心",
+            "category": "ORG"
+          }
+        ],
+        "action": "GENERALIZE",
+        "minimum_representation": "coarse",
+        "required_facts": "纸张实验所借鉴的校内教学背景",
+        "reason": "该段不是顾问或机构推荐栏目，校内单位类型足以交代背景。",
+        "evidence": [
+          "另一处提到校纸艺教学中心曾介绍过纸张的吸水差异。这段用于解释校内材料实验教学背景，网页不列顾问或推荐机构。"
+        ]
+      }
+    ]
+  }
+]

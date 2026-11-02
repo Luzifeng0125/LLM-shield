@@ -1,0 +1,77 @@
+{
+  "pool": "test",
+  "document_id": "t10",
+  "text": "补交提醒里有陆听白，上次小测71分，学号2023082219。",
+  "user_task": "整理给任课老师看的补交提醒。",
+  "workflow_id": "coursework_grades",
+  "task_key": "coursework_grades",
+  "workflow_name": "课程沟通",
+  "units": [
+    {
+      "unit_id": "t10-u1",
+      "quote": "陆听白",
+      "category": "PERSON_NAME",
+      "boundary_id": "authorized_local_delivery",
+      "boundary_name": "授权本机查看",
+      "recipient_id": "viewer_teacher",
+      "recipient_name": "指导老师",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理给任课老师看的补交提醒。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 6,
+      "end": 9
+    },
+    {
+      "unit_id": "t10-u2",
+      "quote": "71分",
+      "category": "GRADE",
+      "boundary_id": "authorized_local_delivery",
+      "boundary_name": "授权本机查看",
+      "recipient_id": "viewer_teacher",
+      "recipient_name": "指导老师",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理给任课老师看的补交提醒。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 14,
+      "end": 17
+    },
+    {
+      "unit_id": "t10-u3",
+      "quote": "2023082219",
+      "category": "STUDENT_ID",
+      "boundary_id": "authorized_local_delivery",
+      "boundary_name": "授权本机查看",
+      "recipient_id": "viewer_teacher",
+      "recipient_name": "指导老师",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理给任课老师看的补交提醒。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 20,
+      "end": 30
+    }
+  ]
+}

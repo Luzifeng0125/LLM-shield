@@ -5,7 +5,8 @@ from unittest.mock import Mock
 from fastapi.testclient import TestClient
 
 from llm_shield import pipeline
-from llm_shield.m6_transform.anonymizer import process_segment
+from llm_shield.m1_access.identity import can_restore
+from llm_shield.m6_transform.anonymizer import apply_decisions, process_segment
 from llm_shield.m6_transform.mapping import MappingTable
 from llm_shield.schema import Action, Decision, Material, Segment, ShieldRequest, Span
 from llm_shield.server import app
@@ -18,6 +19,7 @@ def request(text="负责人：张明，电话13812345678。另有可公开的活
 
 
 def test_missing_model_stops_even_clean_request(monkeypatch):
+    monkeypatch.setenv("SHIELD_DETECTOR_MODE", "dictionary_test")
     monkeypatch.setattr(pipeline, "get_model", lambda: SimpleNamespace(available=False, reason="缺少权重"))
     gateway = Mock(side_effect=AssertionError("不应建立外发网关"))
     monkeypatch.setattr(pipeline, "EgressGateway", gateway)
@@ -29,6 +31,7 @@ def test_missing_model_stops_even_clean_request(monkeypatch):
 
 
 def test_model_pause_stops_whole_request(monkeypatch):
+    monkeypatch.setenv("SHIELD_DETECTOR_MODE", "dictionary_test")
     monkeypatch.setattr(pipeline, "get_model", lambda: SimpleNamespace(available=True))
     monkeypatch.setattr(pipeline, "necessity_scorer", lambda *args, **kwargs: {"PAUSE": 1.0})
     gateway = Mock(side_effect=AssertionError("剩余公开段也不得发送"))
@@ -40,6 +43,7 @@ def test_model_pause_stops_whole_request(monkeypatch):
 
 
 def test_forbidden_model_action_is_not_reselected(monkeypatch):
+    monkeypatch.setenv("SHIELD_DETECTOR_MODE", "dictionary_test")
     monkeypatch.setattr(pipeline, "get_model", lambda: SimpleNamespace(available=True))
     monkeypatch.setattr(pipeline, "necessity_scorer", lambda *args, **kwargs: {"RETAIN": 0.9, "DELETE": 0.1})
     result = pipeline.run_pipeline(request(), send_model=False)
@@ -48,6 +52,7 @@ def test_forbidden_model_action_is_not_reselected(monkeypatch):
 
 
 def test_task_description_reaches_model(monkeypatch):
+    monkeypatch.setenv("SHIELD_DETECTOR_MODE", "dictionary_test")
     monkeypatch.setattr(pipeline, "get_model", lambda: SimpleNamespace(available=True))
     received = []
     def scorer(*args, **kwargs):
@@ -66,6 +71,29 @@ def test_generalize_preserves_entity_coordinates_after_date():
     out = process_segment(seg, Decision("s", Action.GENERALIZE, []), "s", [], MappingTable())
     assert "张明" not in out and "2023012345" not in out and "2026年10月" in out
     assert "某同学" in out and "学号已隐藏" in out
+
+
+def test_several_people_keep_distinct_stable_codes():
+    text = "周晚宁擦黑板。陈予安负责关门。周晚宁再检查一遍。"
+    first = text.index("周晚宁")
+    second = text.index("陈予安")
+    third = text.index("周晚宁再")
+    segments = [
+        Segment("a", text[:second], 0, second, [Span(first, first + 3, "周晚宁", "PERSON_NAME")]),
+        Segment("b", text[second:third], second, third, [Span(second, second + 3, "陈予安", "PERSON_NAME")]),
+        Segment("c", text[third:], third, len(text), [Span(third, third + 3, "周晚宁", "PERSON_NAME")]),
+    ]
+    decisions = [Decision(seg.seg_id, Action.GENERALIZE, ["PERSON_NAME"]) for seg in segments]
+    table = MappingTable()
+    applied = apply_decisions(text, segments, decisions, "duty", table)
+    sanitized = applied["sanitized_text"]
+    assert "周晚宁" not in sanitized and "陈予安" not in sanitized and "某同学" not in sanitized
+    codes = list(applied["mapping"].values())
+    assert len(codes) == 2 and len(set(codes)) == 2
+    assert all(code.startswith("人员") for code in codes)
+    code = applied["mapping"]["PERSON_NAME::周晚宁"]
+    assert table.restore("duty", code, can_restore("student_leader", "viewer_teacher")) == "周晚宁"
+    assert table.restore("duty", code, can_restore("student_leader", "viewer_peer")) is None
 
 
 def test_api_rejects_unknown_task():

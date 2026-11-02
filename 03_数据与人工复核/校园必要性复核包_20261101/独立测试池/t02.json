@@ -1,0 +1,99 @@
+{
+  "pool": "test",
+  "document_id": "t02",
+  "text": "观鸟行由董南枝召集，集合在实验楼3层会议室，住柳园8号楼112，邮箱cui@studio.example.edu。",
+  "user_task": "写一条观鸟行公告，把集合地点写清楚。",
+  "workflow_id": "student_events",
+  "task_key": "activity_notice",
+  "workflow_name": "活动公告",
+  "units": [
+    {
+      "unit_id": "t02-u1",
+      "quote": "董南枝",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "写一条观鸟行公告，把集合地点写清楚。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 4,
+      "end": 7
+    },
+    {
+      "unit_id": "t02-u2",
+      "quote": "实验楼3层会议室",
+      "category": "LOCATION",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "写一条观鸟行公告，把集合地点写清楚。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 13,
+      "end": 21
+    },
+    {
+      "unit_id": "t02-u3",
+      "quote": "柳园8号楼112",
+      "category": "DORM",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "写一条观鸟行公告，把集合地点写清楚。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 23,
+      "end": 31
+    },
+    {
+      "unit_id": "t02-u4",
+      "quote": "cui@studio.example.edu",
+      "category": "EMAIL",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "写一条观鸟行公告，把集合地点写清楚。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 34,
+      "end": 56
+    }
+  ]
+}

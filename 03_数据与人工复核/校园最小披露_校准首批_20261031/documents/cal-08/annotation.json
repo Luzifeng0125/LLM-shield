@@ -1,0 +1,245 @@
+{
+  "task_required_facts": [
+    "负责人与事项、期限的对应",
+    "印刷费保留大致量级"
+  ],
+  "units": [
+    {
+      "quote": "顾承安",
+      "start": 78,
+      "end": 81,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "PSEUDONYMIZE"
+      ],
+      "expected_output_constraints": [
+        "同一人使用同一个代号",
+        "外部草稿不出现原姓名"
+      ],
+      "evidence_refs": [
+        "顾承安"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u1",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "recipient_id": "external_model",
+      "purpose_id": "seminar-minutes",
+      "canonical_action": "PSEUDONYMIZE",
+      "required_facts": "外部排版需要区分两位负责人，但不接收原姓名"
+    },
+    {
+      "quote": "裴星澜",
+      "start": 103,
+      "end": 106,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "PSEUDONYMIZE"
+      ],
+      "expected_output_constraints": [
+        "同一人使用同一个代号",
+        "外部草稿不出现原姓名"
+      ],
+      "evidence_refs": [
+        "裴星澜"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u2",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "recipient_id": "external_model",
+      "purpose_id": "seminar-minutes",
+      "canonical_action": "PSEUDONYMIZE",
+      "required_facts": "外部排版需要区分两位负责人，但不接收原姓名"
+    },
+    {
+      "quote": "13800001008",
+      "start": 252,
+      "end": 263,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "DELETE"
+      ],
+      "expected_output_constraints": [],
+      "evidence_refs": [
+        "13800001008"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u3",
+      "category": "PHONE",
+      "boundary_id": "external_generation",
+      "recipient_id": "external_model",
+      "purpose_id": "seminar-minutes",
+      "canonical_action": "DELETE",
+      "required_facts": "纪要不需要私人电话"
+    },
+    {
+      "quote": "最近在服药",
+      "start": 285,
+      "end": 290,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "DELETE"
+      ],
+      "expected_output_constraints": [],
+      "evidence_refs": [
+        "最近在服药"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u4",
+      "category": "SENSITIVE_ATTR",
+      "boundary_id": "external_generation",
+      "recipient_id": "external_model",
+      "purpose_id": "seminar-minutes",
+      "canonical_action": "DELETE",
+      "required_facts": "健康情况不属于纪要"
+    },
+    {
+      "quote": "12800元",
+      "start": 188,
+      "end": 194,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "GENERALIZE"
+      ],
+      "expected_output_constraints": [
+        "约一万元",
+        "不出现12800"
+      ],
+      "evidence_refs": [
+        "12800元"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u5",
+      "category": "BUDGET",
+      "boundary_id": "external_generation",
+      "recipient_id": "external_model",
+      "purpose_id": "seminar-minutes",
+      "canonical_action": "GENERALIZE",
+      "required_facts": "读者需要印刷费的大致量级，精确金额不进入外部工具"
+    },
+    {
+      "quote": "顾承安",
+      "start": 78,
+      "end": 81,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "RETAIN"
+      ],
+      "expected_output_constraints": [
+        "保留原姓名"
+      ],
+      "evidence_refs": [
+        "顾承安"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": true,
+      "counts_as_primary": false,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u6",
+      "category": "PERSON_NAME",
+      "boundary_id": "authorized_local_delivery",
+      "recipient_id": "viewer_teacher",
+      "purpose_id": "seminar-minutes-teacher-view",
+      "canonical_action": "RETAIN",
+      "required_facts": "本机老师核对需要海报负责人的原姓名"
+    },
+    {
+      "quote": "裴星澜",
+      "start": 103,
+      "end": 106,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "RETAIN"
+      ],
+      "expected_output_constraints": [
+        "保留原姓名"
+      ],
+      "evidence_refs": [
+        "裴星澜"
+      ],
+      "pause_group_id": null,
+      "pause_kind": null,
+      "counterfactual": true,
+      "counts_as_primary": false,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u7",
+      "category": "PERSON_NAME",
+      "boundary_id": "authorized_local_delivery",
+      "recipient_id": "viewer_teacher",
+      "purpose_id": "seminar-minutes-teacher-view",
+      "canonical_action": "RETAIN",
+      "required_facts": "本机老师核对需要教室负责人的原姓名"
+    }
+  ]
+}

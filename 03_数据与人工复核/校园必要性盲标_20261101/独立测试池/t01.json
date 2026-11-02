@@ -1,0 +1,165 @@
+{
+  "pool": "test",
+  "document_id": "t01",
+  "text": "周五活动室使用，崔予宁负责收签到表，邵闻舟负责锁门。地点在东区体育馆副馆。电话15200005001。",
+  "user_task": "整理成班群通知，写清谁收签到、谁锁门。",
+  "workflow_id": "class_coordination",
+  "task_key": "class_coordination",
+  "workflow_name": "班级协作",
+  "units": [
+    {
+      "unit_id": "t01-u1",
+      "quote": "崔予宁",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理成班群通知，写清谁收签到、谁锁门。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 8,
+      "end": 11
+    },
+    {
+      "unit_id": "t01-u2",
+      "quote": "邵闻舟",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理成班群通知，写清谁收签到、谁锁门。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 18,
+      "end": 21
+    },
+    {
+      "unit_id": "t01-u3",
+      "quote": "东区体育馆副馆",
+      "category": "LOCATION",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理成班群通知，写清谁收签到、谁锁门。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 29,
+      "end": 36
+    },
+    {
+      "unit_id": "t01-u4",
+      "quote": "15200005001",
+      "category": "PHONE",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理成班群通知，写清谁收签到、谁锁门。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 39,
+      "end": 50
+    },
+    {
+      "unit_id": "t01-u5",
+      "quote": "崔予宁",
+      "category": "PERSON_NAME",
+      "boundary_id": "authorized_local_delivery",
+      "boundary_name": "授权本机查看",
+      "recipient_id": "viewer_peer",
+      "recipient_name": "同班同学",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理成同班同学本机查看的分工说明。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 8,
+      "end": 11
+    },
+    {
+      "unit_id": "t01-u6",
+      "quote": "崔予宁",
+      "category": "PERSON_NAME",
+      "boundary_id": "authorized_local_delivery",
+      "boundary_name": "授权本机查看",
+      "recipient_id": "viewer_teacher",
+      "recipient_name": "指导老师",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理成班主任本机查看的分工说明。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 8,
+      "end": 11
+    },
+    {
+      "unit_id": "t01-u7",
+      "quote": "邵闻舟",
+      "category": "PERSON_NAME",
+      "boundary_id": "public_release",
+      "boundary_name": "公开发布",
+      "recipient_id": "egress_tool_public",
+      "recipient_name": "公开发布",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理成可以张贴在活动室门口的分工说明。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 18,
+      "end": 21
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "pool": "blind",
+  "document_id": "n01",
+  "text": "周五值日梁疏影负责开门，宋知微负责锁窗。教室在公教楼B201。联系电话13700008008。",
+  "user_task": "整理成班群通知，写明谁开门、谁锁窗。",
+  "workflow_id": "class_coordination",
+  "task_key": "class_coordination",
+  "workflow_name": "班级协作",
+  "units": [
+    {
+      "unit_id": "n01-u1",
+      "quote": "梁疏影",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理成班群通知，写明谁开门、谁锁窗。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 4,
+      "end": 7
+    },
+    {
+      "unit_id": "n01-u2",
+      "quote": "宋知微",
+      "category": "PERSON_NAME",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理成班群通知，写明谁开门、谁锁窗。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 12,
+      "end": 15
+    },
+    {
+      "unit_id": "n01-u3",
+      "quote": "公教楼B201",
+      "category": "LOCATION",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理成班群通知，写明谁开门、谁锁窗。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 23,
+      "end": 30
+    },
+    {
+      "unit_id": "n01-u4",
+      "quote": "13700008008",
+      "category": "PHONE",
+      "boundary_id": "external_generation",
+      "boundary_name": "发给外部生成",
+      "recipient_id": "external_model",
+      "recipient_name": "外部生成服务",
+      "identity_key": "student_leader",
+      "identity_name": "学生组织负责人",
+      "user_task": "整理成班群通知，写明谁开门、谁锁窗。",
+      "annotation": {
+        "canonical_action": "",
+        "required_facts": "",
+        "adjudication": "",
+        "notes": "",
+        "annotator": "",
+        "annotated_at": ""
+      },
+      "start": 35,
+      "end": 46
+    }
+  ],
+  "label_status": "unlabeled",
+  "model_screened": false
+}

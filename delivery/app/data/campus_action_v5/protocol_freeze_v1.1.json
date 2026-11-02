@@ -1,0 +1,21 @@
+{
+  "schema": "campus-protocol-freeze-v1.1",
+  "created_at_utc": "2026-10-31T11:12:44.734609+00:00",
+  "scope": "protocol_documents_only_not_runtime_acceptance",
+  "files": {
+    "01_优化方案/校园场景80到98执行方案_20261031.md": "449c757112a91127139d18e1fa2015af68f8d2773b4b4b4962afccd154f97e8c",
+    "01_优化方案/校园最小披露标注与验收协议_v1.1.md": "3ef5ced3ac24d42b77fabb769ecca2cb68f12e00e72a88cf1fb8ff358952ba2f",
+    "03_数据与人工复核/校园场景复核约定_20261031.md": "16ed18e78ffd98995f15938d2a31488c63ac8618d4e67a7695281d96359b7e22",
+    "delivery/app/data/campus_action_v5/README.md": "c7988ed9fec4ca0697868ebbf208693bcf6ec688f14770d2b8ceb6c9bd80126d",
+    "delivery/app/data/campus_action_v5/plan.json": "78b64a0b258aaf41b1cf26b86e0e1018c1fcfe186deeaffa8245dc04df0b06ce",
+    "delivery/app/data/campus_action_v5/source_registry.json": "c90cc17c4013edf921d803a885fc53ac3532340e62e5657d8f31373caf1a06f4",
+    "01_优化方案/历史版本/校园场景80到98执行方案_v1.0_20261031.md": "ac0cc66bfee833128db874a2c9272446ddcef64b6c6185eceaae406c748fcb65",
+    "delivery/app/data/campus_action_v5/history/plan_v1.json": "aba488dbf113449fe554a91c17df834a478daa0b2f0a90c42cfa4257c7ffcb36",
+    "delivery/app/data/campus_action_v5/history/review_policy_v1.md": "de0d7cce69554ff70625903778b43002b4d5d0ac3369768096397eae1c7ff1e5"
+  },
+  "protected_active_artifacts": {
+    "delivery/app/models/necessity_action.joblib": "cbfed4ca422a1a6d416ce1b5f488649816c261b6acc86ffc173887c8dfed1b9f",
+    "delivery/app/models/ACTIVE_MODELS.json": "f7e27ea6060bc51e70429d967c5afb27a86726c9586f0b8dd03c7138da1af6c8"
+  },
+  "implementation_status": "pending"
+}

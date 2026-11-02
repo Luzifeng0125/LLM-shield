@@ -1,0 +1,104 @@
+{
+  "task_required_facts": [
+    "上门维修所需的联系方式",
+    "接收人未登记"
+  ],
+  "units": [
+    {
+      "quote": "宋清让",
+      "start": 90,
+      "end": 93,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "PAUSE"
+      ],
+      "expected_output_constraints": [],
+      "evidence_refs": [
+        "宋清让"
+      ],
+      "pause_group_id": "cal-07-missing-recipient",
+      "pause_kind": "clarification",
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u1",
+      "category": "PERSON_NAME",
+      "boundary_id": "authorized_local_delivery",
+      "recipient_id": null,
+      "purpose_id": "dorm-repair",
+      "canonical_action": "PAUSE",
+      "required_facts": "当前没有已登记的后勤接收人，无法判断报修里的房间、姓名和电话可以交给谁"
+    },
+    {
+      "quote": "竹园2号楼417",
+      "start": 95,
+      "end": 103,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "PAUSE"
+      ],
+      "expected_output_constraints": [],
+      "evidence_refs": [
+        "竹园2号楼417"
+      ],
+      "pause_group_id": "cal-07-missing-recipient",
+      "pause_kind": "clarification",
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u2",
+      "category": "DORM",
+      "boundary_id": "authorized_local_delivery",
+      "recipient_id": null,
+      "purpose_id": "dorm-repair",
+      "canonical_action": "PAUSE",
+      "required_facts": "当前没有已登记的后勤接收人，无法判断报修里的房间、姓名和电话可以交给谁"
+    },
+    {
+      "quote": "13800001007",
+      "start": 124,
+      "end": 135,
+      "confidence": 1.0,
+      "purpose_source": "user_explicit",
+      "permission_basis_refs": [
+        "config/identities.yaml#identities-v0.1",
+        "config/recipients.yaml#recipients-v0.1"
+      ],
+      "acceptable_actions": [
+        "PAUSE"
+      ],
+      "expected_output_constraints": [],
+      "evidence_refs": [
+        "13800001007"
+      ],
+      "pause_group_id": "cal-07-missing-recipient",
+      "pause_kind": "clarification",
+      "counterfactual": false,
+      "counts_as_primary": true,
+      "representational_gap": false,
+      "annotation_status": "ai_draft",
+      "policy_version": "campus-min-disclosure-v1.1",
+      "information_unit_id": "u3",
+      "category": "PHONE",
+      "boundary_id": "authorized_local_delivery",
+      "recipient_id": null,
+      "purpose_id": "dorm-repair",
+      "canonical_action": "PAUSE",
+      "required_facts": "当前没有已登记的后勤接收人，无法判断报修里的房间、姓名和电话可以交给谁"
+    }
+  ]
+}

@@ -24,6 +24,7 @@
 
 /* ---------------- 侧栏（导航层 → 玻璃 + 彩色辉光） ---------------- */
 .config {
+  min-width: 0;
   border-radius: var(--r-lg);
   padding: 16px 16px 18px;
   display: flex;
@@ -58,7 +59,7 @@
 .rail-btn:active { transform: scale(.94); }
 
 .config-body {
-  flex: 1; min-height: 0;
+  flex: 1; min-height: 0; min-width: 0;
   overflow-y: auto; overflow-x: hidden;
   padding-right: 4px;
   animation: riseIn var(--dur-base) var(--ease-out) both;
@@ -69,6 +70,7 @@
 
 /* ---------------- 对话主区（内容层 → 实色） ---------------- */
 .chat-main {
+  min-width: 0;
   border-radius: var(--r-lg);
   display: flex; flex-direction: column;
   min-height: 0;
@@ -395,12 +397,30 @@
 /* ---------------- 响应式 ---------------- */
 @media (max-width: 1000px) {
   body { overflow: auto; }
-  .chat-layout { grid-template-columns: 1fr; min-height: calc(100vh - 64px); padding: 14px; gap: 14px; }
+  .chat-layout { grid-template-columns: minmax(0, 1fr); min-height: calc(100vh - 64px); padding: 14px; gap: 14px; flex: 0 0 auto; }
+  .chat-layout.rail-collapsed { grid-template-columns: minmax(0, 1fr); }
+  .chat-layout.rail-collapsed .rail-nav { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; }
   .config { overflow: visible; }
-  .config-body { overflow: visible; }
+  .config-body { overflow: visible; flex: none; }
   .chat-main { min-height: 76vh; padding-top: 16px; }
   .chat-heading, .chat-scroll { padding-left: 18px; padding-right: 18px; }
   .composer-wrap { padding: 12px 18px 16px; mask-image: none; -webkit-mask-image: none; }
   .bubble { max-width: 86%; }
   .empty-title { font-size: var(--fs-20); }
+}
+
+@media (max-width: 600px) {
+  .topbar { display: grid; grid-template-columns: minmax(0, 1fr) auto; height: auto;
+    min-height: 64px; gap: 10px 12px; padding: 12px 14px; }
+  .topbar .brand { grid-column: 1 / -1; }
+  .brand-text { min-width: 0; }
+  .brand-text .sub { white-space: normal; }
+  .topbar-right { min-width: 0; gap: 6px; }
+  .service-status { min-width: 0; max-width: none; white-space: normal; overflow-wrap: anywhere; padding: 6px 9px; }
+  .topbar > a { white-space: nowrap; font-size: var(--fs-13); }
+  .chat-heading { flex-wrap: wrap; gap: 10px; }
+  .heading-text { flex: 1 1 100%; }
+  .heading-sub { white-space: normal; overflow-wrap: anywhere; }
+  .turns-wrap { flex: 0 0 auto; white-space: nowrap; }
+  .turns-label { white-space: nowrap; }
 }
