@@ -37,6 +37,6 @@ python -X utf8 delivery/app/scripts/verify_model_release.py --load
 
 ## GLiNER 与其他本地产物
 
-`gliner_v3` 只分发已有配置和分词器；默认识别所需的 `pytorch_model.bin` 在本机也缺失，预期哈希见活动清单。仅下载本仓库不能完成真实 GLiNER 启动验收。
+`gliner_v3/pytorch_model.bin` 已按活动清单的 SHA-256 `3e7d4c3d704920e78fc0a8d65a768aaab4e095d0ae8c0da2fb96615d4883a360` 放入本机目录。仓库分发包本身仍只有配置和分词器，这份 1.1 GB 权重不随仓库分发。
 
 `gliner_official_multi_v2.1`、`reviewed_ner`、运行环境、历史实验目录和上传材料继续留在本地。可用 `scripts/download_verified_models.py` 下载固定版本官方识别权重与校验过的必要性权重，随后自动准备离线配置。`启动官方模型测试.cmd` 显式选择官方对照与mock生成；原默认启动路径仍要求原微调权重。

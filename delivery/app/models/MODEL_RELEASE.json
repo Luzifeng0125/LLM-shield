@@ -97,7 +97,7 @@
     {
       "path": "delivery/app/models/gliner_v3/pytorch_model.bin",
       "expected_sha256": "3e7d4c3d704920e78fc0a8d65a768aaab4e095d0ae8c0da2fb96615d4883a360",
-      "present_locally": false,
+      "present_locally": true,
       "distributed": false
     }
   ],
