@@ -50,6 +50,20 @@ def test_workbench_from_upload_through_export_and_revocation(monkeypatch, tmp_pa
     response = client.post("/api/workbench/export", json=query)
     assert response.status_code == 200
     assert ["'=1+1", "1"] in list(csv.reader(io.StringIO(response.content.decode("utf-8-sig"))))
+    xlsx = client.post("/api/workbench/export?format=xlsx", json=query)
+    assert xlsx.status_code == 200
+    from openpyxl import load_workbook
+
+    with io.BytesIO(xlsx.content) as stream:
+        workbook = load_workbook(stream)
+        try:
+            groups = [cell for cell in workbook["统计汇总"]["A"] if cell.value == "=1+1"]
+            assert len(groups) == 1 and groups[0].data_type == "s"
+            criteria = list(workbook["来源与口径"].values)
+            assert ("等于", "专业", "网络空间安全") in criteria
+        finally:
+            workbook.close()
+
     duplicate = upload("编号,车辆\n001,甲车\n００１,乙车\n")
     duplicate_query = query | {"join": query["join"] | {"source": source(duplicate)}}
     assert client.post("/api/workbench/query", json=duplicate_query).status_code == 422

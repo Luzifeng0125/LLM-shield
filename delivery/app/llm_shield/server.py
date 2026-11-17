@@ -18,6 +18,7 @@ from dataclasses import replace
 from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, RedirectResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
+from starlette.concurrency import run_in_threadpool
 from pydantic import BaseModel, Field
 from typing import Literal
 
@@ -39,6 +40,7 @@ from .metrics import snapshot as metrics_snapshot
 from .runtime import readiness
 from .evaluation_report import evaluation_summary
 from .workflows import router as workflows_router
+from .ocr import OcrError, read_ocr
 from .table_workbench import require_local_request, router as table_workbench_router
 
 def _warmup() -> None:
@@ -281,6 +283,19 @@ def api_upload_formats():
     return {"formats": sorted(SUPPORTED), "max_mb": MAX_BYTES // 1024 // 1024}
 
 
+@app.post("/api/ocr")
+async def api_ocr(request: Request, file: UploadFile = File(...)):
+    require_local_request(request)
+    try:
+        data = await file.read(MAX_BYTES + 1)
+        result = await run_in_threadpool(read_ocr, data, file.filename or "")
+        return JSONResponse(result, headers={"Cache-Control": "no-store"})
+    except OcrError as exc:
+        raise HTTPException(422, str(exc)) from None
+    finally:
+        await file.close()
+
+
 @app.post("/api/upload")
 async def api_upload(file: UploadFile = File(...),
                      task: str = Form("meeting_minutes"),
@@ -488,6 +503,10 @@ if WEB_DIR.exists():
     @app.get("/chat")
     def chat_page():
         return RedirectResponse("/", status_code=307)
+
+    @app.get("/projects")
+    def projects_page():
+        return FileResponse(WEB_DIR / "projects.html")
 
     @app.get("/recipient-review")
     def recipient_review_page():

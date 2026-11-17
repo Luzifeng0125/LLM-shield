@@ -249,18 +249,17 @@ byId('undo').addEventListener('click', async () => {
   byId('query').requestSubmit();
 });
 
-byId('export').addEventListener('click', async () => {
+async function exportResult(button, format) {
   if (!current || byId('result').hidden) return;
   const runRevision = revision;
-  const button = byId('export');
   button.disabled = true;
   try {
-    const blob = await request('/api/workbench/export', current, true);
+    const blob = await request('/api/workbench/export?format=' + format, current, true);
     if (runRevision !== revision) return;
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = url;
-    anchor.download = '隐盾本机统计汇总.csv';
+    anchor.download = '隐盾本机统计汇总.' + format;
     anchor.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   } catch (error) {
@@ -271,7 +270,9 @@ byId('export').addEventListener('click', async () => {
   } finally {
     button.disabled = false;
   }
-});
+}
+byId('export').addEventListener('click', (event) => exportResult(event.currentTarget, 'csv'));
+byId('export-xlsx').addEventListener('click', (event) => exportResult(event.currentTarget, 'xlsx'));
 
 async function init() {
   const {identities} = await request('/api/config');

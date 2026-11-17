@@ -8,7 +8,7 @@ import time
 from dataclasses import dataclass, field, replace
 
 from . import config as C
-from .chat_retrieval import exact_count_for_chat, select_for_chat
+from .chat_retrieval import CountQuery, select_for_chat, table_turn
 from .m1_access.identity import check_provide
 from .m1_access.identity import check_read
 from .m2_detect.pipeline import build_detectors, detect_and_segment
@@ -50,6 +50,7 @@ class ChatSession:
     lock: threading.Lock = field(default_factory=threading.Lock)
     active: bool = True
     local_only_indexes: set[int] = field(default_factory=set)
+    count_query: CountQuery | None = None
     material_policies: dict[str, Material] = field(default_factory=dict)
 
 
@@ -79,6 +80,7 @@ class ChatStore:
         session.private_spans.clear()
         session.allowed_values.clear()
         session.local_only_indexes.clear()
+        session.count_query = None
         session.material_policies.clear()
         session.mapping.clear_session(session.session_id)
 
@@ -221,7 +223,7 @@ def _send_turn(session: ChatSession, materials: list[Material]) -> dict:
                     or (m.doc_type == "uploaded" and m.doc_id != "chat-input")}
         context = decision_context(session)
         question = "\n".join(m.text for m in materials if m.doc_id == "chat-input")
-        exact = exact_count_for_chat(materials, question)
+        exact = table_turn(materials, question, session.count_query)
         if exact is not None:
             access = check_read(session.identity, materials)
             provided, _ = check_provide(session.identity, "external_model")
@@ -231,17 +233,20 @@ def _send_turn(session: ChatSession, materials: list[Material]) -> dict:
             for key in ("detect", "policy", "constraints", "transform", "utility", "gateway"):
                 trace.mark(key, "skipped", "本机精确统计路径，本轮不经过此阶段")
             trace.mark("output", "passed", "本机统计完成，未调用生成模型")
-            safe_question, answer = exact
+            safe_question, answer, count_query, checked_values = exact
+            # For follow-ups, inspect each value interpolated into the fixed local result.
+            # Fixed field labels, counters and response wording do not come from the file.
             gateway = EgressGateway()
             if not all(gateway.precheck("external_model", session.identity, content,
                                        task_key=session.task)["allowed"]
-                       for content in (safe_question, answer)):
+                       for content in checked_values):
                 return paused("本机统计结果未通过敏感信息复检")
             messages = session.messages + [{"role": "user", "content": safe_question},
                                            {"role": "assistant", "content": answer}]
             if sum(len(m["content"]) for m in messages) > MAX_HISTORY_CHARS:
                 return paused("上下文超过容量上限，请新建会话")
             session.messages = messages
+            session.count_query = count_query
             session.local_only_indexes.update((len(messages) - 2, len(messages) - 1))
             session.material_policies.update(policies)
             session.touched_at = time.monotonic()
@@ -328,6 +333,7 @@ def _send_turn(session: ChatSession, materials: list[Material]) -> dict:
         if sum(len(m["content"]) for m in messages) + len(response["text"]) > MAX_HISTORY_CHARS:
             return paused("回答使上下文超过容量，本轮未写入历史，请新建会话", descriptions)
         session.messages = messages + [{"role": "assistant", "content": response["text"]}]
+        session.count_query = None
         session.mapping = staged_mapping
         session.private_spans = private_spans
         session.allowed_values = retained

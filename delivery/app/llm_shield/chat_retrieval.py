@@ -7,7 +7,8 @@ from __future__ import annotations
 
 import re
 import unicodedata
-from dataclasses import replace
+from collections import Counter
+from dataclasses import dataclass, replace
 
 from . import config as C
 from .m1_access.loader import flatten_material
@@ -30,39 +31,107 @@ def _normalized(value: object) -> str:
     return re.sub(r"\s+", "", unicodedata.normalize("NFKC", str(value if value is not None else "")))
 
 
-def exact_count_for_chat(materials: list[Material], question: str) -> tuple[str, str] | None:
-    """Answer a narrow category count from the entire authorized table locally.
+@dataclass(frozen=True)
+class CountQuery:
+    source: tuple
+    field: str
+    value: str
+    excluded: tuple[tuple[str, str], ...] = ()
+    group_by: str | None = None
 
-    The caller checks access and the output boundary before returning the result.
-    No row values or names are included in the answer or conversation history.
-    """
-    tables = [m for m in materials if m.rows is not None and m.columns]
-    if not tables:
+
+_COUNT_FOLLOWUP = re.compile(
+    r"^(?:再)?排除(?P<field>专业|学院|校区|职责|年级|车辆编号|车辆)"
+    r"(?:为|是|等于)[ 　]*(?P<value>[^，。？?]{1,40})[。？?]?$"
+)
+_COUNT_EXCLUDE_ASSISTANT = re.compile(r"^(?:再)?排除(?P<value>带队助教|助教)[。？?]?$")
+_COUNT_GROUP = re.compile(r"^(?:再|改为|改)?按(?P<field>专业|学院|校区|职责|年级|车辆编号|车辆)分组(?:统计)?[。？?]?$")
+
+
+def _count_source(material: Material) -> tuple:
+    return material.doc_id, material.source_key, material.source_version, material.created_at
+
+
+def table_turn(materials: list[Material], question: str,
+               previous: CountQuery | None = None) -> tuple[str, str, CountQuery | None, tuple[str, ...]] | None:
+    """Compute a full-table count or amend the previous query for the same source."""
+    q = question.strip()
+    match = next((m for pattern in _COUNT_PATTERNS if (m := pattern.fullmatch(q))), None)
+    exclude = _COUNT_FOLLOWUP.fullmatch(q)
+    group = _COUNT_GROUP.fullmatch(q)
+    role = _COUNT_EXCLUDE_ASSISTANT.fullmatch(q) if previous is not None else None
+    if not (match or exclude or group or role):
         return None
-    match = next((m for pattern in _COUNT_PATTERNS
-                  if (m := pattern.fullmatch(question.strip()))), None)
-    if match is None:
+    tables = [m for m in materials if m.rows is not None and m.columns]
+    label = "本机分类统计请求"
+    if not tables and match:
         return None
     if len(tables) != 1:
-        return '本机分类统计请求', '当前包含多张表，尚未确定合并及去重口径；请先选择一张表，不能据此确认人数。'
+        reason = ("当前包含多张表，尚未确定合并及去重口径；请先选择一张表，不能据此确认人数。"
+                  if tables else "请选中原表，再重新发起本机统计。")
+        return label, reason, None, ()
     table = tables[0]
-    field = match.group("field")
-    matching_columns = [c for c in table.columns if _normalized(c) == field]
-    if len(matching_columns) != 1:
-        return '本机分类统计请求', '统计字段缺失或无法唯一对应，请先核对表头；当前不能据此确认人数。'
-    column = matching_columns[0]
-    value = match.group("value").strip(' \t“”"「」')
-    target = _normalized(value)
-    if not target:
-        return None
+    source = _count_source(table)
+    if not match and (previous is None or previous.source != source):
+        return label, "请先对当前表发起一次分类统计，再追加筛选或分组。", None, ()
     if any(not isinstance(row, dict) for row in table.rows):
-        return '本机分类统计请求', '记录结构不一致，请先核对表格；当前不能据此确认人数。'
-    count = sum(_normalized(row.get(column, "")) == target for row in table.rows)
-    safe_question = f"按{field}列统计{value}的匹配记录（本机全表精确统计）"
-    answer = (f"{value}{field}匹配 {count} 条记录"
-              f"（全表 {len(table.rows)} 条数据记录，不含表头；按记录计数，未按身份去重，"
-              "未确认一行一人，不能据此确认人数）。")
-    return safe_question, answer
+        return label, "记录结构不一致，请核对表格；当前不能据此确认人数。", None, ()
+
+    if match:
+        plan = CountQuery(source, match.group("field"), match.group("value").strip(' \t“”"「」'))
+    elif exclude or role:
+        field, value = exclude.group("field", "value") if exclude else ("职责", role.group("value"))
+        field = "车辆编号" if field == "车辆" else field
+        item = field, value.strip(' \t“”"「」')
+        if item not in previous.excluded and len(previous.excluded) >= 10:
+            return label, "筛选条件已达上限，请在表格工作台调整。", previous, ()
+        plan = replace(previous, excluded=tuple(dict.fromkeys((*previous.excluded, item))))
+    else:
+        field = group.group("field")
+        plan = replace(previous, group_by="车辆编号" if field == "车辆" else field)
+
+    needed = {plan.field, *(field for field, _ in plan.excluded)}
+    if plan.group_by:
+        needed.add(plan.group_by)
+    columns = {}
+    for field in needed:
+        candidates = [col for col in table.columns if _normalized(col) == field]
+        if len(candidates) != 1:
+            return label, "统计字段缺失或无法唯一对应，请先核对表头；当前不能据此确认人数。", previous, ()
+        columns[field] = candidates[0]
+    target = _normalized(plan.value)
+    if not target or any(not _normalized(value) for _, value in plan.excluded):
+        return label, "请输入非空的筛选值。", previous, ()
+
+    excluded = [(columns[field], _normalized(value)) for field, value in plan.excluded]
+    rows = [row for row in table.rows if _normalized(row.get(columns[plan.field])) == target
+            and not any(_normalized(row.get(col)) == value for col, value in excluded)]
+    summary = f"{plan.value}{plan.field}匹配 {len(rows)} 条记录"
+    answer = summary + (f"（全表 {len(table.rows)} 条数据记录，不含表头；按记录计数，未按身份去重，"
+                        "未确认一行一人，不能据此确认人数）。")
+    if plan.excluded:
+        fields = "、".join(dict.fromkeys(field for field, _ in plan.excluded))
+        answer += f"\n已应用 {len(plan.excluded)} 条排除条件，涉及字段：{fields}。"
+    checked_values = (f"{plan.field}：{plan.value}",)
+    if plan.group_by:
+        counts = Counter(_normalized(row.get(columns[plan.group_by])) for row in rows)
+        if len(counts) > 30 or any(len(value) > 80 for value in counts):
+            return label, "分组太多或分组标签过长，请在表格工作台查看完整结果。", previous, ()
+        checked_values += tuple(f"{plan.group_by}：{value}" for value in counts if value)
+        answer += f"\n按{plan.group_by}分组：" + ("、".join(
+            f"{value or '空值'} {count} 条" for value, count in sorted(counts.items())) or "无匹配记录") + "。"
+    if match:
+        label = f"按{plan.field}列统计{plan.value}的匹配记录（本机全表精确统计）"
+    elif exclude or role:
+        label = "追加排除条件（本机全表精确统计）"
+    else:
+        label = "按所选字段分组（本机全表精确统计）"
+    return label, answer, plan, (label, answer) if match else checked_values
+
+
+def exact_count_for_chat(materials: list[Material], question: str) -> tuple[str, str] | None:
+    result = table_turn(materials, question)
+    return (result[0], result[1]) if result else None
 
 
 def _terms(question: str) -> set[str]:

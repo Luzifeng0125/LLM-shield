@@ -217,22 +217,68 @@ def _csv_cell(value: str) -> str:
 
 
 @router.post("/export")
-def export_summary(body: Query, request: Request):
+def export_summary(body: Query, request: Request, format: Literal["csv", "xlsx"] = "csv"):
     require_local_request(request)
     with _open_tables(body, require_version=True) as (tables, _):
         result = execute(body, tables)
-        stream = io.StringIO(newline="")
-        writer = csv.writer(stream)
-        writer.writerow(["统计项目", "数量"])
+        summary = [["统计项目", "数量"]]
         for label, key in [("主表记录", "source_rows"), ("关联后记录", "joined_rows"),
                            ("未关联记录", "unmatched_rows"), ("命中记录", "matched_rows"),
                            ("空去重键", "missing_keys"),
-                           ("去重合计" if body.distinct_by else "记录合计", "total")]:
-            writer.writerow([label, result[key]])
+                           ("全局去重合计" if body.distinct_by else "记录合计", "total")]:
+            summary.append([label, result[key]])
         if body.group_by:
-            writer.writerow([])
-            writer.writerow([_csv_cell(body.group_by), "分组数量"])
-            writer.writerows((_csv_cell(group["value"]), group["count"]) for group in result["groups"])
-        return Response(stream.getvalue().encode("utf-8-sig"), media_type="text/csv",
-                        headers={"Content-Disposition": 'attachment; filename="shield-local-summary.csv"',
+            summary.extend([[], [body.group_by, "分组数量"]])
+            summary.extend([group["value"], group["count"]] for group in result["groups"])
+        if format == "xlsx":
+            content = _xlsx_summary(summary, body, tables)
+            media_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        else:
+            stream = io.StringIO(newline="")
+            writer = csv.writer(stream)
+            writer.writerows([_csv_cell(cell) if isinstance(cell, str) else cell
+                              for cell in row] for row in summary)
+            content = stream.getvalue().encode("utf-8-sig")
+            media_type = "text/csv"
+        return Response(content, media_type=media_type,
+                        headers={"Content-Disposition": f'attachment; filename="shield-local-summary.{format}"',
                                  "Cache-Control": "no-store"})
+
+
+def _xlsx_summary(summary: list[list], body: Query, tables: list) -> bytes:
+    from openpyxl import Workbook
+    from openpyxl.cell.cell import ILLEGAL_CHARACTERS_RE
+    from openpyxl.styles import Font
+
+    workbook = Workbook()
+    results = workbook.active
+    results.title = "统计汇总"
+    criteria = workbook.create_sheet("来源与口径")
+    criteria_rows = [["项目", "字段或条件", "值"],
+                     ["主表", tables[0].title],
+                     ["筛选逻辑", "全部满足" if body.logic == "all" else "任一满足"],
+                     ["计数单位", "唯一非空键" if body.distinct_by else "记录", body.distinct_by],
+                     ["分组字段", body.group_by]]
+    if body.join:
+        criteria_rows.extend([["关联表", tables[1].title],
+                              ["关联键", body.join.left_column, body.join.right_column]])
+    criteria_rows.extend(["等于" if item.op == "eq" else "不等于", item.column, item.value]
+                         for item in body.conditions)
+    for sheet, rows in ((results, summary), (criteria, criteria_rows)):
+        sheet.freeze_panes = "A2"
+        for column in ("A", "B", "C"):
+            sheet.column_dimensions[column].width = 32 if column != "C" else 42
+        for row_index, row in enumerate(rows, start=1):
+            for column, value in enumerate(row, start=1):
+                cell = sheet.cell(row_index, column)
+                if isinstance(value, str):
+                    cell.value = ILLEGAL_CHARACTERS_RE.sub("�", value)
+                    cell.data_type = "s"
+                else:
+                    cell.value = value
+                if row_index == 1:
+                    cell.font = Font(bold=True)
+    stream = io.BytesIO()
+    workbook.save(stream)
+    workbook.close()
+    return stream.getvalue()

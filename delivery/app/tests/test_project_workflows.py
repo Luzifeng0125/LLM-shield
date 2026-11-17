@@ -26,6 +26,10 @@ def project_api(monkeypatch, tmp_path):
 def test_surrogate_verification_scope_and_revocation(project_api, monkeypatch):
     http, root, url, admin = project_api
     assert http.post(root + "/projects").status_code == 401
+    assert http.get(root + "/projects").status_code == 401
+    listing = http.get(root + "/projects", headers=admin)
+    assert listing.json() == {"projects": [url.rsplit("/", 1)[1]]}
+    assert listing.headers["cache-control"] == "no-store"
     body = {
         "resources": [{"label": "仅本机的甲室", "capacity": 2}, {"label": "仅本机的乙室", "capacity": 1}],
         "assignments": [

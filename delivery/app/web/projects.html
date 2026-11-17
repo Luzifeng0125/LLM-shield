@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>项目协作 · 隐盾</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/notice.css">
+  <link rel="stylesheet" href="/static/workbench.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-text"><h1>项目协作</h1><p class="sub">任务分配、签到和采购验收</p></div>
+    <a class="btn" href="/">返回对话</a>
+  </header>
+  <main class="notice-layout workbench">
+    <section class="notice-panel">
+      <h2>项目管理</h2>
+      <label for="admin">项目管理员凭证</label>
+      <input type="password" id="admin" autocomplete="off" spellcheck="false">
+      <div class="notice-actions">
+        <button class="btn" type="button" id="load">加载项目</button>
+        <button class="btn primary" type="button" id="create">新建项目</button>
+      </div>
+      <label for="project">当前项目</label><select id="project"><option value="">请选择</option></select>
+      <p id="management-status" role="status"></p>
+      <div id="project-sections" hidden>
+        <details>
+          <summary>资源分配</summary>
+          <form id="assignment">
+            <label for="resources">资源与容量（每行资源名,容量）</label>
+            <textarea id="resources" rows="3" maxlength="7500" required placeholder="教室甲,2"></textarea>
+            <label for="subjects">参与者和可用资源（每行对象名,资源名,资源名…）</label>
+            <textarea id="subjects" rows="4" maxlength="12000" required placeholder="成员甲,教室甲"></textarea>
+            <button class="btn primary">在本机求解并核验</button>
+          </form>
+          <pre id="assignment-result"></pre>
+        </details>
+        <details>
+          <summary>供应商与签到凭证</summary>
+          <button class="btn" id="supplier-create" type="button">新增供应商</button>
+          <pre id="supplier-result"></pre>
+          <form id="pass">
+            <label for="supplier">供应商编号</label>
+            <input id="supplier" pattern="[a-f0-9]{32}" required spellcheck="false">
+            <label for="subject">参与者代号（不填姓名或联系方式）</label>
+            <input id="subject" pattern="[A-Za-z0-9_-]{1,64}" required>
+            <label for="ttl">有效时长（分钟）</label><input id="ttl" type="number" min="1" max="1440" value="60" required>
+            <button class="btn primary">签发一次性凭证</button>
+          </form>
+          <pre id="pass-result"></pre>
+          <div class="notice-actions">
+            <button class="btn" id="summary" type="button">刷新签到数量</button>
+            <button class="btn" id="revoke-supplier" type="button">撤销当前供应商</button>
+          </div>
+          <p id="count" role="status"></p>
+        </details>
+        <details>
+          <summary>采购验收</summary>
+          <form id="suite">
+            <label for="suite-file">上传验收集 JSON（8 至 32 个用例）</label>
+            <input id="suite-file" type="file" accept=".json" required>
+            <button class="btn">封存用例</button>
+          </form>
+          <form id="candidate">
+            <label for="benchmark">验收编号</label><input id="benchmark" pattern="[a-f0-9]{32}" required>
+            <label for="candidate-file">上传候选定义 JSON</label>
+            <input id="candidate-file" type="file" accept=".json" required>
+            <div class="notice-actions">
+              <button class="btn primary">执行候选</button>
+              <button class="btn" id="benchmark-report" type="button">查看验收报告</button>
+            </div>
+          </form>
+          <pre id="benchmark-result"></pre>
+        </details>
+      </div>
+    </section>
+    <section class="notice-panel">
+      <h2>供应商签到</h2>
+      <form id="checkin">
+        <label for="supplier-token">供应商凭证</label>
+        <input type="password" id="supplier-token" pattern="[A-Za-z0-9_-]{43}" required autocomplete="off">
+        <label for="pass-token">签到凭证</label>
+        <input type="password" id="pass-token" pattern="[A-Za-z0-9_-]{43}" required autocomplete="off">
+        <button class="btn primary">核销签到</button>
+      </form>
+      <p id="checkin-result" role="status"></p>
+    </section>
+  </main>
+  <script src="/static/projects.js" defer></script>
+</body>
+</html>

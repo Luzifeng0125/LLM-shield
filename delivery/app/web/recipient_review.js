@@ -81,6 +81,10 @@ byId('task').addEventListener('change', () => documents());
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
   clearVersions();
+  if (!byId('ocr-check').hidden && !byId('ocr-verified').checked) {
+    statusNode.textContent = '请先对照原件核对 OCR 草稿，再确认。';
+    return;
+  }
   const input = byId('source-text').value;
   const doc = byId('document').value;
   const recipients = [...form.querySelectorAll('input[name="recipient"]:checked')].map((item) => item.value);
@@ -145,6 +149,44 @@ byId('upload-review').addEventListener('click', async () => {
     button.disabled = false;
   }
 });
+byId('source-text').addEventListener('input', () => { byId('ocr-verified').checked = false; });
+byId('ocr-review').addEventListener('click', async () => {
+  const file = byId('review-file').files[0];
+  if (!file || !/\.(pdf|png|jpe?g)$/i.test(file.name)) {
+    statusNode.textContent = '请选择扫描 PDF、PNG 或 JPEG。';
+    return;
+  }
+  const textField = byId('source-text');
+  if (textField.value.trim() && !window.confirm('用识别草稿替换当前文本？')) return;
+  clearVersions();
+  const atRevision = revision;
+  const button = byId('ocr-review');
+  button.disabled = true;
+  statusNode.textContent = '正在本机识别扫描件…';
+  const body = new FormData();
+  body.set('file', file);
+  try {
+    const response = await fetch('/api/ocr', {method: 'POST', body});
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(typeof result.detail === 'string' ? result.detail : '扫描识别失败。');
+    }
+    if (revision !== atRevision) return;
+    byId('document').value = '';
+    textField.value = result.text;
+    const empty = result.pages.filter((page) => !page.lines.length).map((page) => page.page);
+    const low = result.pages.reduce((sum, page) => sum + page.low_confidence, 0);
+    byId('ocr-note').textContent = '识别 ' + result.pages.length + ' 页，低置信文本行 ' + low + ' 条。' +
+      (empty.length ? ' 无识别结果的页面：' + empty.join('、') + '。' : '') + ' 请逐页核对原件。';
+    byId('ocr-verified').checked = false;
+    byId('ocr-check').hidden = false;
+    statusNode.textContent = '识别草稿已填入，可以修订。';
+  } catch (error) {
+    if (revision === atRevision) statusNode.textContent = error.message;
+  } finally {
+    button.disabled = false;
+  }
+});
 async function init() {
   const response = await fetch('/api/config', {cache: 'no-store'});
   if (!response.ok) throw new Error('无法加载任务与材料。');
@@ -168,5 +210,7 @@ async function init() {
   }
   documents();
   byId('review-button').disabled = false;
+  byId('upload-review').disabled = false;
+  byId('ocr-review').disabled = false;
 }
 init().catch((error) => { statusNode.textContent = error.message; });

@@ -21,10 +21,15 @@
         <label for="task">材料用途</label><select id="task" required></select>
         <label for="document">已上传材料</label><select id="document"></select>
         <label for="review-file">上传到当前用途</label>
-        <div class="workbench-row"><input type="file" id="review-file" accept=".docx,.pdf,.xlsx,.csv,.tsv,.txt,.md">
-          <button type="button" class="btn" id="upload-review">上传</button></div>
+        <div class="workbench-row"><input type="file" id="review-file" accept=".docx,.pdf,.xlsx,.csv,.tsv,.txt,.md,.png,.jpg,.jpeg">
+          <button type="button" class="btn" id="upload-review" disabled>上传</button>
+          <button type="button" class="btn" id="ocr-review" disabled>识别扫描件</button></div>
         <label for="source-text">粘贴或修订文本</label>
         <textarea id="source-text" rows="8" maxlength="24000" placeholder="可单独粘贴文本，也可作为所选材料的补充。"></textarea>
+        <div id="ocr-check" hidden>
+          <p id="ocr-note"></p>
+          <label class="notice-check"><input type="checkbox" id="ocr-verified">我已对照原件核对并修订识别结果</label>
+        </div>
         <label for="task-description">任务说明</label><textarea id="task-description" rows="2" maxlength="4000"></textarea>
         <fieldset id="recipients"><legend>接收方（最多四个）</legend></fieldset>
         <button class="btn primary" id="review-button" disabled>生成本机版本</button>

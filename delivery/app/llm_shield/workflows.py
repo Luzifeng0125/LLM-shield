@@ -77,6 +77,13 @@ class ExternalAssignmentRequest(Contract):
     confirm_structure_disclosure: Literal[True]
 
 
+@router.get("/projects", dependencies=owner, summary="列出本机项目")
+def list_projects():
+    with STORE.transaction() as db:
+        return {"projects": [row[0] for row in db.execute(
+            "SELECT id FROM projects ORDER BY rowid DESC LIMIT 200")]}
+
+
 @router.post("/projects", dependencies=owner, status_code=201, summary="建立本地项目")
 def create_project():
     with STORE.transaction() as db:
