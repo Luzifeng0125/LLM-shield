@@ -3,23 +3,50 @@
 三种模式（.env 的 LLM_MODE）：
   mock —— 强制本地模拟，完全离线，演示与自动化评测可复现
   real —— 强制真实 API，失败即报错
-  auto —— 未配置密钥时离线演示；已配置密钥时真实调用，失败即暂停
+  auto —— 兼容旧配置，按真实调用处理
 
 安全约定：API Key 从本机配置读取，仅通过认证头发送给配置的服务端，不写日志。
 """
 from __future__ import annotations
 
-import json
-import time
+import math
 from typing import Dict, List, Optional
+from urllib.parse import urlsplit
 
 import httpx
 
 from ..config import llm_settings
 
 
+class ConfigurationError(ValueError):
+    """Public message for an invalid operator configuration."""
+
+
+def configuration_status(settings: dict) -> str:
+    """Validate the same connection settings for diagnostics and generation."""
+    if settings.get("mode") not in (None, "mock", "real", "auto"):
+        return "invalid_configuration"
+    try:
+        address = settings.get("base_url", "")
+        url = urlsplit(address)
+        valid_scheme = url.scheme == "https" or (
+            url.scheme == "http" and url.hostname in {"127.0.0.1", "::1"}
+        )
+        timeout = float(settings.get("timeout", 60))
+        if (not valid_scheme or not url.hostname or url.username is not None
+                or url.query or url.fragment or url.port == 0
+                or any(c.isspace() for c in address) or not settings.get("model", "").strip()
+                or not math.isfinite(timeout) or timeout <= 0):
+            return "invalid_configuration"
+    except (ValueError, TypeError):
+        return "invalid_configuration"
+    return "configuration_only" if settings.get("api_key") else "missing_key"
+
+
 def _public_api_error(exc: Exception) -> str:
     """Expose a useful failure class without leaking upstream bodies or keys."""
+    if isinstance(exc, ConfigurationError):
+        return str(exc)
     if isinstance(exc, httpx.HTTPStatusError):
         return f"真实模型请求失败（HTTP {exc.response.status_code}）"
     if isinstance(exc, httpx.TimeoutException):
@@ -111,7 +138,7 @@ class OpenAICompatLLM(BaseLLM):
         self.base_url = base_url.rstrip("/")
         self.api_key = api_key
         self.model = model
-        self.timeout = timeout
+        self.timeout = float(timeout)
         self.last_error = ""
 
     def chat(self, system: str, user: str, temperature: float = 0.3,
@@ -136,7 +163,11 @@ class OpenAICompatLLM(BaseLLM):
             "stream": False,
         }
         try:
-            with httpx.Client(timeout=self.timeout) as client:
+            with httpx.Client(
+                timeout=self.timeout,
+                trust_env=urlsplit(self.base_url).hostname not in {"127.0.0.1", "::1"},
+                follow_redirects=False,
+            ) as client:
                 resp = client.post(url, headers=headers, json=payload)
                 resp.raise_for_status()
                 data = resp.json()
@@ -161,66 +192,37 @@ class OpenAICompatLLM(BaseLLM):
 # ---------------------------------------------------------------- 工厂
 
 
-_CLIENT: Optional[BaseLLM] = None
-
-
 def get_llm_client(force: Optional[str] = None) -> BaseLLM:
-    """按配置返回客户端实例（模块级缓存）。"""
-    global _CLIENT
-    if _CLIENT is not None and force is None:
-        return _CLIENT
-
-    s = llm_settings()
-    mode = (force or s["mode"]).lower()
-    if mode == "mock":
-        client: BaseLLM = MockLLM()
-    elif not s["api_key"] and mode != "real":
-        client = MockLLM()
-    else:
-        client = OpenAICompatLLM(s["base_url"], s["api_key"], s["model"], s["timeout"])
-
-    if force is None:
-        _CLIENT = client
-    return client
+    settings = llm_settings()
+    if force is not None:
+        settings = {**settings, "mode": force.lower()}
+    if settings["mode"] == "mock":
+        return MockLLM()
+    status = configuration_status(settings)
+    if status == "missing_key":
+        raise ConfigurationError("尚未配置生成服务密钥，本轮已暂停")
+    if status != "configuration_only":
+        raise ConfigurationError("生成服务配置无效，请检查地址、模式、模型或超时设置")
+    return OpenAICompatLLM(settings["base_url"], settings["api_key"],
+                           settings["model"], settings["timeout"])
 
 
 def chat_with_fallback(system: str, user: str, **kwargs) -> Dict[str, str]:
-    """Run the real API when configured; never disguise its failure as a reply.
-
-    :return: {"text": ..., "engine": "real"/"mock", "error": ...}
-    """
-    s = llm_settings()
-    mode = s["mode"].lower()
-
-    if mode == "real" or (mode == "auto" and s["api_key"]):
-        try:
-            if not s['api_key']:
-                raise ValueError('尚未配置生成服务密钥')
-            client = OpenAICompatLLM(s["base_url"], s["api_key"], s["model"], s["timeout"])
-            text = client.chat(system, user, **kwargs)
-            return {"text": text, "engine": "real", "error": ""}
-        except Exception as exc:
-            return {"text": "", "engine": "error", "error": _public_api_error(exc)}
-
-    return {"text": MockLLM().chat(system, user, **kwargs), "engine": "mock", "error": ""}
+    """Run the configured generation mode and return only public error details."""
+    try:
+        client = get_llm_client()
+        return {"text": client.chat(system, user, **kwargs), "engine": client.name, "error": ""}
+    except Exception as exc:
+        return {"text": "", "engine": "error", "error": _public_api_error(exc)}
 
 
 def chat_messages_with_fallback(messages: List[dict]) -> Dict[str, str]:
-    """发送服务端构造且已整体检查的多轮消息；不展示供应商内部推理字段。"""
-    settings = llm_settings()
-    mode = settings["mode"]
-    if mode == "real" or (mode == "auto" and settings["api_key"]):
-        try:
-            if not settings["api_key"]:
-                raise ValueError("尚未配置生成服务密钥")
-            client = OpenAICompatLLM(settings["base_url"], settings["api_key"],
-                                     settings["model"], settings["timeout"])
+    """Send checked text messages and read only the final answer."""
+    try:
+        client = get_llm_client()
+        if client.name == "real":
             return {"text": client.chat_messages(messages), "engine": "real", "error": ""}
-        except Exception as exc:
-            # 供应商异常可能含请求体或凭据，不能回传给界面或历史。
-            return {"text": "", "engine": "error", "error": _public_api_error(exc)}
-    user_messages = [m["content"] for m in messages if m["role"] == "user"]
-    reply = (f"【离线演示回复】\n已接收第 {len(user_messages)} 轮处理后的消息。\n\n"
-             f"本轮输入：\n{user_messages[-1][:1200]}\n\n"
-             "此回复用于验证会话与防护流程。接入真实生成服务后可获得任务回答。")
+    except Exception as exc:
+        return {"text": "", "engine": "error", "error": _public_api_error(exc)}
+    reply = "【离线演示回复】\n本轮处理完成。此回复用于验证会话与防护流程。"
     return {"text": reply, "engine": "mock", "error": ""}

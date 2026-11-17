@@ -4,23 +4,19 @@ from __future__ import annotations
 import argparse
 import json
 import time
-from urllib.parse import urlsplit
 
 import httpx
 
 from .config import llm_settings
-from .m7_egress.llm_client import OpenAICompatLLM
+from .m7_egress.llm_client import OpenAICompatLLM, configuration_status
 
 
 def check_connection(settings: dict, *, connect: bool = False) -> dict:
     result = {'key_configured': bool(settings.get('api_key')), 'network_attempted': False,
               'connected': False, 'status': 'configuration_only'}
-    url = urlsplit(settings.get('base_url', ''))
-    if (url.scheme != 'https' or not url.hostname or url.username or url.password
-            or url.query or url.fragment or not settings.get('model')):
-        return {**result, 'status': 'invalid_configuration'}
-    if not result['key_configured']:
-        return {**result, 'status': 'missing_key'}
+    result['status'] = configuration_status(settings)
+    if result['status'] != 'configuration_only':
+        return result
     if not connect:
         return result
     started = time.perf_counter()

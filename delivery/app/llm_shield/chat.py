@@ -99,6 +99,8 @@ class ChatStore:
     def create(self, identity: str, task: str, description: str = "") -> ChatSession:
         if not isinstance(C.tasks().get(task), dict) or not isinstance(C.identities().get(identity), dict):
             raise ChatError("未知任务或身份")
+        if C.tasks()[task].get("workflow") == "assignment":
+            raise ChatError("替身分配须使用项目工作流接口", 400)
         if C.tasks()[task].get("workflow") == "notice":
             raise ChatError("此任务请使用名单本机核对与通知入口")
         allowed, _ = check_provide(identity, "external_model")
@@ -179,6 +181,20 @@ def send_turn(session: ChatSession, materials: list[Material]) -> dict:
                 "decisions": [], "session_id": session.session_id, "turns": 0}
 
 
+def decision_context(session: ChatSession) -> str:
+    """构造传给决策器的对话上下文。
+
+    isolated（默认）：返回空串——历史里既有用户消息也有**外部模型回复**，
+    后者可被诱导生成任意文本，一旦进入 m4 的 [CONTEXT] 特征就能小幅改变动作
+    概率（P0-3 实测 0.9012→0.9151）。隔离后决策只由「本地材料 + 用户任务 +
+    身份/接收方」决定。
+    legacy：保留旧行为，仅用于对照实验与回滚。
+    """
+    if C.decision_context_mode() == "isolated":
+        return ""
+    return "\n".join(m["content"] for m in session.messages[-4:])[-2000:]
+
+
 def _send_turn(session: ChatSession, materials: list[Material]) -> dict:
     if not session.lock.acquire(blocking=False):
         raise ChatError("上一轮仍在处理，请勿重复提交", 409)
@@ -203,7 +219,7 @@ def _send_turn(session: ChatSession, materials: list[Material]) -> dict:
         policies = {m.doc_id: replace(m, title="", text="", rows=None, columns=None)
                     for m in materials if m.expires_at is not None or m.allowed_purposes is not None
                     or (m.doc_type == "uploaded" and m.doc_id != "chat-input")}
-        context = "\n".join(m["content"] for m in session.messages[-4:])[-2000:]
+        context = decision_context(session)
         question = "\n".join(m.text for m in materials if m.doc_id == "chat-input")
         exact = exact_count_for_chat(materials, question)
         if exact is not None:

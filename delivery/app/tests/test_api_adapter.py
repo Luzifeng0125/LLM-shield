@@ -1,6 +1,7 @@
 """接口契约验证使用本机模拟 HTTP，不代表真实供应商已连通。"""
 import json
 import httpx
+import pytest
 import llm_shield.m7_egress.llm_client as adapter
 
 def configure(monkeypatch, handler, mode='real', key='test-key-not-real'):
@@ -23,13 +24,15 @@ def test_real_adapter_sends_full_messages_and_reads_only_final_content(monkeypat
     assert captured[0].headers['authorization'] == 'Bearer test-key-not-real'
     assert payload['messages'] == messages and payload['stream'] is False
 
-def test_real_mode_without_key_does_not_send_or_fall_back(monkeypatch):
+@pytest.mark.parametrize("mode", ["real", "auto"])
+def test_real_mode_without_key_does_not_send_or_fall_back(monkeypatch, mode):
 
     def forbidden(request):
         raise AssertionError('No request should be sent')
-    configure(monkeypatch, forbidden, key='')
+    configure(monkeypatch, forbidden, mode=mode, key='')
     result = adapter.chat_messages_with_fallback([{'role': 'user', 'content': '公开内容'}])
     assert result['engine'] == 'error' and result['text'] == ''
+    assert '密钥' in result['error']
 
 def test_real_http_failure_does_not_expose_upstream_body(monkeypatch):
     configure(monkeypatch, lambda _: httpx.Response(401, json={'error': 'private-upstream-body-test-key-not-real'}))

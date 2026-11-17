@@ -32,6 +32,7 @@ from .notice import notice_request, review_roster
 from .metrics import snapshot as metrics_snapshot
 from .runtime import readiness
 from .evaluation_report import evaluation_summary
+from .workflows import router as workflows_router
 
 def _warmup() -> None:
     """启动预热。
@@ -70,6 +71,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="隐盾 LLM-Shield", version="0.1.0",
               description="面向高校场景的最小披露防护服务（本地受控）",
               lifespan=lifespan)
+app.include_router(workflows_router)
 
 
 @app.exception_handler(SourcePolicyError)
@@ -228,7 +230,7 @@ def api_config(include_builtin: bool = False):
     return {
         "tasks": {k: {"name": v.get("name"), "desc": v.get("desc"),
                       "must_retain": v.get("must_retain", [])}
-                  for k, v in C.tasks().items() if k != "version"},
+                  for k, v in C.tasks().items() if k != "version" and v.get("workflow") != "assignment"},
         "identities": {k: {"name": v.get("name"), "desc": v.get("desc"),
                            "max_level": v.get("max_level")}
                        for k, v in C.identities().items() if k != "version"},
@@ -279,7 +281,7 @@ async def api_upload(file: UploadFile = File(...),
 
     解析在本地完成，只保留提取出的文本/表格，不保存原始二进制文件。
     """
-    if not isinstance(C.tasks().get(task), dict) or C.tasks()[task].get("workflow") == "notice":
+    if not isinstance(C.tasks().get(task), dict) or C.tasks()[task].get("workflow") in {"notice", "assignment"}:
         raise HTTPException(400, "请选择有效的材料处理用途")
     cleanup_expired_uploads()
     data = await file.read(MAX_BYTES + 1)
@@ -335,6 +337,8 @@ def _build_request(r: RunRequest) -> ShieldRequest:
                                 ("接收方", r.recipient, C.recipients())):
         if not isinstance(choices.get(value), dict):
             raise HTTPException(400, f"未知{key}: {value}")
+    if C.tasks()[r.task].get("workflow") == "assignment":
+        raise HTTPException(400, "替身分配须使用项目工作流接口")
     if C.tasks()[r.task].get("workflow") == "notice":
         raise HTTPException(400, "此任务请使用名单本机核对与通知入口，名单不能提交给通用生成流程")
     materials: List[Material] = []
