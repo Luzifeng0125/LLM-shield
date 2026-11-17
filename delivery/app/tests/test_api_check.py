@@ -13,6 +13,13 @@ def test_no_connection_without_explicit_flag_or_key(monkeypatch):
     assert diagnostic.check_connection({**SETTINGS, 'api_key': ''}, connect=True)['status'] == 'missing_key'
 
 
+def test_cleartext_generation_is_only_allowed_on_loopback():
+    local = {**SETTINGS, 'base_url': 'http://127.0.0.1:4000'}
+    remote = {**SETTINGS, 'base_url': 'http://example.invalid:4000'}
+    assert diagnostic.check_connection(local)['status'] == 'configuration_only'
+    assert diagnostic.check_connection(remote)['status'] == 'invalid_configuration'
+
+
 @pytest.mark.parametrize('status', [401, 403, 404, 429, 500])
 def test_only_status_is_reported_for_upstream_failure(monkeypatch, status):
     class Client:

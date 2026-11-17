@@ -1,0 +1,4 @@
+# Optional local OCR profile. These wheels contain the default recognition weights.
+rapidocr==3.10.0
+onnxruntime==1.32.0
+pypdfium2==5.15.2

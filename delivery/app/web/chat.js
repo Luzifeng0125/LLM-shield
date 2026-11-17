@@ -819,12 +819,13 @@ async function initialize() {
 
     syncTaskDisplay(); syncIdentityDisplay(); syncReqSummary();
 
-    localReady = !!health.ready_to_chat;
+    localReady = !!health.ready_local;
     setModelStatus(health);
     const llm = config.models.llm;
     if (llm.mode === 'mock') setApiStatus('离线演示 · 未调用真实 API', 'warn');
-    else if (llm.has_key) setApiStatus('API 已配置 · 发送时连接', 'ok');
-    else setApiStatus('API 未配置 · 无法生成回答', 'error');
+    else if (health.real_api_configured) setApiStatus('API 已配置 · 发送时连接', 'ok');
+    else if (health.generation_config_status === 'missing_key') setApiStatus('未配置生成密钥 · 可本机统计', 'warn');
+    else setApiStatus('生成配置无效 · 可本机统计', 'warn');
     el('apiHelp').textContent = `生成服务：${llm.provider} / ${llm.model}。真实调用需在本机 .env 配置服务地址、模型和密钥，并将 LLM_MODE 设为 real 后重启。已配置不代表已连接成功。`;
     library = config.materials; ready = true;
     render({}); setBusy(false); autoGrow(); syncSendState();

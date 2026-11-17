@@ -1,0 +1,15 @@
+.workbench { align-items: start; }
+.workbench details { margin: 1rem 0; }
+.workbench summary { cursor: pointer; font-weight: 600; }
+.workbench-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+.workbench-row { display: flex; gap: .5rem; align-items: center; }
+.workbench-row input { min-width: 0; }
+.workbench-condition { display: grid; grid-template-columns: 1.15fr auto 1fr auto; gap: .4rem; margin: .6rem 0; align-items: center; }
+.workbench-condition > * { min-width: 0; }
+.workbench-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem; }
+.workbench-metrics div { background: #edf4fb; padding: .75rem; border-radius: .65rem; color: #172a43; }
+.workbench-metrics dd { margin: .15rem 0 0; font-size: 1.4rem; font-weight: 700; }
+#criteria p { overflow-wrap: anywhere; }
+@media (max-width: 540px) {
+  .workbench-grid, .workbench-condition { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

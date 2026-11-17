@@ -2,7 +2,6 @@
 
 词典测试模式只证明本地链路能跑到暂停点，不证明识别已经安全。
 """
-import os
 
 from llm_shield.config import llm_settings
 from llm_shield.m2_detect.gliner_ner import GLiNERDetector
@@ -110,10 +109,10 @@ def test_offline_rule_is_not_the_online_lane():
     assert "online" not in str(offline.get("rule_version"))
 
 
-def test_real_mode_without_a_key_is_still_not_a_mock_call():
+def test_real_mode_without_a_key_is_still_not_a_mock_call(monkeypatch):
+    monkeypatch.setenv("LLM_MODE", "real")
+    monkeypatch.setenv("LLM_API_KEY", "")
     settings = llm_settings()
-    if settings.get("mode") == "mock":
-        assert os.getenv("LLM_MODE", "").lower() == "mock"
-        return
-    assert not settings.get("api_key")
+    has_key = bool(settings.get("api_key"))
+    assert not has_key
     assert settings.get("mode") == "real"

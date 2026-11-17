@@ -76,6 +76,12 @@ meeting_minutes:
     - 替换后负责人/事项/期限三者仍一一对应
     - 无关联系方式已删除
 
+assignment_planning:
+  name: 受控替身分配
+  desc: 仅从项目接口接收数字别名及资格、容量
+  workflow: assignment
+  never_send: [PERSON_NAME, ORG, LOCATION, PHONE, EMAIL, ID_CARD, BANK_CARD, API_KEY, STUDENT_ID, WECHAT, DORM, SENSITIVE_ATTR, BUDGET, GRADE]
+
 project_intro:
   name: 项目对外介绍
   desc: 把项目计划书改写成可对外发布的介绍文案

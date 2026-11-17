@@ -95,11 +95,24 @@ LOC_STOPWORDS = {
 }
 
 # 敏感个人属性关键词（出现即高敏）
+#
+# 口径修正（2026-11-17）：旧词表只收「宗教/信仰/低保」这类上位词，
+# 命中边界只覆盖半个实体（「信仰基督教」只标出「基督教」），
+# 未覆盖的实体（家庭经济困难/患有哮喘/心理疏导/低保家庭/曾患肺结核）
+# 在 field_v1 上严格召回为 0。现在收完整短语，并在匹配时按长度优先、
+# 抑制重叠，保证「信仰基督教」「低保家庭」「家庭经济困难」各为一个实体。
 SENSITIVE_WORDS = [
-    "政治面貌", "中共党员", "预备党员", "共青团员", "民主党派", "群众", "宗教", "信仰",
-    "佛教", "基督教", "伊斯兰教", "民族", "汉族", "回族", "藏族", "维吾尔", "壮族",
-    "病史", "病历", "抑郁症", "焦虑症", "残疾", "精神疾病", "传染病", "药物过敏",
-    "贫困生", "低保", "助学金", "家庭困难", "单亲", "离异", "性取向", "婚育",
+    # 政治面貌 / 民族 / 宗教（完整表述优先，避免只命中上位词）
+    "政治面貌", "中共党员", "中共预备党员", "预备党员", "共青团员", "民主党派",
+    "信仰基督教", "信仰佛教", "信仰伊斯兰教", "基督教", "佛教",
+    "伊斯兰教", "汉族", "回族", "藏族", "维吾尔族", "壮族",
+    # 健康 / 心理（具体病名与完整表述）
+    "家庭经济困难", "经济困难", "低保家庭", "低保边缘", "特困家庭",
+    "患有哮喘", "哮喘", "曾患肺结核", "肺结核", "抑郁症", "焦虑症",
+    "持续接受心理疏导", "心理疏导", "心理咨询", "精神疾病", "传染病",
+    "药物过敏", "病史", "病历", "残疾", "慢性病",
+    # 家庭 / 其他
+    "贫困生", "家庭困难", "单亲", "离异", "性取向", "婚育",
 ]
 
 # 表格列名 → 敏感类别（模块 ② 的「结构化材料结合列名判断」）
@@ -381,16 +394,23 @@ class EntityDetector(Detector):
         return value
 
     def _detect_sensitive_attrs(self, text: str) -> List[Span]:
+        """长词优先 + 重叠抑制：保证「信仰基督教」不会被拆成「信仰」+「基督教」。"""
         out: List[Span] = []
-        for word in SENSITIVE_WORDS:
+        occupied: List[tuple] = []
+        for word in sorted(SENSITIVE_WORDS, key=len, reverse=True):
             start = 0
             while True:
                 idx = text.find(word, start)
                 if idx < 0:
                     break
-                out.append(Span(idx, idx + len(word), word, "SENSITIVE_ATTR", 0.92,
-                                self.name, "sensitive_word"))
+                end = idx + len(word)
+                if not any(idx < used_end and used_start < end
+                           for used_start, used_end in occupied):
+                    out.append(Span(idx, end, word, "SENSITIVE_ATTR", 0.92,
+                                    self.name, "sensitive_word"))
+                    occupied.append((idx, end))
                 start = idx + len(word)
+        out.sort(key=lambda span: span.start)
         return out
 
     def _detect_from_columns(self, text: str, columns: Optional[List[str]],

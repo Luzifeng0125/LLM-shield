@@ -22,6 +22,7 @@ from ..m8_audit.audit import get_auditor
 from ..m8_audit.observer import inspect_payload
 from ..schema import Boundary, BoundaryRecord, RecipientType, Span
 from .llm_client import chat_with_fallback, chat_messages_with_fallback
+from .policy import policy_denial
 
 EGRESS_DIR = OUTPUT_DIR / "egress_sim"
 
@@ -80,7 +81,8 @@ class EgressGateway:
                  allowed_values: Optional[Set[str]] = None,
                  *, placeholders: Optional[Set[str]] = None,
                  task_key: Optional[str] = None,
-                 expected_type: Optional[RecipientType] = None) -> Dict[str, object]:
+                 expected_type: Optional[RecipientType] = None,
+                 operation: Optional[str] = None) -> Dict[str, object]:
         """发送前检查：权限 + 载荷内容。"""
         rec = recipients().get(recipient_key)
         if not isinstance(rec, dict):
@@ -101,6 +103,11 @@ class EgressGateway:
         ok, why = check_provide(identity_key, recipient_key)
         if not ok:
             return {"allowed": False, "reason": why}
+
+        if operation is not None:
+            denial = policy_denial(identity_key, task_key, recipient_key, operation)
+            if denial:
+                return {"allowed": False, "reason": denial}
 
         try:
             insp = inspect_payload(content or "", recipient_key,
@@ -161,7 +168,7 @@ class EgressGateway:
         pre = self.precheck("external_model", identity_key, payload,
                             original_spans, allowed_values, placeholders=placeholders,
                             task_key=task_key,
-                            expected_type=RecipientType.EXTERNAL_MODEL)
+                            expected_type=RecipientType.EXTERNAL_MODEL, operation="model_input")
         if not pre["allowed"]:
             insp = pre.get("inspect", {})
             rec = self._record(Boundary.B1_MODEL_INPUT, "external_model", "", True,
@@ -176,9 +183,9 @@ class EgressGateway:
 
         if result.get("engine") == "error":
             rec = self._record(Boundary.B1_MODEL_INPUT, "external_model", payload,
-                               True, "生成模型调用失败，已暂停", latency)
+                               True, result["error"], latency)
             return {"allowed": False, "text": "", "record": rec, "engine": "error",
-                    "error": "生成模型调用失败，已暂停"}
+                    "error": result["error"]}
 
         # 记录发送前同一份载荷的检查结果；检测到问题时绝不先发送再追认拦截。
         insp = pre["inspect"]
@@ -203,7 +210,7 @@ class EgressGateway:
         payload = "\n\n".join(m["content"] for m in outgoing)
         pre = self.precheck("external_model", identity_key, payload, original_spans,
                             allowed_values, placeholders=placeholders, task_key=task_key,
-                            expected_type=RecipientType.EXTERNAL_MODEL)
+                            expected_type=RecipientType.EXTERNAL_MODEL, operation="model_input")
         if not pre["allowed"]:
             self._record(Boundary.B1_MODEL_INPUT, "external_model", "", True,
                          str(pre["reason"]), (time.perf_counter() - started) * 1000)
@@ -215,6 +222,10 @@ class EgressGateway:
                      (time.perf_counter() - started) * 1000)
         if generated["engine"] == "error":
             return {**generated, "allowed": False, "input_checked": True}
+        denial = policy_denial(identity_key, task_key, "external_model", "chat_output")
+        if denial:
+            return {"allowed": False, "text": "", "engine": generated["engine"],
+                    "input_checked": True, "error": denial}
         # 回答要进入下一轮历史，因此按外部模型边界复检，不能把原值存回历史。
         output = self.precheck("external_model", identity_key, generated["text"], original_spans,
                                allowed_values, placeholders=placeholders, task_key=task_key,
@@ -246,7 +257,7 @@ class EgressGateway:
         pre = self.precheck(recipient_key, identity_key, content,
                             original_spans, allowed_values, placeholders=placeholders,
                             task_key=task_key,
-                            expected_type=RecipientType.VIEWER)
+                            expected_type=RecipientType.VIEWER, operation="view_display")
         latency = (time.perf_counter() - t0) * 1000
         if not pre["allowed"]:
             insp = pre.get("inspect", {})
@@ -273,7 +284,7 @@ class EgressGateway:
         pre = self.precheck(recipient_key, identity_key, content,
                             original_spans, allowed_values, placeholders=placeholders,
                             task_key=task_key,
-                            expected_type=RecipientType.EGRESS_TOOL)
+                            expected_type=RecipientType.EGRESS_TOOL, operation="tool_egress")
         latency = (time.perf_counter() - t0) * 1000
         if not pre["allowed"]:
             insp = pre.get("inspect", {})

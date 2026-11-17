@@ -33,6 +33,8 @@ def test_trial_captures_sanitized_history_and_does_not_call_network(monkeypatch)
     records = run_cases([{'id': 'x', 'task': 'meeting_minutes', 'turns': ['负责人：张明。事项：准备海报。期限：周五。', '请沿用前面的负责人代号，期限改为下周一。']}])
     assert len(records) == 2
     assert all((not r['network_requested'] for r in records))
-    assert all((r['response']['ok'] for r in records))
+    assert all((r['response']['ok'] for r in records)), [
+        r['response'].get('pause_reason') for r in records
+    ]
     assert len(records[1]['outgoing'][0]['messages']) == 4
     assert '张明' not in str(records[0]['outgoing'])
