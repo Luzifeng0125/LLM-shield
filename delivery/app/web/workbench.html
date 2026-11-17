@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>表格工作台 · 隐盾</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/notice.css">
+  <link rel="stylesheet" href="/static/workbench.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-text"><h1>表格工作台</h1><p class="sub">本机全表筛选、关联与统计</p></div>
+    <a class="btn" href="/">返回对话</a>
+  </header>
+  <main class="notice-layout workbench">
+    <section class="notice-panel">
+      <h2>材料和统计条件</h2>
+      <label for="identity">当前身份</label>
+      <select id="identity"></select>
+      <form id="upload">
+        <label for="file">上传活动统计表</label>
+        <div class="workbench-row"><input id="file" type="file" accept=".xlsx,.csv,.tsv" required>
+          <button class="btn" type="submit">上传</button></div>
+        <p>支持 XLSX、CSV、TSV，单文件最多 5 MB，临时材料保留 30 分钟。</p>
+      </form>
+      <form id="query">
+        <label for="main-source">主表</label>
+        <select id="main-source" required></select>
+        <details>
+          <summary>关联第二张表</summary>
+          <label for="join-source">关联表</label><select id="join-source"></select>
+          <div class="workbench-grid">
+            <div><label for="left-key">主表关联键</label><select id="left-key"></select></div>
+            <div><label for="right-key">关联表唯一键</label><select id="right-key"></select></div>
+          </div>
+          <p>只统计能在关联表找到匹配键的主表记录。关联表重复键会阻止统计。</p>
+        </details>
+        <label for="logic">筛选条件</label>
+        <select id="logic"><option value="all">满足全部条件</option><option value="any">满足任一条件</option></select>
+        <div id="conditions"></div>
+        <button type="button" class="btn" id="add-condition">添加条件</button>
+        <div class="workbench-grid">
+          <div><label for="group">分组字段</label><select id="group"></select></div>
+          <div><label for="distinct">去重字段</label><select id="distinct"></select></div>
+        </div>
+        <div class="notice-actions"><button type="submit" class="btn primary" id="run">计算</button>
+          <button type="button" class="btn" id="undo" disabled>恢复上次条件</button></div>
+      </form>
+    </section>
+    <section class="notice-panel">
+      <h2>统计结果</h2>
+      <p id="status" role="status"></p>
+      <div id="result" hidden>
+        <dl class="workbench-metrics" id="metrics"></dl>
+        <h3>数据来源与口径</h3>
+        <div id="criteria"></div>
+        <div class="notice-table-wrap"><table id="result-table" hidden>
+          <thead><tr><th scope="col">分组</th><th scope="col">数量</th></tr></thead><tbody id="result-rows"></tbody>
+        </table></div>
+        <p>下载文件包含分组原值时，请按材料权限在本机使用。</p>
+        <button type="button" id="export" class="btn">下载汇总 CSV</button>
+      </div>
+    </section>
+  </main>
+  <script src="/static/workbench.js" defer></script>
+</body>
+</html>

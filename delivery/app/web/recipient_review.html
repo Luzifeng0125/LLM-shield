@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>接收方版本 · 隐盾</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/notice.css">
+  <link rel="stylesheet" href="/static/workbench.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-text"><h1>接收方版本</h1><p class="sub">按接收方权限生成并核对交付稿</p></div>
+    <a class="btn" href="/">返回对话</a>
+  </header>
+  <main class="notice-layout workbench">
+    <section class="notice-panel">
+      <h2>材料与权限</h2>
+      <form id="review-form">
+        <label for="identity">当前身份</label><select id="identity" required></select>
+        <label for="task">材料用途</label><select id="task" required></select>
+        <label for="document">已上传材料</label><select id="document"></select>
+        <label for="review-file">上传到当前用途</label>
+        <div class="workbench-row"><input type="file" id="review-file" accept=".docx,.pdf,.xlsx,.csv,.tsv,.txt,.md">
+          <button type="button" class="btn" id="upload-review">上传</button></div>
+        <label for="source-text">粘贴或修订文本</label>
+        <textarea id="source-text" rows="8" maxlength="24000" placeholder="可单独粘贴文本，也可作为所选材料的补充。"></textarea>
+        <label for="task-description">任务说明</label><textarea id="task-description" rows="2" maxlength="4000"></textarea>
+        <fieldset id="recipients"><legend>接收方（最多四个）</legend></fieldset>
+        <button class="btn primary" id="review-button" disabled>生成本机版本</button>
+      </form>
+    </section>
+    <section class="notice-panel">
+      <h2>逐个核对</h2>
+      <p>展示版本可在此查看。通过外发检查的版本可以下载为重新排版的 Word。</p>
+      <p id="status" role="status"></p>
+      <div id="versions"></div>
+    </section>
+  </main>
+  <script src="/static/recipient_review.js" defer></script>
+</body>
+</html>

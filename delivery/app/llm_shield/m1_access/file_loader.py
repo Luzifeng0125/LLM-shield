@@ -95,6 +95,10 @@ def _parse_csv(data: bytes, title: str) -> Tuple[str, Optional[list], Optional[l
     if len(rows_raw) < 2:
         return text, None, None
     columns = [c.strip() for c in rows_raw[0]]
+    if not all(columns) or len(set(columns)) != len(columns):
+        raise ParseError("表头含空字段或重复字段，请修正后再上传")
+    if any(len(row) > len(columns) for row in rows_raw[1:]):
+        raise ParseError("有数据行超出表头列数，请补齐表头后再上传")
     rows = []
     for r in rows_raw[1:]:
         rows.append({columns[i]: (r[i].strip() if i < len(r) else "")
@@ -229,12 +233,22 @@ def _parse_pdf(data: bytes, title: str) -> Tuple[str, None, None]:
 
     reader = PdfReader(io.BytesIO(data))
     pages = []
-    for p in reader.pages:
+    unresolved = []
+    for page_number, page in enumerate(reader.pages, start=1):
         try:
-            pages.append(p.extract_text() or "")
+            content = (page.extract_text() or "").strip()
         except Exception:
-            pages.append("")
-    text = "\n".join(pages).strip()
+            unresolved.append(page_number)
+            continue
+        if content:
+            pages.append(f"【第 {page_number} 页】\n{content}")
+        elif page.get_contents() is not None:
+            unresolved.append(page_number)
+    if unresolved:
+        shown = "、".join(map(str, unresolved[:12]))
+        suffix = "等" if len(unresolved) > 12 else ""
+        raise ParseError(f"PDF 第 {shown}{suffix} 页缺少可提取文本，请先做 OCR 后再上传")
+    text = "\n\n".join(pages).strip()
     if not text:
         # 扫描件/图片型 PDF 没有文本层
         raise ParseError("该 PDF 未提取到文本（可能是扫描件或图片型 PDF），请先做 OCR")

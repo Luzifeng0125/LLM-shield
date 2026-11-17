@@ -5,12 +5,18 @@
 """
 from __future__ import annotations
 
+import hashlib
+import io
+import json
+import secrets
+
 from typing import List, Optional
 
 from contextlib import asynccontextmanager
+from dataclasses import replace
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
-from fastapi.responses import FileResponse, RedirectResponse, JSONResponse
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
+from fastapi.responses import FileResponse, RedirectResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from typing import Literal
@@ -20,7 +26,7 @@ from .m1_access.file_loader import (MAX_BYTES, SUPPORTED, ParseError,
                                     delete_upload, maybe_parse_table,
                                     parse_uploads, cleanup_expired_uploads)
 from .m1_access.loader import list_materials, load_material
-from .material_policy import SourcePolicyError
+from .material_policy import SourcePolicyError, material_scope
 from .m1_access.identity import check_provide, check_read
 from .m2_detect.pipeline import DetectionError, build_detectors
 from .m4_necessity.model import get_model
@@ -33,6 +39,7 @@ from .metrics import snapshot as metrics_snapshot
 from .runtime import readiness
 from .evaluation_report import evaluation_summary
 from .workflows import router as workflows_router
+from .table_workbench import require_local_request, router as table_workbench_router
 
 def _warmup() -> None:
     """启动预热。
@@ -72,6 +79,7 @@ app = FastAPI(title="隐盾 LLM-Shield", version="0.1.0",
               description="面向高校场景的最小披露防护服务（本地受控）",
               lifespan=lifespan)
 app.include_router(workflows_router)
+app.include_router(table_workbench_router)
 
 
 @app.exception_handler(SourcePolicyError)
@@ -381,6 +389,85 @@ def api_run(r: RunRequest):
     return run_pipeline(req, send_model=r.send_model).to_dict()
 
 
+class RecipientReviewRequest(BaseModel):
+    model_config = {"extra": "forbid"}
+    identity: str = Field(max_length=64)
+    task: str = Field(max_length=64)
+    doc_ids: List[str] = Field(default_factory=list, max_length=10)
+    custom_text: str = Field(default="", max_length=24000)
+    task_description: str = Field(default="", max_length=4000)
+    recipients: List[str] = Field(min_length=1, max_length=4)
+    review_id: str | None = Field(default=None, pattern=r"^[a-f0-9]{32}$")
+
+
+class RecipientExportRequest(RecipientReviewRequest):
+    approval: str = Field(pattern=r"^[a-f0-9]{64}$")
+
+
+_REVIEW_KEY = secrets.token_bytes(32)
+
+
+def _recipient_version(req, recipient):
+    recipient_config = C.recipients().get(recipient)
+    kind = recipient_config.get("type") if isinstance(recipient_config, dict) else None
+    if kind not in {"VIEWER", "EGRESS_TOOL"}:
+        raise HTTPException(400, "请选择展示或外发接收方")
+    result = run_pipeline(req, send_model=False)
+    boundary = next((item for item in result.boundaries if item["recipient"] == recipient), {})
+    text = result.display_text if kind == "VIEWER" else result.egress_text
+    if not result.ok or result.paused or not boundary.get("allowed") or not text.strip():
+        return {"recipient": recipient, "allowed": False, "text": "", "approval": None,
+                "reason": result.pause_reason or boundary.get("blocked_reason") or "没有可交付内容"}
+    approval = None
+    if kind == "EGRESS_TOOL":
+        approval_data = json.dumps([req.session_id, req.identity, req.task, req.user_instruction,
+                                    recipient, text, [(m.doc_id, m.source_version) for m in req.materials]],
+                                   ensure_ascii=True).encode()
+        approval = hashlib.blake2b(approval_data, key=_REVIEW_KEY, digest_size=32).hexdigest()
+    return {"recipient": recipient, "allowed": True, "text": text, "approval": approval, "reason": ""}
+
+
+@app.post("/api/recipient-review")
+def api_recipient_review(body: RecipientReviewRequest, request: Request):
+    require_local_request(request)
+    if len(set(body.recipients)) != len(body.recipients):
+        raise HTTPException(422, "接收方不能重复")
+    review_id = body.review_id or secrets.token_hex(16)
+    req = _build_request(RunRequest(session_id=review_id, recipient=body.recipients[0],
+                                    **body.model_dump(exclude={"recipients", "review_id"})))
+
+    with material_scope(req.materials, req.task):
+        versions = [_recipient_version(replace(req, recipient=key), key) for key in body.recipients]
+        return JSONResponse({"review_id": review_id, "versions": versions},
+                            headers={"Cache-Control": "no-store"})
+
+
+@app.post("/api/recipient-review/export")
+def api_recipient_export(body: RecipientExportRequest, request: Request):
+    require_local_request(request)
+    if not body.review_id or len(body.recipients) != 1:
+        raise HTTPException(422, "请选择一份经检查的外发版本")
+    key = body.recipients[0]
+    req = _build_request(RunRequest(session_id=body.review_id, recipient=key,
+                                    **body.model_dump(exclude={"recipients", "review_id", "approval"})))
+    from docx import Document
+
+    with material_scope(req.materials, req.task):
+        version = _recipient_version(req, key)
+        if not version["approval"] or not secrets.compare_digest(version["approval"], body.approval):
+            raise HTTPException(409, "内容或权限已变化，请重新生成预览并检查")
+        output = Document()
+        output.core_properties.author = "隐盾"
+        output.core_properties.title = "隐盾外发版本"
+        for line in version["text"].split("\n"):
+            output.add_paragraph(line)
+        stream = io.BytesIO()
+        output.save(stream)
+        return Response(stream.getvalue(),
+                        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        headers={"Content-Disposition": 'attachment; filename="shield-approved-version.docx"',
+                                 "Cache-Control": "no-store"})
+
 @app.post("/api/check-access")
 def api_check_access(identity: str, recipient: str):
     """单独检查某身份能否向某接收方提供内容（模块 ① 的第二项检查）。"""
@@ -401,6 +488,14 @@ if WEB_DIR.exists():
     @app.get("/chat")
     def chat_page():
         return RedirectResponse("/", status_code=307)
+
+    @app.get("/recipient-review")
+    def recipient_review_page():
+        return FileResponse(WEB_DIR / "recipient_review.html")
+
+    @app.get("/workbench")
+    def workbench_page():
+        return FileResponse(WEB_DIR / "workbench.html")
 
     @app.get("/notice")
     def notice_page():
