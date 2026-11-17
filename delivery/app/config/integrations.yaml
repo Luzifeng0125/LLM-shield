@@ -1,0 +1,31 @@
+# Edit locally, then restart. API keys are referenced from environment variables.
+version: 1
+presidio:
+  enabled: false
+  patterns:
+    - name: campus_internal_id
+      category: STUDENT_ID
+      regex: '\bJNU-[0-9]{8}\b'
+      score: 0.95
+nemo:
+  enabled: false
+  deny_phrases:
+    - "忽略隐私规则"
+    - "绕过接收方权限"
+    - "ignore privacy rules"
+lakera:
+  enabled: false
+  approved_for_checked_content: false
+litellm:
+  enabled: false
+  base_url: http://127.0.0.1:4000/v1
+  approved_models: [shield-primary]
+# Each knowledge id has its own token and fixed identity, task and source set.
+# knowledge:
+#   campus-public:
+#     identity: student_leader
+#     task: meeting_minutes
+#     recipient: egress_tool_public
+#     token_env: SHIELD_DIFY_CAMPUS_TOKEN
+#     doc_ids: [an_uploaded_material_id]
+knowledge: {}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>识别与集成 · 隐盾</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/notice.css">
+  <link rel="stylesheet" href="/static/workbench.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-text"><h1>识别与集成</h1><p class="sub">核对识别依据和接收方检查结果</p></div>
+    <a class="btn" href="/">返回对话</a>
+  </header>
+  <main class="notice-layout workbench">
+    <section class="notice-panel">
+      <h2>本机识别核对</h2>
+      <form id="diagnose">
+        <label for="identity">当前身份</label><select id="identity" required></select>
+        <label for="task">材料用途</label><select id="task" required></select>
+        <label for="recipient">接收方</label><select id="recipient" required></select>
+        <label for="text">待核对文本</label><textarea id="text" rows="8" maxlength="24000" required></textarea>
+        <label for="description">任务说明</label><textarea id="description" rows="2" maxlength="4000"></textarea>
+        <button class="btn primary" id="diagnose-button" disabled>查看识别与动作依据</button>
+      </form>
+      <p id="status" role="status"></p>
+      <div class="notice-table-wrap">
+        <table id="entities" hidden><thead><tr><th>原文</th><th>类别</th><th>识别器／规则</th><th>置信度</th></tr></thead><tbody></tbody></table>
+      </div>
+      <pre id="decisions"></pre>
+    </section>
+    <section class="notice-panel">
+      <h2>组件状态</h2>
+      <div id="components"></div>
+      <h2>外发工具确认</h2>
+      <form id="tool">
+        <label for="admin">管理员凭证</label><input id="admin" type="password" autocomplete="off" required>
+        <label for="tool-id">已配置工具编号</label><input id="tool-id" maxlength="80" required>
+        <label for="tool-text">待发送正文</label><textarea id="tool-text" rows="5" maxlength="12000" required></textarea>
+        <button class="btn" id="preview-button">检查并预览</button>
+      </form>
+      <p id="tool-status" role="status"></p>
+      <pre id="preview"></pre>
+      <button class="btn primary" id="execute" hidden>确认向此地址发送</button>
+    </section>
+  </main>
+  <script src="/static/integrations.js" defer></script>
+</body>
+</html>

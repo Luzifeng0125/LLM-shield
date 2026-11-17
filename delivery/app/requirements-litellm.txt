@@ -1,0 +1,2 @@
+# Run as a separate local proxy, not in the GLiNER environment.
+litellm[proxy]==1.109.1
