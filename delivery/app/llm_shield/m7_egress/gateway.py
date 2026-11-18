@@ -84,7 +84,8 @@ class EgressGateway:
                  task_key: Optional[str] = None,
                  expected_type: Optional[RecipientType] = None,
                  operation: Optional[str] = None,
-                 local_only: bool = False) -> Dict[str, object]:
+                 local_only: bool = False,
+                 guard_stage: Optional[str] = None) -> Dict[str, object]:
         """发送前检查：权限 + 载荷内容。"""
         rec = recipients().get(recipient_key)
         if not isinstance(rec, dict):
@@ -125,7 +126,14 @@ class EgressGateway:
                 "reason": f"载荷中仍存在受限信息（{cats}），共 {insp['n_hits']} 处，已拦截",
                 "inspect": insp,
             }
-        denial = extra_denial(content, recipient_key, local_only=local_only)
+        stage = guard_stage or {
+            "VIEWER": "view_display", "EGRESS_TOOL": "tool_egress",
+            "EXTERNAL_MODEL": "model_input",
+        }.get(rec.get("type"), "model_input")
+        if stage not in {"model_input", "model_output", "retrieval", "view_display",
+                         "tool_egress", "tool_response"}:
+            return {"allowed": False, "reason": "未知防护边界，已暂停"}
+        denial = extra_denial(content, recipient_key, local_only=local_only, stage=stage)
         if denial:
             return {"allowed": False, "reason": denial}
         return {"allowed": True, "reason": why, "inspect": insp}
@@ -234,7 +242,7 @@ class EgressGateway:
         # 回答要进入下一轮历史，因此按外部模型边界复检，不能把原值存回历史。
         output = self.precheck("external_model", identity_key, generated["text"], original_spans,
                                allowed_values, placeholders=placeholders, task_key=task_key,
-                               expected_type=RecipientType.EXTERNAL_MODEL)
+                               expected_type=RecipientType.EXTERNAL_MODEL, guard_stage="model_output")
         if not output["allowed"]:
             self.auditor.log("chat.output_blocked", task=task_key, reason=str(output["reason"]))
             sanitized = self._redact_answer(generated["text"],
@@ -244,7 +252,7 @@ class EgressGateway:
                 checked = self.precheck("external_model", identity_key, sanitized,
                                         original_spans, allowed_values,
                                         placeholders=placeholders, task_key=task_key,
-                                        expected_type=RecipientType.EXTERNAL_MODEL)
+                                        expected_type=RecipientType.EXTERNAL_MODEL, guard_stage="model_output")
                 if checked["allowed"]:
                     self.auditor.log("chat.output_redacted", task=task_key)
                     return {**generated, "text": sanitized, "allowed": True, "input_checked": True,
