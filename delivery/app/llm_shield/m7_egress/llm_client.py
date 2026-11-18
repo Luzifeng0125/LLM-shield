@@ -26,6 +26,13 @@ def configuration_status(settings: dict) -> str:
     """Validate the same connection settings for diagnostics and generation."""
     if settings.get("mode") not in (None, "mock", "real", "auto"):
         return "invalid_configuration"
+    if settings.get("provider") == "shield":
+        try:
+            from .native_gateway import configured_route
+            configured_route(settings.get("route", "primary"))
+            return "configuration_only"
+        except ConfigurationError:
+            return "invalid_configuration"
     try:
         address = settings.get("base_url", "")
         url = urlsplit(address)
@@ -140,6 +147,7 @@ class OpenAICompatLLM(BaseLLM):
         self.model = model
         self.timeout = float(timeout)
         self.last_error = ""
+        self.last_usage = None
 
     def chat(self, system: str, user: str, temperature: float = 0.3,
              max_tokens: int = 2000) -> str:
@@ -163,6 +171,7 @@ class OpenAICompatLLM(BaseLLM):
             "stream": False,
         }
         try:
+            self.last_usage = None
             with httpx.Client(
                 timeout=self.timeout,
                 trust_env=urlsplit(self.base_url).hostname not in {"127.0.0.1", "::1"},
@@ -171,6 +180,7 @@ class OpenAICompatLLM(BaseLLM):
                 resp = client.post(url, headers=headers, json=payload)
                 resp.raise_for_status()
                 data = resp.json()
+            self.last_usage = data.get("usage")
             choices = data.get("choices") or []
             if not choices:
                 raise ValueError("生成服务未返回有效回答")
@@ -198,6 +208,9 @@ def get_llm_client(force: Optional[str] = None) -> BaseLLM:
         settings = {**settings, "mode": force.lower()}
     if settings["mode"] == "mock":
         return MockLLM()
+    if settings.get("provider") == "shield":
+        from .native_gateway import NativeModelGateway
+        return NativeModelGateway(settings.get("route", "primary"))
     status = configuration_status(settings)
     if status == "missing_key":
         raise ConfigurationError("尚未配置生成服务密钥，本轮已暂停")

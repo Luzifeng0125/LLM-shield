@@ -90,6 +90,40 @@ class Tool(Contract):
     recipient: str
 
 
+class ModelTarget(Contract):
+    base_url: str
+    model: str = Field(min_length=1, max_length=100)
+    key_env: str = Field(pattern=r"^[A-Z][A-Z0-9_]+$")
+    disclosure_scope: str = Field(min_length=1, max_length=80)
+    timeout: float = Field(default=60, gt=0, le=180, allow_inf_nan=False)
+    input_price: int = Field(ge=0, strict=True)
+    output_price: int = Field(ge=0, strict=True)
+
+
+class ModelRoute(Contract):
+    targets: list[str] = Field(min_length=1, max_length=5)
+    disclosure_scope: str = Field(min_length=1, max_length=80)
+
+
+class ModelGateway(Contract):
+    enabled: bool = False
+    currency: Literal["CNY", "USD"] = "CNY"
+    monthly_budget: int = Field(default=0, ge=0, strict=True)
+    requests_per_minute: int = Field(default=30, ge=1, le=10000, strict=True)
+    targets: dict[str, ModelTarget] = Field(default_factory=dict, max_length=20)
+    routes: dict[str, ModelRoute] = Field(default_factory=dict, max_length=20)
+
+    @model_validator(mode="after")
+    def approved_routes(self):
+        for route in self.routes.values():
+            if len(set(route.targets)) != len(route.targets):
+                raise ValueError("路由中包含重复目标")
+            for key in route.targets:
+                if key not in self.targets or self.targets[key].disclosure_scope != route.disclosure_scope:
+                    raise ValueError("路由目标不存在或接收范围不一致")
+        return self
+
+
 class Integrations(Contract):
     version: Literal[1] = 1
     recognition: RecognitionRules = Field(default_factory=RecognitionRules,
@@ -100,6 +134,7 @@ class Integrations(Contract):
     litellm: LiteLLM = Field(default_factory=LiteLLM)
     knowledge: dict[str, Knowledge] = Field(default_factory=dict)
     tools: dict[str, Tool] = Field(default_factory=dict)
+    model_gateway: ModelGateway = Field(default_factory=ModelGateway)
 
     @property
     def presidio(self):
