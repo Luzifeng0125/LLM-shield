@@ -121,17 +121,17 @@ async function init() {
     for (const [key, value] of Object.entries(values)) field(id).add(new Option(value.name, key));
   }
   field('task').value = 'meeting_minutes';
-  const labels = {presidio: 'Presidio 扩展', nemo: 'NeMo 本地策略', litellm: 'LiteLLM 网关', lakera: 'Lakera 附加检查'};
+  const labels = {recognition: '隐盾识别规则', policies: '隐盾边界策略', litellm: '可选代理连接', lakera: '可选外部检查'};
   field('components').replaceChildren(...Object.entries(labels).map(([key, name]) => {
     const p = document.createElement('p');
     p.textContent = name + (status[key] ? ' · 已配置启用' : ' · 未启用');
     return p;
   }));
   const knowledge = document.createElement('p');
-  knowledge.textContent = 'Dify 知识源绑定 ' + status.knowledge_sources + ' 个';
+  knowledge.textContent = '获准知识源绑定 ' + status.knowledge_sources + ' 个';
   field('components').append(knowledge);
   const boundaries = document.createElement('p');
-  boundaries.textContent = 'NeMo 独立策略边界 ' + (status.policy_boundaries.join('、') || '使用全局规则');
+  boundaries.textContent = '独立策略边界 ' + (status.policy_boundaries.join('、') || '使用全局规则');
   field('components').append(boundaries);
   field('diagnose-button').disabled = false;
 }

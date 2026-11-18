@@ -2,8 +2,7 @@
 from __future__ import annotations
 
 import os
-from functools import lru_cache
-from threading import Lock
+import re
 
 import httpx
 
@@ -11,57 +10,25 @@ from .integrations import load_integrations
 from .material_policy import require_source_access
 
 
-class GuardUnavailable(RuntimeError):
-    pass
-
-
-_NEMO_LOCK = Lock()
-
-
-@lru_cache(maxsize=4)
-def _nemo(phrases: tuple[str, ...]):
-    from nemoguardrails import LLMRails, RailsConfig
-
-    config = RailsConfig.from_content(
-        config={"models": [], "rails": {"input": {"flows": ["shield input"]}}},
-        colang_content="""
-define flow shield input
-  $allowed = execute shield_phrase_check
-  if not $allowed
-    bot say "SHIELD_BLOCKED"
-    stop
-""",
-    )
-    rails = LLMRails(config)
-
-    async def shield_phrase_check(context):
-        text = context.get("user_message", "").casefold()
-        return not any(phrase.casefold() in text for phrase in phrases if phrase)
-
-    rails.register_action(shield_phrase_check, name="shield_phrase_check")
-    return rails
-
-
-def nemo_denial(content: str, phrases: tuple[str, ...]) -> str:
-    with _NEMO_LOCK:
-        rails = _nemo(phrases)
-        result = rails.check(messages=[{"role": "user", "content": content}])
-    if result.status == "passed":
-        return ""
-    if result.status == "blocked":
-        return "本地 NeMo 策略拒绝当前内容，请修订后重试"
-    raise GuardUnavailable("NeMo 未返回有效许可")
+def boundary_denial(content: str, phrases: tuple[str, ...]) -> str:
+    text = content.casefold()
+    if any(phrase.casefold() in text for phrase in phrases if phrase):
+        return "隐盾本地策略拒绝当前内容，请修订后重试"
+    return ""
 
 
 def extra_denial(content: str, recipient: str, *, local_only: bool = False,
                  stage: str = "model_input") -> str:
     try:
         settings, _ = load_integrations()
-        if settings.nemo.enabled:
-            phrases = tuple(settings.nemo.deny_phrases) + tuple(settings.nemo.boundaries.get(stage, ()))
-            denial = nemo_denial(content, phrases)
+        if settings.policies.enabled:
+            phrases = tuple(settings.policies.deny_phrases) + tuple(settings.policies.boundaries.get(stage, ()))
+            denial = boundary_denial(content, phrases)
             if denial:
                 return denial
+            for rule in settings.policies.rules:
+                if stage in rule.stages and re.search(rule.regex, content):
+                    return "隐盾边界策略拒绝当前内容，规则 " + rule.name
         if local_only:
             return ""
         # Authorized viewer content can contain restored names. Never forward it.

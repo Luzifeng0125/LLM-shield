@@ -60,9 +60,9 @@ def build_detectors(use_gliner: Optional[bool] = None) -> List[Detector]:
     try:
         from ..integrations import load_integrations
         settings, _ = load_integrations()
-        if settings.presidio.enabled:
-            from .presidio_adapter import detector
-            detectors.append(detector(settings.presidio.model_dump_json()))
+        if settings.recognition.enabled:
+            from .registered_rules import detector
+            detectors.append(detector(settings.recognition.model_dump_json()))
     except Exception:
         raise DetectionError("附加识别器配置或依赖不可用，已暂停处理") from None
     return detectors

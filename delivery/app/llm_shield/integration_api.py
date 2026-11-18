@@ -6,7 +6,6 @@ import hmac
 import os
 import re
 import secrets
-from importlib.metadata import PackageNotFoundError, version
 
 from fastapi import APIRouter, Depends, HTTPException, Response
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -38,20 +37,17 @@ def status():
         settings, revision = load_integrations()
     except Exception:
         raise HTTPException(503, "集成配置无效，请检查本机配置文件") from None
-    packages = {}
-    for package in ("presidio-analyzer", "nemoguardrails"):
-        try:
-            packages[package] = version(package)
-        except PackageNotFoundError:
-            packages[package] = None
-    return {"revision": revision, "packages": packages,
+    return {"revision": revision,
             "presidio": settings.presidio.enabled, "nemo": settings.nemo.enabled,
             "litellm": settings.litellm.enabled, "lakera": settings.lakera.enabled,
             "knowledge_sources": len(settings.knowledge),
-            "policy_boundaries": sorted(settings.nemo.boundaries),
+            "recognition": settings.recognition.enabled,
+            "policies": settings.policies.enabled,
+            "implementation": "shield_native",
+            "policy_boundaries": sorted(settings.policies.boundaries),
             "recognizers": [{"name": pattern.name, "category": pattern.category,
                              "revision": pattern.revision}
-                            for pattern in settings.presidio.patterns]}
+                            for pattern in settings.recognition.patterns]}
 
 
 class Diagnostic(Contract):
@@ -141,6 +137,7 @@ def _approved_content(material, binding):
     return content, codes, analysis.spans, allowed
 
 
+@router.post("/api/knowledge/retrieval", dependencies=[Depends(no_cache)])
 @router.post("/api/integrations/dify/retrieval", dependencies=[Depends(no_cache)])
 def retrieval(body: Retrieval, auth: HTTPAuthorizationCredentials | None = Depends(bearer)):
     try:

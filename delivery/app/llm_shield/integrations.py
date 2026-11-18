@@ -3,11 +3,12 @@ from __future__ import annotations
 
 import hashlib
 import os
+import re
 from pathlib import Path
 from typing import Literal
 
 import yaml
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import AliasChoices, BaseModel, ConfigDict, Field, model_validator
 
 from . import config as C
 
@@ -24,7 +25,7 @@ class Pattern(Contract):
     revision: str = Field(default="1", min_length=1, max_length=40)
 
 
-class Presidio(Contract):
+class RecognitionRules(Contract):
     enabled: bool = False
     patterns: list[Pattern] = Field(default_factory=list, max_length=50)
 
@@ -37,11 +38,27 @@ class Presidio(Contract):
         return self
 
 
-class Nemo(Contract):
+class BoundaryPolicies(Contract):
     enabled: bool = False
     deny_phrases: list[str] = Field(default_factory=list, max_length=100)
     boundaries: dict[Literal["model_input", "model_output", "retrieval", "view_display",
                              "tool_egress", "tool_response"], list[str]] = Field(default_factory=dict)
+    rules: list["BoundaryRule"] = Field(default_factory=list, max_length=100)
+
+
+class BoundaryRule(Contract):
+    name: str = Field(min_length=1, max_length=80)
+    stages: list[Literal["model_input", "model_output", "retrieval", "view_display",
+                         "tool_egress", "tool_response"]] = Field(min_length=1, max_length=6)
+    regex: str = Field(min_length=1, max_length=500)
+
+    @model_validator(mode="after")
+    def valid_expression(self):
+        try:
+            re.compile(self.regex)
+        except re.error:
+            raise ValueError("边界策略包含无效正则") from None
+        return self
 
 
 class Lakera(Contract):
@@ -75,12 +92,26 @@ class Tool(Contract):
 
 class Integrations(Contract):
     version: Literal[1] = 1
-    presidio: Presidio = Field(default_factory=Presidio)
-    nemo: Nemo = Field(default_factory=Nemo)
+    recognition: RecognitionRules = Field(default_factory=RecognitionRules,
+                                          validation_alias=AliasChoices("recognition", "presidio"))
+    policies: BoundaryPolicies = Field(default_factory=BoundaryPolicies,
+                                       validation_alias=AliasChoices("policies", "nemo"))
     lakera: Lakera = Field(default_factory=Lakera)
     litellm: LiteLLM = Field(default_factory=LiteLLM)
     knowledge: dict[str, Knowledge] = Field(default_factory=dict)
     tools: dict[str, Tool] = Field(default_factory=dict)
+
+    @property
+    def presidio(self):
+        return self.recognition
+
+    @property
+    def nemo(self):
+        return self.policies
+
+
+Presidio = RecognitionRules
+Nemo = BoundaryPolicies
 
 
 def load_integrations() -> tuple[Integrations, str]:

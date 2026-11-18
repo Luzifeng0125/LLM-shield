@@ -1,5 +1,7 @@
 # 五项目融合接入
 
+2026-11-18 已将实现方向调整为隐盾原生功能。规则识别使用本项目 `registered_rules`，六边界检查使用本地策略代码，两项在线路径已移除第三方库调用。配置改用 `recognition` 和 `policies`，兼容旧键。原生知识检索地址为 `/api/knowledge/retrieval`。后续以[原生能力开发范围](../../04_技术文档/原生能力开发范围.md)为准，下文的第三方安装与验证记录供历史追溯。
+
 隐盾 2.0 候选版提供五个项目的接入路径。基础融合已通过 [PR #4](https://github.com/Luzifeng0125/LLM-shield/pull/4) 合入 `main`。统一配置位于 `delivery/app/config/integrations.yaml`。`SHIELD_INTEGRATIONS_CONFIG` 可指定本机独立配置文件，修改后重启服务。
 
 ## 实现与验证范围

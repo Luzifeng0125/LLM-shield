@@ -1,13 +1,13 @@
 # Edit locally, then restart. API keys are referenced from environment variables.
 version: 1
-presidio:
+recognition:
   enabled: false
   patterns:
     - name: campus_internal_id
       category: STUDENT_ID
       regex: '\bJNU-[0-9]{8}\b'
       score: 0.95
-nemo:
+policies:
   enabled: false
   boundaries: {}
   deny_phrases:

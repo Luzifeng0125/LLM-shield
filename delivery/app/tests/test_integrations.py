@@ -1,5 +1,6 @@
 """Integration contracts, local-only diagnostics and external side-effect boundaries."""
 import json
+import builtins
 from uuid import uuid4
 
 import httpx
@@ -47,25 +48,29 @@ def test_config_is_strict_and_diagnostics_are_local(settings):
     assert local_client().get("/api/integrations").status_code == 503
 
 
-def test_optional_implementations_execute_without_network():
-    pytest.importorskip("nemoguardrails")
-    pytest.importorskip("presidio_analyzer")
-    from llm_shield.m2_detect.presidio_adapter import PresidioDetector
+def test_native_implementations_execute_without_network():
+    from llm_shield.m2_detect.registered_rules import RegisteredRuleDetector
 
     with pytest.MonkeyPatch.context() as patch:
+        original_import = builtins.__import__
+
+        def restricted_import(name, *args, **kwargs):
+            if name.split(".")[0] in {"presidio_analyzer", "nemoguardrails"}:
+                pytest.fail("Native capabilities must not import external guardrail libraries")
+            return original_import(name, *args, **kwargs)
+
+        patch.setattr(builtins, "__import__", restricted_import)
         patch.setattr(httpx.Client, "send", lambda *a, **k: pytest.fail("No network permitted"))
-        assert guards.nemo_denial("公开内容", ("绕过权限",)) == ""
-        assert guards.nemo_denial("绕过权限", ("绕过权限",))
+        assert guards.boundary_denial("公开内容", ("绕过权限",)) == ""
+        assert guards.boundary_denial("绕过权限", ("绕过权限",))
         config = integrations.Presidio(enabled=True, patterns=[integrations.Pattern(
             name="campus-id", category="STUDENT_ID", regex=r"JNU-[0-9]{8}")])
-        spans = PresidioDetector(config).detect("编号 JNU-20260001")
+        spans = RegisteredRuleDetector(config).detect("编号 JNU-20260001")
         assert [(s.start, s.end, s.text, s.rule_id) for s in spans] == [
             (3, 15, "JNU-20260001", "campus-id")]
 
 
 def test_presidio_and_nemo_are_on_the_normal_pipeline(settings, monkeypatch):
-    pytest.importorskip("nemoguardrails")
-    pytest.importorskip("presidio_analyzer")
     from llm_shield.m2_detect.pipeline import build_detectors, detect_all
     from llm_shield.m7_egress import gateway
 
@@ -73,7 +78,7 @@ def test_presidio_and_nemo_are_on_the_normal_pipeline(settings, monkeypatch):
         {"name": "custom-id", "category": "STUDENT_ID", "regex": "JNU-[0-9]{8}"}]},
         nemo={"enabled": True, "deny_phrases": ["绕过权限"]})
     spans = detect_all("编号 JNU-20260001", detectors=build_detectors(use_gliner=False))
-    assert any(span.detector == "presidio" and span.text == "JNU-20260001" for span in spans)
+    assert any(span.detector == "registered_rules" and span.text == "JNU-20260001" for span in spans)
     monkeypatch.setattr(gateway, "inspect_payload", lambda *a, **k: {
         "leaked": False, "leak_hits": [], "leaked_categories": []})
     guard = gateway.EgressGateway()
@@ -161,7 +166,7 @@ def test_dify_returns_only_processed_content_and_rechecks_sources(settings, monk
     with monkeypatch.context() as patch:
         patch.setenv("SHIELD_DETECTOR_MODE", "dictionary_test")
         assert client.post(endpoint, json=body, headers=headers).status_code == 409
-    reply = client.post(endpoint, json=body, headers=headers)
+    reply = client.post("/api/knowledge/retrieval", json=body, headers=headers)
     assert reply.status_code == 200, reply.text
     assert reply.headers["cache-control"] == "no-store"
     record, = reply.json()["records"]
