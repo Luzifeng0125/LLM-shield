@@ -186,6 +186,7 @@ def llm_settings() -> Dict[str, Any]:
         "api_key": os.getenv("LLM_API_KEY", "").strip(),
         "model": os.getenv("LLM_MODEL", "deepseek-flash"),
         "timeout": os.getenv("LLM_TIMEOUT", "60"),
+        "route": os.getenv("SHIELD_MODEL_ROUTE", "primary"),
     }
 
 

@@ -21,9 +21,25 @@ from .material_policy import material_scope
 from .processing import ProcessingFailure, analyze
 from .schema import Action, Material, RecipientType
 from .table_workbench import require_local_request
+from .workflows import require_owner
 
 router = APIRouter(tags=["集成与识别诊断"])
 bearer = HTTPBearer(auto_error=False)
+
+
+@router.get("/api/models/usage", dependencies=[
+    Depends(require_local_request), Depends(require_owner)])
+def model_usage(response: Response):
+    from .m7_egress.native_gateway import usage_summary
+    from .m7_egress.llm_client import ConfigurationError
+
+    response.headers["Cache-Control"] = "no-store"
+    try:
+        return usage_summary()
+    except ConfigurationError as exc:
+        raise HTTPException(409, str(exc)) from None
+    except Exception:
+        raise HTTPException(503, "模型费用账本或配置不可用") from None
 _REFERENCE_KEY = secrets.token_bytes(32)
 
 
@@ -43,6 +59,7 @@ def status():
             "knowledge_sources": len(settings.knowledge),
             "recognition": settings.recognition.enabled,
             "policies": settings.policies.enabled,
+            "model_gateway": settings.model_gateway.enabled,
             "implementation": "shield_native",
             "policy_boundaries": sorted(settings.policies.boundaries),
             "recognizers": [{"name": pattern.name, "category": pattern.category,

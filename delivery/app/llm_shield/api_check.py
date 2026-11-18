@@ -17,13 +17,20 @@ def check_connection(settings: dict, *, connect: bool = False) -> dict:
     result['status'] = configuration_status(settings)
     if result['status'] != 'configuration_only':
         return result
+    if settings.get('provider') == 'shield':
+        result['key_configured'] = True
     if not connect:
         return result
     started = time.perf_counter()
     result['network_attempted'] = True
+    client = None
     try:
-        client = OpenAICompatLLM(settings['base_url'], settings['api_key'], settings['model'],
-                                 min(float(settings.get('timeout', 30)), 30))
+        if settings.get('provider') == 'shield':
+            from .m7_egress.native_gateway import NativeModelGateway
+            client = NativeModelGateway(settings.get('route', 'primary'))
+        else:
+            client = OpenAICompatLLM(settings['base_url'], settings['api_key'], settings['model'],
+                                     min(float(settings.get('timeout', 30)), 30))
         reply = client.chat_messages([{'role': 'user', 'content': '连接测试。请只回复 OK。'}], max_tokens=64)
         result.update(connected=True, status='connected', response_characters=len(reply))
     except httpx.HTTPStatusError as exc:
@@ -37,6 +44,8 @@ def check_connection(settings: dict, *, connect: bool = False) -> dict:
         result['status'] = 'network_error'
     except Exception:
         result['status'] = 'invalid_response_or_configuration'
+    if settings.get('provider') == 'shield':
+        result['network_attempted'] = bool(client and client.attempted_network)
     result['elapsed_ms'] = round((time.perf_counter() - started) * 1000)
     return result
 

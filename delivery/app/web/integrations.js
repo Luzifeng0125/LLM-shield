@@ -121,7 +121,8 @@ async function init() {
     for (const [key, value] of Object.entries(values)) field(id).add(new Option(value.name, key));
   }
   field('task').value = 'meeting_minutes';
-  const labels = {recognition: '隐盾识别规则', policies: '隐盾边界策略', litellm: '可选代理连接', lakera: '可选外部检查'};
+  const labels = {recognition: '隐盾识别规则', policies: '隐盾边界策略',
+    model_gateway: '隐盾模型网关', litellm: '可选代理连接', lakera: '可选外部检查'};
   field('components').replaceChildren(...Object.entries(labels).map(([key, name]) => {
     const p = document.createElement('p');
     p.textContent = name + (status[key] ? ' · 已配置启用' : ' · 未启用');
@@ -135,4 +136,22 @@ async function init() {
   field('components').append(boundaries);
   field('diagnose-button').disabled = false;
 }
+field('usage-button').addEventListener('click', async () => {
+  const button = field('usage-button');
+  button.disabled = true;
+  field('usage').textContent = '';
+  try {
+    const result = await api('/api/models/usage', undefined, field('admin').value);
+    const rows = result.attempts.map((row) =>
+      row.target + ' · ' + row.state + ' · ' + row.count + ' 次 · ' +
+      (row.amount / 1000000).toFixed(6) + ' ' + result.currency);
+    field('usage').textContent = result.month + ' · 预算 ' +
+      (result.budget / 1000000).toFixed(6) + ' ' + result.currency + '\n' +
+      (rows.join('\n') || '本月暂无请求。');
+  } catch (error) {
+    field('usage').textContent = error.message;
+  } finally {
+    button.disabled = false;
+  }
+});
 init().catch((error) => { field('status').textContent = error.message; });

@@ -1,5 +1,12 @@
 # Edit locally, then restart. API keys are referenced from environment variables.
 version: 1
+model_gateway:
+  enabled: false
+  currency: CNY
+  monthly_budget: 0
+  requests_per_minute: 30
+  targets: {}
+  routes: {}
 recognition:
   enabled: false
   patterns:
