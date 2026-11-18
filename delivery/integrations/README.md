@@ -1,6 +1,6 @@
 # 五项目融合接入
 
-本分支在隐盾 2.0 候选版上增加五个项目的接入路径。统一配置位于 `delivery/app/config/integrations.yaml`。`SHIELD_INTEGRATIONS_CONFIG` 可指定本机独立配置文件，修改后重启服务。
+隐盾 2.0 候选版提供五个项目的接入路径。基础融合已通过 [PR #4](https://github.com/Luzifeng0125/LLM-shield/pull/4) 合入 `main`。统一配置位于 `delivery/app/config/integrations.yaml`。`SHIELD_INTEGRATIONS_CONFIG` 可指定本机独立配置文件，修改后重启服务。
 
 ## 实现与验证范围
 
@@ -8,7 +8,7 @@
 | --- | --- | --- |
 | Presidio | 追加本机 PatternRecognizer，转换成隐盾 Span，沿用合并与动作决策 | 使用真实 2.2.366 库识别合成编号，无网络请求 |
 | NeMo | 使用 LLMRails 和 Colang input flow 调用本地拒绝短语检查 | 使用真实 0.24.1 库验证放行、暂停及网关接入，无模型调用 |
-| LiteLLM | 兼容代理请求，校验代理地址及模型别名，提供固定上游配置 | 实际 1.109.1 代理与合成回环上游通信成功 |
+| LiteLLM | 兼容代理请求，校验代理地址及模型别名，提供固定上游配置 | 隐盾生成客户端经过实际 1.109.1 代理访问合成回环上游 |
 | Dify | 实现 External Knowledge API，凭证绑定固定来源、身份、用途和接收方 | 协议测试覆盖鉴权、转换后内容、来源删除和不支持的过滤条件 |
 | Lakera | 本地检查后调用 `/v2/guard`，要求 enforce 策略及有效布尔结果 | 本机 HTTP 契约测试覆盖拒绝、无效响应及 detect-only |
 
@@ -27,7 +27,7 @@ Dify 实际实例和 Lakera 商业账户仍需连通验证。NeMo 当前执行�
 
 在当前激活配置中将 `presidio.enabled` 和 `nemo.enabled` 设为 true。Presidio 规则填写名称、已有隐盾类别、正则和分数。启用的组件配置或依赖不可用时暂停处理。
 
-仓库配置默认关闭可选组件，供干净安装选择。2026-11-18 本机激活文件为 `local/integrations_active.yaml`，由应用 `.env` 的 `SHIELD_INTEGRATIONS_CONFIG` 引用。预检已确认 regex、entity、gliner 和 presidio 同时可用，GLiNER 使用 CUDA。
+仓库配置默认关闭可选组件，供干净安装选择。2026-11-18 本机激活文件为 `local/integrations_active.yaml`，由应用 `.env` 的 `SHIELD_INTEGRATIONS_CONFIG` 引用。预检已确认 regex、entity、gliner 和 presidio 同时可用，GLiNER 使用 CUDA。词典测试模式下，Dify 检索和确认工具暂停外发。
 
 ## LiteLLM
 
@@ -48,7 +48,7 @@ LLM_MODEL=shield-primary
 
 在激活配置中启用 litellm，登记相同地址和 `approved_models`。示例代理使用单一明确上游，关闭跨供应商回退及正文日志。客户端验证地址和别名，代理管理员负责该别名实际指向的部署。更换实际供应商时重新评审接收范围。
 
-样例设置请求及 token 限流。多人虚拟密钥、项目预算、费用面板需要数据库及身份配置，未自动部署。代理验证脚本只使用合成回环上游，无付费模型调用。
+样例设置请求及 token 限流。多人虚拟密钥、项目预算、费用面板需要数据库及身份配置，未自动部署。代理验证脚本依赖隐盾应用及代理两份依赖，使用临时配置经隐盾客户端调用代理及合成回环上游，无付费模型调用。
 
 ```powershell
 python delivery/app/scripts/verify_litellm_local.py
@@ -72,7 +72,7 @@ knowledge:
 
 调用方无法覆盖身份、用途及来源范围。系统先做本地决策与转换，再检查实际返回内容。原始映射、本机路径和文件名不作为返回元数据。来源删除、过期或用途不符时拒绝返回，内容或策略变化会产生新引用。
 
-当前检索将处理后文本分为最多 1200 字符的片段，按词项重合度打分，无嵌入服务。每个知识源最多 20 份材料，每份分析上限 24000 字符，一次最多返回 5 个片段。实际返回片段再次执行出口检查。`score_threshold` 对应该词项分数。非空 `metadata_condition` 尚不支持，会明确拒绝。
+当前检索将处理后文本分为最多 1200 字符的片段，按词项重合度打分；中文用相邻两字组成词项，无嵌入服务。每个知识源最多 20 份材料，每份分析上限 24000 字符，一次最多返回 5 个片段。整份转换结果仅在本机预检；排序选中的片段带原始检测与本机代号上下文执行完整出口检查，启用 Lakera 时只检查选中的片段。任一选中片段被拦截时本轮不返回内容。`score_threshold` 对应该词项分数。非空 `metadata_condition` 尚不支持，会明确拒绝。
 
 ## Lakera
 

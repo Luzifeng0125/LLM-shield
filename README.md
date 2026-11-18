@@ -34,7 +34,7 @@ Windows 下双击 [启动隐盾.cmd](启动隐盾.cmd)，或在仓库根目录�
 
 ## 五项目融合接入
 
-融合分支增加“识别与集成”页面，支持 Presidio 模式识别扩展、NeMo 本地流程检查、LiteLLM 地址与模型许可、Dify 外部知识接口，以及经确认的 Webhook 外发。配置与验证范围见 [融合接入说明](delivery/integrations/README.md)。
+主分支提供“识别与集成”页面，支持 Presidio 模式识别扩展、NeMo 本地流程检查、LiteLLM 地址与模型许可、Dify 外部知识接口、可选 Lakera 检查，以及经确认的 Webhook 外发。配置与验证范围见 [融合接入说明](delivery/integrations/README.md)，项目目标、系统架构、创新与现状见 [2.0 融合版报告](04_技术文档/隐盾2.0融合版系统架构与现状.md)。
 
 Presidio 和 NeMo 已使用实际库验证，LiteLLM 已与合成回环上游完成代理通信。Dify 和 Lakera 已验证接口契约，实际实例或商业账户仍需配置凭证与接收范围并测试。
 

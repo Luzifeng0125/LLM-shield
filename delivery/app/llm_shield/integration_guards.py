@@ -53,13 +53,15 @@ def nemo_denial(content: str, phrases: tuple[str, ...]) -> str:
     raise GuardUnavailable("NeMo 未返回有效许可")
 
 
-def extra_denial(content: str, recipient: str) -> str:
+def extra_denial(content: str, recipient: str, *, local_only: bool = False) -> str:
     try:
         settings, _ = load_integrations()
         if settings.nemo.enabled:
             denial = nemo_denial(content, tuple(settings.nemo.deny_phrases))
             if denial:
                 return denial
+        if local_only:
+            return ""
         # Authorized viewer content can contain restored names. Never forward it.
         from .config import recipients
 
