@@ -1,0 +1,17 @@
+# Launch with LITELLM_MASTER_KEY and SHIELD_UPSTREAM_API_KEY in the environment.
+# There is one reviewed upstream, with no cross-provider fallback.
+model_list:
+  - model_name: shield-primary
+    litellm_params:
+      model: openai/deepseek-flash
+      api_base: https://api.deepseek.com/v1
+      api_key: os.environ/SHIELD_UPSTREAM_API_KEY
+      rpm: 30
+      tpm: 60000
+litellm_settings:
+  set_verbose: false
+  turn_off_message_logging: true
+  request_timeout: 45
+  num_retries: 0
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY

@@ -1,0 +1,2 @@
+# Install in the application's environment after testing dependency compatibility.
+nemoguardrails==0.24.1

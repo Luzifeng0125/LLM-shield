@@ -203,6 +203,19 @@ def get_llm_client(force: Optional[str] = None) -> BaseLLM:
         raise ConfigurationError("尚未配置生成服务密钥，本轮已暂停")
     if status != "configuration_only":
         raise ConfigurationError("生成服务配置无效，请检查地址、模式、模型或超时设置")
+    if settings.get("provider") == "litellm":
+        from ..integrations import load_integrations
+
+        try:
+            integration, _ = load_integrations()
+            proxy = integration.litellm
+            approved = (proxy.enabled
+                        and settings["base_url"].rstrip("/") == proxy.base_url.rstrip("/")
+                        and settings["model"] in proxy.approved_models)
+        except Exception:
+            approved = False
+        if not approved:
+            raise ConfigurationError("LiteLLM 地址或模型别名未获本机配置许可")
     return OpenAICompatLLM(settings["base_url"], settings["api_key"],
                            settings["model"], settings["timeout"])
 

@@ -23,6 +23,7 @@ from ..m8_audit.observer import inspect_payload
 from ..schema import Boundary, BoundaryRecord, RecipientType, Span
 from .llm_client import chat_with_fallback, chat_messages_with_fallback
 from .policy import policy_denial
+from ..integration_guards import extra_denial
 
 EGRESS_DIR = OUTPUT_DIR / "egress_sim"
 
@@ -123,6 +124,9 @@ class EgressGateway:
                 "reason": f"载荷中仍存在受限信息（{cats}），共 {insp['n_hits']} 处，已拦截",
                 "inspect": insp,
             }
+        denial = extra_denial(content, recipient_key)
+        if denial:
+            return {"allowed": False, "reason": denial}
         return {"allowed": True, "reason": why, "inspect": insp}
 
     # ------------------------------------------------------------ 三个边界

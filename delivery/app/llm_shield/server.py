@@ -40,6 +40,8 @@ from .metrics import snapshot as metrics_snapshot
 from .runtime import readiness
 from .evaluation_report import evaluation_summary
 from .workflows import router as workflows_router
+from .integration_api import router as integration_router
+from .integration_tools import router as tool_router
 from .ocr import OcrError, read_ocr
 from .table_workbench import require_local_request, router as table_workbench_router
 
@@ -81,6 +83,8 @@ app = FastAPI(title="隐盾 LLM-Shield", version="0.1.0",
               description="面向高校场景的最小披露防护服务（本地受控）",
               lifespan=lifespan)
 app.include_router(workflows_router)
+app.include_router(integration_router)
+app.include_router(tool_router)
 app.include_router(table_workbench_router)
 
 
@@ -503,6 +507,10 @@ if WEB_DIR.exists():
     @app.get("/chat")
     def chat_page():
         return RedirectResponse("/", status_code=307)
+
+    @app.get("/integrations")
+    def integrations_page():
+        return FileResponse(WEB_DIR / "integrations.html")
 
     @app.get("/projects")
     def projects_page():
