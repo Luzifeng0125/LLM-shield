@@ -12,6 +12,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import Field
 
+from .config import detector_mode, recipients
 from .integrations import Contract, load_integrations
 from .m1_access.loader import load_material
 from .m6_transform.anonymizer import apply_decisions
@@ -90,7 +91,10 @@ class Retrieval(Contract):
 
 
 def _terms(text: str) -> set[str]:
-    return set(re.findall(r"[a-z0-9_]{2,}|[\u4e00-\u9fff]{2}", text.casefold()))
+    terms = set(re.findall(r"[a-z0-9_]{2,}", text.casefold()))
+    for run in re.findall(r"[\u4e00-\u9fff]+", text):
+        terms.update(run[index:index + 2] for index in range(len(run) - 1))
+    return terms
 
 
 def _chunks(content: str):
@@ -126,10 +130,11 @@ def _approved_content(material, binding):
     content = applied["sanitized_text"]
     checked = EgressGateway(generated_pseudonyms=codes).precheck(
         binding.recipient, binding.identity, content, analysis.spans, allowed,
-        task_key=binding.task, expected_type=RecipientType.EGRESS_TOOL, operation="tool_egress")
+        task_key=binding.task, expected_type=RecipientType.EGRESS_TOOL, operation="tool_egress",
+        local_only=True)
     if not checked["allowed"]:
         raise HTTPException(409, "知识片段未通过接收方检查")
-    return content
+    return content, codes, analysis.spans, allowed
 
 
 @router.post("/api/integrations/dify/retrieval", dependencies=[Depends(no_cache)])
@@ -145,8 +150,8 @@ def retrieval(body: Retrieval, auth: HTTPAuthorizationCredentials | None = Depen
         raise HTTPException(401, "知识服务凭证无效")
     if body.metadata_condition:
         raise HTTPException(422, "当前连接器尚不支持元数据过滤条件")
-    from .config import recipients
-
+    if detector_mode() == "dictionary_test":
+        raise HTTPException(409, "词典测试模式的识别结果未经验证，已暂停外发")
     if recipients().get(binding.recipient, {}).get("type") != "EGRESS_TOOL":
         raise HTTPException(503, "知识源需要配置外发接收方")
     try:
@@ -158,7 +163,7 @@ def retrieval(body: Retrieval, auth: HTTPAuthorizationCredentials | None = Depen
     with material_scope(materials, binding.task):
         for material in materials:
             try:
-                content = _approved_content(material, binding)
+                content, codes, spans, allowed = _approved_content(material, binding)
             except ProcessingFailure:
                 raise HTTPException(409, "知识材料未通过本机处理检查") from None
             if not content.strip():
@@ -170,19 +175,23 @@ def retrieval(body: Retrieval, auth: HTTPAuthorizationCredentials | None = Depen
                 score = len(terms & _terms(chunk)) / len(terms) if terms else 0.0
                 if score == 0 or score < body.retrieval_setting.score_threshold:
                     continue
-                checked = EgressGateway().precheck(
-                    binding.recipient, binding.identity, chunk, task_key=binding.task,
-                    expected_type=RecipientType.EGRESS_TOOL, operation="tool_egress")
-                if not checked["allowed"]:
-                    raise HTTPException(409, "知识片段未通过接收方检查")
                 reference = hmac.new(_REFERENCE_KEY, stamp + str(index).encode(), hashlib.sha256).hexdigest()
-                records.append({"content": chunk, "score": score, "title": "获准知识片段",
-                                "metadata": {"reference": reference, "policy_version": revision}})
-        records.sort(key=lambda record: record["score"], reverse=True)
+                record = {"content": chunk, "score": score, "title": "获准知识片段",
+                          "metadata": {"reference": reference, "policy_version": revision}}
+                records.append((record, codes, spans, allowed))
+        records.sort(key=lambda candidate: candidate[0]["score"], reverse=True)
+        selected = []
+        for record, codes, spans, allowed in records[:body.retrieval_setting.top_k]:
+            checked = EgressGateway(generated_pseudonyms=codes).precheck(
+                binding.recipient, binding.identity, record["content"], spans, allowed,
+                task_key=binding.task, expected_type=RecipientType.EGRESS_TOOL, operation="tool_egress")
+            if not checked["allowed"]:
+                raise HTTPException(409, "知识片段未通过接收方检查")
+            selected.append(record)
         try:
             _, current_revision = load_integrations()
         except Exception:
             raise HTTPException(503, "知识服务配置不可用") from None
         if current_revision != revision:
             raise HTTPException(409, "知识授权配置已变化，请重试")
-        return {"records": records[:body.retrieval_setting.top_k]}
+        return {"records": selected}

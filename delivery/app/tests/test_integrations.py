@@ -102,6 +102,7 @@ def test_lakera_is_explicit_and_fail_closed(settings, monkeypatch, reply, allowe
     transport(monkeypatch, handler)
     assert bool(guards.extra_denial("公开材料", "external_model")) is not allowed
     assert len(requests) == 1
+    assert not guards.extra_denial("仅供本机预检的材料", "egress_tool_public", local_only=True)
     assert not guards.extra_denial("获准恢复的姓名", "viewer_teacher")
     assert len(requests) == 1
     settings(lakera={"enabled": True})
@@ -114,7 +115,7 @@ def test_local_payload_denial_never_calls_commercial_screen(settings, monkeypatc
 
     monkeypatch.setattr(gateway, "inspect_payload", lambda *a, **k: {
         "leaked": True, "leaked_categories": ["PHONE"], "n_hits": 1})
-    monkeypatch.setattr(gateway, "extra_denial", lambda *a: pytest.fail("Local check must run first"))
+    monkeypatch.setattr(gateway, "extra_denial", lambda *a, **k: pytest.fail("Local check must run first"))
     assert not gateway.EgressGateway().precheck("external_model", "student_leader", "test",
                                                task_key="meeting_minutes")["allowed"]
 
@@ -157,6 +158,9 @@ def test_dify_returns_only_processed_content_and_rechecks_sources(settings, monk
     endpoint = "/api/integrations/dify/retrieval"
     assert client.post(endpoint, json=body).status_code == 401
     headers = {"Authorization": "Bearer " + "x" * 40}
+    with monkeypatch.context() as patch:
+        patch.setenv("SHIELD_DETECTOR_MODE", "dictionary_test")
+        assert client.post(endpoint, json=body, headers=headers).status_code == 409
     reply = client.post(endpoint, json=body, headers=headers)
     assert reply.status_code == 200, reply.text
     assert reply.headers["cache-control"] == "no-store"
@@ -168,6 +172,31 @@ def test_dify_returns_only_processed_content_and_rechecks_sources(settings, monk
                        headers=headers).status_code == 422
     assert file_loader.delete_upload(material.doc_id)
     assert client.post(endpoint, json=body, headers=headers).status_code == 410
+
+
+def test_dify_checks_only_selected_chunks_with_their_original_context(settings, monkeypatch):
+    settings(knowledge={"kb": {"identity": "student_leader", "task": "meeting_minutes",
+                               "token_env": "TEST_DIFY_TOKEN", "doc_ids": ["one", "two"]}})
+    monkeypatch.setenv("TEST_DIFY_TOKEN", "x" * 40)
+    monkeypatch.setattr(api, "load_material", lambda key: Material(key, "uploaded", "", key))
+    original = Span(0, 2, "张明", "PERSON_NAME")
+    monkeypatch.setattr(api, "_approved_content", lambda material, binding: (
+        "拟招聘工作方案，人员甲负责" if material.doc_id == "one" else "公开招聘公告",
+        {"人员甲"} if material.doc_id == "one" else set(), [original], set()))
+    checked = []
+
+    def precheck(self, recipient, identity, content, spans, allowed, **kwargs):
+        checked.append(content)
+        assert self.generated_pseudonyms == {"人员甲"}
+        assert spans == [original]
+        return {"allowed": True}
+
+    monkeypatch.setattr(api.EgressGateway, "precheck", precheck)
+    reply = local_client().post("/api/integrations/dify/retrieval", json={
+        "knowledge_id": "kb", "query": "招聘工作", "retrieval_setting": {"top_k": 1, "score_threshold": 0}},
+        headers={"Authorization": "Bearer " + "x" * 40})
+    assert reply.status_code == 200, reply.text
+    assert [record["content"] for record in reply.json()["records"]] == checked == ["拟招聘工作方案，人员甲负责"]
 
 
 def test_confirmed_tool_call_is_not_repeated(settings, monkeypatch, tmp_path):
@@ -202,6 +231,10 @@ def test_confirmed_tool_call_is_not_repeated(settings, monkeypatch, tmp_path):
 
     with monkeypatch.context() as patch:
         transport(patch, handler)
+        with monkeypatch.context() as dictionary:
+            dictionary.setenv("SHIELD_DETECTOR_MODE", "dictionary_test")
+            assert client.post(endpoint + "/execute", json=execution, headers=headers).status_code == 409
+            assert not sends
         assert client.post(endpoint + "/execute", json={**execution, "text": "modified"},
                            headers=headers).status_code == 409
         assert client.post(endpoint + "/execute", json=execution, headers=headers).json()["completed"]

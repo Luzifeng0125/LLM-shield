@@ -17,7 +17,7 @@ import httpx
 from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import Field
 
-from .config import OUTPUT_DIR
+from .config import OUTPUT_DIR, detector_mode
 from .integrations import Contract, load_integrations
 from .m7_egress.gateway import EgressGateway
 from .schema import RecipientType
@@ -63,6 +63,8 @@ def _configured(body):
 
 
 def _check(tool, text):
+    if detector_mode() == "dictionary_test":
+        raise HTTPException(409, "词典测试模式的识别结果未经验证，已暂停外发")
     result = EgressGateway().precheck(
         tool.recipient, tool.identity, text, task_key=tool.task,
         expected_type=RecipientType.EGRESS_TOOL, operation="tool_egress")

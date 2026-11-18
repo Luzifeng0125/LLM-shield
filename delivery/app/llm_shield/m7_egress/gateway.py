@@ -83,7 +83,8 @@ class EgressGateway:
                  *, placeholders: Optional[Set[str]] = None,
                  task_key: Optional[str] = None,
                  expected_type: Optional[RecipientType] = None,
-                 operation: Optional[str] = None) -> Dict[str, object]:
+                 operation: Optional[str] = None,
+                 local_only: bool = False) -> Dict[str, object]:
         """发送前检查：权限 + 载荷内容。"""
         rec = recipients().get(recipient_key)
         if not isinstance(rec, dict):
@@ -124,7 +125,7 @@ class EgressGateway:
                 "reason": f"载荷中仍存在受限信息（{cats}），共 {insp['n_hits']} 处，已拦截",
                 "inspect": insp,
             }
-        denial = extra_denial(content, recipient_key)
+        denial = extra_denial(content, recipient_key, local_only=local_only)
         if denial:
             return {"allowed": False, "reason": denial}
         return {"allowed": True, "reason": why, "inspect": insp}

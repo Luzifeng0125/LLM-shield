@@ -75,7 +75,8 @@ def main():
                                             "--config", str(config)], stdout=log, stderr=log,
                                            env=env, cwd=temp)
                 cleanup.callback(stop, process)
-                with httpx.Client(base_url=f"http://127.0.0.1:{port}", trust_env=False, timeout=10) as client:
+                base_url = f"http://127.0.0.1:{port}"
+                with httpx.Client(base_url=base_url, trust_env=False, timeout=10) as client:
                     for _ in range(90):
                         if process.poll() is not None:
                             raise RuntimeError("LiteLLM exited before becoming ready")
@@ -87,16 +88,23 @@ def main():
                         time.sleep(0.5)
                     else:
                         raise RuntimeError("LiteLLM startup timed out")
-                    messages = [{"role": "user", "content": "固定公开连接测试"}]
-                    response = client.post("/v1/chat/completions", headers={"Authorization": "Bearer " + token},
-                                           json={"model": "shield-primary", "messages": messages})
-                    response.raise_for_status()
-                    assert response.json()["choices"][0]["message"]["content"] == "公开连接测试通过"
-                    assert len(requests) == 1, "Expected one upstream call"
-                    assert requests[0]["messages"] == messages, repr(requests[0]["messages"])
+                manifest = directory / "shield-integrations.yaml"
+                manifest.write_text(yaml.safe_dump({"litellm": {"enabled": True,
+                    "base_url": base_url + "/v1", "approved_models": ["shield-primary"]}}), encoding="utf-8")
+                os.environ.update(SHIELD_INTEGRATIONS_CONFIG=str(manifest), LLM_PROVIDER="litellm",
+                                  LLM_MODE="real", LLM_BASE_URL=base_url + "/v1",
+                                  LLM_MODEL="shield-primary", LLM_API_KEY=token, LLM_TIMEOUT="10")
+                sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+                from llm_shield.m7_egress.llm_client import chat_messages_with_fallback
+
+                messages = [{"role": "user", "content": "固定公开连接测试"}]
+                result = chat_messages_with_fallback(messages)
+                assert result == {"text": "公开连接测试通过", "engine": "real", "error": ""}, result
+                assert len(requests) == 1, "Expected one upstream call"
+                assert requests[0]["messages"] == messages
                 stop(process)
                 process = None
-        print("Actual LiteLLM proxy and synthetic loopback upstream verified. No paid model call.")
+        print("Shield client -> actual LiteLLM proxy -> synthetic loopback upstream verified. No paid model call.")
     finally:
         if process is not None:
             stop(process)
