@@ -53,11 +53,13 @@ def nemo_denial(content: str, phrases: tuple[str, ...]) -> str:
     raise GuardUnavailable("NeMo 未返回有效许可")
 
 
-def extra_denial(content: str, recipient: str, *, local_only: bool = False) -> str:
+def extra_denial(content: str, recipient: str, *, local_only: bool = False,
+                 stage: str = "model_input") -> str:
     try:
         settings, _ = load_integrations()
         if settings.nemo.enabled:
-            denial = nemo_denial(content, tuple(settings.nemo.deny_phrases))
+            phrases = tuple(settings.nemo.deny_phrases) + tuple(settings.nemo.boundaries.get(stage, ()))
+            denial = nemo_denial(content, phrases)
             if denial:
                 return denial
         if local_only:

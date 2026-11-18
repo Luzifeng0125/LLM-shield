@@ -47,7 +47,11 @@ def status():
     return {"revision": revision, "packages": packages,
             "presidio": settings.presidio.enabled, "nemo": settings.nemo.enabled,
             "litellm": settings.litellm.enabled, "lakera": settings.lakera.enabled,
-            "knowledge_sources": len(settings.knowledge)}
+            "knowledge_sources": len(settings.knowledge),
+            "policy_boundaries": sorted(settings.nemo.boundaries),
+            "recognizers": [{"name": pattern.name, "category": pattern.category,
+                             "revision": pattern.revision}
+                            for pattern in settings.presidio.patterns]}
 
 
 class Diagnostic(Contract):
@@ -131,7 +135,7 @@ def _approved_content(material, binding):
     checked = EgressGateway(generated_pseudonyms=codes).precheck(
         binding.recipient, binding.identity, content, analysis.spans, allowed,
         task_key=binding.task, expected_type=RecipientType.EGRESS_TOOL, operation="tool_egress",
-        local_only=True)
+        local_only=True, guard_stage="retrieval")
     if not checked["allowed"]:
         raise HTTPException(409, "知识片段未通过接收方检查")
     return content, codes, analysis.spans, allowed
@@ -184,7 +188,8 @@ def retrieval(body: Retrieval, auth: HTTPAuthorizationCredentials | None = Depen
         for record, codes, spans, allowed in records[:body.retrieval_setting.top_k]:
             checked = EgressGateway(generated_pseudonyms=codes).precheck(
                 binding.recipient, binding.identity, record["content"], spans, allowed,
-                task_key=binding.task, expected_type=RecipientType.EGRESS_TOOL, operation="tool_egress")
+                task_key=binding.task, expected_type=RecipientType.EGRESS_TOOL, operation="tool_egress",
+                guard_stage="retrieval")
             if not checked["allowed"]:
                 raise HTTPException(409, "知识片段未通过接收方检查")
             selected.append(record)

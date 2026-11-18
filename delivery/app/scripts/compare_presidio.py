@@ -40,7 +40,7 @@ def main() -> int:
         from presidio_anonymizer import AnonymizerEngine
         from presidio_anonymizer.entities import OperatorConfig, RecognizerResult
     except ImportError:
-        parser.error("请先安装 requirements-presidio.txt")
+        parser.error("请先安装 requirements-presidio-eval.txt")
 
     engine = AnonymizerEngine()
     samples = [f.read_text(encoding="utf-8") for f in args.files] or [

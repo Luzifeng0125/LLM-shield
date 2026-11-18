@@ -130,6 +130,9 @@ async function init() {
   const knowledge = document.createElement('p');
   knowledge.textContent = 'Dify 知识源绑定 ' + status.knowledge_sources + ' 个';
   field('components').append(knowledge);
+  const boundaries = document.createElement('p');
+  boundaries.textContent = 'NeMo 独立策略边界 ' + (status.policy_boundaries.join('、') || '使用全局规则');
+  field('components').append(boundaries);
   field('diagnose-button').disabled = false;
 }
 init().catch((error) => { field('status').textContent = error.message; });

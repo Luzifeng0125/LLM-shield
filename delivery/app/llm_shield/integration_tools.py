@@ -62,12 +62,12 @@ def _configured(body):
     return tool, revision, token
 
 
-def _check(tool, text):
+def _check(tool, text, *, stage="tool_egress"):
     if detector_mode() == "dictionary_test":
         raise HTTPException(409, "词典测试模式的识别结果未经验证，已暂停外发")
     result = EgressGateway().precheck(
         tool.recipient, tool.identity, text, task_key=tool.task,
-        expected_type=RecipientType.EGRESS_TOOL, operation="tool_egress")
+        expected_type=RecipientType.EGRESS_TOOL, operation="tool_egress", guard_stage=stage)
     if not result["allowed"]:
         raise HTTPException(409, result["reason"])
 
@@ -132,7 +132,7 @@ def execute(body: Execution, response: Response):
                         raise ValueError("response too large")
         # The response is untrusted data. Check it before exposing success.
         answer = bytes(raw).decode("utf-8")
-        _check(tool, answer)
+        _check(tool, answer, stage="tool_response")
     except Exception:
         # Preserve pending state because the receiver may have performed the action.
         raise HTTPException(409, "接收结果未通过确认，请在接收端核对；本机不会自动重复执行") from None

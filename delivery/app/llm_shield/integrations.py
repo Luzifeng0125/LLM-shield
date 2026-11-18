@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Literal
 
 import yaml
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from . import config as C
 
@@ -21,16 +21,27 @@ class Pattern(Contract):
     category: str = Field(min_length=1, max_length=40)
     regex: str = Field(min_length=1, max_length=500)
     score: float = Field(default=0.85, ge=0, le=1)
+    revision: str = Field(default="1", min_length=1, max_length=40)
 
 
 class Presidio(Contract):
     enabled: bool = False
     patterns: list[Pattern] = Field(default_factory=list, max_length=50)
 
+    @model_validator(mode="after")
+    def unique_patterns(self):
+        names = [pattern.name for pattern in self.patterns]
+        definitions = [(pattern.category, pattern.regex) for pattern in self.patterns]
+        if len(set(names)) != len(names) or len(set(definitions)) != len(definitions):
+            raise ValueError("识别器名称或类别与正则组合重复")
+        return self
+
 
 class Nemo(Contract):
     enabled: bool = False
     deny_phrases: list[str] = Field(default_factory=list, max_length=100)
+    boundaries: dict[Literal["model_input", "model_output", "retrieval", "view_display",
+                             "tool_egress", "tool_response"], list[str]] = Field(default_factory=dict)
 
 
 class Lakera(Contract):

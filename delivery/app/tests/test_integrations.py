@@ -250,7 +250,7 @@ def test_uncertain_tool_result_blocks_retry(settings, monkeypatch, tmp_path):
     settings(tools={"send": {"endpoint": "https://example.invalid/receive", "token_env": "TEST_TOOL_TOKEN",
                             "identity": "student_leader", "task": "meeting_minutes",
                             "recipient": "egress_tool_public"}})
-    monkeypatch.setattr(tools, "_check", lambda *a: None)
+    monkeypatch.setattr(tools, "_check", lambda *a, **k: None)
     client = local_client()
     headers = {"Authorization": "Bearer " + "owner" * 10}
     body = {"tool_id": "send", "text": "公开交付稿", "event_id": str(uuid4())}
