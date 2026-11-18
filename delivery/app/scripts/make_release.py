@@ -52,6 +52,8 @@ def runtime_files() -> list[Path]:
         )
         if parts[:2] == ("llm_shield", "m9_data") or name == "llm_shield/m4_necessity/train.py":
             selected = False
+        if path.name in {"requirements-presidio.txt", "requirements-presidio-eval.txt", "requirements-nemo.txt"}:
+            selected = False
         if selected and path.is_file() and not should_skip(path):
             files.append(path)
         elif selected and name in {"models/ACTIVE_MODELS.json", "models/README.md"}:
