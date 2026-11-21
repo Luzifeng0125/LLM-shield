@@ -3,7 +3,7 @@ const fs=require('node:fs'),path=require('node:path'),assert=require('node:asser
 const {pathToFileURL}=require('node:url');
 const {chromium}=require('C:/Users/nicholas/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core');
 const root=path.resolve(__dirname,'../..');
-const dir=path.join(root,'delivery/app/outputs/natural_action_experiment_20261030_v1');
+const dir=path.join(root,'app/outputs/natural_action_experiment_20261030_v1');
 const out=path.join(dir,'ui_qa');
 (async()=>{fs.mkdirSync(out,{recursive:true});const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'});try{
  const page=await browser.newPage({viewport:{width:1280,height:950}}),errors=[],requests=[];

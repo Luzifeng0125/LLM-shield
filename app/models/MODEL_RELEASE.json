@@ -1,0 +1,297 @@
+{
+  "schema_version": 1,
+  "release_date": "2026-11-02",
+  "latest_trained_model": "context",
+  "active_model": "active",
+  "promoted_candidates": [],
+  "weights_retrained_for_publication": false,
+  "paths_relative_to": "repository_root",
+  "dependency_lock": "app/requirements-lock.txt",
+  "models": [
+    {
+      "id": "active",
+      "path": "app/models/necessity_action.joblib",
+      "feature_version": 3,
+      "status": "active"
+    },
+    {
+      "id": "campus_candidate",
+      "path": "app/models/necessity_action_campus_candidate.joblib",
+      "feature_version": 3,
+      "status": "not_promoted",
+      "metadata": "app/models/necessity_action_campus_candidate.FROZEN.json"
+    },
+    {
+      "id": "aligned",
+      "path": "app/models/necessity_action_campus_aligned_20261101.joblib",
+      "feature_version": 3,
+      "status": "not_promoted",
+      "metadata": "app/models/necessity_action_campus_aligned_20261101.json"
+    },
+    {
+      "id": "task",
+      "path": "app/models/necessity_action_campus_task_20261102.joblib",
+      "feature_version": 4,
+      "status": "not_promoted",
+      "metadata": "app/models/necessity_action_campus_task_20261102.json"
+    },
+    {
+      "id": "context",
+      "path": "app/models/necessity_action_campus_context_20261102.joblib",
+      "feature_version": 5,
+      "status": "not_promoted",
+      "metadata": "app/models/necessity_action_campus_context_20261102.json"
+    }
+  ],
+  "human_evaluation": {
+    "reference": "31 frozen merged adjudications; individual reviewer forms unavailable",
+    "source_report": "docs/archive/technical/校园必要性模型独立人工评测报告_20261102.md",
+    "archive": "delivery/app/eval/releases/campus_blind31_20261102",
+    "results": {
+      "active": {
+        "argmax": {
+          "accuracy": 0.5161,
+          "correct": 16,
+          "n": 31,
+          "macro_f1_six_actions": 0.2874
+        },
+        "pipeline": {
+          "accuracy": 0.5484,
+          "correct": 17,
+          "n": 31,
+          "macro_f1_six_actions": 0.4028
+        }
+      },
+      "task": {
+        "argmax": {
+          "accuracy": 0.7097,
+          "correct": 22,
+          "n": 31,
+          "macro_f1_six_actions": 0.4696
+        },
+        "pipeline": {
+          "accuracy": 0.7097,
+          "correct": 22,
+          "n": 31,
+          "macro_f1_six_actions": 0.4696
+        }
+      },
+      "context": {
+        "argmax": {
+          "accuracy": 0.6129,
+          "correct": 19,
+          "n": 31,
+          "macro_f1_six_actions": 0.3825
+        },
+        "pipeline": {
+          "accuracy": 0.6129,
+          "correct": 19,
+          "n": 31,
+          "macro_f1_six_actions": 0.3825
+        }
+      }
+    },
+    "rerun_for_publication": false
+  },
+  "missing_runtime_weights": [
+    {
+      "path": "delivery/app/models/gliner_v3/pytorch_model.bin",
+      "expected_sha256": "3e7d4c3d704920e78fc0a8d65a768aaab4e095d0ae8c0da2fb96615d4883a360",
+      "present_locally": true,
+      "distributed": false
+    }
+  ],
+  "files": [
+    {
+      "path": "research/datasets/legacy/校园必要性盲标_20261102/manifest.json",
+      "size_bytes": 2004,
+      "sha256": "f17280e6c22a1e1f98d8ca450cb3f59121ea3da724bb76da8244bb574e011433",
+      "role": "frozen_evaluation_reference"
+    },
+    {
+      "path": "research/datasets/legacy/校园必要性盲标_20261102/n01.json",
+      "size_bytes": 3103,
+      "sha256": "e6e49bb09be91f82d40d4d55b9b820de522c9867b2bae58a417964622dd543dd",
+      "role": "frozen_evaluation_input"
+    },
+    {
+      "path": "research/datasets/legacy/校园必要性盲标_20261102/n02.json",
+      "size_bytes": 1048,
+      "sha256": "055d0f8c2c57eb189deda5a0c2706465059de505e7021c20e7e6c41ffc4900ff",
+      "role": "frozen_evaluation_input"
+    },
+    {
+      "path": "research/datasets/legacy/校园必要性盲标_20261102/n03.json",
+      "size_bytes": 2415,
+      "sha256": "5cc8bf5d54cbd79c87ae07aba71c254c7ccce725961a58393d86201694b8f8c5",
+      "role": "frozen_evaluation_input"
+    },
+    {
+      "path": "research/datasets/legacy/校园必要性盲标_20261102/n04.json",
+      "size_bytes": 3282,
+      "sha256": "7cfa6efe852c9e17d83b4a5d9c423723014e03fa8237c96dfaabf83283999478",
+      "role": "frozen_evaluation_input"
+    },
+    {
+      "path": "research/datasets/legacy/校园必要性盲标_20261102/n05.json",
+      "size_bytes": 2510,
+      "sha256": "d831b1450436043c5c7ba11a11d78545e2ae736f3732b67b101750c15a7627be",
+      "role": "frozen_evaluation_input"
+    },
+    {
+      "path": "research/datasets/legacy/校园必要性盲标_20261102/n06.json",
+      "size_bytes": 2492,
+      "sha256": "7aaf022960b63d7c6bfbabcf6d00840fc4aa0de9d284d2c9dfbe9d9c862f1e50",
+      "role": "frozen_evaluation_input"
+    },
+    {
+      "path": "research/datasets/legacy/校园必要性盲标_20261102/n07.json",
+      "size_bytes": 1792,
+      "sha256": "3e4233f10563eab10dee09692f68e399ec57150de368591a7917e6393744f0c4",
+      "role": "frozen_evaluation_input"
+    },
+    {
+      "path": "research/datasets/legacy/校园必要性盲标_20261102/n08.json",
+      "size_bytes": 1654,
+      "sha256": "953355952c799a3c5d223c8430b1f55395d4747e8b9b1dd36771327238c369d3",
+      "role": "frozen_evaluation_input"
+    },
+    {
+      "path": "research/datasets/legacy/校园必要性盲标_20261102/n09.json",
+      "size_bytes": 2406,
+      "sha256": "10239d8198984b0db49920e72bbce0ae28321044064c98f4f22d869ad20d3aed",
+      "role": "frozen_evaluation_input"
+    },
+    {
+      "path": "research/datasets/legacy/校园必要性盲标_20261102/n10.json",
+      "size_bytes": 2340,
+      "sha256": "14b8baf061a4c3fab6ad8ddc2f23ff5d8027df08f622465ffa4f8c08ad4582b4",
+      "role": "frozen_evaluation_input"
+    },
+    {
+      "path": "research/datasets/legacy/校园必要性盲标_20261102/n11.json",
+      "size_bytes": 1662,
+      "sha256": "4134e6163157789f4fdce0172e39f396647480c79f7ac3bf235636262abb3abb",
+      "role": "frozen_evaluation_input"
+    },
+    {
+      "path": "research/datasets/legacy/校园必要性盲标_20261102/n12.json",
+      "size_bytes": 987,
+      "sha256": "b53c4d9f58b7bb231cbb9194161bdd351eb4b4475de4c072f0d0bd3eb6cc51de",
+      "role": "frozen_evaluation_input"
+    },
+    {
+      "path": "research/datasets/legacy/校园必要性盲标_20261102/版本/冻结标记.json",
+      "size_bytes": 64,
+      "sha256": "2cdd313c3775d584957770dd5a622ef38abd9b0a0a5887939a33d8661fda7ea0",
+      "role": "frozen_evaluation_reference"
+    },
+    {
+      "path": "research/datasets/legacy/校园必要性盲标_20261102/版本/最终裁定.json",
+      "size_bytes": 5717,
+      "sha256": "f33474888da6cf8a9ad149b0cfc1a18f236a2d93069a04d37849bea9f5af0027",
+      "role": "frozen_evaluation_reference"
+    },
+    {
+      "path": "app/eval/releases/campus_blind31_20261102/confusion.json",
+      "size_bytes": 12003,
+      "sha256": "deca5f259ce2dc1446a05e874e4c842cc02b97cf409da3380e94a396fa8ab94b",
+      "role": "archived_evaluation_evidence"
+    },
+    {
+      "path": "app/eval/releases/campus_blind31_20261102/environment.json",
+      "size_bytes": 3706,
+      "sha256": "84003cca3717a9cf36edce4ff86a4ea5294342c6587958fba4d14036542e0d4b",
+      "role": "archived_evaluation_evidence"
+    },
+    {
+      "path": "app/eval/releases/campus_blind31_20261102/errors.json",
+      "size_bytes": 4618,
+      "sha256": "4aa6df36ae70349d3e70eba07bd89b2cf2e7fd9f9ee8de489be19ed8b19a3e22",
+      "role": "archived_evaluation_evidence"
+    },
+    {
+      "path": "app/eval/releases/campus_blind31_20261102/experiment.json",
+      "size_bytes": 3368,
+      "sha256": "376a069d7e6c95596309d980338b8f02df23ebaaf3b14b1ab1f77387a85c78ec",
+      "role": "archived_evaluation_evidence"
+    },
+    {
+      "path": "app/eval/releases/campus_blind31_20261102/results.csv",
+      "size_bytes": 6039,
+      "sha256": "9bbf61f207dd82cb70627c06c33308ad1cd80831076dc93393fe956636d8e492",
+      "role": "archived_evaluation_evidence"
+    },
+    {
+      "path": "app/eval/releases/campus_blind31_20261102/报告格式.md",
+      "size_bytes": 1782,
+      "sha256": "23ced5c9bc5839ed129afdc8d8a650651a6ed6f27d9e50fc4f55dee3e42e36e9",
+      "role": "archived_evaluation_evidence"
+    },
+    {
+      "path": "app/models/ACTIVE_MODELS.json",
+      "size_bytes": 1048,
+      "sha256": "f7e27ea6060bc51e70429d967c5afb27a86726c9586f0b8dd03c7138da1af6c8",
+      "role": "active_runtime_configuration"
+    },
+    {
+      "path": "app/models/necessity_action.joblib",
+      "size_bytes": 1224000,
+      "sha256": "cbfed4ca422a1a6d416ce1b5f488649816c261b6acc86ffc173887c8dfed1b9f",
+      "role": "model_weights"
+    },
+    {
+      "path": "app/models/necessity_action_campus_aligned_20261101.joblib",
+      "size_bytes": 135734,
+      "sha256": "6fe7e292d618106af9109788181a55965365819667f8f34841e68c674b514356",
+      "role": "model_weights"
+    },
+    {
+      "path": "app/models/necessity_action_campus_aligned_20261101.json",
+      "size_bytes": 585,
+      "sha256": "1e5cdb2a5494368a18096d205e34bf78f8ff35433f932d7c6b3880898482286c",
+      "role": "original_model_metadata"
+    },
+    {
+      "path": "app/models/necessity_action_campus_candidate.FROZEN.json",
+      "size_bytes": 665,
+      "sha256": "1779f9dc8ddaa5fd484e3c50f607393abd4a86f3029b764ce0b5a0b2d6c3a85f",
+      "role": "original_model_metadata"
+    },
+    {
+      "path": "app/models/necessity_action_campus_candidate.joblib",
+      "size_bytes": 117656,
+      "sha256": "74902c5d9239eaffc0208891297d8f19b462910534fcc3a51e37b1997f3ee950",
+      "role": "model_weights"
+    },
+    {
+      "path": "app/models/necessity_action_campus_context_20261102.joblib",
+      "size_bytes": 235729,
+      "sha256": "288fbb6399622a64d953d3044cf57929f3be7f341842bb185820d28148906163",
+      "role": "model_weights"
+    },
+    {
+      "path": "app/models/necessity_action_campus_context_20261102.json",
+      "size_bytes": 542,
+      "sha256": "74bc17a41394f6fa1ed0e72c21cc33732d243a5facf58f332193e303e50ca475",
+      "role": "original_model_metadata"
+    },
+    {
+      "path": "app/models/necessity_action_campus_task_20261102.joblib",
+      "size_bytes": 481841,
+      "sha256": "7d4a50a394e1aea94f562fc99419e798dfa70976627a96a0fff1513c31236c1e",
+      "role": "model_weights"
+    },
+    {
+      "path": "app/models/necessity_action_campus_task_20261102.json",
+      "size_bytes": 580,
+      "sha256": "358a50fda6dab3492c642d3fa507f2a5f80dec4acabd3c8b1aafb8bdacc7c932",
+      "role": "original_model_metadata"
+    }
+  ],
+  "layout_migration": {
+    "date": "2026-11-21",
+    "baseline": "e9e16b8",
+    "original_manifest": "archive/pre-reorganization-20261121:delivery/app/models/MODEL_RELEASE.json"
+  }
+}
