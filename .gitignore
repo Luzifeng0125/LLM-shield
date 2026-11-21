@@ -3,16 +3,14 @@
 !/.gitignore
 !/.gitattributes
 !/README.md
-!/AI_EXECUTION_PLAN.md
-!/进度.md
 !/启动隐盾.cmd
 !/启动官方模型测试.cmd
-!/delivery/
+!/app/
+!/research/
+!/docs/
+!/CHANGELOG.md
+!/.github/
 !/tools/
-!/04_技术文档/
-!/01_优化方案/
-!/02_提交材料/
-!/03_数据与人工复核/
 !/00_文件导航.html
 !/打开文件导航.cmd
 !/打开人工复核.cmd
@@ -21,7 +19,7 @@
 /local/
 
 # GLiNER 识别模型的配置与分词器随仓库分发；1.1 GB 权重本体由
-# delivery/app/.gitignore 的 *.bin 规则排除，哈希见 models/ACTIVE_MODELS.json。
+# app/.gitignore 的 *.bin 规则排除，哈希见 models/ACTIVE_MODELS.json。
 
 # Local credentials, environments, uploaded materials and generated traces.
 **/.env
@@ -32,7 +30,7 @@
 **/venv/
 **/node_modules/
 **/runtime/
-/delivery/app/models/reviewed_ner/
+/app/models/reviewed_ner/
 **/__pycache__/
 **/.pytest_cache/
 **/pytest-cache-files-*/
@@ -50,21 +48,21 @@
 
 # Human return archives remain local; accepted frozen labels are versioned separately.
 /delivery/交付文件清单.json
-/03_数据与人工复核/任务必要性复核_20261026*/reviews/
-/03_数据与人工复核/任务必要性复核_20261026*/reviewed/
-/03_数据与人工复核/任务必要性复核_自然文档*/reviews/
-/03_数据与人工复核/任务必要性复核_自然文档*/reviewed/
-/03_数据与人工复核/复核接收_*/
-/03_数据与人工复核/**/reviews/
-/03_数据与人工复核/**/reviewed/
-/03_数据与人工复核/**/返还/
-/03_数据与人工复核/**/裁决结果*/
-/03_数据与人工复核/**/复核结果*/
-/03_数据与人工复核/**/返还原件*
+/research/datasets/legacy/任务必要性复核_20261026*/reviews/
+/research/datasets/legacy/任务必要性复核_20261026*/reviewed/
+/research/datasets/legacy/任务必要性复核_自然文档*/reviews/
+/research/datasets/legacy/任务必要性复核_自然文档*/reviewed/
+/research/datasets/legacy/复核接收_*/
+/research/datasets/legacy/**/reviews/
+/research/datasets/legacy/**/reviewed/
+/research/datasets/legacy/**/返还/
+/research/datasets/legacy/**/裁决结果*/
+/research/datasets/legacy/**/复核结果*/
+/research/datasets/legacy/**/返还原件*
 
 # Local reorganization audit and generated download copies.
-/04_技术文档/整理记录/*.json
-/01_优化方案/*.zip
-/03_数据与人工复核/*便携版*.zip
-/03_数据与人工复核/**/*.zip
-/02_提交材料/99_历史版本/**/build/
+/docs/整理记录/*.json
+/docs/archive/plans/*.zip
+/research/datasets/legacy/*便携版*.zip
+/research/datasets/legacy/**/*.zip
+/docs/submissions/99_历史版本/**/build/

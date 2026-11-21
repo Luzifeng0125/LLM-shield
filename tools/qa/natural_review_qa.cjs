@@ -6,8 +6,8 @@ const path = require('node:path');
 const {pathToFileURL} = require('node:url');
 const {chromium} = require('C:/Users/nicholas/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core');
 const root = path.resolve(__dirname, '../..');
-const pack = path.join(root, '03_数据与人工复核/任务必要性复核_自然文档_v3_20261029');
-const out = path.join(root, 'delivery/app/outputs/natural_review_qa_20261029');
+const pack = path.join(root, 'research/datasets/legacy/任务必要性复核_自然文档_v3_20261029');
+const out = path.join(root, 'app/outputs/natural_review_qa_20261029');
 
 async function main() {
   fs.mkdirSync(out, {recursive:true});

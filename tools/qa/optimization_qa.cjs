@@ -155,7 +155,7 @@ async function main() {
 
     stage='review_form';
     await page.goto(pathToFileURL(path.join(appRoot,'scripts/action_review.html')).href);
-    await page.locator('#taskFile').setInputFiles(path.join(root,'03_数据与人工复核/任务必要性复核_20261026_v2/review-first-batch.json'));
+    await page.locator('#taskFile').setInputFiles(path.join(root,'research/datasets/legacy/任务必要性复核_20261026_v2/review-first-batch.json'));
     await page.waitForFunction(()=>!document.getElementById('work').hidden);
     assert((await page.locator('#progress').innerText()).includes('/ 28'));
     await page.locator('#reviewer').fill('AUTOMATED_UI_TEST_NOT_A_HUMAN');

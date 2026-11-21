@@ -1,0 +1,22 @@
+name: Verify native runtime
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  native-runtime:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install application and test dependencies
+        run: python -m pip install -r requirements-lock.txt -r requirements-dev.txt
+      - name: Verify native gateway, policies and runtime package
+        run: python -m pytest tests/test_native_gateway.py tests/test_api_adapter.py tests/test_integrations.py tests/test_modular_runtime.py -q
