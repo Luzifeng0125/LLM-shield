@@ -1,4 +1,4 @@
-"""Verify published bytes, with optional local model loading and synthetic inference."""
+"""Verify the recorded research files and locally supplied action weights."""
 from __future__ import annotations
 
 import argparse
@@ -12,9 +12,14 @@ APP = Path(__file__).resolve().parents[1]
 ROOT = APP.parent
 
 
-def verify(load: bool = False) -> None:
+def verify(load: bool = False, *, repository_only: bool = False) -> None:
+    if repository_only and load:
+        raise ValueError("Model loading requires full local verification")
     release = json.loads((APP / "models/MODEL_RELEASE.json").read_text(encoding="utf-8"))
-    for entry in release["files"]:
+    external = {model["path"] for model in release["models"]}
+    entries = [entry for entry in release["files"]
+               if not repository_only or entry["path"] not in external]
+    for entry in entries:
         path = (ROOT / entry["path"]).resolve()
         if not path.is_relative_to(ROOT):
             raise ValueError(f"Path outside repository: {entry['path']}")
@@ -23,7 +28,9 @@ def verify(load: bool = False) -> None:
             raise ValueError(f"Size mismatch: {entry['path']}")
         if hashlib.sha256(data).hexdigest() != entry["sha256"]:
             raise ValueError(f"SHA-256 mismatch: {entry['path']}")
-    print(f"Verified {len(release['files'])} published files (size and SHA-256).")
+    print(f"Verified {len(entries)} files (size and SHA-256).")
+    if repository_only:
+        print(f"{len(external)} external action weights were outside this check.")
 
     if not load:
         return
@@ -54,10 +61,12 @@ def verify(load: bool = False) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--load", action="store_true", help="Load trusted published models and run a synthetic probe.")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("--repository-only", action="store_true", help="Check repository records without the separately supplied action weights.")
+    group.add_argument("--load", action="store_true", help="Load trusted local models and run a synthetic probe.")
     args = parser.parse_args()
     try:
-        verify(load=args.load)
+        verify(load=args.load, repository_only=args.repository_only)
     except (OSError, ValueError, KeyError, TypeError) as exc:
         print(f"Verification failed: {exc}", file=sys.stderr)
         return 1

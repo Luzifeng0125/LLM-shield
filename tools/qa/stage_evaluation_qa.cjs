@@ -4,7 +4,7 @@ const path=require('node:path');
 const fs=require('node:fs');
 const net=require('node:net');
 const assert=require('node:assert/strict');
-const {chromium}=require('C:/Users/nicholas/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core');
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright-core');
 const root=path.resolve(__dirname,'../..'), appRoot=path.join(root,'delivery/app');
 const out=path.join(appRoot,'outputs/stage_ui_20261102_'+Date.now());
 const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));

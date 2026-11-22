@@ -1,5 +1,5 @@
 // Optional local software QA; never a human review.
-const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'C:/Users/nicholas/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core');
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright-core');
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {pathToFileURL}=require('node:url');const root=path.resolve(__dirname,'..');
 const read=p=>fs.readFileSync(p,'utf8').trim().split(/\r?\n/).map(x=>JSON.parse(x));

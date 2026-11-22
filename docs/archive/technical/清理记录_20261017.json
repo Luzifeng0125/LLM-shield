@@ -11121,7 +11121,7 @@
     "pytest": "delivery/app/outputs/verification/pytest.xml",
     "models": "delivery/app/models/ACTIVE_MODELS.json"
   },
-  "runtime_base_python": "C:/Users/nicholas/AppData/Local/Programs/Python/Python312",
+  "runtime_base_python": "%LOCALAPPDATA%/Programs/Python/Python312",
   "limitations": [
     "Current runtime is a local venv, not a verified portable release.",
     "Known public-location versus dorm classification issue remains; see AI_EXECUTION_PLAN.md.",

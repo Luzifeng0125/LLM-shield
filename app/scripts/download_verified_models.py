@@ -1,4 +1,4 @@
-"""Download pinned public weights; retain existing files until hashes are verified."""
+"""Download the pinned official GLiNER comparison model; action weights are supplied locally."""
 from __future__ import annotations
 
 import argparse
@@ -12,12 +12,10 @@ from pathlib import Path
 import requests
 
 APP = Path(__file__).resolve().parents[1]
-ROOT = APP.parent
 REVISION = "443d26d654e0324125a96bebd8e796c14ff2efe6"
 MODEL_REPO = "urchade/gliner_multi-v2.1"
 WEIGHT_SHA = "2100142f31627531497850659dcb3821c99d5e71c08a8e01a98e4b11ef32a199"
 WEIGHT_SIZE = 1155830112
-ACTION_COMMIT = "46bf3c24cf10b1ec8f7bb0c17d7a0e218084c36f"
 
 
 def sha(path: Path) -> str:
@@ -118,21 +116,12 @@ def main() -> None:
         assets.append({"file": name, "sha256": sha(destination), "source": "existing_project_mdeberta_assets"})
     receipt["encoder_assets"] = assets
 
-    release = json.loads((APP / "models/MODEL_RELEASE.json").read_text(encoding="utf-8"))
-    action_directory = APP / "models/download_verification_20261102"
-    verified_actions = []
-    for model in release["models"]:
-        entry = next(entry for entry in release["files"] if entry["path"] == model["path"])
-        name = Path(model["path"]).name
-        info = download(f"https://raw.githubusercontent.com/Luzifeng0125/LLM-shield/{ACTION_COMMIT}/{model['path']}", action_directory / name, entry["size_bytes"], entry["sha256"])
-        verified_actions.append({**info, "model_id": model["id"], "matches_local": sha(ROOT / model["path"]) == entry["sha256"]})
-    receipt["action_models"] = {"source_commit": ACTION_COMMIT, "files": verified_actions}
     with (directory / "DOWNLOAD_RECEIPT.json").open("w", encoding="utf-8", newline="\n") as output:
         json.dump(receipt, output, ensure_ascii=False, indent=2)
         output.write("\n")
     from prepare_offline_gliner import main as prepare_offline
     prepare_offline()
-    print("GLiNER and five action models downloaded and verified.", flush=True)
+    print("Official GLiNER downloaded and verified. Use verify_model_release.py for locally supplied action weights.", flush=True)
 
 
 if __name__ == "__main__":

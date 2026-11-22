@@ -2,7 +2,9 @@
 import hashlib
 from pathlib import Path
 
-from llm_shield.config import recipients
+import pytest
+
+from llm_shield.config import detector_mode, gliner_model_dir, recipients, use_gliner
 from llm_shield.m6_transform.local_completion import (
     boundary_allows_generalized_budget,
     plan_meeting_budget,
@@ -66,6 +68,11 @@ def test_authorized_display_adds_phrase_and_unauthorized_does_not():
     assert "印刷费：约六千元" in teacher and "6400" not in teacher and "郑清越" in teacher
     assert "约六千元" not in peer and "6400" not in peer and "郑清越" not in peer
     assert "约六千元" not in public and "6400" not in public
+    # These egress assertions use the configured recognizer; the display assertions above use local policy.
+    if use_gliner() and detector_mode() != "dictionary_test":
+        directory = Path(gliner_model_dir())
+        if not any((directory / name).is_file() for name in ("pytorch_model.bin", "model.safetensors")):
+            pytest.skip("egress assertions require the locally supplied project GLiNER weight")
     spans = [
         Span(0, 3, "郑清越", "PERSON_NAME"),
         Span(0, 3, "曹明川", "PERSON_NAME"),
@@ -104,6 +111,7 @@ def test_exact_amount_request_does_not_use_local_completion(monkeypatch):
     assert result.paused
 
 
+@pytest.mark.skipif(not ACTIVE.is_file(), reason="requires an available action model to reach the detector boundary")
 def test_pipeline_withholds_amount_before_existing_detection_pause(monkeypatch):
     monkeypatch.setenv("SHIELD_DETECTOR_MODE", "dictionary_test")
     result = run_pipeline(ShieldRequest(
@@ -119,4 +127,20 @@ def test_pipeline_withholds_amount_before_existing_detection_pause(monkeypatch):
     assert result.local_completion["necessity_action"] == "GENERALIZE"
     assert result.local_completion["boundary_action"] == "WITHHOLD"
     assert result.local_completion["presented"] is False
+
+
+@pytest.mark.skipif(not ACTIVE.is_file(), reason="requires the locally supplied active action weight")
+def test_locally_supplied_active_action_matches_frozen_digest():
     assert hashlib.sha256(ACTIVE.read_bytes()).hexdigest() == ACTIVE_SHA
+
+
+def test_missing_action_weight_stops_before_budget_is_disclosed(monkeypatch, tmp_path):
+    monkeypatch.setenv("SHIELD_DETECTOR_MODE", "dictionary_test")
+    monkeypatch.setenv("SHIELD_ACTION_MODEL_PATH", str(tmp_path / "absent.joblib"))
+    result = run_pipeline(ShieldRequest(
+        "missing-action", "student_leader", "meeting_minutes", "external_model",
+        [Material("n04", "meeting_minutes", "例会", TEXT)], user_instruction=ASK),
+        send_model=False)
+    assert result.paused and "本地决策模型不可用" in result.pause_reason
+    assert not result.display_text
+    assert "6400" not in result.sanitized_text and "约六千元" not in result.sanitized_text

@@ -1,7 +1,7 @@
 // Synthetic UI fixtures only; never count these exports as a human review.
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {pathToFileURL}=require('node:url');
-const {chromium}=require('C:/Users/nicholas/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core');
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright-core');
 const root=path.resolve(__dirname,'../..');
 const dir=path.join(root,'app/outputs/natural_action_experiment_20261030_v1');
 const out=path.join(dir,'ui_qa');

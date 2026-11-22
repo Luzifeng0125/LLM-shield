@@ -27,3 +27,6 @@ app/models/gliner_v3/spm.model binary
 app/models/*.json -text
 app/eval/releases/** -text
 research/datasets/legacy/** -text
+
+# Preserve the archived PowerShell CRLF bytes when checking edits for whitespace.
+research/datasets/legacy/**/scripts/render_manual.ps1 whitespace=trailing-space,space-before-tab,cr-at-eol

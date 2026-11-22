@@ -16,6 +16,7 @@ def test_relative_candidate_path_uses_app_root(monkeypatch):
     assert config.action_model_path() == model.MODEL_PATH.resolve()
 
 
+@pytest.mark.skipif(not model.MODEL_PATH.is_file(), reason="requires the locally supplied active action weight")
 def test_switching_to_missing_candidate_never_reuses_good_model(monkeypatch, tmp_path):
     monkeypatch.setattr(config, "load_env", lambda: None)
     monkeypatch.setenv("SHIELD_ACTION_MODEL_PATH", str(model.MODEL_PATH))

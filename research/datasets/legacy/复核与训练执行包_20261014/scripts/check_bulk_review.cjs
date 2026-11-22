@@ -1,5 +1,5 @@
 // Browser regression with artificial software fixtures only; never approves user work.
-const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'C:/Users/nicholas/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core');
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright-core');
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {pathToFileURL}=require('node:url');
 const root=path.resolve(__dirname,'..'),qa=path.join(root,'qa');

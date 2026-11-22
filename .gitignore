@@ -3,6 +3,8 @@
 !/.gitignore
 !/.gitattributes
 !/README.md
+!/PROJECT_STATUS.md
+!/ROADMAP.md
 !/启动隐盾.cmd
 !/启动官方模型测试.cmd
 !/app/
@@ -66,3 +68,10 @@
 /research/datasets/legacy/*便携版*.zip
 /research/datasets/legacy/**/*.zip
 /docs/submissions/99_历史版本/**/build/
+
+# 本机受控原件仍可在原路径使用；目录内其余研究资料照常跟踪。
+/docs/submissions/01_申报书/隐盾项目申报书.docx
+/docs/submissions/02_报告/隐盾项目最终报告_本地模型方案版_更新20261016.docx
+/docs/submissions/03_答辩PPT/隐盾-隐私保护对话系统-苹果风-20261017内容修订.pptx
+/docs/submissions/99_历史版本/隐盾-隐私保护对话系统-苹果风优化版.pptx
+/research/datasets/legacy/复核与训练执行包_20261014/隐盾数据复核与模型训练执行方案.docx

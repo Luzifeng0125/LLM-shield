@@ -2,7 +2,7 @@ const {spawn} = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 const assert = require('node:assert/strict');
-const {chromium} = require('C:/Users/nicholas/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core');
+const {chromium} = require(process.env.PLAYWRIGHT_MODULE || 'playwright-core');
 const root = path.resolve(__dirname, '../../delivery');
 const screenshots = path.join(root, 'app/outputs/browser_qa/screenshots');
 fs.mkdirSync(screenshots, {recursive:true});

@@ -1,6 +1,6 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const {pathToFileURL}=require('node:url');
-const {chromium}=require('C:/Users/nicholas/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core');
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright-core');
 const root=path.resolve(__dirname,'../..'),pack=path.join(root,'research/datasets/legacy/上下文长材料_v4_1_20261030'),out=path.join(root,'app/outputs/context_review_v4_1_qa_20261030');
 (async()=>{fs.mkdirSync(out,{recursive:true});const task=JSON.parse(fs.readFileSync(path.join(pack,'review-task.json'),'utf8'));
 assert(task.cases.every(c=>!c.annotation&&!c.review));
