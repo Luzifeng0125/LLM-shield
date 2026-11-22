@@ -1,5 +1,5 @@
 // Optional UI verification. Needs local Playwright and Edge; dataset generation does not.
-const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'C:/Users/nicholas/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core');
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright-core');
 const fs=require('node:fs');
 const path=require('node:path');
 const {pathToFileURL}=require('node:url');

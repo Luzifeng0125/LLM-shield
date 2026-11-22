@@ -295,8 +295,7 @@ def test_calibration_pack_keeps_labels_out_of_runtime_and_matches_r0_contract():
     assert manifest["status"] == "human_assisted_review_received"
     assert manifest["train_validation"] == "unassigned_until_40_document_manifest"
     active = (ROOT / "app/models/ACTIVE_MODELS.json").read_bytes()
-    weights = (ROOT / "app/models/necessity_action.joblib").read_bytes()
     assert hashlib.sha256(active).hexdigest() == "f7e27ea6060bc51e70429d967c5afb27a86726c9586f0b8dd03c7138da1af6c8"
-    assert hashlib.sha256(weights).hexdigest() == "cbfed4ca422a1a6d416ce1b5f488649816c261b6acc86ffc173887c8dfed1b9f"
+    assert json.loads(active)["action"]["weights_sha256"] == "cbfed4ca422a1a6d416ce1b5f488649816c261b6acc86ffc173887c8dfed1b9f"
     untouched = copy.deepcopy(manifest)
     assert untouched == manifest

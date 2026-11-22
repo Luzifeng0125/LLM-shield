@@ -14,19 +14,14 @@ logs/*.log
 outputs/*
 !outputs/.gitkeep
 
-# 保留当前运行必需的小型动作模型；可选大模型权重不入库。
+# 动作权重由团队受控提供；Git 跟踪角色与指纹。
 models/*
-!models/necessity_action.joblib
 !models/ACTIVE_MODELS.json
 !models/README.md
 !models/MODEL_RELEASE.json
-!models/necessity_action_campus_candidate.joblib
 !models/necessity_action_campus_candidate.FROZEN.json
-!models/necessity_action_campus_aligned_20261101.joblib
 !models/necessity_action_campus_aligned_20261101.json
-!models/necessity_action_campus_task_20261102.joblib
 !models/necessity_action_campus_task_20261102.json
-!models/necessity_action_campus_context_20261102.joblib
 !models/necessity_action_campus_context_20261102.json
 
 # GLiNER 识别模型：配置与分词器入库（约 20 MB），便于核对模型结构与版本；
@@ -49,3 +44,7 @@ pretrained/
 # 弱监督/合成数据中间产物
 data/generated/cache/
 data/campus_corpus/raw/
+
+# 未确认可共享的历史语料保留在本机，按指纹复核。
+/data/ner_v3b/newtest300.jsonl
+/data/ner_v3b/train_aug300.jsonl

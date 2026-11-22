@@ -20,6 +20,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 FIELD = ROOT / "data" / "field_v1" / "field_v1.jsonl"
 REPORT = ROOT / "data" / "field_v1" / "integrity_report.md"
 
+AUGMENTED_REFERENCE = ROOT / "data" / "ner_v3b" / "train_aug300.jsonl"
 OLD_GOLD = [ROOT / "data" / "gold_v3" / "gold" / f"{s}_gold.jsonl"
             for s in ("train", "validation", "test")]
 CORPORA = {
@@ -27,7 +28,7 @@ CORPORA = {
                              for s in ("train", "validation")],
     "(b) 旧模板训练集": [ROOT / "data" / "ner_v3" / f"{s}.jsonl"
                          for s in ("train", "validation")],
-    "(c) 自举增强集": [ROOT / "data" / "ner_v3b" / "train_aug300.jsonl"],
+    "(c) 自举增强集": [AUGMENTED_REFERENCE],
 }
 
 _buf = []
@@ -77,6 +78,8 @@ def ngrams(text, n):
 
 
 def main():
+    if not AUGMENTED_REFERENCE.is_file():
+        raise SystemExit("缺少受控自举语料 train_aug300.jsonl，无法执行重叠检查。请先按 research/README.md 取得授权副本。")
     field = rows(FIELD)
     old = [r for p in OLD_GOLD for r in rows(p)]
 

@@ -297,7 +297,7 @@ class NecessityModel:
 
     def _load(self) -> None:
         if not self.model_path.exists():
-            self.reason = "未找到模型决策权重；请运行 python -m llm_shield.m4_necessity.train"
+            self.reason = "未找到模型决策权重；请取得获准的本机权重，按 app/models/ACTIVE_MODELS.json 核对摘要，并检查 SHIELD_ACTION_MODEL_PATH"
             return
         try:
             import joblib

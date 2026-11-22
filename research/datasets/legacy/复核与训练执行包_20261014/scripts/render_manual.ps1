@@ -1,6 +1,9 @@
 $ErrorActionPreference = 'Stop'
 $manualRoot = Split-Path -Parent $PSScriptRoot
 $manualDocx = Join-Path $manualRoot '隐盾数据复核与模型训练执行方案.docx'
+if (-not (Test-Path -LiteralPath $manualDocx -PathType Leaf)) {
+    throw '缺少受控 Word 原件。请从项目资料负责人取得，或用同批次 build_manual.py 在本机生成。'
+}
 $manualQa = Join-Path $manualRoot 'qa\document'
 New-Item -ItemType Directory -Force -Path $manualQa | Out-Null
 $manualPdf = Join-Path $manualQa 'manual.pdf'
@@ -24,5 +27,6 @@ try {
         [void][Runtime.InteropServices.Marshal]::ReleaseComObject($manualWord)
     }
 }
-& 'C:\Users\nicholas\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\poppler\Library\bin\pdftoppm.exe' -scale-to 1600 -png $manualPdf (Join-Path $manualQa 'page')
+$renderer = if ($env:PDFTOPPM) { $env:PDFTOPPM } else { 'pdftoppm' }
+& $renderer -scale-to 1600 -png $manualPdf (Join-Path $manualQa 'page')
 if ($LASTEXITCODE -ne 0) { throw 'Page rendering failed' }

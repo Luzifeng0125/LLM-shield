@@ -15,16 +15,18 @@
 
 ## 新机器或干净克隆
 
-最新校园动作候选与默认动作模型已随仓库分发，见[模型说明](../../app/models/README.md)。先在仓库根目录执行 `python -X utf8 app/scripts/verify_model_release.py` 检查文件；安装应用依赖后可增加 `--load` 检查加载与合成输入推理。此检查不训练、不重新评分冻结人工材料。
+协作仓库保留活动模型和校园候选的身份、摘要及历史结果。模型实物由团队受控供应，具体角色和对照方式见[模型说明](../../app/models/README.md)。
 
 1. 安装 Python 3.12，运行 `powershell -ExecutionPolicy Bypass -File .\tools\windows\安装开发环境.ps1`。基础依赖使用 requirements-lock.txt，GLiNER 推理依赖使用 requirements-gliner.txt。CUDA PyTorch 版本应与显卡驱动匹配。`-BaseOnly` 只供不运行模型的软件开发环境使用。
-2. 从授权本机训练产物取得完整 gliner_v3 目录，放入 app/models/gliner_v3，至少包含 pytorch_model.bin、gliner_config.json、config.json、tokenizer 文件和 spm.model。当前哈希见 ACTIVE_MODELS.json。Git 不分发这份大权重；普通同名下载不能视为当前微调产物。
+2. 从团队获准来源取得活动动作权重 `necessity_action.joblib`，放入 app/models，或用 SHIELD_ACTION_MODEL_PATH 指定本机文件。按[活动清单](../../app/models/ACTIVE_MODELS.json)核对 SHA-256。另取得完整 gliner_v3 目录，放入 app/models/gliner_v3，至少包含 pytorch_model.bin、gliner_config.json、config.json、tokenizer 文件和 spm.model。当前哈希见 ACTIVE_MODELS.json。Git 不分发这份大权重；普通同名下载不能视为当前微调产物。
 3. 复制 app/.env.example 为 app/.env，并在本机填写 LLM_API_KEY。默认官方 DeepSeek 地址为 https://api.deepseek.com，模型为 deepseek-flash。不要提交 .env。
 4. 运行预检与软件验证，然后启动服务。安装本身不能证明 CUDA 与模型质量已经验收。
 
 “运行Python.cmd”优先使用 SHIELD_PYTHON，随后读取本机 local/runtime/delivery/python-path.txt；未配置时使用 app/.venv。当前机器复用已安装完整 GLiNER/CUDA 依赖的解释器。两种 Python 环境不会同时加载应用。
 
 ## 验证
+
+纯 Git 工作树可从仓库根执行 `python -X utf8 app/scripts/verify_model_release.py --repository-only`，核对仓内记录。受控动作文件齐备后，省略该选项可校验所有历史清单项。参见[模型说明](../../app/models/README.md)。
 
 ```powershell
 & '.\tools\windows\运行验证.cmd'
