@@ -1,48 +1,44 @@
 # 隐盾 LLM-Shield
 
-隐盾面向名单统计、通知起草、会议整理和协作交付。在本机识别敏感信息，依据任务、身份和接收方选择处理动作。支持的表格统计使用完整记录，生成服务接收通过检查的内容。
+隐盾是面向组织协作文档处理的本地隐私保护研究原型。项目当前转入**本科生创新训练项目（人工智能+专项）**研究阶段，重点研究人工智能如何理解任务语义、文档事实与接收方需求，并在授权约束下控制信息披露。
 
-这里是团队的研发协作仓库，维护当前代码、必要工具、研究证据和决策。2.0 是当前候选研发版本。进度、分工方式和近期任务见[项目状态](PROJECT_STATUS.md)、[路线图](ROADMAP.md)和[协作说明](docs/current/仓库维护.md)。
+本仓库是研发协作与研究复现仓库，不等同于最终参赛/结题材料包。项目类型、研究目标、创新候选、假设、实验原则和申报文稿要求以[AI+大创研究基准](docs/research/AI_PLUS_RESEARCH_BASELINE.md)为准。
+
+## 当前研究状态
+
+- 现有 2.0 候选应用、模型、数据、历史评测和测试作为研究基础保留。
+- 旧挑战杯材料保留为历史资料，不再决定当前研究目标。
+- 下一阶段先进行系统查新、研究问题收敛和预实验，再决定新机制是否进入在线主流程。
+- 当前候选研究方向：接收方感知的跨文档/跨轮次累积披露评估、事实依赖驱动的变更一致性、联合披露方案选择。它们尚未被证明为原创成果。
 
 ## 启动
 
 首次安装按[安装与验证](docs/current/从GitHub安装与验证.md)配置 Python、完整 GLiNER 目录和 `app/.env`。
 
 ```powershell
-.\启动隐盾.cmd --check-only
-.\启动隐盾.cmd
+.\\启动隐盾.cmd --check-only
+.\\启动隐盾.cmd
 ```
 
-默认地址 http://127.0.0.1:8787/ 。启动器启用 GLiNER，自动选择 CUDA 或 CPU。外部生成需要有效配置，本机表格计算可独立执行。
+默认地址 http://127.0.0.1:8787/。外部生成需要有效配置；本机表格计算可独立执行。
 
-## 功能与文档
-
-| 能力 | 范围 |
-| --- | --- |
-| 文件对话与全表统计 | 受控历史、统计追问、条件筛选、分组、关联、去重、CSV/XLSX导出 |
-| 接收方版本 | 授权恢复、批准版本绑定的Word导出、可选本机OCR |
-| 项目协作 | 编号化分配与核验、供应商凭证与核销、本地封存验收 |
-| 原生安全能力 | 注册识别规则、六动作模型、硬约束和六边界检查 |
-| 原生网关 | 获准路由、同范围回退、预算预留、限流和费用查询 |
-| 知识与外发 | 绑定用途的本地词项检索、预览确认的固定Webhook |
-
-项目协作、知识源、工具和原生网关按需配置。请阅读[技术状态与历史验证范围](docs/current/状态.md)、[系统架构](docs/current/架构.md)、[原生能力](docs/current/原生能力开发范围.md)及[模型网关](docs/current/原生模型网关.md)。
-
-## 文件位置
+## 目录
 
 | 目录 | 内容 |
-| --- | --- |
-| [app](app/README.md) | 应用、网页、默认配置、活动模型清单与测试 |
-| [research](research/README.md) | 研究入口与版本化复核资料 |
-| [docs/current](docs/current/README.md) | 当前架构、安装、部署及维护说明 |
-| [docs/reports](docs/reports/仓库整理验收_20261121.md) | 项目报告与验证记录 |
-| [docs/submissions](docs/submissions/使用说明.md) | 申报与答辩材料索引，含个人属性的 Office 原件由负责人保管 |
-| [docs/archive](docs/archive/README.md) | 历史方案、实验文档和旧说明 |
-| [tools](tools/README.md) | Windows启动、打包、工程检查与维护工具 |
-| local | 本机密钥、私有数据、环境、输出和备份，Git忽略 |
+|---|---|
+| [app](app/README.md) | 应用、模型、配置、数据和测试 |
+| [research](research/README.md) | 历史研究数据、人工复核和实验材料 |
+| [docs/research](docs/research/AI_PLUS_RESEARCH_BASELINE.md) | 当前 AI+ 大创研究基准 |
+| [docs/current](docs/current/README.md) | 当前架构、安装、部署和维护说明 |
+| [docs/reports](docs/reports/) | 项目报告与仓库验收记录 |
+| [docs/submissions](docs/submissions/使用说明.md) | 历史申报材料索引 |
+| [docs/archive](docs/archive/README.md) | 旧方案、历史实验和挑战杯资料 |
+| [tools](tools/README.md) | 维护、QA 和 Windows 工具 |
 
-## 团队协作
+## 研究与协作规则
 
-在 [Issues](https://github.com/Luzifeng0125/LLM-shield/issues) 记录任务、负责人、范围与完成条件。在 [Pull requests](https://github.com/Luzifeng0125/LLM-shield/pulls) 提交变更、关联 Issue 并附检查结果。研发、修复和研究各使用独立任务分支。
-
-研究批次、历史决策和模型身份可从 [研究入口](research/README.md)、[历史资料](docs/archive/README.md)、[模型记录](app/models/README.md) 和 [变更记录](CHANGELOG.md) 查找。取得授权后，在本机按指纹配置活动动作模型及项目 GLiNER。Git 保留清单、测试和复现说明。
+- 冻结数据、权重、人工裁定及历史报告不得覆盖。
+- 新研究使用独立分支和实验目录，记录代码提交、数据版本、模型指纹和运行环境。
+- 先冻结研究规格与验收标准，再实施；不能以工具自报完成代替独立验收。
+- 通过 Issues 记录任务和完成条件，通过 Pull Requests 审查代码与证据。
+- 详细路线见 [PROJECT_STATUS.md](PROJECT_STATUS.md)、[ROADMAP.md](ROADMAP.md)。
