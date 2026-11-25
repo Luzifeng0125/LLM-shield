@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yin-dun.candidate_registry.v1",
+  "type": "object",
+  "required": ["schema", "registry_origin", "registry_sha256", "candidates"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": "yin-dun.candidate_registry.v1"},
+    "registry_origin": {"enum": ["r0", "human_controlled"]},
+    "registry_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "candidate_id",
+          "evidence_anchor",
+          "subject_id",
+          "attribute_id",
+          "context_scope_id",
+          "grain_id",
+          "parent_scope"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "candidate_id": {"type": "string"},
+          "evidence_anchor": {"type": "string", "minLength": 1},
+          "subject_id": {"type": "string"},
+          "attribute_id": {"type": "string"},
+          "context_scope_id": {"type": "string"},
+          "grain_id": {"type": "string"},
+          "parent_scope": {"type": "string"}
+        }
+      }
+    }
+  }
+}

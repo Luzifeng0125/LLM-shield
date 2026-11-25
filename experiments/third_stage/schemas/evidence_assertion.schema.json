@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yin-dun.evidence_assertion.v1",
+  "title": "Evidence and claim assertions",
+  "type": "object",
+  "required": ["schema", "dimensions"],
+  "properties": {
+    "schema": {
+      "enum": ["yin-dun.evidence_assertion.v1", "yin-dun.claim_assertion.v1"]
+    },
+    "evidence_location": {
+      "type": "object",
+      "required": ["doc_id", "revision_id", "anchor", "text", "quote_sha256"],
+      "properties": {
+        "doc_id": {"type": "string"},
+        "revision_id": {"type": "string"},
+        "anchor": {"type": "string"},
+        "text": {"type": "string"},
+        "quote_sha256": {"type": "string"},
+        "spans": {"type": "object"}
+      }
+    },
+    "dimensions": {
+      "type": "object",
+      "required": [
+        "subject",
+        "attribute",
+        "context_scope",
+        "grain",
+        "numeric_value",
+        "unit",
+        "valid_time",
+        "polarity",
+        "status"
+      ]
+    }
+  }
+}

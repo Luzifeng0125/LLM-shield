@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yin-dun.fixture_case.v1",
+  "type": "object",
+  "required": [
+    "case_id",
+    "source_documents",
+    "revisions",
+    "evidence_anchors",
+    "claim",
+    "expected_registry",
+    "expected_links",
+    "expected_update_relations",
+    "expected_assertions",
+    "expected_source_conflict",
+    "expected_four_state",
+    "rationale",
+    "execution"
+  ],
+  "properties": {
+    "case_id": {"type": "string"},
+    "execution": {"const": "pending_l3_l4"},
+    "expected_four_state": {
+      "enum": ["still_valid", "affected_still_valid", "invalid", "paused", "withheld_pending_human_link_gold"]
+    },
+    "expected_source_conflict": {"enum": ["none", "conflict"]}
+  }
+}
